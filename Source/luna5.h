@@ -1,13 +1,15 @@
 #pragma once
+/***************************************************
+Luna Five
 
+This version has been modified
 
-/**********************************************************************
- *
- * TODO: for all getters/setters, remove userdata, we don't need it
- *       and we'll be able to access all values with -1
- *
- **********************************************************************/
+@see http://lua-users.org/wiki/LunaFive
 
+There's no mentioned license on the original code
+all modifications are (c) 2013 Peersuasive Technologies
+
+****************************************************/
 
 #include <iostream>
 #include <typeinfo>
@@ -15,11 +17,6 @@
 
 #define method(class, name) {#name, &class::name}
 
-/*
-Modified Luna Five
-This version has been slightly modified
-Taken from: http://lua-users.org/wiki/LunaFive
-*/
 template < class T > 
 class Luna {
 
@@ -119,17 +116,13 @@ public:
        @param L Lua State
        @param namespac Namespace to load into, if black the global namespace is assumed
        */
-    // pour l'héritage,
-    // je pourrais ajouter ici une options: LComponent = true/false
-    // mais en fait, je peux le savoir à la compilation
-    // avec les std::is...
+    // TODO: check inherited classes and add inherited methods
     static void Register(lua_State * L, const char *namespac = NULL, bool is_inh = false ) {
         DBG(String("**registering ") + T::className);
         lua_newtable(L);
         int nt = lua_gettop(L);
         lua_pushcfunction(L, &Luna < T >::constructor);
         lua_setfield(L, nt, "new");
-        //lua_pushcfunction(L, &Luna < T >::constructor);
 
         luaL_newmetatable(L, T::className);
         int metatable = lua_gettop(L);
@@ -153,8 +146,6 @@ public:
         lua_pushstring(L, "__newindex");
         lua_pushcfunction(L, &Luna < T >::property_setter);
         lua_settable(L, metatable);
-
-        //lua_settable(L, metatable);
 
         int p_i = 0;
         for (int i = 0; T::properties[i].name; ++i, ++p_i) { // Register some properties in it
@@ -207,10 +198,6 @@ public:
       @param L Lua State
       */
     static int constructor(lua_State * L) {
-        //T*  ap = new T(L);
-        //T** a = static_cast<T**>(lua_newuserdata(L, sizeof(T *))); // Push value = userdata
-        //*a = ap;
-
         lua_newtable(L);
         int t = lua_gettop(L);
 
@@ -223,7 +210,6 @@ public:
         lua_setmetatable(L, -2); // udata metatable_
         lua_settable(L, t);
 
-        // TODO: set real function there, don't know how yet, must trigger the __index stuff somehow...
         lua_pushstring(L, "methods");
         lua_newtable(L);
         int nt = lua_gettop(L);
@@ -282,7 +268,6 @@ public:
             int max_m = lua_tonumber(L, -1);
             lua_pop(L,1);
 
-            //T** obj = static_cast<T**>(lua_touserdata(L, -1));
             lua_getfield(L, 1, "__self");
             T** obj = static_cast<T**>(lua_touserdata(L, -1));
 
@@ -301,7 +286,6 @@ public:
             lua_remove(L,1); // Remove userdata
             lua_remove(L,1); // Remove [key]
 
-            //return ((*obj)->*(T::properties[_index].getter)) (L);
             if ( _index < max_p )
                 return ((*obj)->*(T::properties[_index].getter)) (L);
             else {
@@ -339,9 +323,6 @@ public:
             int max_m = lua_tonumber(L, -1);
             lua_pop(L,1);
 
-            //for(int i=1;i<=lua_gettop(L);++i) std::cout<<"at pos ["<<i<<"]: "<<lua_typename(L,lua_type(L,i))<<std::endl;
-
-            //T** obj = static_cast<T**>(lua_touserdata(L, 1));
             lua_getfield(L, 1, "__self");
             T** obj = static_cast<T**>(lua_touserdata(L, -1));
             lua_pop(L, 1);
@@ -362,8 +343,6 @@ public:
             }
 
             lua_pop(L,2);    // Pop metatable and _index
-            //lua_remove(L,1); // Remove userdata
-            //lua_remove(L,1); // Remove [key]
             lua_remove(L,2); // Remove [key], keep udata
 
             //return ((*obj)->*(T::properties[_index].setter)) (L);
@@ -433,7 +412,6 @@ public:
         T** obj = static_cast<T**>(lua_touserdata(L, -1));
 
         if( obj && obj != nullptr )
-            //lua_pushfstring(L, "%s (%p)", T::className, (void*)*obj);
             lua_pushfstring(L, "%s", T::className);
         else
             lua_pushstring(L,"Empty object");
