@@ -1,0 +1,8 @@
+
+*.sw*
+local/
+.*.sw*
+.ycm_extra_conf.py
+local/
+build/
+microparser/

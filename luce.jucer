@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="ftVh6x" name="luce" projectType="dll" version="0.1" bundleIdentifier="org.peersuasive.luce"
+              includeBinaryInAppConfig="1" jucerVersion="3.1.0">
+  <MAINGROUP id="dqAalt" name="luce">
+    <GROUP id="{2FE4F1A2-0FC8-4734-52AA-2C4364E3272C}" name="Source">
+      <FILE id="XNbO0r" name="luce.cpp" compile="1" resource="0" file="Source/luce.cpp"/>
+      <FILE id="rmasH2" name="luce.h" compile="0" resource="0" file="Source/luce.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <LINUX_MAKE targetFolder="Builds/Linux" extraCompilerFlags="-std=c++11&#10;-Wno-unused-result&#10;-I/usr/include/lua5.1&#10;-fPIC"
+                externalLibraries="lua5.1" extraLinkerFlags="-std=c++11&#10;-fPIC&#10;-shared">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="luce"/>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="luce_d"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
