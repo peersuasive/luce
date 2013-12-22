@@ -192,7 +192,18 @@ int luaopen_luce (lua_State *L) {
     initialiseJuce_GUI();
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     //luaL_register(L,"luce.core", luce_lib);
-    luaL_register(L,"luce", luce_lib);
+    //luaL_register(L,"luce", luce_lib);
+    //l_NotificationType(L);
+
+    lua_newtable(L);
+    int i = lua_gettop(L);
+    for (int f = 0; luce_lib[f].name ; ++f ) {
+        std::cout << "adding: " << luce_lib[f].name << std::endl;
+        lua_pushstring(L,luce_lib[f].name);
+        lua_pushcfunction(L, luce_lib[f].func);
+        lua_settable(L, i);
+    }
+    
     l_NotificationType(L);
 
     return 1;
