@@ -154,7 +154,7 @@ namespace LUA {
             return res;
         }
 
-        const Rectangle<int> getRectangle(int i=-1) {
+        const juce::Rectangle<int> getRectangle(int i=-1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             int ind = lua_gettop(L);
@@ -168,16 +168,10 @@ namespace LUA {
             int h = luaL_checknumber(L, -1);
             lua_pop(L, 5);
             lua_remove(L,i);
-            std::cout << "got: " 
-                << "x: " << x 
-                << ", y: " << y 
-                << ", w: " << w
-                << ", h: " << h
-                << std::endl;
             return { x, y, w, h };
         }
 
-        const Point<int> getPoint(int i=-1) {
+        const juce::Point<int> getPoint(int i=-1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             lua_rawgeti(L, -1, 1);
@@ -308,7 +302,7 @@ namespace LUA {
         // we could set a table with x, y, width, height instead of an array
         // or we could also implement the rectangle class to get all the facilities
         // it offers ?
-        int returnTable( const Rectangle<int>& r ) {
+        int returnTable( const juce::Rectangle<int>& r ) {
             lua_newtable(L);
             int t = lua_gettop(L);
             lua_pushnumber(L, r.getX());
@@ -322,14 +316,14 @@ namespace LUA {
             return 1;
         }
 
-        int returnTable( const RectangleList<int>& r ) {
+        int returnTable( const juce::RectangleList<int>& r ) {
             // TODO
             //
             // for each rectangle, create a list of numbers
             return 0;
         }
 
-        int returnTable( const Point<int>& r ) {
+        int returnTable( const juce::Point<int>& r ) {
             int i = 0;
             lua_newtable(L);
             int t = lua_gettop(L);
