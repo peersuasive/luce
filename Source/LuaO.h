@@ -1,6 +1,14 @@
 #ifndef __LUA_O_H
 #define __LUA_O_H
 
+#ifdef LUA52
+int luaL_getn(lua_State *L, int idx) {
+    return luaL_len(L, idx);
+}
+typedef luaL_Reg luaL_reg;
+#endif
+
+
 namespace LUA {
     namespace {
         lua_State *L = nullptr;

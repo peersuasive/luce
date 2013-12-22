@@ -6,6 +6,10 @@
 
 #include "JuceHeader.h"
 
+#ifdef LUA52
+#define LUA_COMPAT_MODULE
+#endif
+
 namespace luce {
 
 #include <lua.hpp>
