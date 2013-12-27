@@ -19,6 +19,43 @@ namespace LUA {
             return L;
         }
 
+        int stacktrace(lua_State *L) {
+            lua_Debug info;
+            int level = 0;
+            // error
+            lua_getstack(L, level++, &info),
+            lua_getinfo(L, "nSl", &info);
+            std::cerr << "Error while executing callback:" << std::endl;
+            if ( info.name )
+                std::cerr << "-> unknown method: " << info.name << "()" << std::endl;
+            else
+                std::cerr << "-> attempt for call method from a nil table" << std::endl;
+            
+            // stack
+            while (lua_getstack(L, level, &info)) {
+                lua_getinfo(L, "nSl", &info);
+                // dump only callback related stack
+                if ( info.currentline == -1 && info.linedefined == -1 && String(info.what) == "C" ) break;
+
+                if ( info.name )
+                    std::cerr << "   -> from function " << info.name << "()";
+                else
+                    std::cerr << "   -> from <callback>";
+
+                std::cerr << ":" << info.currentline
+                          << " (defined at " << info.short_src <<":"<< info.linedefined << ")"
+                          << std::endl;
+                ++level;
+            }
+            // pop remaining traces
+            while (lua_getstack(L, level, &info)) {
+                lua_getinfo(L, "nSl", &info);
+                ++level;
+            }
+
+            return 0;
+        }
+
         const int call_cb(int ref, int nb_ret = 0, const std::list<var>& args = {} ) {
             jassert( L != nullptr );
             if ( L == nullptr ) {
@@ -30,7 +67,7 @@ namespace LUA {
             if ( lua_type(LUA::Get(), -1) == LUA_TFUNCTION ) {
                 // set arguments
                 for ( auto &it : args ) {
-                    if ( it.isInt() 
+                    if ( it.isInt()
                             || it.isInt64() 
                             || it.isDouble()
                             ) {
@@ -57,23 +94,30 @@ namespace LUA {
                     }
                 }
 
-                if ( lua_pcall(LUA::Get(), 0, nb_ret, 0) != 0 ) {
+                lua_pushcclosure(L, stacktrace, 0);
+                int errfunc = lua_gettop(L);
+                lua_pushvalue(L, -2);
+                if ( lua_pcall(L, 0, nb_ret, errfunc) != 0 ) {
                     DBG("failed to execute callback.");
                     status = -1;
                 }
                 else {
                     status = 1;
                 }
+                lua_remove(L, errfunc);
+                //lua_pop(L,1);
             } else {
                 DBG("no cb found for ?");
             }
             return status;
         }
 
-        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, const std::list<var>& args = {} ) {
+        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, 
+                                                                const std::list<var>& args = {} ) 
+        {
             int status = call_cb(cb[key], nb_ret, args);
             if ( status < 0 ) {
-                DBG("couldn't execute the " + key + "callbak.");
+                DBG("couldn't execute the " + key + " callback.");
             }
             else if ( ! status ) {
                 DBG("no callback found for " + key);
