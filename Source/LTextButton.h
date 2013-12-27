@@ -11,34 +11,44 @@
 
 *************************************************************/
 
-#ifndef __LUCE_TEXT_BUTTON_H
-#define __LUCE_TEXT_BUTTON_H
+#ifndef __LUCE_LTEXTBUTTON_H
+#define __LUCE_LTEXTBUTTON_H
 
-class LTextButton : public LComponent,
-                    public TextButton,
-                    public ButtonListener
+class LTextButton
+    : public LButton,
+      public TextButton,
+      public Button::Listener
 {
-public:
-    LTextButton(lua_State *L);
+public:    
+    LTextButton(lua_State*);
     ~LTextButton();
-
-    int setButtonText(lua_State *L);
-    int getButtonText(lua_State *L);
-    void buttonClicked (Button* buttonThatWasClicked);
-    int buttonClicked (lua_State *L);
-
+    
+    //==============================================================================
+    int changeWidthToFitText(lua_State*);
+    int paintButton(lua_State*);
+    int colourChanged(lua_State*);
+    
+    //==============================================================================
+    int getFont(lua_State*);
+    
+    //==============================================================================
+    
     static const char className[];
     static const Luna<LTextButton>::Inheritence inherits[];
     static const Luna<LTextButton>::InheritenceF inheritsF[];
     static const Luna<LTextButton>::PropertyType properties[];
     static const Luna<LTextButton>::FunctionType methods[];
-
-private:
+    
+private:    
+    
     //==============================================================================
-    virtual void resized() override;
+    // callbacks
+ 
+    virtual void buttonStateChanged() override;
+    virtual void buttonClicked (Button* buttonThatWasClicked) override;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LTextButton)
 };
 
-#endif // __LUCE_TEXT_BUTTON_H
+#endif // __LUCE_LTEXTBUTTON_H

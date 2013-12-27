@@ -3,6 +3,7 @@
 namespace luce {
 
 #include "LComponent.cpp"
+#include "LButton.cpp"
 #include "LJUCEApplication.cpp"
 #include "LDocumentWindow.cpp"
 #include "LMainComponent.cpp"

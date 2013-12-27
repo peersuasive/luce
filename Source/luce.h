@@ -17,6 +17,7 @@ namespace luce {
 #include "LuaO.h"
 
 #include "LComponent.h"
+#include "LButton.h"
 #include "LDocumentWindow.h"
 #include "LMainComponent.h"
 #include "LJUCEApplication.h"
