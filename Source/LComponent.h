@@ -7,14 +7,14 @@
     @copyright 
 
 
-(c) 2013, Peersuasive Technologies
+(c) 2013-2014, Peersuasive Technologies
 
 *************************************************************/
 
 #ifndef __LUCE_LCOMPONENT_H
 #define __LUCE_LCOMPONENT_H
 
-class LComponent
+class LComponent : protected LBase
 {
 public:    
     LComponent(lua_State*, Component* child = nullptr, const String& name = String::empty);
@@ -213,9 +213,11 @@ protected:
     //==============================================================================
     String myName;
 
-    void reg( const String& );
-    void set( const String& r, int lua_type = LUA_TFUNCTION, int pos = -1);
-    int callback(const String&, int nb_res = 0, const std::list<var>& args = {}) const;
+    //==============================================================================
+    // now in LBase
+    //void reg( const String& );
+    //void set( const String& r, int lua_type = LUA_TFUNCTION, int pos = -1);
+    //int callback(const String&, int nb_res = 0, const std::list<var>& args = {}) const;
 
     enum xFocusChangeType
     {
@@ -265,7 +267,8 @@ private:
     lua_State *L;
     
     //==============================================================================
-    HashMap<String,int> cb;
+    // LBase
+    //HashMap<String,int> cb;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LComponent)

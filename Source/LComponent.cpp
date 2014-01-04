@@ -7,7 +7,7 @@
     @copyright 
 
 
-(c) 2013, Peersuasive Technologies
+(c) 2013-2014, Peersuasive Technologies
 
 *************************************************************/
 
@@ -23,9 +23,9 @@ const Luna<LComponent>::FunctionType LComponent::methods[] = {
 };
 
 LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
-    : child(child_)
+    : LBase(Ls),
+      child(child_)
 {
-    LUA::Set(Ls);
     L = Ls;
     
     if ( lua_isstring(L, 2) )        
@@ -66,28 +66,11 @@ LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
 }
 
 LComponent::~LComponent(){
-    LUA::unregAll(cb);
     if (child) {
         child.release();
         child = nullptr;
     }
 }
-
-/// protected methods
-void LComponent::reg( const String& r ) {
-    cb.set( r, LUA_REFNIL);
-}
-
-void LComponent::set( const String& r, int lua_type, int pos ) {
-    luaL_checktype(L, pos, lua_type );
-    cb.set(r, luaL_ref(L, LUA_REGISTRYINDEX));
-    lua_pop(L,1);
-}
-
-int LComponent::callback( const String& r, int nb_res, const std::list<var>& args ) const {
-    return LUA::call_cb(cb, r, nb_res, args);
-}
-
 
 // get/set
 int LComponent::setBounds(lua_State *L) {

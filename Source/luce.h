@@ -16,6 +16,7 @@ namespace luce {
 #include "luna5.h"
 #include "LuaO.h"
 
+#include "LBase.h"
 #include "LComponent.h"
 #include "LButton.h"
 #include "LDocumentWindow.h"

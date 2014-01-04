@@ -18,11 +18,11 @@
 
 */
 
-// LComponent inheritage
-const Luna<LComponent>::Inheritence LComponent::inherits[] = {
+// LBase inheritage
+const Luna<LBase>::Inheritence LBase::inherits[] = {
     {0,0}
 };
 
-const Luna<LComponent>::InheritenceF LComponent::inheritsF[] = {
+const Luna<LBase>::InheritenceF LBase::inheritsF[] = {
     {0,0}
 };
