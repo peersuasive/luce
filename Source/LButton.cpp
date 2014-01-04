@@ -26,7 +26,7 @@ const Luna<LButton>::FunctionType LButton::methods[] = {
 LButton::LButton(lua_State *Ls, Button* child_, const String& name_)
     : child(child_),
       LComponent(Ls, child_, name_)
-{    
+{
     L = Ls;
     
     reg("paintButton");
@@ -105,24 +105,24 @@ int LButton::buttonClicked(lua_State*) {
 }
 
 /////// getters/setters
-int LButton::getClickingTogglesState ( lua_State* ) {    
+int LButton::getClickingTogglesState ( lua_State* ) {
     if (child) {
         return LUA::returnBoolean( child->getClickingTogglesState() );
     } else return 0;
 }
-int LButton::setClickingTogglesState ( lua_State* ) {    
+int LButton::setClickingTogglesState ( lua_State* ) {
     if (child) {
         child->setClickingTogglesState(LUA::getBoolean());
     }
     return 0;
 }
 
-int LButton::getToggleState ( lua_State* ) {    
+int LButton::getToggleState ( lua_State* ) {
     if (child) {
         return LUA::returnBoolean( child->getToggleState() );
     } else return 0;
 }
-int LButton::setToggleState ( lua_State* ) {    
+int LButton::setToggleState ( lua_State* ) {
     bool shouldBeOn = LUA::getBoolean();
     String notif = LUA::getString();
     if (child)
@@ -130,12 +130,12 @@ int LButton::setToggleState ( lua_State* ) {
     return 0;
 }
 
-int LButton::getRadioGroupId ( lua_State* ) {    
+int LButton::getRadioGroupId ( lua_State* ) {
     if (child)
         return LUA::returnNumber( child->getRadioGroupId() );
     else return 0;
 }
-int LButton::setRadioGroupId ( lua_State* ) {    
+int LButton::setRadioGroupId ( lua_State* ) {
     int newGroupId = LUA::getNumber();
     String notif = LUA::getString();
     if (child)
@@ -143,97 +143,97 @@ int LButton::setRadioGroupId ( lua_State* ) {
     return 0;
 }
 
-int LButton::getTooltip ( lua_State* ) {    
+int LButton::getTooltip ( lua_State* ) {
     if (child)
         return LUA::returnString( child->getTooltip() );
     else return 0;
 }
-int LButton::setTooltip ( lua_State* ) {    
+int LButton::setTooltip ( lua_State* ) {
     if (child)
         child->setTooltip(LUA::getString());
     return 0;
 }
 
-int LButton::getButtonText ( lua_State* ) {    
+int LButton::getButtonText ( lua_State* ) {
     if (child)
         return LUA::returnString( child->getButtonText() );
     else return 0;
 }
-int LButton::setButtonText ( lua_State* ) {    
+int LButton::setButtonText ( lua_State* ) {
     if (child)
         child->setButtonText(LUA::getString());
     return 0;
 }
 
 /////// getters
-int LButton::getConnectedEdgeFlags ( lua_State* ) {    
+int LButton::getConnectedEdgeFlags ( lua_State* ) {
     if (child)
         return LUA::returnNumber( child->getConnectedEdgeFlags() );
     else return 0;
 }
 
-int LButton::isConnectedOnRight ( lua_State* ) {    
+int LButton::isConnectedOnRight ( lua_State* ) {
     if (child)
         return LUA::returnBoolean( child->isConnectedOnRight() );
     else return 0;
 }
 
-int LButton::isConnectedOnTop ( lua_State* ) {    
+int LButton::isConnectedOnTop ( lua_State* ) {
     if (child)
         return LUA::returnBoolean( child->isConnectedOnTop() );
     else return 0;
 }
 
-int LButton::isOver ( lua_State* ) {    
+int LButton::isOver ( lua_State* ) {
     if (child)
         return LUA::returnBoolean( child->isOver() );
     else return 0;
 }
 
-int LButton::isDown ( lua_State* ) {    
+int LButton::isDown ( lua_State* ) {
     if (child)
         return LUA::returnBoolean( child->isDown() );
     else return 0;
 }
 
-int LButton::isConnectedOnLeft ( lua_State* ) {    
+int LButton::isConnectedOnLeft ( lua_State* ) {
     if (child)
         return LUA::returnBoolean( child->isConnectedOnLeft() );
     else return 0;
 }
 
-int LButton::isConnectedOnBottom ( lua_State* ) {    
+int LButton::isConnectedOnBottom ( lua_State* ) {
     if (child)
         return LUA::returnBoolean( child->isConnectedOnBottom() );
     else return 0;
 }
 
-int LButton::getMillisecondsSinceButtonDown ( lua_State* ) {    
+int LButton::getMillisecondsSinceButtonDown ( lua_State* ) {
     if (child)
         return LUA::returnNumber( child->getMillisecondsSinceButtonDown() );
     else return 0;
 }
 
 /////// setters
-int LButton::setConnectedEdges ( lua_State* ) {    
+int LButton::setConnectedEdges ( lua_State* ) {
     if (child)
         child->setConnectedEdges(LUA::getNumber());
     return 0;
 }
 
-int LButton::clearShortcuts ( lua_State* ) {    
+int LButton::clearShortcuts ( lua_State* ) {
     if (child)
         child->clearShortcuts();
     return 0;
 }
 
-int LButton::setTriggeredOnMouseDown ( lua_State* ) {    
+int LButton::setTriggeredOnMouseDown ( lua_State* ) {
     if (child)
         child->setTriggeredOnMouseDown(LUA::getBoolean());
     return 0;
 }
 
-int LButton::setRepeatSpeed ( lua_State* ) {    
+int LButton::setRepeatSpeed ( lua_State* ) {
     int initialDelayInMillisecs = LUA::getNumber();
     int repeatDelayInMillisecs = LUA::getNumber();
     int minimumDelayInMillisecs = LUA::checkAndGetNumber(-1, -1);
@@ -244,7 +244,7 @@ int LButton::setRepeatSpeed ( lua_State* ) {
 
 // TODO
 // getters
-int LButton::isRegisteredForShortcut ( lua_State* ) {    
+int LButton::isRegisteredForShortcut ( lua_State* ) {
     if (child) {
         // KeyPress keypress_ = LUA::TODO_OBJECT_KeyPress;
         // return LUA::returnBoolean( child->isRegisteredForShortcut( keypress_ ) );
@@ -253,7 +253,7 @@ int LButton::isRegisteredForShortcut ( lua_State* ) {
     } else return 0;
 }
 
-int LButton::getCommandID ( lua_State* ) {    
+int LButton::getCommandID ( lua_State* ) {
     if (child) {
         // return LUA::TODO_RETURN_OBJECT_CommandID( child->getCommandID() );
         lua_settop(LUA::Get(), 1); // added by TODO
@@ -261,7 +261,7 @@ int LButton::getCommandID ( lua_State* ) {
     } else return 0;
 }
 
-int LButton::getToggleStateValue ( lua_State* ) {    
+int LButton::getToggleStateValue ( lua_State* ) {
     if (child) {
         // return LUA::TODO_RETURN_OBJECT_Value( child->getToggleStateValue() );
         lua_settop(LUA::Get(), 1); // added by TODO
@@ -269,25 +269,19 @@ int LButton::getToggleStateValue ( lua_State* ) {
     } else return 0;
 }
 
-int LButton::removeListener ( lua_State* ) {    
-    if (child) {
-        // child->removeListener(LUA::TODO_OBJECT_Listener);
-        LUA::TODO_OBJECT( "removeListener, LUA::TODO_OBJECT_Listener" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
+//int LButton::removeListener ( lua_State* ) {
+//    if (child)
+//        child->removeListener((Button::Listener*)child);
+//    return 0;
+//}
+//
+//int LButton::addListener ( lua_State* ) {
+//    if (child)
+//        child->addListener(child);
+//    return 0;
+//}
 
-int LButton::addListener ( lua_State* ) {    
-    if (child) {
-        // child->addListener(LUA::TODO_OBJECT_Listener);
-        LUA::TODO_OBJECT( "addListener, LUA::TODO_OBJECT_Listener" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
-
-int LButton::addShortcut ( lua_State* ) {    
+int LButton::addShortcut ( lua_State* ) {
     if (child) {
         // child->addShortcut(LUA::TODO_OBJECT_KeyPress);
         LUA::TODO_OBJECT( "addShortcut, LUA::TODO_OBJECT_KeyPress" );
@@ -296,7 +290,7 @@ int LButton::addShortcut ( lua_State* ) {
     return 0;
 }
 
-int LButton::setState ( lua_State* ) {    
+int LButton::setState ( lua_State* ) {
     if (child) {
         // child->setState(LUA::TODO_OBJECT_ButtonState);
         LUA::TODO_OBJECT( "setState, LUA::TODO_OBJECT_ButtonState" );
@@ -305,7 +299,7 @@ int LButton::setState ( lua_State* ) {
     return 0;
 }
 
-int LButton::setCommandToTrigger ( lua_State* ) {    
+int LButton::setCommandToTrigger ( lua_State* ) {
     if (child) {
         // ApplicationCommandManager* commandManagerToUse = LUA::TODO_OBJECT_ApplicationCommandManager;
         // CommandID commandID = LUA::TODO_OBJECT_CommandID;

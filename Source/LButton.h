@@ -33,9 +33,9 @@ public:
     int getButtonText(lua_State*);
     
     //==============================================================================
-    int removeListener(lua_State*);
+    //int removeListener(lua_State*);
     int setConnectedEdges(lua_State*);
-    int addListener(lua_State*);
+    //int addListener(lua_State*);
     int addShortcut(lua_State*);
     int setState(lua_State*);
     int clearShortcuts(lua_State*);

@@ -32,7 +32,10 @@ public:
     int getFont(lua_State*);
     
     //==============================================================================
-    
+    int addListener(lua_State*);
+    int removeListener(lua_State*);
+
+    //==============================================================================
     static const char className[];
     static const Luna<LTextButton>::Inheritence inherits[];
     static const Luna<LTextButton>::InheritenceF inheritsF[];
@@ -43,7 +46,6 @@ private:
     
     //==============================================================================
     // callbacks
- 
     virtual void buttonStateChanged() override;
     virtual void buttonClicked (Button* buttonThatWasClicked) override;
 

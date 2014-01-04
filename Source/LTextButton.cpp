@@ -23,6 +23,9 @@ const Luna<LTextButton>::FunctionType LTextButton::methods[] = {
     method( LTextButton, changeWidthToFitText ),
     method( LTextButton, paintButton ),
     method( LTextButton, colourChanged ),
+
+    method( LTextButton, addListener ),
+    method( LTextButton, removeListener ),
     {0,0}
 };
 
@@ -38,6 +41,16 @@ LTextButton::LTextButton(lua_State *L)
 LTextButton::~LTextButton(){}
 
 /////// callbacks
+int LTextButton::removeListener ( lua_State* ) {
+    TextButton::removeListener(this);
+    return 0;
+}
+
+int LTextButton::addListener ( lua_State* ) {
+    TextButton::addListener(this);
+    return 0;
+}
+
 void LTextButton::buttonStateChanged() {
     LButton::lbuttonStateChanged();
 }
@@ -61,8 +74,8 @@ int LTextButton::changeWidthToFitText ( lua_State* ) {
 
 int LTextButton::paintButton ( lua_State* ) {
     // Graphics graphics_ = LUA::TODO_OBJECT_Graphics;
-    bool isMouseOverButton = LUA::getBoolean(3);
-    bool isButtonDown = LUA::getBoolean(4);
+    //bool isMouseOverButton = LUA::getBoolean();
+    //bool isButtonDown = LUA::getBoolean();
     // TextButton::paintButton( graphics_, isMouseOverButton, isButtonDown );
     LUA::TODO_OBJECT( "paintButton,  graphics_, isMouseOverButton, isButtonDown " );
     lua_settop(LUA::Get(), 1); // added by TODO
