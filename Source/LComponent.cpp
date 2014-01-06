@@ -1079,11 +1079,10 @@ int LComponent::setCachedComponentImage ( lua_State* ) {
 /// getters
 int LComponent::findColour ( lua_State* ) {
     if (child) {
-        int colourId = LUA::getNumber(1);
+        int colourId = LUA::getNumber(2);
         bool inheritFromParent = LUA::checkAndGetBoolean(2, false);
-        // return LUA::TODO_RETURN_OBJECT_Colour( child->findColour( colourId, inheritFromParent ) );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "Colour findColour( colourId, inheritFromParent )" );
+        //return LUA::returnString( (child->findColour( colourId, inheritFromParent )).toString() );
+        return LUA::returnString( (child->findColour( colourId, inheritFromParent )).toDisplayString(true) );
     } else return 0;
 }
 
@@ -1243,11 +1242,19 @@ int LComponent::removeMouseListener ( lua_State* ) {
 
 int LComponent::setColour ( lua_State* ) {
     if (child) {
-        int colourId = LUA::getNumber(2);
-        // Colour newColour = LUA::TODO_OBJECT_Colour;
-        // child->setColour( colourId, newColour );
-        LUA::TODO_OBJECT( "setColour,  colourId, newColour " );
-        lua_settop(LUA::Get(), 1); // added by TODO
+        int id = LUA::getNumber(2);
+        std::cout << "actual type: " << lua_typename(L, lua_type(L, -1) ) << std::endl;
+        if ( lua_isnumber(L, -1) ) {
+            // TODO: convert from lua number (double) to uint32
+            var val = LUA::getNumber();
+            //std::cout << "val: " << val << std::endl;
+            //child->setColour( id, Colour( (uint32)((int)val)) );
+        } else if ( lua_isstring(L, -1) ) {
+            String name = LUA::getString();
+            child->setColour( id, Colours::findColourForName( name, Colours::transparentWhite ) );
+        } else {
+            LUA::throwError( "Missing colour value (name or ARGB)" );
+        }
     }
     return 0;
 }
