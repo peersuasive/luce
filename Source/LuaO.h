@@ -24,6 +24,7 @@ namespace LUA {
         }
 
         int stacktrace(lua_State *L) {
+            bool full_stack = false;
             lua_Debug info;
             int level = 0;
             // error
@@ -32,8 +33,11 @@ namespace LUA {
             std::cerr << "Error while executing callback:" << std::endl;
             if ( info.name )
                 std::cerr << "-> unknown method: " << info.name << "()" << std::endl;
-            else
-                std::cerr << "-> attempt for call method from a nil table" << std::endl;
+            else {
+                std::cerr << "-> attempt to call method from a nil table" << std::endl;
+                std::cerr << "   (full stack)" << std::endl;
+                full_stack = true;
+            }
             
             // stack
             while (lua_getstack(L, level, &info)) {
@@ -54,6 +58,17 @@ namespace LUA {
             // pop remaining traces
             while (lua_getstack(L, level, &info)) {
                 lua_getinfo(L, "nSl", &info);
+                if ( full_stack ) {
+                    if ( info.name )
+                        std::cerr << "   -> from function " << info.name << "()";
+                    else
+                        std::cerr << "   -> from <callback>";
+
+                    std::cerr << ":" << info.currentline
+                              << " (defined at " << info.short_src <<":"<< info.linedefined << ")"
+                              << std::endl;
+
+                }
                 ++level;
             }
 
