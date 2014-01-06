@@ -138,6 +138,10 @@ namespace LUA {
         const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, 
                                                                 const std::list<var>& args = {} ) 
         {
+            // quick return
+            if ( ! cb.contains(key) || (cb[key] == LUA_REFNIL) )
+                return -1;
+
             int status = call_cb(cb[key], nb_ret, args);
             if ( status < 0 ) {
                 DBG("couldn't execute the " + key + " callback.");
