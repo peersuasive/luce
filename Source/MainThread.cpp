@@ -45,6 +45,7 @@ void MainThread::run() {
             int rc = LUA::call_cb(cb_ref, 1);
             if ( rc < 0 ) {
                 const char *err = lua_tostring(L, -1);
+                LUA::throwError(String("Error while executing the main loop: ") + err);
                 std::cout << "error while executing the callback: " << err << std::endl;
                 lua_pop(L, 1);
             }
