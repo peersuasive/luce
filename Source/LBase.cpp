@@ -47,3 +47,7 @@ void LBase::set( const String& r, int lua_type, int pos ) {
 int LBase::callback( const String& r, int nb_res, const std::list<var>& args ) const {
     return LUA::call_cb(cb, r, nb_res, args);
 }
+
+bool LBase::hasCallback( const String& k ) {
+    return cb.contains( k ) && (cb[k] != LUA_REFNIL);
+}
