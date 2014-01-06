@@ -67,8 +67,13 @@ namespace LUA {
                 return -2;
             }
             int status = 0;
-            lua_rawgeti(LUA::Get(), LUA_REGISTRYINDEX, ref);
-            if ( lua_type(LUA::Get(), -1) == LUA_TFUNCTION ) {
+            lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+            int func_index = lua_gettop(L);
+            if ( lua_type(L, -1) == LUA_TFUNCTION ) {
+                lua_pushcclosure(L, stacktrace, 0);
+                int errfunc = lua_gettop(L);
+                lua_pushvalue(L, func_index);
+
                 // set arguments
                 for ( auto &it : args ) {
                     if ( it.isInt()
@@ -98,10 +103,8 @@ namespace LUA {
                     }
                 }
 
-                lua_pushcclosure(L, stacktrace, 0);
-                int errfunc = lua_gettop(L);
-                lua_pushvalue(L, -2);
-                if ( lua_pcall(L, 0, nb_ret, errfunc) != 0 ) {
+                // call callback function
+                if ( lua_pcall(L, args.size(), nb_ret, errfunc) != 0 ) {
                     DBG("failed to execute callback.");
                     status = -1;
                 }
@@ -109,9 +112,10 @@ namespace LUA {
                     status = 1;
                 }
                 lua_remove(L, errfunc);
-                //lua_pop(L,1);
+                lua_remove(L, func_index);
             } else {
                 DBG("no cb found for ?");
+                lua_remove(L, func_index);
             }
             return status;
         }

@@ -51,14 +51,13 @@ void MainThread::run() {
             else if ( rc ) {
                 if ( lua_type(L, -1) != LUA_TNIL ) {
                     bool res = lua_toboolean(L, -1);
-                    lua_pop(L, 1);
                     if( ! res ) {
                         DBG("exit after cb break");
                         keep_running = false;
                     }
                 }
+                lua_pop(L, 1);
             }
         }
-        
     }
 }
