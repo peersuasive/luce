@@ -39,7 +39,7 @@ const Luna<LMainComponent>::Inheritence LMainComponent::inherits[] = {
     {"visible", &LComponent::isVisible, &LComponent::setVisible},
     {"broughtToFrontOnMouseClick", &LComponent::isBroughtToFrontOnMouseClick, &LComponent::setBroughtToFrontOnMouseClick},
     {"mouseClickGrabsKeyboardFocus", &LComponent::getMouseClickGrabsKeyboardFocus, &LComponent::setMouseClickGrabsKeyboardFocus},
-    {"interceptsMouseClicks", &LComponent::getInterceptMouseClicks, &LComponent::setInterceptMouseClicks},
+    {"interceptsMouseClicks", &LComponent::getInterceptsMouseClicks, &LComponent::setInterceptsMouseClicks},
     {"name", &LComponent::getName, &LComponent::setName},
     {0,0}
 };

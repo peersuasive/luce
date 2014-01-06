@@ -40,7 +40,7 @@ const Luna<LTextButton>::Inheritence LTextButton::inherits[] = {
     {"visible", &LButton::isVisible, &LButton::setVisible},
     {"broughtToFrontOnMouseClick", &LButton::isBroughtToFrontOnMouseClick, &LButton::setBroughtToFrontOnMouseClick},
     {"mouseClickGrabsKeyboardFocus", &LButton::getMouseClickGrabsKeyboardFocus, &LButton::setMouseClickGrabsKeyboardFocus},
-    {"interceptsMouseClicks", &LComponent::getInterceptMouseClicks, &LComponent::setInterceptMouseClicks},
+    {"interceptsMouseClicks", &LComponent::getInterceptsMouseClicks, &LComponent::setInterceptsMouseClicks},
     {"name", &LButton::getName, &LButton::setName},
 
     // LButton
