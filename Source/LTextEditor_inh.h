@@ -39,6 +39,7 @@ const Luna<LTextEditor>::Inheritence LTextEditor::inherits[] = {
     {"visible", &LComponent::isVisible, &LComponent::setVisible},
     {"broughtToFrontOnMouseClick", &LComponent::isBroughtToFrontOnMouseClick, &LComponent::setBroughtToFrontOnMouseClick},
     {"mouseClickGrabsKeyboardFocus", &LComponent::getMouseClickGrabsKeyboardFocus, &LComponent::setMouseClickGrabsKeyboardFocus},
+    {"interceptsMouseClicks", &LComponent::getInterceptMouseClicks, &LComponent::setInterceptMouseClicks},
     {"name", &LComponent::getName, &LComponent::setName},
     {0,0}
 };

@@ -39,6 +39,7 @@ const Luna<LDocumentWindow>::Inheritence LDocumentWindow::inherits[] = {
     {"cachedComponentImage", &LComponent::getCachedComponentImage, &LComponent::setCachedComponentImage},
     {"broughtToFrontOnMouseClick", &LComponent::isBroughtToFrontOnMouseClick, &LComponent::setBroughtToFrontOnMouseClick},
     {"mouseClickGrabsKeyboardFocus", &LComponent::getMouseClickGrabsKeyboardFocus, &LComponent::setMouseClickGrabsKeyboardFocus},
+    {"interceptsMouseClicks", &LComponent::getInterceptMouseClicks, &LComponent::setInterceptMouseClicks},
     {"name", &LComponent::getName, &LComponent::setName},
 
 
