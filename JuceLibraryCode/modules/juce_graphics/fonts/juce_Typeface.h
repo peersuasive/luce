@@ -64,6 +64,12 @@ public:
     /** Creates a new system typeface. */
     static Ptr createSystemTypefaceFor (const Font& font);
 
+    /** Attempts to create a font from some raw font file data (e.g. a TTF or OTF file image).
+        The system will take its own internal copy of the data, so you can free the block once
+        this method has returned.
+    */
+    static Ptr createSystemTypefaceFor (const void* fontFileData, size_t fontFileDataSize);
+
     //==============================================================================
     /** Destructor. */
     virtual ~Typeface();
@@ -128,6 +134,11 @@ public:
     */
     static void scanFolderForFonts (const File& folder);
 
+    /** Makes an attempt at estimating a good overall transform that will scale a font of
+        the given size to align vertically with the pixel grid.
+    */
+    AffineTransform getVerticalHintingTransform (float fontHeight);
+
 protected:
     //==============================================================================
     String name, style;
@@ -137,6 +148,11 @@ protected:
     static Ptr getFallbackTypeface();
 
 private:
+    struct HintingParams;
+    friend struct ContainerDeletePolicy<HintingParams>;
+    ScopedPointer<HintingParams> hintingParams;
+    CriticalSection hintingLock;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Typeface)
 };
 
