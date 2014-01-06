@@ -61,6 +61,8 @@ public:
     int getName(lua_State*);
     int setSize(lua_State*);
     int getSize(lua_State*);
+    int setInterceptsMouseClicks(lua_State*);
+    int getInterceptsMouseClicks(lua_State*);
     
     //==============================================================================
     int enterModalState(lua_State*);
@@ -83,7 +85,6 @@ public:
     int centreWithSize(lua_State*);
     int copyAllExplicitColoursTo(lua_State*);
     int exitModalState(lua_State*);
-    int setInterceptsMouseClicks(lua_State*);
     int setTopRightPosition(lua_State*);
     int grabKeyboardFocus(lua_State*);
     int addToDesktop(lua_State*);
@@ -91,7 +92,6 @@ public:
     int setBufferedToImage(lua_State*);
     int setBoundsToFit(lua_State*);
     int addChildAndSetID(lua_State*);
-    int getInterceptsMouseClicks(lua_State*);
     int removeMouseListener(lua_State*);
     int beginDragAutoRepeat(lua_State*);
     int setColour(lua_State*);

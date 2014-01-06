@@ -36,32 +36,32 @@ LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
     reg("childrenChanged");
     reg("parentHierarchyChanged");
     reg("colourChanged");
-    reg("mouseWheelMove");
     reg("lookAndFeelChanged");
     reg("userTriedToCloseWindow");
     reg("modifierKeysChanged");
     reg("broughtToFront");
     reg("parentSizeChanged");
     reg("visibilityChanged");
-    reg("mouseDoubleClick");
     reg("inputAttemptWhenModal");
     reg("paint");
     reg("handleCommandMessage");
     reg("resized");
     reg("focusGained");
-    reg("mouseDrag");
     reg("paintOverChildren");
     reg("moved");
     reg("childBoundsChanged");
-    reg("mouseMove");
     reg("focusLost");
-    reg("mouseExit");
     reg("minimisationStateChanged");
+    reg("mouseMove");
     reg("mouseEnter");
-    reg("mouseMagnify");
-    reg("mouseUp");
-    reg("enablementChanged");
+    reg("mouseExit");
     reg("mouseDown");
+    reg("mouseDrag");
+    reg("mouseUp");
+    reg("mouseDoubleClick");
+    reg("mouseWheelMove");
+    reg("mouseMagnify");
+    reg("enablementChanged");
     reg("focusOfChildComponentChanged");
 }
 
@@ -705,16 +705,6 @@ int LComponent::colourChanged(lua_State*){
     return 0;
 }
 
-void LComponent::lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel ) {
-    if (child)
-        callback("mouseWheelMove");
-}
-int LComponent::mouseWheelMove(lua_State*){
-    if (child)
-        set("mouseWheelMove");
-    return 0;
-}
-
 void LComponent::llookAndFeelChanged() {
     if (child)
         callback("lookAndFeelChanged");
@@ -775,16 +765,6 @@ int LComponent::visibilityChanged(lua_State*){
     return 0;
 }
 
-void LComponent::lmouseDoubleClick( const MouseEvent& event ) {
-    if (child)
-        callback("mouseDoubleClick");
-}
-int LComponent::mouseDoubleClick(lua_State*){
-    if (child)
-        set("mouseDoubleClick");
-    return 0;
-}
-
 void LComponent::linputAttemptWhenModal() {
     if (child)
         callback("inputAttemptWhenModal");
@@ -835,16 +815,6 @@ int LComponent::focusGained(lua_State*){
     return 0;
 }
 
-void LComponent::lmouseDrag( const MouseEvent& event ) {
-    if (child)
-        callback("mouseDrag");
-}
-int LComponent::mouseDrag(lua_State*){
-    if (child)
-        set("mouseDrag");
-    return 0;
-}
-
 void LComponent::lpaintOverChildren( Graphics& g ) {
     if (child)
         callback("paintOverChildren");
@@ -875,16 +845,6 @@ int LComponent::childBoundsChanged(lua_State*){
     return 0;
 }
 
-void LComponent::lmouseMove( const MouseEvent& event ) {
-    if (child)
-        callback("mouseMove");
-}
-int LComponent::mouseMove(lua_State*){
-    if (child)
-        set("mouseMove");
-    return 0;
-}
-
 void LComponent::lfocusLost( Component::FocusChangeType cause ) {
     if (child)
         callback("focusLost");
@@ -895,23 +855,21 @@ int LComponent::focusLost(lua_State*){
     return 0;
 }
 
-void LComponent::lmouseExit( const MouseEvent& event ) {
-    if (child)
-        callback("mouseExit");
-}
-int LComponent::mouseExit(lua_State*){
-    if (child)
-        set("mouseExit");
+int LComponent::addMouseListener ( lua_State* ) {
+    if (child) child->addMouseListener( child, LUA::checkAndGetBoolean(2, false) );
     return 0;
 }
 
-void LComponent::lminimisationStateChanged( bool isNowMinimised ) {
-    if (child)
-        callback("minimisationStateChanged");
+int LComponent::removeMouseListener ( lua_State* ) {
+    if (child) child->removeMouseListener(child);
+    return 0;
 }
-int LComponent::minimisationStateChanged(lua_State*){
-    if (child)
-        set("minimisationStateChanged");
+
+void LComponent::lmouseMove( const MouseEvent& event ) {
+    if (child) callback("mouseMove");
+}
+int LComponent::mouseMove(lua_State*){
+    if (child) set("mouseMove");
     return 0;
 }
 
@@ -925,23 +883,70 @@ int LComponent::mouseEnter(lua_State*){
     return 0;
 }
 
-void LComponent::lmouseMagnify( const MouseEvent& event,float scaleFactor ) {
-    if (child)
-        callback("mouseMagnify");
+void LComponent::lmouseExit( const MouseEvent& event ) {
+    if (child) callback("mouseExit");
 }
-int LComponent::mouseMagnify(lua_State*){
-    if (child)
-        set("mouseMagnify");
+int LComponent::mouseExit(lua_State*){
+    if (child) set("mouseExit");
+    return 0;
+}
+
+void LComponent::lmouseDown( const MouseEvent& event ) {
+    if (child) callback("mouseDown");
+}
+int LComponent::mouseDown(lua_State*){
+    if (child) set("mouseDown");
+    return 0;
+}
+
+void LComponent::lmouseDrag( const MouseEvent& event ) {
+    if (child) callback("mouseDrag");
+}
+int LComponent::mouseDrag(lua_State*){
+    if (child) set("mouseDrag");
     return 0;
 }
 
 void LComponent::lmouseUp( const MouseEvent& event ) {
-    if (child)
-        callback("mouseUp");
+    if (child) callback("mouseUp");
 }
 int LComponent::mouseUp(lua_State*){
+    if (child) set("mouseUp");
+    return 0;
+}
+
+void LComponent::lmouseDoubleClick( const MouseEvent& e ) {
     if (child)
-        set("mouseUp");
+        callback("mouseDoubleClick", 0, { new LRefBase("MouseEvent", new MouseEvent(e)) } );
+}
+int LComponent::mouseDoubleClick(lua_State*){
+    if (child) set("mouseDoubleClick");
+    return 0;
+}
+
+void LComponent::lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel ) {
+    if (child) callback("mouseWheelMove");
+}
+int LComponent::mouseWheelMove(lua_State*){
+    if (child) set("mouseWheelMove");
+    return 0;
+}
+
+void LComponent::lmouseMagnify( const MouseEvent& event,float scaleFactor ) {
+    if (child) callback("mouseMagnify");
+}
+int LComponent::mouseMagnify(lua_State*){
+    if (child) set("mouseMagnify");
+    return 0;
+}
+
+void LComponent::lminimisationStateChanged( bool isNowMinimised ) {
+    if (child)
+        callback("minimisationStateChanged");
+}
+int LComponent::minimisationStateChanged(lua_State*){
+    if (child)
+        set("minimisationStateChanged");
     return 0;
 }
 
@@ -955,16 +960,6 @@ int LComponent::enablementChanged(lua_State*){
     return 0;
 }
 
-void LComponent::lmouseDown( const MouseEvent& event ) {
-    if (child)
-        callback("mouseDown");
-}
-int LComponent::mouseDown(lua_State*){
-    if (child)
-        set("mouseDown");
-    return 0;
-}
-
 void LComponent::lfocusOfChildComponentChanged( Component::FocusChangeType cause ) {
     if (child)
         callback("focusOfChildComponentChanged");
@@ -974,7 +969,6 @@ int LComponent::focusOfChildComponentChanged(lua_State*){
         set("focusOfChildComponentChanged");
     return 0;
 }
-
 
 /// TODO
 
@@ -1245,15 +1239,6 @@ int LComponent::addChildAndSetID ( lua_State* ) {
     return 0;
 }
 
-int LComponent::removeMouseListener ( lua_State* ) {
-    if (child) {
-        // child->removeMouseListener(LUA::TODO_OBJECT_MouseListener);
-        LUA::TODO_OBJECT( "removeMouseListener, LUA::TODO_OBJECT_MouseListener" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
-
 int LComponent::setColour ( lua_State* ) {
     if (child) {
         int id = LUA::getNumber(2);
@@ -1438,22 +1423,9 @@ int LComponent::getWindowHandle ( lua_State* ) {
     return 0;
 }
 
-int LComponent::addMouseListener ( lua_State* ) {
-    if (child) {
-        // MouseListener* newListener = LUA::TODO_OBJECT_MouseListener;
-        bool wantsEventsForAllNestedChildComponents = LUA::getBoolean(3);
-        // child->addMouseListener( newListener, wantsEventsForAllNestedChildComponents );
-        LUA::TODO_OBJECT( "addMouseListener,  newListener, wantsEventsForAllNestedChildComponents " );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
+int LComponent::removeComponentListener ( lua_State* ) {
+    if (child) child->removeMouseListener(child);
     return 0;
 }
 
-int LComponent::removeComponentListener ( lua_State* ) {
-    if (child) {
-        // child->removeComponentListener(LUA::TODO_OBJECT_ComponentListener);
-        LUA::TODO_OBJECT( "removeComponentListener, LUA::TODO_OBJECT_ComponentListener" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
+
