@@ -26,6 +26,23 @@
         <MODULEPATH id="juce_gui_extra" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
+    <LINUX_MAKE targetFolder="Builds/MingW" extraCompilerFlags="-std=gnu++11&#10;-Wno-unused-result"
+                extraLinkerFlags="-std=gnu++11&#10;-shared">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Release" libraryPath="" isDebug="0" optimisation="2" targetName="luce"
+                       linuxArchitecture="-m32"/>
+        <CONFIGURATION name="Debug" libraryPath="" isDebug="1" optimisation="1" targetName="luce"
+                       linuxArchitecture="-m32"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>

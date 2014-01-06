@@ -89,13 +89,15 @@ LTreeViewItem::LTreeViewItem(lua_State *L)
     reg("getUniqueName");
 
     reg("compareElements");
+
+    reg("createItemComponent");
 }
 
 LTreeViewItem::~LTreeViewItem() {}
 
 /////// callbacks
 void LTreeViewItem::itemOpennessChanged( bool isNowOpen ) {
-    callback("itemOpennessChanged");
+    callback("itemOpennessChanged", 0, { isNowOpen });
 }
 int LTreeViewItem::itemOpennessChanged(lua_State*){
     set("itemOpennessChanged");
@@ -103,7 +105,10 @@ int LTreeViewItem::itemOpennessChanged(lua_State*){
 }
 
 void LTreeViewItem::paintOpenCloseButton( Graphics& graphics_, const Rectangle<float>& area, Colour backgroundColour, bool isMouseOver ) {
-    callback("paintOpenCloseButton");
+    if ( ! hasCallback("paintOpenCloseButton") )
+        TreeViewItem::paintOpenCloseButton(graphics_, area, backgroundColour, isMouseOver);
+    else
+        callback("paintOpenCloseButton");
 }
 int LTreeViewItem::paintOpenCloseButton(lua_State*){
     set("paintOpenCloseButton");
@@ -135,7 +140,10 @@ int LTreeViewItem::filesDropped(lua_State*){
 }
 
 void LTreeViewItem::paintHorizontalConnectingLine( Graphics& graphics_, const Line<float>& line ) {
-    callback("paintHorizontalConnectingLine");
+    if (! hasCallback("paintHorizontalConnectingLine") )
+        TreeViewItem::paintHorizontalConnectingLine(graphics_, line);
+    else
+        callback("paintHorizontalConnectingLine");
 }
 int LTreeViewItem::paintHorizontalConnectingLine(lua_State*){
     set("paintHorizontalConnectingLine");
@@ -143,7 +151,10 @@ int LTreeViewItem::paintHorizontalConnectingLine(lua_State*){
 }
 
 void LTreeViewItem::paintVerticalConnectingLine( Graphics& graphics_, const Line<float>& line ) {
-    callback("paintVerticalConnectingLine");
+    if (! hasCallback("paintVerticalConnectingLine") )
+        TreeViewItem::paintVerticalConnectingLine(graphics_, line);
+    else
+        callback("paintVerticalConnectingLine");
 }
 int LTreeViewItem::paintVerticalConnectingLine(lua_State*){
     set("paintVerticalConnectingLine");
@@ -167,10 +178,21 @@ int LTreeViewItem::itemSelectionChanged(lua_State*){
 }
 
 void LTreeViewItem::itemDoubleClicked( const MouseEvent& e ) {
-    callback("itemDoubleClicked");
+    if (! hasCallback("itemDoubleClicked") ) {
+        std::cout << "********** no callback -- default" << std::endl;
+        if (mightContainSubItems())
+            TreeViewItem::setOpen (! TreeViewItem::isOpen());
+    }
+    else
+        callback("itemDoubleClicked");
 }
-int LTreeViewItem::itemDoubleClicked(lua_State*){
-    set("itemDoubleClicked");
+int LTreeViewItem::itemDoubleClicked(lua_State* L) {
+    if ( ! lua_isnil(L, 2) ) {
+        if ( lua_type(L,2) == LUA_TFUNCTION )
+            set("itemDoubleClicked");
+        else 
+            TreeViewItem::itemDoubleClicked( *LUA::to_juce<LMouseEvent>(2) );
+    }
     return 0;
 }
 
@@ -190,7 +212,7 @@ bool LTreeViewItem::mightContainSubItems() {
     if ( callback("mightContainSubItems", 1) )
         return LUA::getBoolean();
     else
-        return true;
+        return false;
 }
 int LTreeViewItem::mightContainSubItems ( lua_State* ) {
     set("mightContainSubItems");
@@ -206,16 +228,22 @@ int LTreeViewItem::getUniqueName ( lua_State* ) {
     set("getUniqueName");
 }
 
-// TODO
+Component *LTreeViewItem::createItemComponent() {
+    if ( callback("createItemComponent", 1) ) {
+        Component *comp = LUA::from_luce<Component>();
+        return comp;
+    }
+    return nullptr;
+}
 int LTreeViewItem::createItemComponent ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Component( TreeViewItem::createItemComponent() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Component createItemComponent()" );
+    set("createItemComponent");
+    return 0;
 }
 
 /// end of callbacks
 
 
+// TODO
 /////// getters
 int LTreeViewItem::isOpen ( lua_State* ) {
     return LUA::returnBoolean( TreeViewItem::isOpen() );
@@ -264,6 +292,8 @@ int LTreeViewItem::getItemIdentifierString ( lua_State* ) {
 }
 
 int LTreeViewItem::getTooltip ( lua_State* ) {
+    // TODO: TreeViewItem returns String::empty anyway
+    //       so instanciate a Tooltip or something appropriate here
     return LUA::returnString( TreeViewItem::getTooltip() );
 }
 

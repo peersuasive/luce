@@ -74,6 +74,7 @@ LTreeView::LTreeView(lua_State *L)
     TreeView::setName(myName);
     //LTreeView::addListener(this);
 }
+
 LTreeView::~LTreeView() {
     TreeView::setRootItem(nullptr);
 }
@@ -182,6 +183,7 @@ int LTreeView::getRootItem ( lua_State* ) {
     return LUA::returnUserdata<LTreeViewItem>( TreeView::getRootItem() );
 }
 int LTreeView::setRootItem ( lua_State* ) {
+    TreeView::setRootItem( nullptr );
     TreeView::setRootItem( LUA::toUserdata<LTreeViewItem>(2) );
     return 0;
 }

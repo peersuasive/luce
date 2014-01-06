@@ -46,7 +46,7 @@ public:
     int canBeSelected(lua_State*);
 
     int getSubItem(lua_State*);
-    int createItemComponent(lua_State*);
+    
     int isLastOfSiblings(lua_State*);
     int getOwnerView(lua_State*);
     int getItemWidth(lua_State*);
@@ -82,6 +82,9 @@ public:
 
     virtual bool mightContainSubItems() override;
     int mightContainSubItems(lua_State*);
+
+    virtual Component* createItemComponent() override;
+    int createItemComponent(lua_State*);
 
     // basic comparator
     const int compareElements( TreeViewItem *first, TreeViewItem *second );
