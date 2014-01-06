@@ -23,155 +23,6 @@ namespace LUA {
             lua_error(L);
         }
 
-        int stacktrace(lua_State *L) {
-            bool full_stack = false;
-            lua_Debug info;
-            int level = 0;
-            // error
-            lua_getstack(L, level++, &info),
-            lua_getinfo(L, "nSl", &info);
-            std::cerr << "Error while executing callback:" << std::endl;
-            if ( info.name )
-                std::cerr << "-> unknown method: " << info.name << "()" << std::endl;
-            else {
-                std::cerr << "-> attempt to call method from a nil table" << std::endl;
-                std::cerr << "   (full stack)" << std::endl;
-                full_stack = true;
-            }
-            
-            // stack
-            while (lua_getstack(L, level, &info)) {
-                lua_getinfo(L, "nSl", &info);
-                // dump only callback related stack
-                if ( info.currentline == -1 && info.linedefined == -1 && String(info.what) == "C" ) break;
-
-                if ( info.name )
-                    std::cerr << "   -> from function " << info.name << "()";
-                else
-                    std::cerr << "   -> from <callback>";
-
-                std::cerr << ":" << info.currentline
-                          << " (defined at " << info.short_src <<":"<< info.linedefined << ")"
-                          << std::endl;
-                ++level;
-            }
-            // pop remaining traces
-            while (lua_getstack(L, level, &info)) {
-                lua_getinfo(L, "nSl", &info);
-                if ( full_stack ) {
-                    if ( info.name )
-                        std::cerr << "   -> from function " << info.name << "()";
-                    else
-                        std::cerr << "   -> from <callback>";
-
-                    std::cerr << ":" << info.currentline
-                              << " (defined at " << info.short_src <<":"<< info.linedefined << ")"
-                              << std::endl;
-
-                }
-                ++level;
-            }
-
-            return 0;
-        }
-
-        const int call_cb(int ref, int nb_ret = 0, const std::list<var>& args = {} ) {
-            jassert( L != nullptr );
-            if ( L == nullptr ) {
-                std::cout << "No lua state found !" << std::endl;
-                return -2;
-            }
-            int status = 0;
-            lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-            int func_index = lua_gettop(L);
-            if ( lua_type(L, -1) == LUA_TFUNCTION ) {
-                lua_pushcclosure(L, stacktrace, 0);
-                int errfunc = lua_gettop(L);
-                lua_pushvalue(L, func_index);
-
-                // set arguments
-                for ( auto &it : args ) {
-                    if ( it.isInt()
-                            || it.isInt64() 
-                            || it.isDouble()
-                            ) {
-                        lua_pushnumber(L, it);
-                    }
-                    else if ( it.isBool() ) {
-                        lua_pushboolean(L, (bool)it);
-                    }
-                    else if ( it.isString() ) {
-                        lua_pushlstring(L, it.toString().toRawUTF8(), it.toString().length() );
-                    }
-                    else {
-                        // ça peut etre un tableau, donc _newtable, boucle, recusivité avec ici
-                        // ou un hashmap, idem, mais on pushstring avand le newtable s'il y a lieu, etc.
-                        // ou un objet -- comment je détècte ? le type Binary... du var ?
-                        // en tout cas, probablement, lightuserdata, du moins s'il fait
-                        // partie des types L-implémentés, sinon... ?
-                        // un nouvel objet n'aurait le comportement attendu,
-                        // mais peut-etre implémenter l'instanciation par copie de l'objet avec la L-classe correspondante ?
-                        // et si elle n'existe pas, on se pose pas la question, c'est une erreur, mais il y a peu de chances
-                        // pour que ça arrive puisqu'on est dans notre environnement
-                        lua_pushnil(L);
-                        std::cout << "type not yet implemented" << std::endl;
-                    }
-                }
-
-                // call callback function
-                if ( lua_pcall(L, args.size(), nb_ret, errfunc) != 0 ) {
-                    DBG("failed to execute callback.");
-                    status = -1;
-                }
-                else {
-                    status = 1;
-                }
-                lua_remove(L, errfunc);
-                lua_remove(L, func_index);
-            } else {
-                DBG("no cb found for ?");
-                lua_remove(L, func_index);
-            }
-            return status;
-        }
-
-        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, 
-                                                                const std::list<var>& args = {} ) 
-        {
-            // quick return
-            if ( ! cb.contains(key) || (cb[key] == LUA_REFNIL) )
-                return -1;
-
-            int status = call_cb(cb[key], nb_ret, args);
-            if ( status < 0 ) {
-                DBG("couldn't execute the " + key + " callback.");
-            }
-            else if ( ! status ) {
-                DBG("no callback found for " + key);
-            }
-            return status;
-        }
-
-        void unreg( const HashMap<String, int>& cb, const String& key) {
-            luaL_unref(LUA::Get(), LUA_REGISTRYINDEX, cb[key]);
-        }
-
-        void unregAll( const HashMap<String,int>& cb ) {
-            HashMap<String, int>::Iterator i(cb);
-            while(i.next()) {
-                luaL_unref(LUA::Get(), LUA_REGISTRYINDEX, i.getValue());
-            }
-        }
-
-        const String getError() {
-            String err = String::empty;
-            if ( lua_isstring(L, -1) ) {
-                err = lua_tostring(L, -1);
-                lua_pop(L,1);
-            }
-            return err;
-        }
-
         // get results from stack
         const var getNumber(int i= -1) {
             var res( luaL_checknumber(L, i) );
@@ -320,9 +171,27 @@ namespace LUA {
             return res;
         }
 
-        template<class T, class U>
+        template<class T>
+        T* from_luce(int i=-1) {
+            luaL_checktype(L, i, LUA_TTABLE);
+            lua_getfield(L, i, "__self");
+            if ( lua_isnil(L, -1) ) {
+                throwError("given object is not a valid Luce object");
+            }
+
+            T **obj = static_cast<T**>(lua_touserdata(L, -1));
+            if(!obj)
+                return NULL;
+    
+            lua_pop(L, 1);
+            return *obj;
+        }
+
+        template<class T, class U = T>
         int returnUserdata(U* udata) {
             if ( udata ) {
+                std::cout << "size of L at start: " << lua_gettop(L) << std::endl;
+
                 T *ldata = static_cast<T*>( udata );
                 lua_newtable(L);
                 int t = lua_gettop(L);
@@ -332,7 +201,18 @@ namespace LUA {
 
                 std::string cn = std::string(T::className) + "_";
                 luaL_getmetatable(L, cn.c_str());
-                lua_setmetatable(L, -2); // metatable_
+                if ( ! lua_isnil(L, -1) ) {
+                    lua_setmetatable(L, -2); // index of udata
+                } else {
+                    lua_pop(L,1); // pop nil
+                    Luna<T>::Register(L);
+                    if ( lua_isnil(L, -1) )
+                        throwError("Internal Error: Can't register class -- please, send a bug report");
+                    lua_pop(L,1); // pop new()
+                    luaL_getmetatable(L, cn.c_str());
+                    lua_setmetatable(L, -2); // index of udata
+                }
+
                 lua_settable(L, t);
 
                 lua_pushstring(L, "methods");
@@ -344,13 +224,37 @@ namespace LUA {
                 }
                 lua_settable(L, t);
 
+                // set static values, like enums...
+                for ( int i = 0; T::enums[i].name; ++i ) {
+                    lua_pushstring(L, T::enums[i].name);
+                    lua_newtable(L);
+                    int nt = lua_gettop(L);
+                    int ii = 1;
+                    for ( auto& it : T::enums[i].values ) {
+                        lua_pushstring(L, it.first.c_str());
+                        lua_pushnumber(L, it.second);
+                        lua_settable(L, nt);
+                    }
+                    lua_settable(L, t);
+                }
+
                 luaL_getmetatable(L, T::className);
-                lua_setmetatable(L, -2);
+                if ( ! lua_isnil(L, -1) ) {
+                    lua_setmetatable(L, -2);
+                } else lua_pop(L,1);
+
+                std::cout << "size of L at end: " << lua_gettop(L) << std::endl;
                 return 1;
+
             } else {
+                std::cout << "******** NIL" << std::endl;
                 lua_pushnil(L);
                 return 1;
             }
+        }
+
+        int returnUserdata(MouseEvent* e) {
+            return returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)e );
         }
 
         int returnBoolean(bool val) {
@@ -440,6 +344,172 @@ namespace LUA {
             lua_rawseti(L, t, 2);
             return 1;
         }
+
+        int stacktrace(lua_State *L) {
+            bool full_stack = false;
+            lua_Debug info;
+            int level = 0;
+            // error
+            lua_getstack(L, level++, &info),
+            lua_getinfo(L, "nSl", &info);
+            std::cerr << "Error while executing callback:" << std::endl;
+            if ( info.name )
+                std::cerr << "-> unknown method: " << info.name << "()" << std::endl;
+            else {
+                std::cerr << "-> attempt to call method from a nil table" << std::endl;
+                std::cerr << "   (full stack)" << std::endl;
+                full_stack = true;
+            }
+            
+            // stack
+            while (lua_getstack(L, level, &info)) {
+                lua_getinfo(L, "nSl", &info);
+                // dump only callback related stack
+                if ( info.currentline == -1 && info.linedefined == -1 && String(info.what) == "C" ) break;
+
+                if ( info.name )
+                    std::cerr << "   -> from function " << info.name << "()";
+                else
+                    std::cerr << "   -> from <callback>";
+
+                std::cerr << ":" << info.currentline
+                          << " (defined at " << info.short_src <<":"<< info.linedefined << ")"
+                          << std::endl;
+                ++level;
+            }
+            // pop remaining traces
+            while (lua_getstack(L, level, &info)) {
+                lua_getinfo(L, "nSl", &info);
+                if ( full_stack ) {
+                    if ( info.name )
+                        std::cerr << "   -> from function " << info.name << "()";
+                    else
+                        std::cerr << "   -> from <callback>";
+
+                    std::cerr << ":" << info.currentline
+                              << " (defined at " << info.short_src <<":"<< info.linedefined << ")"
+                              << std::endl;
+
+                }
+                ++level;
+            }
+
+            return 0;
+        }
+
+        const int call_cb(int ref, int nb_ret = 0, const std::list<var>& args = {} ) {
+            jassert( L != nullptr );
+            if ( L == nullptr ) {
+                std::cout << "No lua state found !" << std::endl;
+                return -2;
+            }
+            int status = 0;
+            lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+            int func_index = lua_gettop(L);
+            if ( lua_type(L, -1) == LUA_TFUNCTION ) {
+                lua_pushcclosure(L, stacktrace, 0);
+                int errfunc = lua_gettop(L);
+                lua_pushvalue(L, func_index);
+
+                // set arguments
+                for ( auto &it : args ) {
+                    if ( it.isInt()
+                            || it.isInt64() 
+                            || it.isDouble()
+                            ) {
+                        lua_pushnumber(L, it);
+                    }
+                    else if ( it.isBool() ) {
+                        lua_pushboolean(L, (bool)it);
+                    }
+                    else if ( it.isString() ) {
+                        lua_pushlstring(L, it.toString().toRawUTF8(), it.toString().length() );
+                    }
+                    else if ( it.isObject() ) {
+                        std::cout << "converting object" << std::endl;
+                        LRefBase* lr = ((LRefBase*)it.getObject());
+                        String type = lr->getType();
+                        if ( type == "LMouseEvent" ) {
+                            returnUserdata<LMouseEvent>( lr->getMe() );
+                        } else if ( type == "MouseEvent" ) {
+                            returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
+                        } else {
+                            lua_pushnil(L);
+                        }
+                        lr = nullptr;
+                        //((LRefBase*)it.getObject())->me();
+                    }
+                    else {
+                        // ça peut etre un tableau, donc _newtable, boucle, recusivité avec ici
+                        // ou un hashmap, idem, mais on pushstring avand le newtable s'il y a lieu, etc.
+                        // ou un objet -- comment je détècte ? le type Binary... du var ?
+                        // en tout cas, probablement, lightuserdata, du moins s'il fait
+                        // partie des types L-implémentés, sinon... ?
+                        // un nouvel objet n'aurait le comportement attendu,
+                        // mais peut-etre implémenter l'instanciation par copie de l'objet avec la L-classe correspondante ?
+                        // et si elle n'existe pas, on se pose pas la question, c'est une erreur, mais il y a peu de chances
+                        // pour que ça arrive puisqu'on est dans notre environnement
+                        lua_pushnil(L);
+                        std::cout << "type not yet implemented" << std::endl;
+                    }
+                }
+
+                // call callback function
+                if ( lua_pcall(L, args.size(), nb_ret, errfunc) != 0 ) {
+                    DBG("failed to execute callback.");
+                    status = -1;
+                }
+                else {
+                    status = 1;
+                }
+                lua_remove(L, errfunc);
+                lua_remove(L, func_index);
+            } else {
+                DBG("no cb found for ?");
+                lua_remove(L, func_index);
+            }
+            return status;
+        }
+
+        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, 
+                                                                const std::list<var>& args = {} ) 
+        {
+            // quick return
+            if ( ! cb.contains(key) || (cb[key] == LUA_REFNIL) )
+                return -1;
+
+            int status = call_cb(cb[key], nb_ret, args);
+            if ( status < 0 ) {
+                DBG("couldn't execute the " + key + " callback.");
+            }
+            else if ( ! status ) {
+                DBG("no callback found for " + key);
+            }
+            return status;
+        }
+
+        void unreg( const HashMap<String, int>& cb, const String& key) {
+            luaL_unref(LUA::Get(), LUA_REGISTRYINDEX, cb[key]);
+        }
+
+        void unregAll( const HashMap<String,int>& cb ) {
+            HashMap<String, int>::Iterator i(cb);
+            while(i.next()) {
+                luaL_unref(LUA::Get(), LUA_REGISTRYINDEX, i.getValue());
+            }
+        }
+
+        const String getError() {
+            String err = String::empty;
+            if ( lua_isstring(L, -1) ) {
+                err = lua_tostring(L, -1);
+                lua_pop(L,1);
+            }
+            return err;
+        }
+
+
+
     }
 }
 
