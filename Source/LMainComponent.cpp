@@ -32,3 +32,11 @@ LMainComponent::LMainComponent(lua_State *L)
 LMainComponent::~LMainComponent() {
     Component::deleteAllChildren();
 }
+
+void LMainComponent::paint(Graphics& g) {
+    LComponent::lpaint(g);
+}
+
+void LMainComponent::resized() {
+    LComponent::lresized();
+}

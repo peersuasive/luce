@@ -30,6 +30,10 @@ public:
     static const Luna<LMainComponent>::Enum enums[];
 private:
     //==============================================================================
+    virtual void paint (Graphics& g) override;
+    virtual void resized () override;
+
+    //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LMainComponent)
 };
 
