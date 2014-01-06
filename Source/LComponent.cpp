@@ -988,13 +988,27 @@ int LComponent::getLookAndFeel ( lua_State* ) {
 }
 int LComponent::setLookAndFeel ( lua_State* ) {
     if (child) {
-        // child->setLookAndFeel(LUA::TODO_OBJECT_LookAndFeel);
-        LUA::TODO_OBJECT( "setLookAndFeel, LUA::TODO_OBJECT_LookAndFeel" );
-        lua_settop(LUA::Get(), 1); // added by TODO
+        int lnf = LUA::getNumber();
+        switch ( lnf ) {
+            case 1:
+                child->setLookAndFeel(&lookAndFeelV1);
+                break;
+            case 2:
+                child->setLookAndFeel(&lookAndFeelV2);
+                break;
+            case 3:
+                child->setLookAndFeel(&lookAndFeelV3);
+                break;
+            case 4:
+                child->setLookAndFeel(&myLookAndFeel);
+                break;
+            default:
+                LUA::throwError("Unknown LookAndFeel");
+                break;
+        }
     }
     return 0;
 }
-
 
 int LComponent::getComponentEffect ( lua_State* ) {
     if (child) {

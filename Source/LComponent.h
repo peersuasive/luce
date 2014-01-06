@@ -260,13 +260,19 @@ protected:
     void lmouseDown( const MouseEvent& event );
     void lfocusOfChildComponentChanged( Component::FocusChangeType cause );
     
-private:    
+private:
     //==============================================================================
     ScopedPointer<Component> child;
     
     //==============================================================================
     lua_State *L;
     
+    //==============================================================================
+    LookAndFeel_V1 lookAndFeelV1;
+    LookAndFeel_V2 lookAndFeelV2;
+    LookAndFeel_V3 lookAndFeelV3;
+    MyLookAndFeel  myLookAndFeel;
+ 
     //==============================================================================
     // LBase
     //HashMap<String,int> cb;
