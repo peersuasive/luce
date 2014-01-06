@@ -799,7 +799,7 @@ void LComponent::lpaint( Graphics& g ) {
     if (child)
         callback("paint");
 }
-int LComponent::paint(lua_State*){
+int LComponent::paint(lua_State*) {
     if (child)
         set("paint");
     return 0;
@@ -1257,7 +1257,6 @@ int LComponent::removeMouseListener ( lua_State* ) {
 int LComponent::setColour ( lua_State* ) {
     if (child) {
         int id = LUA::getNumber(2);
-        std::cout << "actual type: " << lua_typename(L, lua_type(L, -1) ) << std::endl;
         if ( lua_isnumber(L, -1) ) {
             // TODO: convert from lua number (double) to uint32
             var val = LUA::getNumber();
