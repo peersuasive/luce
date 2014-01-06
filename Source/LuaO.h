@@ -183,7 +183,8 @@ namespace LUA {
             if(!obj)
                 return NULL;
     
-            lua_pop(L, 1);
+            lua_remove(L, i);
+            lua_pop(L,1);
             return *obj;
         }
 
