@@ -18,6 +18,8 @@ const char LLabel::className[] = "LLabel";
 const Luna<LLabel>::PropertyType LLabel::properties[] = {
     {"text", &LLabel::getText, &LLabel::setText},
     {"editable", &LLabel::isEditable, &LLabel::setEditable},
+    {"minimumHorizontalScale", &LLabel::getMinimumHorizontalScale, &LLabel::setMinimumHorizontalScale},
+    {"justificationType", &LLabel::getJustificationType, &LLabel::setJustificationType},
     {0,0}
 };
 
@@ -29,6 +31,12 @@ const Luna<LLabel>::FunctionType LLabel::methods[] = {
     method( LLabel, isAttachedOnLeft ),
     method( LLabel, setEditable ),
     method( LLabel, isEditable ),
+
+    method( LLabel, getMinimumHorizontalScale),
+    method( LLabel, setMinimumHorizontalScale),
+
+    method( LLabel, getJustificationType),
+    method( LLabel, setJustificationType),
 
     method( LLabel, labelTextChanged ),
 
@@ -103,6 +111,22 @@ int LLabel::labelTextChanged(lua_State *L) {
     set("labelTextHasChanged");
 
     return 0;
+}
+
+int LLabel::setMinimumHorizontalScale(lua_State*) {
+    Label::setMinimumHorizontalScale( (float)LUA::getNumber() );
+    return 0;
+}
+int LLabel::getMinimumHorizontalScale(lua_State*) {
+    return LUA::returnNumber( Label::getMinimumHorizontalScale() );
+}
+
+int LLabel::setJustificationType(lua_State*) {
+    Label::setJustificationType( (int)LUA::getNumber() );
+    return 0;
+}
+int LLabel::getJustificationType(lua_State*) {
+    return LUA::returnNumber( Label::getJustificationType().getFlags() );
 }
 
 int LLabel::addListener(lua_State *L) {

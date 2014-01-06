@@ -22,7 +22,6 @@ public:
     LLabel(lua_State *L);
     ~LLabel();
     
-
     int setText(lua_State*);
     int getText(lua_State*);
 
@@ -31,6 +30,13 @@ public:
     int setEditable(lua_State*); // bool sc, bool dc, bool lostOfFocusDiscardChanges
     int isEditable(lua_State*);
     int labelTextChanged(lua_State*);
+
+    int setMinimumHorizontalScale(lua_State*);
+    int getMinimumHorizontalScale(lua_State*);
+
+    int setJustificationType(lua_State*);
+    int getJustificationType(lua_State*);
+
 
     int addListener(lua_State*);
     int removeListener(lua_State*);

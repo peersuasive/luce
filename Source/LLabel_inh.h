@@ -221,5 +221,30 @@ const Luna<LLabel>::InheritenceF LLabel::inheritsF[] = {
 };
 
 const Luna<LLabel>::Enum LLabel::enums[] = {
+    { "ColourIds", {
+        { "backgroundColourId", 0x1000280 },
+        { "textColourId", 0x1000281 },
+        { "outlineColourId", 0x1000282 }
+    }},
+
+    { "JustificationType", {
+        { "left", 1 },
+        { "right", 2 },
+        { "horizontallyCentred", 4 },
+        { "top", 8 },
+        { "bottom", 16 },
+        { "verticallyCentred", 32 },
+        { "horizontallyJustified", 64 },
+        { "centred", 36 },
+        { "centredLeft", 33 },
+        { "centredRight", 34 },
+        { "centredTop", 12 },
+        { "centredBottom", 20 },
+        { "topLeft", 9 },
+        { "topRight", 10 },
+        { "bottomLeft", 17 },
+        { "bottomRight", 18 }
+    }},
+
     {0}
 };
