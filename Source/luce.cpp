@@ -5,6 +5,7 @@ namespace luce {
 #include "MyLookAndFeel.cpp"
 #include "LBase.cpp"
 #include "LComponent.cpp"
+#include "LMouseEvent.cpp"
 #include "LButton.cpp"
 #include "LJUCEApplication.cpp"
 #include "LDocumentWindow.cpp"

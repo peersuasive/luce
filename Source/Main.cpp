@@ -183,6 +183,11 @@ int l_TreeViewItem(lua_State *L) {
     return 1;
 }
 
+int l_MouseEvent(lua_State *L) {
+    Luna<LMouseEvent>::Register(L);
+    return 1;
+}
+
 //int l_ValueTree(lua_State *L) {
 //    Luna<LValueTree>::Register(L);
 //    return 1;
@@ -198,6 +203,7 @@ static const luaL_reg luce_lib [] = {
     { "Label", l_Label },
     { "TreeView", l_TreeView },
     { "TreeViewItem", l_TreeViewItem },
+    { "LMouseEvent", l_MouseEvent },
     //{ "ValueTree", l_ValueTree },
     { "start", start },
     { "start_manual", start_manual },

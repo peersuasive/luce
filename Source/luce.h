@@ -14,10 +14,13 @@ namespace luce {
 
 #include <lua.hpp>
 #include "luna5.h"
+class LMouseEvent;
+#include "LRefBase.h"
 #include "LuaO.h"
 
 #include "MyLookAndFeel.h"
 #include "LBase.h"
+#include "LMouseEvent.h"
 #include "LComponent.h"
 #include "LButton.h"
 #include "LDocumentWindow.h"
