@@ -26,3 +26,7 @@ const Luna<LBase>::Inheritence LBase::inherits[] = {
 const Luna<LBase>::InheritenceF LBase::inheritsF[] = {
     {0,0}
 };
+
+const Luna<LBase>::Enum LBase::enums[] = {
+    {0}
+};

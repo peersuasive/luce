@@ -26,7 +26,8 @@ public:
     static const Luna<LBase>::InheritenceF inheritsF[];
     static const Luna<LBase>::PropertyType properties[];
     static const Luna<LBase>::FunctionType methods[];
-    
+
+    static const Luna<LBase>::Enum enums[];
 protected:    
     //==============================================================================
     void reg( const String& );

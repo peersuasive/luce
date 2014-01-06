@@ -26,3 +26,7 @@ const Luna<LNotificationType>::Inheritence LNotificationType::inherits[] = {
 const Luna<LNotificationType>::InheritenceF LNotificationType::inheritsF[] = {
     {0,0}
 };
+
+const Luna<LNotificationType>::Enum LNotificationType::enums[] = {
+    {0}
+};

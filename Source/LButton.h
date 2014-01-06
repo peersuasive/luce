@@ -72,6 +72,7 @@ public:
     static const Luna<LButton>::PropertyType properties[];
     static const Luna<LButton>::FunctionType methods[];
     
+    static const Luna<LButton>::Enum enums[];
 protected:
     //==============================================================================
     void lpaintButton( Graphics& g,bool isMouseOverButton,bool isButtonDown );

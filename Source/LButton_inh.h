@@ -26,3 +26,7 @@ const Luna<LButton>::Inheritence LButton::inherits[] = {
 const Luna<LButton>::InheritenceF LButton::inheritsF[] = {
     {0,0}
 };
+
+const Luna<LButton>::Enum LButton::enums[] = {
+    {0}
+};

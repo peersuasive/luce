@@ -220,3 +220,7 @@ const Luna<LDocumentWindow>::InheritenceF LDocumentWindow::inheritsF[] = {
 
     {0,0}
 };
+
+const Luna<LDocumentWindow>::Enum LDocumentWindow::enums[] = {
+    {0}
+};

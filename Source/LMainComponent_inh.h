@@ -219,3 +219,7 @@ const Luna<LMainComponent>::InheritenceF LMainComponent::inheritsF[] = {
     method( LComponent, colourChanged ),
     {0,0}
 };
+
+const Luna<LMainComponent>::Enum LMainComponent::enums[] = {
+    {0}
+};

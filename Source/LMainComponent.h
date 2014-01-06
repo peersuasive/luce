@@ -27,6 +27,7 @@ public:
     static const Luna<LMainComponent>::PropertyType properties[];
     static const Luna<LMainComponent>::FunctionType methods[];
 
+    static const Luna<LMainComponent>::Enum enums[];
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LMainComponent)

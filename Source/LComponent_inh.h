@@ -26,3 +26,7 @@ const Luna<LComponent>::Inheritence LComponent::inherits[] = {
 const Luna<LComponent>::InheritenceF LComponent::inheritsF[] = {
     {0,0}
 };
+
+const Luna<LComponent>::Enum LComponent::enums[] = {
+    {0}
+};

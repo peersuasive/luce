@@ -42,6 +42,7 @@ public:
     static const Luna<LTextButton>::PropertyType properties[];
     static const Luna<LTextButton>::FunctionType methods[];
     
+    static const Luna<LTextButton>::Enum enums[];
 private:    
     
     //==============================================================================

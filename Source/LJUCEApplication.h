@@ -41,6 +41,7 @@ public:
     static const Luna<LJUCEApplication>::PropertyType properties[];
     static const Luna<LJUCEApplication>::FunctionType methods[];
 
+    static const Luna<LJUCEApplication>::Enum enums[];
 private:
     //==============================================================================
     ScopedPointer<Component> mainWindow;

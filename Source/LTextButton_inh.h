@@ -268,3 +268,7 @@ const Luna<LTextButton>::InheritenceF LTextButton::inheritsF[] = {
     
     {0,0}
 };
+
+const Luna<LTextButton>::Enum LTextButton::enums[] = {
+    {0}
+};

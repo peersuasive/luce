@@ -59,6 +59,11 @@ public:
         int (T::*func) (lua_State *);
     };
 
+    struct Enum {
+        const char *name;
+        std::map<std::string, int> values;
+    };
+
     /**
       Retrieves a wrapped class from the arguments passed to the function, specified by narg (position).
       This function will raise an exception if the argument is not of the correct type.
@@ -218,6 +223,20 @@ public:
             lua_rawseti(L, nt, i+1);
         }
         lua_settable(L, t);
+
+        // set static values, like enums...
+        for ( int i = 0; T::enums[i].name; ++i ) {
+            lua_pushstring(L, T::enums[i].name);
+            lua_newtable(L);
+            int nt = lua_gettop(L);
+            int ii = 1;
+            for ( auto& it : T::enums[i].values ) {
+                lua_pushstring(L, it.first.c_str());
+                lua_pushnumber(L, it.second);
+                lua_settable(L, nt);
+            }
+            lua_settable(L, t);
+        }
 
         luaL_getmetatable(L, T::className);
         lua_setmetatable(L, -2);

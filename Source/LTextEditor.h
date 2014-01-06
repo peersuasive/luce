@@ -65,6 +65,7 @@ public:
     static const Luna<LTextEditor>::PropertyType properties[];
     static const Luna<LTextEditor>::FunctionType methods[];
 
+    static const Luna<LTextEditor>::Enum enums[];
 private:
     //=============================================================================
 

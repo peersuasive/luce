@@ -26,3 +26,7 @@ const Luna<LJUCEApplication>::Inheritence LJUCEApplication::inherits[] = {
 const Luna<LJUCEApplication>::InheritenceF LJUCEApplication::inheritsF[] = {
     {0,0}
 };
+
+const Luna<LJUCEApplication>::Enum LJUCEApplication::enums[] = {
+    {0}
+};

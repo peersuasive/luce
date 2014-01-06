@@ -219,3 +219,7 @@ const Luna<LTextEditor>::InheritenceF LTextEditor::inheritsF[] = {
     method( LComponent, colourChanged ),
     {0,0}
 };
+
+const Luna<LTextEditor>::Enum LTextEditor::enums[] = {
+    {0}
+};

@@ -41,6 +41,7 @@ public:
     static const Luna<LLabel>::PropertyType properties[];
     static const Luna<LLabel>::FunctionType methods[];
 
+    static const Luna<LLabel>::Enum enums[];
 private:
     //==============================================================================
     virtual void labelTextChanged(Label*) override;

@@ -219,3 +219,7 @@ const Luna<LLabel>::InheritenceF LLabel::inheritsF[] = {
     method( LComponent, colourChanged ),
     {0,0}
 };
+
+const Luna<LLabel>::Enum LLabel::enums[] = {
+    {0}
+};

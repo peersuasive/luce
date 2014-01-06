@@ -209,6 +209,7 @@ public:
     static const Luna<LComponent>::PropertyType properties[];
     static const Luna<LComponent>::FunctionType methods[];
     
+    static const Luna<LComponent>::Enum enums[];
 protected:    
     //==============================================================================
     String myName;
