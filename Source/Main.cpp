@@ -173,6 +173,21 @@ int l_TextEditor(lua_State *L) {
     return 1;
 }
 
+int l_TreeView(lua_State *L) {
+    Luna<LTreeView>::Register(L);
+    return 1;
+}
+
+int l_TreeViewItem(lua_State *L) {
+    Luna<LTreeViewItem>::Register(L);
+    return 1;
+}
+
+//int l_ValueTree(lua_State *L) {
+//    Luna<LValueTree>::Register(L);
+//    return 1;
+//}
+
 static const luaL_reg luce_lib [] = {
     { "JUCEApplication", l_JUCEApplication },
     { "LComponent", l_Component },
@@ -181,6 +196,9 @@ static const luaL_reg luce_lib [] = {
     { "TextButton", l_TextButton },
     { "TextEditor", l_TextEditor },
     { "Label", l_Label },
+    { "TreeView", l_TreeView },
+    { "TreeViewItem", l_TreeViewItem },
+    //{ "ValueTree", l_ValueTree },
     { "start", start },
     { "start_manual", start_manual },
     { "shutdown", lua_shutdown },

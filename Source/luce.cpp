@@ -12,6 +12,10 @@ namespace luce {
 #include "LNotificationType.cpp"
 #include "LTextButton.cpp"
 #include "LTextEditor.cpp"
+//#include "LValueTree.cpp"
+#include "LTreeView.cpp"
+#include "LTreeViewItem.cpp"
+
 #include "MainThread.cpp"
 #include "Main.cpp"
 

@@ -25,9 +25,11 @@ namespace luce {
 #include "LLabel.h"
 #include "LNotificationType.h"
 #include "LTextButton.h"
-#include "MainThread.h"
 #include "LTextEditor.h"
-
+//#include "LValueTree.h"
+#include "LTreeView.h"
+#include "LTreeViewItem.h"
+#include "MainThread.h"
 }
 
 #endif // __LUCE_H
