@@ -2,6 +2,7 @@
 
 namespace luce {
 
+#include "MyLookAndFeel.cpp"
 #include "LBase.cpp"
 #include "LComponent.cpp"
 #include "LButton.cpp"
