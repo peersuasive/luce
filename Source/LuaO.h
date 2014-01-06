@@ -18,6 +18,10 @@ namespace LUA {
         lua_State *Get() {
             return L;
         }
+        void throwError(const String& err) {
+            lua_pushstring(L, err.toRawUTF8());
+            lua_error(L);
+        }
 
         int stacktrace(lua_State *L) {
             lua_Debug info;
@@ -293,6 +297,39 @@ namespace LUA {
             return res;
         }
 
+        template<class T, class U>
+        int returnUserdata(U* udata) {
+            if ( udata ) {
+                T *ldata = static_cast<T*>( udata );
+                lua_newtable(L);
+                int t = lua_gettop(L);
+                lua_pushstring(L, "__self");
+                T** r = static_cast<T**>( lua_newuserdata(L, sizeof(T*)) );
+                *r = ldata;
+
+                std::string cn = std::string(T::className) + "_";
+                luaL_getmetatable(L, cn.c_str());
+                lua_setmetatable(L, -2); // metatable_
+                lua_settable(L, t);
+
+                lua_pushstring(L, "methods");
+                lua_newtable(L);
+                int nt = lua_gettop(L);
+                for(int i= 0; T::methods[i].name; i++) {
+                    lua_pushstring(L, T::methods[i].name);
+                    lua_rawseti(L, nt, i+1);
+                }
+                lua_settable(L, t);
+
+                luaL_getmetatable(L, T::className);
+                lua_setmetatable(L, -2);
+                return 1;
+            } else {
+                lua_pushnil(L);
+                return 1;
+            }
+        }
+
         int returnBoolean(bool val) {
             lua_pushboolean(L, val);
             return 1;
@@ -340,13 +377,8 @@ namespace LUA {
             return 1;
         }
 
-        void throwError(const String& err) {
-            lua_pushstring(L, err.toRawUTF8());
-            lua_error(L);
-        }
-        
-        int TODO_OBJECT(const String& msg = "Not implemented") {
-            lua_pushstring(L, msg.toRawUTF8());
+        int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ") {
+            lua_pushstring(L, (msg + tmpl).toRawUTF8() );
             lua_error(L);
             return 0;
         }
@@ -385,7 +417,6 @@ namespace LUA {
             lua_rawseti(L, t, 2);
             return 1;
         }
-
     }
 }
 
