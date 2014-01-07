@@ -919,7 +919,7 @@ void LComponent::lmouseDoubleClick( const MouseEvent& e ) {
     if (child)
         callback("mouseDoubleClick", 0, { new LRefBase("MouseEvent", new MouseEvent(e)) } );
 }
-int LComponent::mouseDoubleClick(lua_State*){
+int LComponent::mouseDoubleClick(lua_State*) {
     if (child) set("mouseDoubleClick");
     return 0;
 }
@@ -927,7 +927,7 @@ int LComponent::mouseDoubleClick(lua_State*){
 void LComponent::lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel ) {
     if (child) callback("mouseWheelMove");
 }
-int LComponent::mouseWheelMove(lua_State*){
+int LComponent::mouseWheelMove(lua_State*) {
     if (child) set("mouseWheelMove");
     return 0;
 }
@@ -935,7 +935,7 @@ int LComponent::mouseWheelMove(lua_State*){
 void LComponent::lmouseMagnify( const MouseEvent& event,float scaleFactor ) {
     if (child) callback("mouseMagnify");
 }
-int LComponent::mouseMagnify(lua_State*){
+int LComponent::mouseMagnify(lua_State*) {
     if (child) set("mouseMagnify");
     return 0;
 }
