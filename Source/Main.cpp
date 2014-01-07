@@ -222,7 +222,7 @@ int luaopen_luce (lua_State *L) {
     lua_newtable(L);
     int i = lua_gettop(L);
     for (int f = 0; luce_lib[f].name ; ++f ) {
-        DBG(String("adding") +luce_lib[f].name );
+        DBG(String("adding ") +luce_lib[f].name );
         lua_pushstring(L,luce_lib[f].name);
         lua_pushcfunction(L, luce_lib[f].func);
         lua_settable(L, i);
