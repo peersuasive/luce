@@ -86,6 +86,9 @@ public:
     static const Luna<LTreeView>::Enum enums[];
 private:
     //==============================================================================
+    ScopedPointer<TreeViewItem> rootItem;
+
+    //==============================================================================
     // callbacks
     // already set by LComponent
     // void paint (Graphics&) override;
