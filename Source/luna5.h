@@ -267,8 +267,8 @@ public:
         luaL_checktype(L, -1, LUA_TSTRING);
         // TODO: checkudata on object at __self
         luaL_checktype(L, -2, LUA_TTABLE);
-        DBG(String("**processing getter: ") + String(T::className));
-        DBG(String(" with ") + String(lua_tostring(L,-2)));
+        //DBG(String("**processing getter: ") + String(T::className));
+        //DBG(String(" with ") + String(lua_tostring(L,-2)));
 
         lua_getmetatable(L, 1); // Look up the index of a name
         lua_pushvalue(L, 2);  // Push the name
@@ -308,7 +308,7 @@ public:
             if ( _index < max_p )
                 return ((*obj)->*(T::properties[_index].getter)) (L);
             else {
-                DBG("*** inheritence call");
+                //DBG("*** inheritence call");
                 _index = _index - max_p;
                 return ((*obj)->*(T::inherits[_index].getter)) (L);
             }
@@ -323,8 +323,8 @@ public:
       */
     static int property_setter(lua_State * L)
     {
-        DBG(String("**processing setter: ") + String(T::className));
-        DBG(String(" with ") + String(lua_tostring(L,-2)));
+        //DBG(String("**processing setter: ") + String(T::className));
+        //DBG(String(" with ") + String(lua_tostring(L,-2)));
         lua_getmetatable(L, 1); // Look up the index from name
         lua_pushvalue(L, 2);  //
         lua_rawget(L, -2);        //
@@ -368,7 +368,7 @@ public:
             if ( _index < max_p )
                 return ((*obj)->*(T::properties[_index].setter)) (L);
             else {
-                DBG("*** inheritence call");
+                //DBG("*** inheritence call");
                 _index = _index - max_p;
                 return ((*obj)->*(T::inherits[_index].setter)) (L);
             }
@@ -389,7 +389,7 @@ public:
         if (i < max_m)
             return ((*obj)->*(T::methods[i].func)) (L);
         else {
-            DBG("calling inherited function");
+            //DBG("calling inherited function");
             i = i - max_m;
             return ((*obj)->*(T::inheritsF[i].func)) (L);
         }
