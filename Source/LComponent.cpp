@@ -924,8 +924,20 @@ int LComponent::mouseDoubleClick(lua_State*) {
     return 0;
 }
 
-void LComponent::lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel ) {
-    if (child) callback("mouseWheelMove");
+void LComponent::lmouseWheelMove( const MouseEvent& e, const MouseWheelDetails& wheel ) {
+    if (child) {
+        HashMap<String, var> hash(4);
+        hash.set("deltaX", wheel.deltaX);
+        hash.set("deltaY", wheel.deltaY);
+        hash.set("isReversed", wheel.isReversed);
+        hash.set("isSmooth", wheel.isSmooth);
+        callback("mouseWheelMove", 0,
+                {
+                    new LRefBase("MouseEvent", new MouseEvent(e)),
+                    new LRefBase( hash )
+                }
+        );
+    }
 }
 int LComponent::mouseWheelMove(lua_State*) {
     if (child) set("mouseWheelMove");
