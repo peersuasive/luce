@@ -191,7 +191,7 @@ namespace LUA {
         template<class T, class U = T>
         int returnUserdata(U* udata) {
             if ( udata ) {
-                std::cout << "size of L at start: " << lua_gettop(L) << std::endl;
+                DBG(String("size of L at the beginning: ") + String(lua_gettop(L)));
 
                 T *ldata = static_cast<T*>( udata );
                 lua_newtable(L);
@@ -244,11 +244,10 @@ namespace LUA {
                     lua_setmetatable(L, -2);
                 } else lua_pop(L,1);
 
-                std::cout << "size of L at end: " << lua_gettop(L) << std::endl;
+                DBG(String("size of L at the end: ") + String(lua_gettop(L)));
                 return 1;
 
             } else {
-                std::cout << "******** NIL" << std::endl;
                 lua_pushnil(L);
                 return 1;
             }
@@ -427,7 +426,6 @@ namespace LUA {
                         lua_pushlstring(L, it.toString().toRawUTF8(), it.toString().length() );
                     }
                     else if ( it.isObject() ) {
-                        std::cout << "converting object" << std::endl;
                         LRefBase* lr = ((LRefBase*)it.getObject());
                         String type = lr->getType();
                         if ( type == "LMouseEvent" ) {
