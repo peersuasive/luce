@@ -179,7 +179,6 @@ int LTreeViewItem::itemSelectionChanged(lua_State*){
 
 void LTreeViewItem::itemDoubleClicked( const MouseEvent& e ) {
     if (! hasCallback("itemDoubleClicked") ) {
-        std::cout << "********** no callback -- default" << std::endl;
         if (mightContainSubItems())
             TreeViewItem::setOpen (! TreeViewItem::isOpen());
     }
