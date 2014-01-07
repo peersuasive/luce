@@ -432,6 +432,23 @@ namespace LUA {
                             returnUserdata<LMouseEvent>( lr->getMe() );
                         } else if ( type == "MouseEvent" ) {
                             returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
+
+                        } else if ( type == "HashMap" ) {
+                            LRefBase* lr = ((LRefBase*)it.getObject());
+                            HashMap<String, var>& h = *lr->getHash();
+                            lua_newtable(L);
+                            int t = lua_gettop(L);
+                            for (HashMap<String,var>::Iterator i(h); i.next();) {
+                                lua_pushstring(L, i.getKey().toRawUTF8());
+                                var val( i.getValue() );
+                                if ( val.isString() )
+                                    lua_pushstring(L, val.toString().toRawUTF8());
+                                else if ( val.isBool() )
+                                    lua_pushboolean(L, val);
+                                else
+                                    lua_pushnumber(L, val);
+                                lua_settable(L, t);
+                            }
                         } else {
                             lua_pushnil(L);
                         }
