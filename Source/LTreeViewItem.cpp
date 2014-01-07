@@ -327,7 +327,7 @@ int LTreeViewItem::setSelected ( lua_State* ) {
 }
 
 int LTreeViewItem::addSubItem ( lua_State* ) {
-    LTreeViewItem *tvi = LUA::toUserdata<LTreeViewItem>(2);
+    LTreeViewItem *tvi = LUA::from_luce<LTreeViewItem>(2);
     int insertPosition = LUA::checkAndGetNumber(2, -1);
     TreeViewItem::addSubItem( tvi, insertPosition );
     return 0;
