@@ -60,7 +60,7 @@ const Luna<LMouseEvent>::FunctionType LMouseEvent::methods[] = {
 /////// ctor/dtor
 LMouseEvent::LMouseEvent(lua_State *L)
     : LBase(L),
-      MouseEvent( *LUA::from_luce(2) )
+      MouseEvent( *LUA::from_luce<MouseEvent>(2) )
 {
 }
 
