@@ -4,13 +4,13 @@
 class LRefBase : public ReferenceCountedObject
 {
 public:
-    LRefBase( const String& type, void* o ) 
+    LRefBase( const String& type, const void* o ) 
        : me(type),
          object(o)
     {}
 
     LRefBase( const HashMap<String, var>& h )
-        : me("HashMap")
+        : me("Properties")
     {
         for( HashMap<String, var>::Iterator i(h); i.next(); )
             hash.set( i.getKey(), i.getValue() );
@@ -20,7 +20,7 @@ public:
         return me;
     }
 
-    void *getMe() {
+    const void* getMe() {
         return object;
     }
 
@@ -31,9 +31,8 @@ public:
     typedef ReferenceCountedObjectPtr<LRefBase> Ptr;
 
 private:
+    const void* object;
     String me;
-    
-    void *object;
     HashMap<String,var> hash;
 };
 #endif // __LUCE_REF_BASE_H
