@@ -4,9 +4,6 @@ LUCE TreeViewItem for JSON
 (c) 2014, Peersuasive Technologies
 --]]
 
-local wrap = require"common.json".encode
-local unwrap = require"common.json".decode
-
 if arg and arg[1] and arg[1]:match("^[Dd]") then
     print"DEBUG"
     package.cpath = "debug/?.so;"..package.cpath
