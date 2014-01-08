@@ -425,17 +425,16 @@ namespace LUA {
                     else if ( it.isObject() ) {
                         LRefBase* lr = ((LRefBase*)it.getObject());
                         String type = lr->getType();
-                        if ( type == "LMouseEvent" ) {
-                            returnUserdata<LMouseEvent>( lr->getMe() );
-                        } else if ( type == "MouseEvent" ) {
+                        if ( type == "MouseEvent" || type == "LMouseEvent" ) {
                             returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
 
-                        } else if ( type == "HashMap" ) {
-                            LRefBase* lr = ((LRefBase*)it.getObject());
+                        } else if ( type == "Properties" ) {
+                            --nb_args;
                             HashMap<String, var>& h = *lr->getHash();
                             lua_newtable(L);
                             int t = lua_gettop(L);
                             for (HashMap<String,var>::Iterator i(h); i.next();) {
+                                ++nb_args;
                                 lua_pushstring(L, i.getKey().toRawUTF8());
                                 var val( i.getValue() );
                                 if ( val.isString() )
@@ -447,10 +446,10 @@ namespace LUA {
                                 lua_settable(L, t);
                             }
                         } else {
+                            std::cout << "type not yet implemented" << std::endl;
                             lua_pushnil(L);
                         }
                         lr = nullptr;
-                        //((LRefBase*)it.getObject())->me();
                     }
                     else {
                         // ça peut etre un tableau, donc _newtable, boucle, recusivité avec ici
