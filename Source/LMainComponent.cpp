@@ -34,45 +34,89 @@ LMainComponent::~LMainComponent() {
 }
 
 void LMainComponent::paint(Graphics& g) {
-    LComponent::lpaint(g);
+    if ( hasCallback("paint") ) {
+        LComponent::lpaint(g);
+    } else {
+        Component::paint(g);
+    }
 }
 
 void LMainComponent::resized() {
-    LComponent::lresized();
+    if ( hasCallback("resized") ) {
+        LComponent::lresized();
+    } else {
+        Component::resized();
+    }
 }
 
 void LMainComponent::mouseMove(const MouseEvent& e) {
-    LComponent::lmouseMove(e);
+    if ( hasCallback("mouseMove") ) {
+        LComponent::lmouseMove(e);
+    } else {
+        Component::mouseMove(e);
+    }
 }
 
 void LMainComponent::mouseEnter(const MouseEvent& e) {
-    LComponent::lmouseEnter(e);
+    if ( hasCallback("mouseEnter") ) {
+        LComponent::lmouseEnter(e);
+    } else {
+        Component::mouseEnter(e);
+    }
 }
 
 void LMainComponent::mouseExit(const MouseEvent& e) {
-    LComponent::lmouseExit(e);
+    if ( hasCallback("mouseExit") ) {
+        LComponent::lmouseExit(e);
+    } else {
+        Component::mouseExit(e);
+    }
 }
 
 void LMainComponent::mouseDown(const MouseEvent& e) {
-    LComponent::lmouseDown(e);
+    if ( hasCallback("mouseDown") ) {
+        LComponent::lmouseDown(e);
+    } else {
+        Component::mouseDown(e);
+    }
 }
 
 void LMainComponent::mouseDrag(const MouseEvent& e) {
-    LComponent::lmouseDrag(e);
+    if ( hasCallback("mouseDrag") ) {
+        LComponent::lmouseDrag(e);
+    } else {
+        Component::mouseDrag(e);
+    }
 }
 
 void LMainComponent::mouseUp(const MouseEvent& e) {
-    LComponent::lmouseUp(e);
+    if ( hasCallback("mouseUp") ) {
+        LComponent::lmouseUp(e);
+    } else {
+        Component::mouseUp(e);
+    }
 }
 
 void LMainComponent::mouseDoubleClick(const MouseEvent& e) {
-    LComponent::lmouseDoubleClick(e);
+    if ( hasCallback("mouseDoubleClick") ) {
+        LComponent::lmouseDoubleClick(e);
+    } else {
+        Component::mouseDoubleClick(e);
+    }
 }
 
 void LMainComponent::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& wheel) {
-    LComponent::lmouseWheelMove(e, wheel);
+    if ( hasCallback("mouseWheelMove") ) {
+        LComponent::lmouseWheelMove(e, wheel);
+    } else {
+        Component::mouseWheelMove(e, wheel);
+    }
 }
 
 void LMainComponent::mouseMagnify (const MouseEvent& e, float scaleFactor) {
-    LComponent::lmouseMagnify(e, scaleFactor);
+    if ( hasCallback("mouseMagnify") ) {
+        LComponent::lmouseMagnify(e, scaleFactor);
+    } else {
+        Component::mouseMagnify(e, scaleFactor);
+    }
 }
