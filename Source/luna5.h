@@ -76,13 +76,12 @@ public:
     static T* check(lua_State * L, int narg) {
         luaL_checktype(L, narg, LUA_TTABLE);
         lua_getfield(L, narg, "__self");
-
         std::string cn = std::string(T::className)+"_";
         T** obj = static_cast <T **>(luaL_checkudata(L, -1, cn.c_str()));
-        if ( !obj )
-            return NULL; // lightcheck returns nullptr if not found.
-
         lua_pop(L,1);
+        if ( !obj )
+            return nullptr; // lightcheck returns nullptr if not found.
+
         return *obj;      // pointer to T object
     }
 
@@ -90,13 +89,14 @@ public:
         luaL_checktype(L, narg, LUA_TTABLE);
         lua_getfield(L, narg, "__self");
         if ( lua_isnil(L, -1) ) {
-            std::cout << "not a valid object" << std::endl;
-            return NULL;
+            std::cout << "ERROR: not a valid object" << std::endl;
+            lua_pop(L,1);
+            return nullptr;
         }
 
         T **obj = static_cast<T**>(lua_touserdata(L, -1));
         if(!obj)
-            return NULL;
+            return nullptr;
 
         lua_pop(L,1);
         return *obj;      // pointer to T object
