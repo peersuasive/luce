@@ -16,10 +16,18 @@ namespace luce {
 #include "luna5.h"
 class LMouseEvent;
 #include "LRefBase.h"
-#include "LuaO.h"
+namespace LUA {
+    namespace {
+        const int call_cb(int ref, int nb_ret = 0, const std::list<var>& args = {} );
+        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, 
+                                                                const std::list<var>& args = {} );
 
-#include "MyLookAndFeel.h"
+        const bool getBoolean(int i = -1);
+
+    }
+}
 #include "LBase.h"
+#include "MyLookAndFeel.h"
 #include "LMouseEvent.h"
 #include "LComponent.h"
 #include "LButton.h"
@@ -34,6 +42,7 @@ class LMouseEvent;
 #include "LTreeView.h"
 #include "LTreeViewItem.h"
 #include "MainThread.h"
+#include "LuaO.h"
 }
 
 #endif // __LUCE_H

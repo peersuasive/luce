@@ -33,7 +33,7 @@ namespace LUA {
             return lua_type(L, i) == LUA_TNUMBER ? getNumber(i) : def;
         }
         
-        const bool getBoolean(int i=-1) {
+        const bool getBoolean(int i) {
             luaL_checktype(L, i, LUA_TBOOLEAN);
             bool res = lua_toboolean(L, i);
             lua_remove(L, i);
@@ -397,7 +397,8 @@ namespace LUA {
             return 0;
         }
 
-        const int call_cb(int ref, int nb_ret = 0, const std::list<var>& args = {} ) {
+        const int call_cb(int ref, int nb_ret , const std::list<var>& args  ) {
+            int nb_args = args.size();
             jassert( L != nullptr );
             if ( L == nullptr ) {
                 std::cout << "No lua state found !" << std::endl;
@@ -484,11 +485,12 @@ namespace LUA {
                 DBG("no cb found for ?");
                 lua_remove(L, func_index);
             }
+            std::cout << "stack state (end): " << lua_gettop(L) << std::endl;
             return status;
         }
 
-        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, 
-                                                                const std::list<var>& args = {} ) 
+        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret, 
+                                                                const std::list<var>& args) 
         {
             // quick return
             if ( ! cb.contains(key) || (cb[key] == LUA_REFNIL) )
