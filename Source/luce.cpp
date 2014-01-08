@@ -1,11 +1,13 @@
 #include "luce.h"
 
 namespace luce {
+#include "LuaO.cpp"
 
 #include "MyLookAndFeel.cpp"
 #include "LBase.cpp"
-#include "LComponent.cpp"
+#include "LModifierKeys.cpp"
 #include "LMouseEvent.cpp"
+#include "LComponent.cpp"
 #include "LButton.cpp"
 #include "LJUCEApplication.cpp"
 #include "LDocumentWindow.cpp"
