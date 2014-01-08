@@ -37,7 +37,7 @@ local mc = luce:MainComponent():new()
 
 local json = io.open("json_sample.json"):read("*a")
 local ltvi = require"LTreeViewItem"
-local tvi = ltvi(nil, require"common.json".decode(json))
+local tvi = ltvi(nil, require"json".decode(json))
 
 local tv = luce:TreeView():new("Tree View")
 
