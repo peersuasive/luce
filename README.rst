@@ -321,7 +321,7 @@ Adding new ``JUCE`` classes
 License.
 ========
 
-    For open source projects, ``LUCE`` is licensed under the term of the `GPLv3
+    For open source projects, ``LUCE`` is licensed under the terms of the `GPLv3
     <http://www.gnu.org/licenses/gpl-3.0.html>`_ with some parts being `AGPLv3
     <http://www.gnu.org/licenses/agpl-3.0.html>`_.
     
