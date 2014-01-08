@@ -49,36 +49,19 @@ local function createItemComponent(self)
     local val = values.value
     local istop = values.top
  
-    item = require"LItem"( id, val, istop, function(...)self.itemDoubleClicked(self, ...)end )
-    do return item end
-
-    local field = luce:Label():new(id or "<root>")
-    field.text = id or "<root>"
-    field:setMinimumHorizontalScale( 100.0 );
-    field:setJustificationType( field.JustificationType.centredLeft );
-     
-    if (istop) then
-        item = field
-    else
-        local value = luce:Label():new(val or "<empty>")
-        value.text = val or "<empty>"
-        local comp = luce:Label():new("container")
-        comp:setColour( comp.ColourIds.backgroundColourId, "red" )
-        value:setMinimumHorizontalScale( 100.0 );
-        value:setJustificationType( field.JustificationType.centredLeft );
-        value:setColour( value.ColourIds.backgroundColourId, "blue" )
-        --field:attachToComponent( value, true )
-        value:toFront(false)
-        value:setSize{ comp:getWidth(), comp:getHeight() }
-        value:setVisible( true )
-
-        comp:addAndMakeVisible( value )
-        item = comp
-    end
+    item = require"LItem"( id, val, istop, 
+        function(...)self.itemDoubleClicked(self, ...)end,
+        function(...)
+            if(self.parent)then 
+                self.parent:setDefaultOpenness( not(self.parent:areItemsOpenByDefault()) )
+                self.parent:refresh()
+            end 
+        end
+    )
     return item
 end
 
-local function isArray(t)
+local function isArrayxx(t)
     if ( t and ("table"==type(t)) ) then
         if ( #t>0 ) then
             return true
@@ -93,20 +76,42 @@ local function isArray(t)
     return false
 end
 
+local function isArray(t)
+    return ("table"==type(t)) and (#t~=0)
+end
+local function isTable(t)
+    if ("table"==type(t)) then
+        local count = 0
+        for _,v in next, t do
+            count=count+1
+        end
+        return (t~=0) or (count~=0), #t, (count>0 and count-#t or 0)
+        --[[
+        if (count==0) then return false,0,0 end -- empty
+        if (#t~=0) and (count~=#t) then return true, #t, (count-#t) end
+        return false, #t, (count>0 and count-#t or 0)
+        --]]
+    end
+    return false, 0, 0
+end
+
+
 local function itemOpennessChanged(self, isNowOpen)
     if (isNowOpen) then
         if ( self:getNumSubItems() == 0 ) then
             if ( isArray(self.json) ) then
                 for i, child in next, self.json do
                     local id = child.userid
-                    local item = new({}, id, child )
+                    local item = new({}, id, child, self.parent )
                     self:addSubItem( item )
                 end
             else
-                for id, child in next, self.json do
-                    if not ( id == "userid" ) then
-                        local item = new({}, id, child )
-                        self:addSubItem( item )
+                if ( isTable(self.json) ) then
+                    for id, child in next, self.json do
+                        if not ( id == "userid" ) then
+                            local item = new({}, id, child, self.parent )
+                            self:addSubItem( item )
+                        end
                     end
                 end
             end
@@ -114,10 +119,11 @@ local function itemOpennessChanged(self, isNowOpen)
     end
 end
 
-new = function(self, name, json)
+new = function(self, name, json, parent)
     local self = self or {}
     self.name = name
     self.json = json
+    self.parent = parent
 
     local tvi = luce:TreeViewItem():new()
     self.__self = tvi.__self

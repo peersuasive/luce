@@ -12,7 +12,7 @@ else
 end
 local luce = require"luce"
 
-local function new(self, id, val, istop, dblClick)
+local function new(self, id, val, istop, dblClick, changeOpenness)
     local comp  = luce:MainComponent():new("container")
     local field = luce:Label():new(id or "<root>")
     field.text = (id or "<root>") .. ( val and " "..val or "")
@@ -28,12 +28,14 @@ local function new(self, id, val, istop, dblClick)
     comp:mouseDoubleClick(function(mouseEvent)
         if ( mouseEvent.mods:isLeftButtonDown() ) then
             dblClick( mouseEvent )
+        else
+            changeOpenness()
         end
     end)
 
-    comp:mouseWheelMove(function(mouseEvent, mouseWheelDetails)
-        print("mouse wheel")
-    end)
+    --comp:mouseWheelMove(function(mouseEvent, mouseWheelDetails)
+    --    print("mouse wheel")
+    --end)
     return comp
 end
 

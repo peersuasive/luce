@@ -37,9 +37,41 @@ local mc = luce:MainComponent():new()
 
 local json = io.open("json_sample.json"):read("*a")
 local ltvi = require"LTreeViewItem"
-local tvi = ltvi(nil, require"json".decode(json))
 
-local tv = luce:TreeView():new("Tree View")
+local xtv = luce:TreeView():new("Tree View")
+---
+-- LUCE wrapper template example -- allow creation of new variables, 
+-- having methods indexed, for completion for instance, etc.
+-- could be simplified and optimised
+---
+local xtv = luce:TreeView():new("Tree View")
+local tv = {}
+for k,v in next, xtv do
+    if ( k == "methods" ) then
+        for _,f in next, v do
+            tv[f] = xtv[f] -- better than the methods table
+        end
+    else
+        tv[k] = v
+    end
+end
+setmetatable(tv, {
+    __self = xtv.__self,
+    __index = function(t,k) return xtv.__index(xtv, k) end,
+    __newindex = function(t, k, v)
+        if not ( getmetatable(xtv).__index(xtv, k) ) 
+            and not ( getmetatable(xtv).__newindex(xtv, k, v) ) then
+            rawset(t,k,v)
+        end
+    end
+})
+
+local tvi = ltvi(nil, require"json".decode(json), tv)
+function tv:refresh(...)
+    print("refreshing...")
+    local tvi = ltvi(nil, require"json".decode(json), self)
+    self:setRootItem(tvi)
+end
 
 --tv:setColour( tv.ColourIds.backgroundColourId, "dimgrey" )
 
