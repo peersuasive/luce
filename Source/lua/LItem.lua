@@ -26,7 +26,9 @@ local function new(self, id, val, istop, dblClick)
     end)
 
     comp:mouseDoubleClick(function(mouseEvent)
-        dblClick( mouseEvent )
+        if ( mouseEvent.mods:isLeftButtonDown() ) then
+            dblClick( mouseEvent )
+        end
     end)
 
     comp:mouseWheelMove(function(mouseEvent, mouseWheelDetails)
