@@ -186,7 +186,7 @@ void LTreeViewItem::itemDoubleClicked( const MouseEvent& e ) {
         callback("itemDoubleClicked");
 }
 int LTreeViewItem::itemDoubleClicked(lua_State* L) {
-    if ( ! lua_isnil(L, 2) ) {
+    if ( lua_gettop(L) > 1 ) {
         if ( lua_type(L,2) == LUA_TFUNCTION )
             set("itemDoubleClicked");
         else 
