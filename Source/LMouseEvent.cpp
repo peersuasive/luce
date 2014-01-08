@@ -17,6 +17,10 @@
 const char LMouseEvent::className[] = "LMouseEvent";
 const Luna<LMouseEvent>::PropertyType LMouseEvent::properties[] = {
     {"doubleClickTimeout", &LMouseEvent::getDoubleClickTimeout, &LMouseEvent::setDoubleClickTimeout},
+
+    {"x", &LMouseEvent::getX, &LBase::readOnly},
+    {"y", &LMouseEvent::getY, &LBase::readOnly},
+    {"mods", &LMouseEvent::getMods, &LBase::readOnly},
     {0,0}
 };
 const Luna<LMouseEvent>::FunctionType LMouseEvent::methods[] = {
@@ -71,8 +75,18 @@ LMouseEvent::LMouseEvent(lua_State *L, const MouseEvent& e)
 
 LMouseEvent::~LMouseEvent(){}
 
-/////// callbacks
-/////// getters/setters
+// custom methods
+int LMouseEvent::getX(lua_State*) {
+    return LUA::returnNumber( MouseEvent::x );
+}
+int LMouseEvent::getY(lua_State*) {
+    return LUA::returnNumber( MouseEvent::x );
+}
+
+int LMouseEvent::getMods(lua_State* L) {
+    return LUA::returnUserdata<LModifierKeys, ModifierKeys>( &this->mods );
+}
+
 int LMouseEvent::getDoubleClickTimeout ( lua_State* ) {
     return LUA::returnNumber( MouseEvent::getDoubleClickTimeout() );
 }
@@ -99,8 +113,8 @@ int LMouseEvent::mouseWasClicked ( lua_State* ) {
 }
 
 int LMouseEvent::getEventRelativeTo ( lua_State* ) {
-    return LUA::returnUserdata<LMouseEvent, MouseEvent>( 
-            new MouseEvent( MouseEvent::getEventRelativeTo( LUA::from_luce<Component>(2) ) ) );
+    MouseEvent e( MouseEvent::getEventRelativeTo( LUA::from_luce<Component>(2) ) );
+    return LUA::returnUserdata<LMouseEvent, MouseEvent>( &e );
 }
 
 int LMouseEvent::getDistanceFromDragStartX ( lua_State* ) {
@@ -108,22 +122,16 @@ int LMouseEvent::getDistanceFromDragStartX ( lua_State* ) {
 }
 
 int LMouseEvent::getScreenPosition ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Point( MouseEvent::getScreenPosition() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Point getScreenPosition()" );
+    return LUA::returnTable( MouseEvent::getScreenPosition() );
 }
 
 int LMouseEvent::getPosition ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Point( MouseEvent::getPosition() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Point getPosition()" );
+    return LUA::returnTable( MouseEvent::getPosition() );
 }
 
 int LMouseEvent::withNewPosition ( lua_State* ) {
-    // Point<int> newPosition = LUA::TODO_OBJECT_Point;
-    // return LUA::TODO_RETURN_OBJECT_MouseEvent( MouseEvent::withNewPosition( newPosition ) );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "MouseEvent withNewPosition( newPosition )" );
+    MouseEvent e( MouseEvent::withNewPosition(LUA::getPoint()) );
+    return LUA::returnUserdata<LMouseEvent, MouseEvent>( &e );
 }
 
 int LMouseEvent::getMouseDownX ( lua_State* ) {
@@ -151,15 +159,11 @@ int LMouseEvent::getDistanceFromDragStart ( lua_State* ) {
 }
 
 int LMouseEvent::getMouseDownScreenPosition ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Point( MouseEvent::getMouseDownScreenPosition() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Point getMouseDownScreenPosition()" );
+    return LUA::returnTable( MouseEvent::getMouseDownScreenPosition() );
 }
 
 int LMouseEvent::getOffsetFromDragStart ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Point( MouseEvent::getOffsetFromDragStart() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Point getOffsetFromDragStart()" );
+    return LUA::returnTable( MouseEvent::getOffsetFromDragStart() );
 }
 
 int LMouseEvent::getLengthOfMousePress ( lua_State* ) {
@@ -167,9 +171,5 @@ int LMouseEvent::getLengthOfMousePress ( lua_State* ) {
 }
 
 int LMouseEvent::getMouseDownPosition ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Point( MouseEvent::getMouseDownPosition() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Point getMouseDownPosition()" );
+    return LUA::returnTable( MouseEvent::getMouseDownPosition() );
 }
-
-/////// setters

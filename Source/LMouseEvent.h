@@ -28,8 +28,6 @@ public:
     int getDoubleClickTimeout(lua_State*);
 
     //==============================================================================
-
-    //==============================================================================
     int getMouseDownY(lua_State*);
     int getMouseDownScreenX(lua_State*);
     int getNumberOfClicks(lua_State*);
@@ -51,6 +49,11 @@ public:
     int getMouseDownPosition(lua_State*);
 
     //==============================================================================
+    int getX(lua_State*);
+    int getY(lua_State*);
+    int getMods(lua_State*);
+
+    //==============================================================================
 
     static const char className[];
     static const Luna<LMouseEvent>::Inheritence inherits[];
@@ -59,14 +62,7 @@ public:
     static const Luna<LMouseEvent>::FunctionType methods[];
     static const Luna<LMouseEvent>::Enum enums[];
 
-    //typedef ReferenceCountedObjectPtr<LMouseEvent> Ptr;
-
 private:
-    //==============================================================================
-
-    //==============================================================================
-    // callbacks
-
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LMouseEvent)
 };
