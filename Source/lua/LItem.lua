@@ -15,7 +15,7 @@ local luce = require"luce"
 local function new(self, id, val, istop, dblClick)
     local comp  = luce:MainComponent():new("container")
     local field = luce:Label():new(id or "<root>")
-    field.text = id or "<root>"
+    field.text = (id or "<root>") .. ( val and " "..val or "")
     field:setMinimumHorizontalScale( 100.0 );
     field:setJustificationType( field.JustificationType.centredLeft );
     --field:setColour( field.ColourIds.backgroundColourId, "red" )
@@ -26,8 +26,11 @@ local function new(self, id, val, istop, dblClick)
     end)
 
     comp:mouseDoubleClick(function(mouseEvent)
-        print("** mouse dbl click", mouseEvent)
         dblClick( mouseEvent )
+    end)
+
+    comp:mouseWheelMove(function(mouseEvent, mouseWheelDetails)
+        print("mouse wheel")
     end)
     return comp
 end
