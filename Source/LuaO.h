@@ -429,12 +429,10 @@ namespace LUA {
                             returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
 
                         } else if ( type == "Properties" ) {
-                            --nb_args;
                             HashMap<String, var>& h = *lr->getHash();
                             lua_newtable(L);
                             int t = lua_gettop(L);
                             for (HashMap<String,var>::Iterator i(h); i.next();) {
-                                ++nb_args;
                                 lua_pushstring(L, i.getKey().toRawUTF8());
                                 var val( i.getValue() );
                                 if ( val.isString() )
