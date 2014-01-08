@@ -223,29 +223,28 @@ const Luna<LLabel>::InheritenceF LLabel::inheritsF[] = {
 
 const Luna<LLabel>::Enum LLabel::enums[] = {
     { "ColourIds", {
-        { "backgroundColourId", 0x1000280 },
-        { "textColourId", 0x1000281 },
-        { "outlineColourId", 0x1000282 }
+        { "backgroundColourId", backgroundColourId },
+        { "textColourId"      , textColourId },
+        { "outlineColourId"   , outlineColourId }
     }},
 
     { "JustificationType", {
-        { "left", 1 },
-        { "right", 2 },
-        { "horizontallyCentred", 4 },
-        { "top", 8 },
-        { "bottom", 16 },
-        { "verticallyCentred", 32 },
-        { "horizontallyJustified", 64 },
-        { "centred", 36 },
-        { "centredLeft", 33 },
-        { "centredRight", 34 },
-        { "centredTop", 12 },
-        { "centredBottom", 20 },
-        { "topLeft", 9 },
-        { "topRight", 10 },
-        { "bottomLeft", 17 },
-        { "bottomRight", 18 }
+        { "left"                , Justification::left },
+        { "right"               , Justification::right },
+        { "horizontallyCentred" , Justification::horizontallyCentred },
+        { "top"                 , Justification::top },
+        { "bottom"              , Justification::bottom },
+        { "verticallyCentred"   , Justification::verticallyCentred },
+        { "horizontallyJustified", Justification::horizontallyJustified },
+        { "centred"             , Justification::centred },
+        { "centredLeft"         , Justification::centredLeft },
+        { "centredRight"        , Justification::centredRight },
+        { "centredTop"          , Justification::centredTop },
+        { "centredBottom"       , Justification::centredBottom },
+        { "topLeft"             , Justification::topLeft },
+        { "topRight"            , Justification::topRight },
+        { "bottomLeft"          , Justification::bottomLeft },
+        { "bottomRight"         , Justification::bottomRight }
     }},
-
     {0}
 };

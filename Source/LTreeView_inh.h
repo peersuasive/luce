@@ -223,10 +223,10 @@ const Luna<LTreeView>::InheritenceF LTreeView::inheritsF[] = {
 
 const Luna<LTreeView>::Enum LTreeView::enums[] = {
     { "ColourIds", {
-        { "backgroundColourId", 0x1000500 },
-        { "linesColourId", 0x1000501 },
-        { "dragAndDropIndicatorColourId", 0x1000502 },
-        { "selectedItemBackgroundColourId", 0x1000503 }
+        { "backgroundColourId"            , backgroundColourId },
+        { "linesColourId"                 , linesColourId },
+        { "dragAndDropIndicatorColourId"  , dragAndDropIndicatorColourId },
+        { "selectedItemBackgroundColourId", selectedItemBackgroundColourId }
     }},
     {0}
 };
