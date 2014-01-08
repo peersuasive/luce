@@ -51,3 +51,8 @@ int LBase::callback( const String& r, int nb_res, const std::list<var>& args ) c
 bool LBase::hasCallback( const String& k ) {
     return cb.contains( k ) && (cb[k] != LUA_REFNIL);
 }
+
+int LBase::readOnly(lua_State*) {
+    LUA::throwError("Attempted to set a read-only variable");
+    //luaL_error(L, "Attempted to set a read-only variable");
+}

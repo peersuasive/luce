@@ -21,6 +21,9 @@ public:
     ~LBase();
     
     //==============================================================================
+    int readOnly(lua_State*);
+    
+    //==============================================================================
     static const char className[];
     static const Luna<LBase>::Inheritence inherits[];
     static const Luna<LBase>::InheritenceF inheritsF[];
@@ -34,6 +37,7 @@ protected:
     void set( const String& r, int lua_type = LUA_TFUNCTION, int pos = -1);
     int callback(const String&, int nb_res = 0, const std::list<var>& args = {}) const;
     bool hasCallback(const String&);
+
 
 private:    
     //==============================================================================
