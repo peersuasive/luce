@@ -185,15 +185,15 @@ namespace LUA {
         }
 
         template<class T, class U = T>
-        int returnUserdata(U* udata) {
+        int returnUserdata(const U* udata) {
             if ( udata ) {
                 DBG(String("size of L at the beginning: ") + String(lua_gettop(L)));
 
-                T *ldata = static_cast<T*>( udata );
+                const T *ldata = static_cast<const T*>( udata );
                 lua_newtable(L);
                 int t = lua_gettop(L);
                 lua_pushstring(L, "__self");
-                T** r = static_cast<T**>( lua_newuserdata(L, sizeof(T*)) );
+                const T** r = static_cast<const T**>( lua_newuserdata(L, sizeof(const T*)) );
                 *r = ldata;
 
                 std::string cn = std::string(T::className) + "_";

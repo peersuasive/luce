@@ -29,7 +29,7 @@ namespace LUA {
         T* from_luce(int i=-1);
 
             template<class T, class U = T>
-        int returnUserdata(U* udata);
+        int returnUserdata(const U* udata);
 
         int returnUserdata(MouseEvent* e);
 
