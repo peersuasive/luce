@@ -1,6 +1,10 @@
 #ifndef __LUCE_H
 #define __LUCE_H
 
+#define LUCE_VERSION_MAJOR 0
+#define LUCE_VERSION_MINOR 1
+#define LUCE_VERSION_BUILD 0
+
 #include <list>
 #include <map>
 

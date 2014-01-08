@@ -213,6 +213,7 @@ static const luaL_reg luce_lib [] = {
 
 //int luaopen_luce_core (lua_State *L) {
 int luaopen_luce (lua_State *L) {
+    DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     initialiseJuce_GUI();
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     //luaL_register(L,"luce.core", luce_lib);
