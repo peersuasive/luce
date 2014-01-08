@@ -157,7 +157,6 @@ namespace LUA {
 
         template<class T>
         T* to_juce(int i=-1) {
-            //luaL_checktype(L, i, LUA_TTABLE);
             T* res = Luna<T>::to_juce(L, i);
             lua_remove(L,i);
             return res;
@@ -175,16 +174,13 @@ namespace LUA {
         T* from_luce(int i=-1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_getfield(L, i, "__self");
-            if ( lua_isnil(L, -1) ) {
+            if ( lua_isnil(L, -1) )
                 throwError("given object is not a valid Luce object");
-            }
-
             T **obj = static_cast<T**>(lua_touserdata(L, -1));
+            lua_remove(L, i); // object
+            lua_pop(L,1); // pushed __self
             if(!obj)
-                return NULL;
-    
-            lua_remove(L, i);
-            lua_pop(L,1);
+                return nullptr;
             return *obj;
         }
 
