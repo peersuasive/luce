@@ -866,7 +866,7 @@ int LComponent::removeMouseListener ( lua_State* ) {
 }
 
 void LComponent::lmouseMove( const MouseEvent& event ) {
-    if (child) callback("mouseMove");
+    if (child && hasCallback("mouseMove")) callback("mouseMove");
 }
 int LComponent::mouseMove(lua_State*){
     if (child) set("mouseMove");
@@ -874,17 +874,15 @@ int LComponent::mouseMove(lua_State*){
 }
 
 void LComponent::lmouseEnter( const MouseEvent& event ) {
-    if (child)
-        callback("mouseEnter");
+    if (child && hasCallback("mouseEnter")) callback("mouseEnter");
 }
 int LComponent::mouseEnter(lua_State*){
-    if (child)
-        set("mouseEnter");
+    if (child) set("mouseEnter");
     return 0;
 }
 
 void LComponent::lmouseExit( const MouseEvent& event ) {
-    if (child) callback("mouseExit");
+    if (child && hasCallback("mouseExit")) callback("mouseExit");
 }
 int LComponent::mouseExit(lua_State*){
     if (child) set("mouseExit");
@@ -892,7 +890,7 @@ int LComponent::mouseExit(lua_State*){
 }
 
 void LComponent::lmouseDown( const MouseEvent& event ) {
-    if (child) callback("mouseDown");
+    if (child && hasCallback("mouseDown")) callback("mouseDown");
 }
 int LComponent::mouseDown(lua_State*){
     if (child) set("mouseDown");
@@ -900,7 +898,7 @@ int LComponent::mouseDown(lua_State*){
 }
 
 void LComponent::lmouseDrag( const MouseEvent& event ) {
-    if (child) callback("mouseDrag");
+    if (child && hasCallback("mouseDrag")) callback("mouseDrag");
 }
 int LComponent::mouseDrag(lua_State*){
     if (child) set("mouseDrag");
@@ -908,7 +906,7 @@ int LComponent::mouseDrag(lua_State*){
 }
 
 void LComponent::lmouseUp( const MouseEvent& event ) {
-    if (child) callback("mouseUp");
+    if (child && hasCallback("mouseUp")) callback("mouseUp");
 }
 int LComponent::mouseUp(lua_State*){
     if (child) set("mouseUp");
