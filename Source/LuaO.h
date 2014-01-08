@@ -486,7 +486,6 @@ namespace LUA {
                 DBG("no cb found for ?");
                 lua_remove(L, func_index);
             }
-            std::cout << "stack state (end): " << lua_gettop(L) << std::endl;
             return status;
         }
 
