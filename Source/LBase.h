@@ -31,6 +31,7 @@ public:
     static const Luna<LBase>::FunctionType methods[];
 
     static const Luna<LBase>::Enum enums[];
+
 protected:    
     //==============================================================================
     void reg( const String& );
