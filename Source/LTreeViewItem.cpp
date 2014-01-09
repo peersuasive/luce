@@ -333,6 +333,7 @@ int LTreeViewItem::addSubItem ( lua_State* ) {
     return 0;
 }
 
+// set a comparator callback
 int LTreeViewItem::compareElements(lua_State* L) {
     comparator.compareElements(L);
 }
