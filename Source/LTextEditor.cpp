@@ -27,6 +27,7 @@ const Luna<LTextEditor>::PropertyType LTextEditor::properties[] = {
     {"readOnly", &LTextEditor::isReadOnly, &LTextEditor::setReadOnly},
     {"passwordCharacter", &LTextEditor::getPasswordCharacter, &LTextEditor::setPasswordCharacter},
     {"tabKeyUsedAsCharacter", &LTextEditor::isTabKeyUsedAsCharacter, &LTextEditor::setTabKeyUsedAsCharacter},
+    {"scrollbarsShown", &LTextEditor::areScrollbarsShown, &LTextEditor::setScrollbarsShown},
     {0,0}
 };
 const Luna<LTextEditor>::FunctionType LTextEditor::methods[] = {
