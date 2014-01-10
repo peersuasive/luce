@@ -72,12 +72,10 @@ LTreeView::LTreeView(lua_State *L)
       TreeView( /* TODO: add args */ )
 {
     TreeView::setName(myName);
-    //LTreeView::addListener(this);
 }
 
 LTreeView::~LTreeView() {
-    TreeView::setRootItem(nullptr);
-    rootItem = nullptr;
+    TreeView::deleteRootItem();
 }
 
 /////// callbacks
@@ -183,10 +181,12 @@ int LTreeView::setMultiSelectEnabled ( lua_State* ) {
 int LTreeView::getRootItem ( lua_State* ) {
     return LUA::returnUserdata<LTreeViewItem>( TreeView::getRootItem() );
 }
-int LTreeView::setRootItem ( lua_State* ) {
-    TreeView::setRootItem( nullptr );
-    rootItem = LUA::toUserdata<LTreeViewItem>(2);
-    TreeView::setRootItem( rootItem );
+int LTreeView::setRootItem ( lua_State* L) {
+    if ( lua_isnil(L, 2) )
+        TreeView::setRootItem(nullptr);
+    else
+        TreeView::setRootItem( LUA::toUserdata<LTreeViewItem>(2) );
+
     return 0;
 }
 
@@ -271,7 +271,7 @@ int LTreeView::getViewport ( lua_State* ) {
 }
 
 int LTreeView::getOpennessState ( lua_State* ) {
-    bool alsoIncludeScrollPosition = LUA::getBoolean(1);
+    //bool alsoIncludeScrollPosition = LUA::getBoolean(2);
     // return LUA::TODO_RETURN_OBJECT_XmlElement( TreeView::getOpennessState( alsoIncludeScrollPosition ) );
     lua_settop(LUA::Get(), 1); // added by TODO
     return LUA::TODO_OBJECT( "XmlElement getOpennessState( alsoIncludeScrollPosition )" );
@@ -280,7 +280,7 @@ int LTreeView::getOpennessState ( lua_State* ) {
 // setters
 int LTreeView::restoreOpennessState ( lua_State* ) {
     // XmlElement newState = LUA::TODO_OBJECT_XmlElement;
-    bool restoreStoredSelection = LUA::getBoolean(3);
+    //bool restoreStoredSelection = LUA::getBoolean(2);
     // TreeView::restoreOpennessState( newState, restoreStoredSelection );
     LUA::TODO_OBJECT( "restoreOpennessState,  newState, restoreStoredSelection " );
     lua_settop(LUA::Get(), 1); // added by TODO
