@@ -2,6 +2,7 @@
 -- LClass( luce:CLASS():new(...) )
 -- LClass( "AClass", ... )
 ---
+local luce = require"luce"
 local new = function(_, name, ...)
     local self = {}
     local class
