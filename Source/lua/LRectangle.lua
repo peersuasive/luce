@@ -2,9 +2,9 @@ local mt = {}
 
 function mt:reduce(d, dy)
     local d, dy = d, dy or d
-    self.x = self.x+i
-    self.y = self.dy+i
-    self.w = self.w-(i*2)
+    self.x = self.x+d
+    self.y = self.y+dy
+    self.w = self.w-(d*2)
     self.h = self.h-(dy*2)
     self.w = (self.w<=0) and 0 or self.w
     self.h = (self.h<=0) and 0 or self.h
@@ -43,7 +43,7 @@ function mt:removeFromLeft(a)
 end
 
 function mt:removeFromRight(a)
-    local removed = self:new{self.w - a, self.y, a, self.h}
+    local removed = self:new{self.x+(self.w - a), self.y, a, self.h}
     self.w = self.w - a
     return removed
 end
@@ -56,6 +56,7 @@ end
 
 function mt:setLeft(l)
     self.x, self.w = l, self.w-(l*2)
+    return self
 end
 
 function mt:withLeft(l)
@@ -68,10 +69,12 @@ end
 
 function mt:setTop(t)
     self.y, self.h = t, self.h-(t*2)
+    return self
 end
 
 function mt:setRight(l)
     self.w = self.w - l
+    return self
 end
 
 function mt:withRight(l)
@@ -80,6 +83,7 @@ end
 
 function mt:setBottom(b)
     self.h = self.h - l
+    return self
 end
 
 function mt:withBottom(b)
@@ -91,7 +95,7 @@ function mt:withTrimmedRight(a)
 end
 
 function mt:withTrimmedLeft(a)
-    return self:new{ self.x, self.y, self.w-a, self.h }
+    return self:new{ self.x+a, self.y, self.w-a, self.h }
 end
 
 function mt:withTrimmedTop(a)
@@ -100,6 +104,17 @@ end
 
 function mt:withTrimmedBottom(a)
     return self:new{ self.x, self.y, self.w, self.h - a }
+end
+
+function mt:translate(d, dy)
+    local d, dy = d or 0, dy or 0
+    self.x, self.y = self.x+d, self.y+dy
+    return self
+end
+
+function mt:translated(d, dy)
+    local d, dy = d or 0, dy or 0
+    return self:new{ self.x+d, self.y+dy, self.w, self.h }
 end
 
 function mt:dump()
