@@ -24,7 +24,8 @@ const Luna<LComponent>::FunctionType LComponent::methods[] = {
 
 LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
     : LBase(Ls),
-      child(child_)
+      child(child_),
+      currentLookAndFeel(0)
 {
     L = Ls;
     
@@ -987,9 +988,8 @@ int LComponent::focusOfChildComponentChanged(lua_State*){
 // get/set
 int LComponent::getLookAndFeel ( lua_State* ) {
     if (child) {
+        return LUA::returnNumber( currentLookAndFeel );
         // return LUA::TODO_RETURN_OBJECT_LookAndFeel( child->getLookAndFeel() );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "LookAndFeel getLookAndFeel()" );
     } else return 0;
 }
 int LComponent::setLookAndFeel ( lua_State* ) {

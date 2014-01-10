@@ -272,7 +272,7 @@ private:
     LookAndFeel_V2 lookAndFeelV2;
     LookAndFeel_V3 lookAndFeelV3;
     MyLookAndFeel  myLookAndFeel;
- 
+    int currentLookAndFeel;
     //==============================================================================
     // LBase
     //HashMap<String,int> cb;
