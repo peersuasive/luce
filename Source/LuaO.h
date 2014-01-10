@@ -44,6 +44,7 @@ namespace LUA {
         int returnString(const std::string& val);
 
         int returnTable(const std::list<var>& val);
+        int returnTable(const Array<var>& val);
         int returnTable( const juce::Rectangle<int>& r );
         int returnTable( const juce::RectangleList<int>& r );
         int returnTable( const juce::Point<int>& r );
