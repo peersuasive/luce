@@ -16,11 +16,11 @@ local new = function(_, name, ...)
             for _,f in next, v do
                 self[f] = class[f] -- better than the methods table
             end
-        -- TODO: find a smart way t achieve this
-        -- elseif ( k == "vars" ) then
-        --     for _,f in next, v do
-        --         self[f] = class[f]
-        --     end
+        -- TODO: find a smart way to get values when dumping
+        elseif ( k == "vars" ) then
+            for _,f in next, v do
+                self[f] = f
+            end
         else
             self[k] = v
         end
@@ -32,6 +32,8 @@ local new = function(_, name, ...)
             if not ( getmetatable(class).__index(class, k) ) 
                 and not ( getmetatable(class).__newindex(class, k, v) ) then
                 rawset(t,k,v)
+            else
+                class[k] = v
             end
         end
     })
