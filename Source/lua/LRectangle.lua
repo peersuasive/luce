@@ -1,10 +1,105 @@
 local mt = {}
 
-function mt:reduced(i)
-    local self = self:new{self.x+i, self.y+i, self.w-(i*2), self.h-(i*2)}
+function mt:reduce(d, dy)
+    local d, dy = d, dy or d
+    self.x = self.x+i
+    self.y = self.dy+i
+    self.w = self.w-(i*2)
+    self.h = self.h-(dy*2)
     self.w = (self.w<=0) and 0 or self.w
     self.h = (self.h<=0) and 0 or self.h
     return self
+end
+
+function mt:reduced(d, dy)
+    local d, dy = d, dy or d
+    local self = self:new{self.x+d, self.y+dy, self.w-(d*2), self.h-(dy*2)}
+    self.w = (self.w<0) and 0 or self.w
+    self.h = (self.h<0) and 0 or self.h
+    return self
+end
+
+function mt:expand(d, dy)
+    local dy = dy or d
+    self.x, self.y, self.w, self.h = self.x-d, self.y-dy, self.w+(d*2), self.h+(dy*2)
+    return self
+end
+
+function mt:expanded(d, dy)
+    local dy = dy or d
+    return self:new{ self.x-d, self.y-dy, self.w+(d*2), self.h+(dy*2) }
+end
+
+function mt:removeFromTop(a)
+    local removed = self:new{self.x, self.y, self.w, a}
+    self.y, self.h = self.y + a, self.h - a
+    return removed
+end
+
+function mt:removeFromLeft(a)
+    local removed = self:new{self.x, self.y, a, self.h}
+    self.x, self.w = self.x+a, self.w-a
+    return removed
+end
+
+function mt:removeFromRight(a)
+    local removed = self:new{self.w - a, self.y, a, self.h}
+    self.w = self.w - a
+    return removed
+end
+
+function mt:removeFromBottom(a)
+    local rh
+    rh, self.h = a, self.h - a
+    return self:new{ self.x, self.y, self.w, h }
+end
+
+function mt:setLeft(l)
+    self.x, self.w = l, self.w-(l*2)
+end
+
+function mt:withLeft(l)
+    return self:new{ l, self.y, self.w-(l*2), self.h }
+end
+
+function mt:withTop(t)
+    return self:new{ self.x, t, self.w, self.h - (t*2) }
+end
+
+function mt:setTop(t)
+    self.y, self.h = t, self.h-(t*2)
+end
+
+function mt:setRight(l)
+    self.w = self.w - l
+end
+
+function mt:withRight(l)
+    return self:new{ self.x, self.y, self.w-l, self.h }
+end
+
+function mt:setBottom(b)
+    self.h = self.h - l
+end
+
+function mt:withBottom(b)
+    return self:new{ self.x, self.y, self.w, self.h-l }
+end
+
+function mt:withTrimmedRight(a)
+    return self:new{ self.x+a, self.y, self.w-(a*2), self.h }
+end
+
+function mt:withTrimmedLeft(a)
+    return self:new{ self.x, self.y, self.w-a, self.h }
+end
+
+function mt:withTrimmedTop(a)
+    return self:new{ self.x, self.y+a, self.w, self.h - (a*2) }
+end
+
+function mt:withTrimmedBottom(a)
+    return self:new{ self.x, self.y, self.w, self.h - a }
 end
 
 function mt:dump()
