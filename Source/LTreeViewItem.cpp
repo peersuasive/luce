@@ -124,7 +124,27 @@ int LTreeViewItem::itemDropped(lua_State*){
 }
 
 void LTreeViewItem::paintItem( Graphics& g, int width, int height ) {
-    callback("paintItem");
+    if (hasCallback("paintItem"))
+        if ( callback("paintItem", 1) ) {
+            String name = LUA::checkAndGetString(2, String::empty);
+            std::cout << "*** paintItem cb: " << name << std::endl;
+            if (TreeViewItem::isSelected())
+                g.fillAll( Colours::blue.withAlpha( 0.3f ));
+            g.setColour(Colours::black);
+            g.setFont(height * 0.7f);
+
+            g.drawText( name, 4, 0, width - 4, height, Justification::centredLeft, true );
+        } else {
+            std::cout << "failed to execute callback: " << LUA::getError() << std::endl;
+        }
+    else if ( ! hasCallback("paintItem") && ! hasCallback("createItemComponent") ) {
+        std::cout << "** native cb" << std::endl;
+        if (TreeViewItem::isSelected())
+            g.fillAll( Colours::blue.withAlpha( 0.3f ));
+        g.setColour(Colours::black);
+        g.setFont(height * 0.7f);
+        g.drawText( getUniqueName(), 4, 0, width - 4, height, Justification::centredLeft, true );
+    }
 }
 int LTreeViewItem::paintItem(lua_State*){
     set("paintItem");
@@ -213,8 +233,11 @@ bool LTreeViewItem::mightContainSubItems() {
     else
         return false;
 }
-int LTreeViewItem::mightContainSubItems ( lua_State* ) {
-    set("mightContainSubItems");
+int LTreeViewItem::mightContainSubItems ( lua_State* L ) {
+    if ( lua_type(L, 2) == LUA_TFUNCTION )
+        set("mightContainSubItems");
+    else
+        return LUA::returnBoolean( mightContainSubItems() );
 }
 
 String LTreeViewItem::getUniqueName() const {
@@ -223,14 +246,19 @@ String LTreeViewItem::getUniqueName() const {
     else
         return String::empty;
 }
-int LTreeViewItem::getUniqueName ( lua_State* ) {
-    set("getUniqueName");
+int LTreeViewItem::getUniqueName ( lua_State* L ) {
+    if ( lua_type(L, 2) == LUA_TFUNCTION )
+        set("getUniqueName");
+    else
+        return LUA::returnString( getUniqueName() );
 }
 
 Component *LTreeViewItem::createItemComponent() {
-    if ( callback("createItemComponent", 1) ) {
-        Component *comp = LUA::from_luce<Component>();
-        return comp;
+    if (hasCallback("createItemComponent")) {
+        if ( callback("createItemComponent", 1) ) {
+            Component *comp = LUA::from_luce<Component>();
+            return comp;
+        }
     }
     return nullptr;
 }
