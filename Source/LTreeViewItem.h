@@ -102,9 +102,13 @@ private:
     struct LComparator : private LBase {
         LComparator(lua_State* L) : LBase(L) { reg("compareElements"); }
         const int compareElements( TreeViewItem *first, TreeViewItem *second ) {
-            if ( callback("compareElements", 1, { var(first), var(second) } ) ) { // not yet implemented...
-                return LUA::getBoolean();
-            } else {
+            if (hasCallback("compareElements"))
+                return false;
+                // TODO
+                //if ( callback("compareElements", 1, { var(first), var(second) } ) )
+                //    return LUA::getBoolean();
+
+            else {
                 String a = first->getUniqueName();
                 String b = second->getUniqueName();
                 return a.compareLexicographically( b );
