@@ -4,13 +4,13 @@ namespace LUA {
         void throwError(const String& err);
         lua_State *Get();
         const var getNumber(int i= -1);
-        const var checkAndGetNumber(int i=-1, var def = 0);
+        const var checkAndGetNumber(int i=2, var def = 0);
 
         const bool getBoolean(int i = -1);
-        const bool checkAndGetBoolean(int i=-1, int def = false);
+        const bool checkAndGetBoolean(int i=2, int def = false);
 
         const String getString(int i = -1);
-        const String checkAndGetString(int i = -1, String def = String::empty);
+        const String checkAndGetString(int i=2, String def = String::empty);
 
         const Array<var> getList(int i=-1);
         const juce::Rectangle<int> getRectangle(int i=-1);

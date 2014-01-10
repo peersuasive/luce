@@ -68,7 +68,7 @@ int LTextButton::getFont ( lua_State* ) {
 
 /////// setters
 int LTextButton::changeWidthToFitText ( lua_State* ) {
-    TextButton::changeWidthToFitText(LUA::checkAndGetNumber(-1, -1));
+    TextButton::changeWidthToFitText(LUA::checkAndGetNumber(2, -1));
     return 0;
 }
 

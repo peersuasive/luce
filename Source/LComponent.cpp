@@ -296,7 +296,7 @@ int LComponent::getHeight ( lua_State* ) {
 
 int LComponent::isMouseOver ( lua_State* ) {
     if (child)
-        return LUA::returnBoolean( child->isMouseOver( LUA::checkAndGetBoolean(1, false) ) );
+        return LUA::returnBoolean( child->isMouseOver( LUA::checkAndGetBoolean(2, false) ) );
     else return 0;
 }
 
@@ -1135,8 +1135,8 @@ int LComponent::isParentOf ( lua_State* ) {
 int LComponent::createComponentSnapshot ( lua_State* ) {
     if (child) {
         // Rectangle<int> areaToGrab = LUA::TODO_OBJECT_Rectangle;
-        bool clipImageToComponentBounds = LUA::checkAndGetBoolean(2, true);
-        float scaleFactor = LUA::checkAndGetNumber(3, 1.0f);
+        //bool clipImageToComponentBounds = LUA::checkAndGetBoolean(2, true);
+        //float scaleFactor = LUA::checkAndGetNumber(2, 1.0f);
         // return LUA::TODO_RETURN_OBJECT_Image( child->createComponentSnapshot( areaToGrab, clipImageToComponentBounds, scaleFactor ) );
         lua_settop(LUA::Get(), 1); // added by TODO
         return LUA::TODO_OBJECT( "Image createComponentSnapshot( areaToGrab, clipImageToComponentBounds, scaleFactor )" );
@@ -1162,7 +1162,7 @@ int LComponent::getTopLevelComponent ( lua_State* ) {
 
 int LComponent::getCurrentlyModalComponent ( lua_State* ) {
     if (child) {
-        int index = LUA::checkAndGetNumber(1, 0);
+        //int index = LUA::checkAndGetNumber(2, 0);
         // return LUA::TODO_RETURN_OBJECT_Component( child->getCurrentlyModalComponent( index ) );
         lua_settop(LUA::Get(), 1); // added by TODO
         return LUA::TODO_OBJECT( "Component getCurrentlyModalComponent( index )" );
@@ -1399,9 +1399,9 @@ int LComponent::getCurrentlyFocusedComponent ( lua_State* ) {
 /// setters
 int LComponent::enterModalState ( lua_State* ) {
     if (child) {
-        bool takeKeyboardFocus = LUA::checkAndGetBoolean(2, true);
+        //bool takeKeyboardFocus = LUA::checkAndGetBoolean(2, true);
         // ModalComponentManager::Callback* callback = LUA::TODO_OBJECT_ModalComponentManager::Callback;
-        bool deleteWhenDismissed = LUA::checkAndGetBoolean(4, false);
+        //bool deleteWhenDismissed = LUA::checkAndGetBoolean(2, false);
         // child->enterModalState( takeKeyboardFocus, callback, deleteWhenDismissed );
         LUA::TODO_OBJECT( "enterModalState,  takeKeyboardFocus, callback, deleteWhenDismissed " );
         lua_settop(LUA::Get(), 1); // added by TODO

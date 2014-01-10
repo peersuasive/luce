@@ -83,7 +83,7 @@ int LLabel::getText(lua_State *L) {
 
 int LLabel::attachToComponent(lua_State *L) {
     Component *comp = LUA::to_juce<Component>(2);
-    bool onLeft = ( LUA::checkAndGetBoolean(-1, true) );
+    bool onLeft = ( LUA::checkAndGetBoolean(2, true) );
     Label::attachToComponent(comp, onLeft);
     return 0;
 }

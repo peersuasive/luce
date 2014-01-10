@@ -236,7 +236,7 @@ int LButton::setTriggeredOnMouseDown ( lua_State* ) {
 int LButton::setRepeatSpeed ( lua_State* ) {
     int initialDelayInMillisecs = LUA::getNumber();
     int repeatDelayInMillisecs = LUA::getNumber();
-    int minimumDelayInMillisecs = LUA::checkAndGetNumber(-1, -1);
+    int minimumDelayInMillisecs = LUA::checkAndGetNumber(2, -1);
     if (child)
         child->setRepeatSpeed( initialDelayInMillisecs, repeatDelayInMillisecs, minimumDelayInMillisecs );
     return 0;

@@ -290,7 +290,8 @@ int LTextEditor::isMultiLine ( lua_State* ) {
     return LUA::returnBoolean( TextEditor::isMultiLine() );
 }
 int LTextEditor::setMultiLine ( lua_State* ) {
-    TextEditor::setMultiLine( LUA::getBoolean(), LUA::checkAndGetBoolean(2, true) );
+    bool a = LUA::getBoolean(2);
+    TextEditor::setMultiLine( a, LUA::checkAndGetBoolean(2, true) );
     return 0;
 }
 
