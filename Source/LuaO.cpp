@@ -324,6 +324,12 @@ namespace LUA {
                 else if ( it.isString() ) {
                     lua_pushlstring(L, it.toString().toRawUTF8(), it.toString().length() );
                 }
+                else if ( it.isArray() ) {
+                    lua_pushnil(L);
+                    std::cout << "type not yet implemented" << std::endl;
+                    // TODO: test this
+                    // returnTable( *it.getArray() );
+                }
                 else {
                     lua_pushnil(L);
                     std::cout << "type not yet implemented" << std::endl;
@@ -331,6 +337,12 @@ namespace LUA {
                 lua_rawseti(L, t, ++i);
             }
             return 1;
+        }
+        int returnTable(const Array<var>& val) {
+            std::list<var> r;
+            for (int i=0;i<val.size();++i)
+                r.push_back( val[i] );
+            return returnTable(r);
         }
 
         int TODO_OBJECT(const String& tmpl, const String& msg) {
