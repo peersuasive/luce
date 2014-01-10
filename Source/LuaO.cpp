@@ -30,7 +30,11 @@ namespace LUA {
             return res;
         }
         const var checkAndGetNumber(int i, var def) {
-            return lua_type(L, i) == LUA_TNUMBER ? getNumber(i) : def;
+            if (lua_type(L, i) == LUA_TNUMBER)
+                return getNumber(i);
+            if(lua_type(L,i) == LUA_TNIL)
+                lua_remove(L, i);
+            return def;
         }
         
         const bool getBoolean(int i) {
@@ -40,7 +44,11 @@ namespace LUA {
             return res;
         }
         const bool checkAndGetBoolean(int i, int def) {
-            return lua_type(L, i) == LUA_TBOOLEAN ? getBoolean(i) : def;
+            if ((lua_type(L, i) == LUA_TBOOLEAN))
+                return getBoolean(i);
+            if(lua_type(L,i) == LUA_TNIL)
+                lua_remove(L, i);
+            return def;
         }
 
         const String getString(int i) {
@@ -50,7 +58,11 @@ namespace LUA {
             return String(s, len);
         }
         const String checkAndGetString(int i, String def) {
-            return lua_type(L, i) == LUA_TSTRING ? getString(i) : def;
+            if (lua_type(L, i) == LUA_TSTRING)
+                return getString(i);
+            if(lua_type(L,i) == LUA_TNIL)
+                lua_remove(L, i);
+            return def;
         }
 
         const Array<var> getList(int i) {
@@ -220,7 +232,7 @@ namespace LUA {
         template<class T, class U = T>
         int returnUserdata(const U* udata) {
             if ( udata ) {
-                DBG(String("size of L at the beginning: ") + String(lua_gettop(L)));
+                //DBG(String("size of L at the beginning: ") + String(lua_gettop(L)));
 
                 const T *ldata = static_cast<const T*>( udata );
                 lua_newtable(L);
@@ -273,7 +285,7 @@ namespace LUA {
                     lua_setmetatable(L, -2);
                 } else lua_pop(L,1);
 
-                DBG(String("size of L at the end: ") + String(lua_gettop(L)));
+                //DBG(String("size of L at the end: ") + String(lua_gettop(L)));
                 return 1;
 
             } else {
