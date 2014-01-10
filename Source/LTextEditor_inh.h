@@ -222,5 +222,14 @@ const Luna<LTextEditor>::InheritenceF LTextEditor::inheritsF[] = {
 };
 
 const Luna<LTextEditor>::Enum LTextEditor::enums[] = {
+   { "ColourIds", {
+        { "backgroundColourId", backgroundColourId },
+        { "textColourId"      , textColourId },
+        { "highlightColourId" , highlightColourId },
+        { "highlightedTextColourId", highlightedTextColourId },
+        { "outlineColourId"   , outlineColourId },
+        { "focusedOutlineColourId", focusedOutlineColourId },
+        { "shadowColourId"    , shadowColourId },
+    }},
     {0}
 };
