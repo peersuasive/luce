@@ -219,16 +219,25 @@ public:
         lua_newtable(L);
         int nt = lua_gettop(L);
         int ind = 0;
-        for(ind = 0; T::methods[ind].name; ++ind) {
+        for ( int i = 0; T::methods[ind].name; ++i, ++ind) {
             lua_pushstring(L, T::methods[ind].name);
             lua_rawseti(L, nt, ind+1);
         }
-        for ( int i = ind+1; T::inheritsF[i].name; ++i ) {
+        for ( int i = 0; T::inheritsF[i].name; ++i, ++ind ) {
             lua_pushstring(L, T::inheritsF[i].name);
-            lua_rawseti(L, nt, i+1);
+            lua_rawseti(L, nt, ind);
         }
         lua_settable(L, t);
 
+        // direct get/setters in a separate table
+        lua_pushstring(L, "vars");
+        lua_newtable(L);
+        nt = lua_gettop(L);
+        for ( int i = 0; T::inherits[i].name; ++i, ++ind ) {
+            lua_pushstring(L, T::inherits[i].name);
+            lua_rawseti(L, nt, ind);
+        }
+        lua_settable(L, t);
 
         // set static values, like enums...
         for ( int i = 0; T::enums[i].name; ++i ) {
