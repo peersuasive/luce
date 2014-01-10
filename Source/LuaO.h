@@ -10,6 +10,7 @@ namespace LUA {
         const bool checkAndGetBoolean(int i=-1, int def = false);
 
         const String getString(int i = -1);
+        const String checkAndGetString(int i = -1, String def = String::empty);
 
         const Array<var> getList(int i=-1);
         const juce::Rectangle<int> getRectangle(int i=-1);

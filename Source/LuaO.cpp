@@ -49,6 +49,9 @@ namespace LUA {
             lua_remove(L,i);
             return String(s, len);
         }
+        const String checkAndGetString(int i, String def) {
+            return lua_type(L, i) == LUA_TSTRING ? getString(i) : def;
+        }
 
         const Array<var> getList(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
