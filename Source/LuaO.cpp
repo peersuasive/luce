@@ -134,6 +134,18 @@ namespace LUA {
             return { x, y };
         }
 
+        const juce::Range<int> getRange(int i) {
+            luaL_checktype(L, i, LUA_TTABLE);
+            lua_pushvalue(L, i);
+            lua_rawgeti(L, -1, 1);
+            int x = luaL_checknumber(L, -1);
+            lua_rawgeti(L, -2, 2);
+            int y = luaL_checknumber(L, -1);
+            lua_pop(L, 3);
+            lua_remove(L,i);
+            return { x, y };
+        }
+
         const std::list<var> getStdList(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L,i);
@@ -352,12 +364,21 @@ namespace LUA {
         }
 
         int returnTable( const juce::Point<int>& r ) {
-            int i = 0;
             lua_newtable(L);
             int t = lua_gettop(L);
             lua_pushnumber(L, r.getX());
             lua_rawseti(L, t, 1);
             lua_pushnumber(L, r.getY());
+            lua_rawseti(L, t, 2);
+            return 1;
+        }
+
+        int returnTable( const juce::Range<int>& r ) {
+            lua_newtable(L);
+            int t = lua_gettop(L);
+            lua_pushnumber(L, r.getStart());
+            lua_rawseti(L, t, 1);
+            lua_pushnumber(L, r.getEnd());
             lua_rawseti(L, t, 2);
             return 1;
         }

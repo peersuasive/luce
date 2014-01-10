@@ -15,6 +15,7 @@ namespace LUA {
         const Array<var> getList(int i=-1);
         const juce::Rectangle<int> getRectangle(int i=-1);
         const juce::Point<int> getPoint(int i=-1);
+        const juce::Range<int> getRange(int i=-1);
         const std::list<var> getStdList(int i=-1);
 
             template<class T>
@@ -46,6 +47,7 @@ namespace LUA {
         int returnTable( const juce::Rectangle<int>& r );
         int returnTable( const juce::RectangleList<int>& r );
         int returnTable( const juce::Point<int>& r );
+        int returnTable( const juce::Range<int>& r );
 
         int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ");
 
