@@ -116,6 +116,12 @@ const Luna<LTextEditor>::FunctionType LTextEditor::methods[] = {
 
     method( LTextEditor, addListener ),
     method( LTextEditor, removeListener ),
+
+    method( LTextEditor, textEditorTextChanged ),
+    method( LTextEditor, textEditorReturnKeyPressed ),
+    method( LTextEditor, textEditorEscapeKeyPressed ),
+    method( LTextEditor, textEditorFocusLost ),
+
     {0,0}
 };
 
@@ -130,6 +136,12 @@ LTextEditor::LTextEditor(lua_State *L)
     reg("escapePressed");
     reg("returnPressed");
     reg("performPopupMenuAction");
+
+    reg("textEditorTextChanged");
+    reg("textEditorReturnKeyPressed");
+    reg("textEditorEscapeKeyPressed");
+    reg("textEditorFocusLost");
+
 }
 LTextEditor::~LTextEditor(){}
 
@@ -143,7 +155,10 @@ int LTextEditor::removeListener(lua_State *L) {
     return 0;
 }
 void LTextEditor::escapePressed() {
-    callback("escapePressed");
+    if ( hasCallback("escapePressed") )
+        callback("escapePressed");
+    else
+        TextEditor::escapePressed();
 }
 int LTextEditor::escapePressed(lua_State*){
     set("escapePressed");
@@ -151,7 +166,10 @@ int LTextEditor::escapePressed(lua_State*){
 }
 
 void LTextEditor::returnPressed() {
-    callback("returnPressed");
+    if (hasCallback("returnTable"))
+        callback("returnPressed");
+    else
+        TextEditor::returnPressed();
 }
 int LTextEditor::returnPressed(lua_State*){
     set("returnPressed");
@@ -159,7 +177,10 @@ int LTextEditor::returnPressed(lua_State*){
 }
 
 void LTextEditor::performPopupMenuAction( int menuItemID ) {
-    callback("performPopupMenuAction");
+    if (hasCallback("performPopupMenuAction"))
+        callback("performPopupMenuAction", 0, { menuItemID } );
+    else
+        TextEditor::performPopupMenuAction(menuItemID);
 }
 int LTextEditor::performPopupMenuAction(lua_State*){
     set("performPopupMenuAction");
@@ -170,7 +191,7 @@ void LTextEditor::textEditorTextChanged (TextEditor &t) {
     callback("textEditorTextChanged");
 }
 int LTextEditor::textEditorTextChanged(lua_State *L) {
-    reg("textEditorTextChanged");
+    set("textEditorTextChanged");
     return 0;
 }
 
@@ -178,7 +199,7 @@ void LTextEditor::textEditorReturnKeyPressed (TextEditor &t) {
     callback("textEditorReturnKeyPressed");
 }
 int LTextEditor::textEditorReturnKeyPressed (lua_State *L) {
-    reg("textEditorReturnKeyPressed");
+    set("textEditorReturnKeyPressed");
     return 0;
 }
 
@@ -186,7 +207,7 @@ void LTextEditor::textEditorEscapeKeyPressed (TextEditor &t) {
     callback("textEditorEscapeKeyPressed");
 }
 int LTextEditor::textEditorEscapeKeyPressed (lua_State *L) {
-    reg("textEditorEscapeKeyPressed");
+    set("textEditorEscapeKeyPressed");
     return 0;
 }
 
@@ -194,7 +215,7 @@ void LTextEditor::textEditorFocusLost (TextEditor &t) {
     callback("textEditorFocusLost");
 }
 int LTextEditor::textEditorFocusLost (lua_State *L) {
-    reg("textEditorFocusLost");
+    set("textEditorFocusLost");
     return 0;
 }
 
