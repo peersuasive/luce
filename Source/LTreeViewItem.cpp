@@ -126,8 +126,7 @@ int LTreeViewItem::itemDropped(lua_State*){
 void LTreeViewItem::paintItem( Graphics& g, int width, int height ) {
     if (hasCallback("paintItem"))
         if ( callback("paintItem", 1) ) {
-            String name = LUA::checkAndGetString(2, String::empty);
-            std::cout << "*** paintItem cb: " << name << std::endl;
+            String name = LUA::checkAndGetString(-1, String::empty);
             if (TreeViewItem::isSelected())
                 g.fillAll( Colours::blue.withAlpha( 0.3f ));
             g.setColour(Colours::black);
@@ -135,10 +134,9 @@ void LTreeViewItem::paintItem( Graphics& g, int width, int height ) {
 
             g.drawText( name, 4, 0, width - 4, height, Justification::centredLeft, true );
         } else {
-            std::cout << "failed to execute callback: " << LUA::getError() << std::endl;
+            std::cout << "failed to execute painItem callback: " << LUA::getError() << std::endl;
         }
     else if ( ! hasCallback("paintItem") && ! hasCallback("createItemComponent") ) {
-        std::cout << "** native cb" << std::endl;
         if (TreeViewItem::isSelected())
             g.fillAll( Colours::blue.withAlpha( 0.3f ));
         g.setColour(Colours::black);
@@ -182,10 +180,19 @@ int LTreeViewItem::paintVerticalConnectingLine(lua_State*){
 }
 
 void LTreeViewItem::itemClicked( const MouseEvent& e ) {
-    callback("itemClicked");
+    if (! hasCallback("itemClicked") ) {
+        TreeViewItem::itemClicked();
+    }
+    else
+        callback("itemClicked", 0, { new LRefBase("MouseEvent", &e) });
 }
-int LTreeViewItem::itemClicked(lua_State*){
-    set("itemClicked");
+int LTreeViewItem::itemClicked(lua_State*) {
+    if ( lua_gettop(L) > 1 ) {
+        if ( lua_type(L,2) == LUA_TFUNCTION )
+            set("itemClicked");
+        else
+            TreeViewItem::itemClicked( *LUA::toUserdata<LMouseEvent>(2) );
+    }
     return 0;
 }
 
@@ -203,7 +210,7 @@ void LTreeViewItem::itemDoubleClicked( const MouseEvent& e ) {
             TreeViewItem::setOpen (! TreeViewItem::isOpen());
     }
     else
-        callback("itemDoubleClicked");
+        callback("itemDoubleClicked", 0, { new LRefBase("MouseEvent", &e) });
 }
 int LTreeViewItem::itemDoubleClicked(lua_State* L) {
     if ( lua_gettop(L) > 1 ) {
