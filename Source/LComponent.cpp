@@ -29,8 +29,10 @@ LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
 {
     L = Ls;
     
-    if ( lua_isstring(L, 2) )        
-        myName = lua_tostring(L, 2);
+    if ( lua_isstring(L, 2) ) {
+        //myName = lua_tostring(L, 2);
+        myName = LUA::getString(2);
+    }
     else        
         myName = name_;
     
