@@ -97,7 +97,9 @@ LTreeViewItem::~LTreeViewItem() {}
 
 /////// callbacks
 void LTreeViewItem::itemOpennessChanged( bool isNowOpen ) {
-    callback("itemOpennessChanged", 0, { isNowOpen });
+    if ( hasCallback("itemOpennessChanged") ) {
+        callback("itemOpennessChanged", 0, { isNowOpen });
+    }
 }
 int LTreeViewItem::itemOpennessChanged(lua_State*){
     set("itemOpennessChanged");
