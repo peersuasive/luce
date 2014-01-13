@@ -203,16 +203,18 @@ public:
       @param L Lua State
       */
     static int constructor(lua_State * L) {
+        T*  ap = new T(L);
+
         lua_newtable(L);
         int t = lua_gettop(L);
-
         lua_pushstring(L, "__self");
-        T*  ap = new T(L);
         T** a = static_cast<T**>(lua_newuserdata(L, sizeof(T *))); // Push value = userdata
         *a = ap;
+
         std::string cn = std::string(T::className) + "_";
         luaL_getmetatable(L, cn.c_str());
         lua_setmetatable(L, -2); // udata metatable_
+
         lua_settable(L, t);
 
         lua_pushstring(L, "methods");
