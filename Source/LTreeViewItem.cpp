@@ -64,6 +64,8 @@ const Luna<LTreeViewItem>::FunctionType LTreeViewItem::methods[] = {
     method( LTreeViewItem, itemSelectionChanged ),
     method( LTreeViewItem, filesDropped ),
     method( LTreeViewItem, itemDropped ),
+
+    method( LTreeViewItem, compareElements ),
     {0,0}
 };
 

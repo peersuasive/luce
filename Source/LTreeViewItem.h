@@ -98,16 +98,19 @@ public:
     static const Luna<LTreeViewItem>::FunctionType methods[];
 
     static const Luna<LTreeViewItem>::Enum enums[];
+
 private:
     struct LComparator : private LBase {
         LComparator(lua_State* L) : LBase(L) { reg("compareElements"); }
         const int compareElements( TreeViewItem *first, TreeViewItem *second ) {
-            if (hasCallback("compareElements"))
-                return false;
-                // TODO
-                //if ( callback("compareElements", 1, { var(first), var(second) } ) )
-                //    return LUA::getBoolean();
-
+            if (hasCallback("compareElements")) {
+                if ( callback("compareElements", 1, 
+                            { new LRefBase("TreeViewItem", first), 
+                              new LRefBase("TreeViewItem", second) } ) ) {
+                    return LUA::getNumber();
+                }
+                return 0;
+            }
             else {
                 String a = first->getUniqueName();
                 String b = second->getUniqueName();
