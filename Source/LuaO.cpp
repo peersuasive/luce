@@ -305,6 +305,11 @@ namespace LUA {
             return 1;
         }
 
+        int returnNil() {
+            lua_pushnil(L);
+            return 1;
+        }
+
         template<class T>
         int returnNumber(const T& val) {
             lua_pushnumber(L, val);

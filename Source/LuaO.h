@@ -36,6 +36,8 @@ namespace LUA {
         int returnUserdata(MouseEvent* e);
 
         int returnBoolean(bool val);
+        
+        int returnNil();
 
             template<class T>
         int returnNumber(const T& val);
