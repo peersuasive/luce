@@ -11,6 +11,8 @@ typedef luaL_Reg luaL_reg;
 
 namespace LUA {
     namespace {
+        juce::Array<int> locked;
+
         lua_State *L = nullptr;
         void Set(lua_State *L_) {
             if ( L == nullptr ) L = L_;
@@ -459,10 +461,25 @@ namespace LUA {
             return 0;
         }
 
-        const int call_cb(int ref, int nb_ret , const std::list<var>& args  ) {
+        void unlock(int ref) {
+            locked.removeFirstMatchingValue(ref);
+        }
+        const bool is_running(int ref) {
+            return locked.contains(ref);
+        }
+        void lock_running(int ref) {
+            locked.add(ref);
+        }
+        const int call_cb(int ref, int nb_ret , const std::list<var>& args) {
+            if (is_running(ref)) {
+                DBG("WARNING: callback already running !");
+                return -3;
+            }
+            lock_running(ref);
             int nb_args = args.size();
             jassert( L != nullptr );
             if ( L == nullptr ) {
+                unlock(ref);
                 std::cout << "No lua state found !" << std::endl;
                 return -2;
             }
@@ -552,6 +569,7 @@ namespace LUA {
                 DBG("no cb found for ?");
                 lua_remove(L, func_index);
             }
+            unlock(ref);
             return status;
         }
 
