@@ -27,6 +27,10 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
     method( LJUCEApplication, systemRequestedQuit ),
     method( LJUCEApplication, anotherInstanceStarted ),
     method( LJUCEApplication, quit ),
+
+    // artificial
+    method( LJUCEApplication, setDoubleClickTimeout ),
+
     {0,0}
 };
 
@@ -132,5 +136,10 @@ void LJUCEApplication::anotherInstanceStarted (const String& commandLine) {
 }
 int LJUCEApplication::anotherInstanceStarted (lua_State *L) {
     set("anotherInstanceStarted");
+    return 0;
+}
+
+int LJUCEApplication::setDoubleClickTimeout(lua_State*) {
+    MouseEvent::setDoubleClickTimeout(LUA::getNumber());
     return 0;
 }

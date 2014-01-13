@@ -18,6 +18,8 @@ public:
     int moreThanOneInstanceAllowed(lua_State *L);
     bool moreThanOneInstanceAllowed();
 
+    int setDoubleClickTimeout(lua_State*);
+
     //==============================================================================
     int initialise (lua_State *L);
     void initialise (const String& commandLine);
