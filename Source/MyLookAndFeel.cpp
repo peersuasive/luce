@@ -56,13 +56,35 @@ MyLookAndFeel::MyLookAndFeel()
 MyLookAndFeel::~MyLookAndFeel() {}
 
 // resize bar between right and left panels
-void MyLookAndFeel::drawStretchableLayoutResizerBar (Graphics& g, int /*w*/, int /*h*/, bool /*isVerticalBar*/,
+void MyLookAndFeel::drawStretchableLayoutResizerBar (Graphics& g, int w, int h, bool /*isVerticalBar*/,
                                                       bool isMouseOver, bool isMouseDragging)
 {
+
+    float alpha = 0.5f;
+
+    if (isMouseOver || isMouseDragging)
+    {
+        g.fillAll (Colours::grey.withAlpha (0.8f));
+        //g.fillAll (Colour (0x190000ff));
+        alpha = 1.0f;
+    }
+
+    const float cx = w * 0.5f;
+    const float cy = h * 0.5f;
+    const float cr = jmin (w, h) * 0.4f;
+
+    g.setGradientFill (ColourGradient (Colours::white.withAlpha (alpha), cx + cr * 0.1f, cy + cr,
+                                       Colours::black.withAlpha (alpha), cx, cy - cr * 4.0f,
+                                       true));
+
+    g.fillEllipse (cx - cr, cy - cr, cr * 2.0f, cr * 2.0f);
+
+    /*
     if (isMouseOver || isMouseDragging)
         g.fillAll (Colours::grey.withAlpha (1.0f));
     else
         g.fillAll (Colours::grey.withAlpha (0.4f));
+    */
 
 }
 
