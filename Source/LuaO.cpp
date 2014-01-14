@@ -557,7 +557,10 @@ namespace LUA {
                         if ( type == "MouseEvent" || type == "LMouseEvent" ) {
                             returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
 
-                        } else if ( type == "Properties" ) {
+                        } else if ( type == "TreeViewItem" ) {
+                            returnUserdata<LTreeViewItem, TreeViewItem>( (TreeViewItem*)lr->getMe() );
+                        }                        
+                        else if ( type == "Properties" ) {
                             HashMap<String, var>& h = *lr->getHash();
                             lua_newtable(L);
                             int t = lua_gettop(L);
