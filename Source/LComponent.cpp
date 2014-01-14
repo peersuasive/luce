@@ -917,10 +917,8 @@ int LComponent::mouseUp(lua_State*){
 }
 
 void LComponent::lmouseDoubleClick( const MouseEvent& e ) {
-    if (child && hasCallback("mouseDoubleClick") ) {
+    if (child && hasCallback("mouseDoubleClick") )
         callback("mouseDoubleClick", 0, { new LRefBase("MouseEvent", &e) });
-    }
-
 }
 int LComponent::mouseDoubleClick(lua_State*) {
     if (child) set("mouseDoubleClick");
@@ -1104,7 +1102,9 @@ int LComponent::findColour ( lua_State* ) {
         int colourId = LUA::getNumber(2);
         bool inheritFromParent = LUA::checkAndGetBoolean(2, false);
         //return LUA::returnString( (child->findColour( colourId, inheritFromParent )).toString() );
-        return LUA::returnString( (child->findColour( colourId, inheritFromParent )).toDisplayString(true) );
+        //return LUA::returnString( (child->findColour( colourId, inheritFromParent )).toDisplayString(true) );
+        Colour c = child->findColour(colourId, inheritFromParent);
+        return LUA::returnTable( std::list<var>{ c.toDisplayString(true), var((int)c.getARGB()) } );
     } else return 0;
 }
 
@@ -1260,7 +1260,7 @@ int LComponent::setColour ( lua_State* ) {
             // TODO: convert from lua number (double) to uint32
             var val = LUA::getNumber();
             //std::cout << "val: " << val << std::endl;
-            //child->setColour( id, Colour( (uint32)((int)val)) );
+            child->setColour( id, Colour( (uint32)((int)val)) );
         } else if ( lua_isstring(L, -1) ) {
             String name = LUA::getString();
             child->setColour( id, Colours::findColourForName( name, Colours::transparentWhite ) );
