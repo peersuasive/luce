@@ -7,6 +7,8 @@ namespace luce {
 #include "LBase.cpp"
 #include "LModifierKeys.cpp"
 #include "LMouseEvent.cpp"
+#include "LStretchableLayoutManager.cpp"
+
 #include "LComponent.cpp"
 #include "LButton.cpp"
 #include "LJUCEApplication.cpp"
@@ -19,6 +21,7 @@ namespace luce {
 //#include "LValueTree.cpp"
 #include "LTreeView.cpp"
 #include "LTreeViewItem.cpp"
+#include "LStretchableLayoutResizerBar.cpp"
 
 #include "MainThread.cpp"
 #include "Main.cpp"

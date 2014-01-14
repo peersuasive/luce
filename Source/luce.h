@@ -26,6 +26,8 @@ namespace luce {
 #include "LBase.h"
 #include "LModifierKeys.h"
 #include "LMouseEvent.h"
+#include "LStretchableLayoutManager.h"
+
 #include "LComponent.h"
 #include "LButton.h"
 #include "LDocumentWindow.h"
@@ -38,6 +40,7 @@ namespace luce {
 //#include "LValueTree.h"
 #include "LTreeView.h"
 #include "LTreeViewItem.h"
+#include "LStretchableLayoutResizerBar.h"
 
 #include "MainThread.h"
 }
