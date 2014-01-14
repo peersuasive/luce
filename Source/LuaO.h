@@ -13,6 +13,7 @@ namespace LUA {
         const String checkAndGetString(int i=2, String def = String::empty);
 
         const Array<var> getList(int i=-1);
+        const Array<Component*> getComponentList(int n, int i=-1);
         const juce::Rectangle<int> getRectangle(int i=-1);
         const juce::Point<int> getPoint(int i=-1);
         const juce::Range<int> getRange(int i=-1);

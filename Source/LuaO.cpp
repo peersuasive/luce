@@ -102,6 +102,46 @@ namespace LUA {
             return res;
         }
 
+        const Array<Component*> getComponentList(int n, int i) {
+            luaL_checktype(L, i, LUA_TTABLE);
+            lua_pushvalue(L, i);
+
+            Array<Component*> res;
+
+            for (int ind=1;ind<=n;++ind) {
+                Component *comp;
+                lua_rawgeti(L, i, ind);
+                if ( lua_type(L, -1) == LUA_TSTRING ) { // any string will do
+                    comp = nullptr;
+                    lua_pop(L,1);
+                }
+                else
+                    comp = from_luce<Component>(lua_gettop(L));
+                res.add( comp );
+            }
+            lua_pop(L,1);
+            lua_remove(L,i);
+            return res;
+            /*
+            lua_pushnil(L);
+            while( lua_next(L, -2) != 0 ) {
+                std::cout << " ** loop" << std::endl;
+                Component *comp;
+                if ( lua_type(L, -1) == LUA_TNIL ) {
+                    std::cout << "******* NIL" << std::endl;
+                    comp = nullptr;
+                    lua_pop(L,1);
+                }
+                else
+                    comp = from_luce<Component>(lua_gettop(L));
+                res.add(comp);
+            }
+            lua_pop(L,1);
+            lua_remove(L,i);
+            return res;
+            */
+        }
+
         const juce::Rectangle<int> getRectangle(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             i = (i == -1) ? lua_gettop(L) : i; // ensure we have the real table index
