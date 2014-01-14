@@ -97,6 +97,7 @@ namespace LUA {
                 }
                 lua_pop(L, 1);
             }
+            lua_pop(L, 1);
             lua_remove(L,i);
             return res;
         }
