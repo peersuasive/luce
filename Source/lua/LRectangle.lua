@@ -117,6 +117,30 @@ function mt:translated(d, dy)
     return self:new{ self.x+d, self.y+dy, self.w, self.h }
 end
 
+function mt:getX()
+    return self.x
+end
+
+function mt:getY()
+    return self.y
+end
+
+function mt:getWidth()
+    return self.w
+end
+
+function mt:getHeight()
+    return self.h
+end
+
+function mt:setWidth(w)
+    self.w = w
+end
+
+function mt:setHeight(h)
+    self.h = h
+end
+
 function mt:dump()
     return { self.x, self.y, self.w, self.h }
 end
