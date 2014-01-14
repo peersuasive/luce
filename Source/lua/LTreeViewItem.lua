@@ -95,7 +95,6 @@ local function isTable(t)
     return false, 0, 0
 end
 
-
 local function itemOpennessChanged(self, isNowOpen)
     if (isNowOpen) then
         if ( self:getNumSubItems() == 0 ) then
@@ -157,6 +156,9 @@ new = function(self, name, json, parent)
         return itemOpennessChanged(self, isNowOpen)
     end)
 
+    tvi:compareElements(function(a, b)
+        return (string.lower(a) < string.lower(b)) and -1 or 1
+    end)
     -- use
     -- tvi:paint(function(...)
     -- end)
