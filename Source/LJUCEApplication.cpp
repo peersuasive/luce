@@ -48,7 +48,8 @@ LJUCEApplication::LJUCEApplication(lua_State *L)
 
 LJUCEApplication::~LJUCEApplication() {
     DBG("destroying MW...");
-    mainWindow = nullptr;
+    if ( mainWindow )
+        mainWindow = nullptr;
 }
 
 void LJUCEApplication::initialise (const String& commandLine) {
@@ -58,6 +59,7 @@ void LJUCEApplication::initialise (const String& commandLine) {
     else
         mainWindow = LUA::to_juce<Component>();
 }
+
 int LJUCEApplication::initialise( lua_State *L ) {
     set("initialise");
     return 0;
