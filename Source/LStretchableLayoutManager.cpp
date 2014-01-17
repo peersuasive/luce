@@ -34,6 +34,7 @@ LStretchableLayoutManager::LStretchableLayoutManager(lua_State *L)
     : LBase(L),
       StretchableLayoutManager()
 {
+    myName( LUA::checkAndGetString(2, "LStretchableLayoutManager") );
 }
 
 LStretchableLayoutManager::~LStretchableLayoutManager() {}
