@@ -14,12 +14,13 @@
 #ifndef __LUCE_LCOMPONENT_H
 #define __LUCE_LCOMPONENT_H
 
-class LComponent : protected LBase
+class LComponent : public LBase
 {
 public:    
     LComponent(lua_State*, Component* child = nullptr, const String& name = String::empty);
     ~LComponent();
-    
+ 
+    virtual void selfKill() override;
     //==============================================================================
     int setExplicitFocusOrder(lua_State*);
     int getExplicitFocusOrder(lua_State*);
@@ -77,6 +78,7 @@ public:
     int getWindowHandle(lua_State*);
     int moveKeyboardFocusToSibling(lua_State*);
     int addChildComponent(lua_State*);
+    int removeChildComponent(lua_State*);
     int updateMouseCursor(lua_State*);
     int addMouseListener(lua_State*);
     int removeComponentListener(lua_State*);
@@ -212,21 +214,12 @@ public:
     static const Luna<LComponent>::Enum enums[];
 protected:    
     //==============================================================================
-    String myName;
-
-    //==============================================================================
-    // now in LBase
-    //void reg( const String& );
-    //void set( const String& r, int lua_type = LUA_TFUNCTION, int pos = -1);
-    //int callback(const String&, int nb_res = 0, const std::list<var>& args = {}) const;
-
     enum xFocusChangeType
     {
         focusChangedByMouseClick,   /**< Means that the user clicked the mouse to change focus. */
         focusChangedByTabKey,       /**< Means that the user pressed the tab key to move the focus. */
         focusChangedDirectly        /**< Means that the focus was changed by a call to grabKeyboardFocus(). */
     };
-
 
     //==============================================================================
     void lchildrenChanged();
@@ -273,9 +266,6 @@ private:
     LookAndFeel_V3 lookAndFeelV3;
     MyLookAndFeel  myLookAndFeel;
     int currentLookAndFeel;
-    //==============================================================================
-    // LBase
-    //HashMap<String,int> cb;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LComponent)

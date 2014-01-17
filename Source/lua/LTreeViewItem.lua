@@ -4,14 +4,7 @@ LUCE TreeViewItem for JSON
 (c) 2014, Peersuasive Technologies
 --]]
 
-if arg and arg[1] and arg[1]:match("^[Dd]") then
-    print"DEBUG"
-    package.cpath = "debug/?.so;"..package.cpath
-else
-    package.cpath = "./build/?.so;"..package.cpath
-end
-local luce = require"luce"
-
+local luce, LItem
 local new -- pre-declaration
 
 --
@@ -49,6 +42,17 @@ local function createItemComponent(self)
     local val = values.value
     local istop = values.top
  
+    item = LItem( id, val, istop,
+        function(...)self.itemDoubleClicked(self, ...)end,
+        function(...)
+            if(self.parent)then 
+                self.parent:setDefaultOpenness( not(self.parent:areItemsOpenByDefault()) )
+                self.parent:refresh()
+            end 
+        end
+    )
+    return item
+    --[[
     item = require"LItem"( id, val, istop, 
         function(...)self.itemDoubleClicked(self, ...)end,
         function(...)
@@ -59,6 +63,7 @@ local function createItemComponent(self)
         end
     )
     return item
+    --]]
 end
 
 local function isArrayxx(t)
@@ -81,11 +86,13 @@ local function isArray(t)
 end
 local function isTable(t)
     if ("table"==type(t)) then
-        local count = 0
+        local count = false
         for _,v in next, t do
-            count=count+1
+            count=true
+            return true
         end
-        return (t~=0) or (count~=0), #t, (count>0 and count-#t or 0)
+        --return (t~=0) or (count~=0), #t, (count>0 and count-#t or 0)
+        return (#t~=0)
         --[[
         if (count==0) then return false,0,0 end -- empty
         if (#t~=0) and (count~=#t) then return true, #t, (count-#t) end
@@ -114,17 +121,25 @@ local function itemOpennessChanged(self, isNowOpen)
                     end
                 end
             end
+            items = {}
+        end
+    else
+        if not(self.name == "nil") then
+            self:clearSubItems()
         end
     end
 end
 
 new = function(self, name, json, parent)
-    local self = self or {}
+    --local self = self or setmetatable({}, {__mode="v"})
+    local self = {}
     self.name = name
     self.json = json
     self.parent = parent
+    self.childs = setmetatable({}, {__mode="v"})
 
-    local tvi = luce:TreeViewItem():new()
+    local tvi = luce:TreeViewItem()
+    --tvi:isManaged( true )
     self.__self = tvi.__self
     for _,v in next, tvi.methods do
         self[v] = function(self,...)
@@ -143,16 +158,28 @@ new = function(self, name, json, parent)
     function self:getUniqueName(...)
         return self.name
     end
-    tvi:getUniqueName(function(...)
-        return self.name
-    end)
+    --function self:addSubItem(item)
+    --    self.childs[#self.childs+1] = item
+    --    tvi:addSubItem(item)
+    --end
+    --function self:addSubItemSorted(item)
+    --    tvi:addSubItem(item)
+    --end
+    --function self:clearSubItems()
+    --    tvi:clearSubItems()
+    --    self.childs = setmetatable({}, {__mode="v"})
+    --    collectgarbage()
+    --end
+    --function self:getUniqueName(...)
+        tvi:getUniqueName(function(...)
+            return self.name
+        end)
+    --end
     tvi:mightContainSubItems(function(...)
-        --print("*** mightContainSubItems", self.name or "<root>", ("table"==type(self.json)))
         return ("table"==type(self.json))
     end)
 
     tvi:itemOpennessChanged(function(isNowOpen)
-        --print("** openness changed", isNowOpen)
         return itemOpennessChanged(self, isNowOpen)
     end)
 
@@ -160,29 +187,65 @@ new = function(self, name, json, parent)
         return (string.lower(a) < string.lower(b)) and -1 or 1
     end)
     -- use
-    -- tvi:paint(function(...)
-    -- end)
-    -- or
-    -- tvi:createItemComponent(function(...)
-    -- end)
-    -- or none at all
+    --[[
+    tvi:paintItem(function(...)
+       local field = self.name
+       local value;
+       if ( self.json and not ( field and ("table"==type(self.json)) ) ) then
+           if ( field and not("table"==type(self.json)) ) then
+               field = field..":"
+           end
+           if not field and ("table"==type(self.json)) then
+               value = "[Array]"
+           else
+               value = self.json
+           end
+       end
+       return field..(value or"")
+    end)
+    --]]
 
+    -- or
+    
+    ---[[
     tvi:createItemComponent(function(...)
         return createItemComponent(self)
     end)
+    --]]
+
+    -- or none at all
 
     --local mt = tvi.methods
     --require"pl.pretty".dump( tvi.methods )
-    --return setmetatable(self, { __index = self } )
+    ---[[
+    local self = setmetatable(self, {
+        __index = tvi.__index
+    })
     return self
+    --]]
+    --return self
 end
 
 local mt = {}
 mt.__index = mt
 local xmeta = setmetatable( {}, {
-    __call = new,
-    __tostring = function()return"LTreeViewItem"end
+    __call = function(self,debug, ...)
+        local self = self or {}
+        luce = require(debug and"luce_debug"or"luce")
+        LItem = require"LItem"(debug)
+        self = setmetatable({}, {
+            __call = new,
+            __tostring = function()return"LTreeViewItem"end,
+        })
+        return self
+    end,
+    --__tostring = function()return"LTreeViewItem"end,
+    --[[
+    __gc = function(t)
+        t.tvi:isManaged(false)
+    end
+    --]]
 })
 
 module(...)
-return xmeta 
+return xmeta

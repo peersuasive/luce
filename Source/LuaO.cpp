@@ -8,7 +8,6 @@ int luaL_getn(lua_State *L, int idx) {
 typedef luaL_Reg luaL_reg;
 #endif
 
-
 namespace LUA {
     namespace {
         juce::Array<int> locked;
@@ -23,6 +22,104 @@ namespace LUA {
         void throwError(const String& err) {
             lua_pushstring(L, err.toRawUTF8());
             lua_error(L);
+        }
+
+        void reg(const LBase* key) {
+            if ( ! key || key == nullptr )
+                throwError("Trying to register a NULL pointer");
+
+            lua_pushlightuserdata(L, (void*)key); // check if table exists
+            lua_gettable(L, LUA_REGISTRYINDEX);    //
+            if ( lua_isnil(L, -1) ) {
+                lua_pop(L,1);
+                lua_pushlightuserdata(L, (void*)key); // check if table exists
+                lua_newtable(L);
+                int i = lua_gettop(L);
+                lua_settable(L, LUA_REGISTRYINDEX);
+            }
+            else
+                lua_pop(L,1);
+        }
+        void unreg(const LBase* key) {
+            lua_pushlightuserdata(L, (void*)key);
+            lua_pushnil(L);
+            lua_settable(L, LUA_REGISTRYINDEX);
+        }
+
+        bool set(const LBase* key, const char* name, int n_) {
+            bool res = false;
+            if ( ! lua_isfunction(L, n_) )
+                throwError("LUCE ERROR: callback is not a function");
+        
+            int n = (n_<0) ? (lua_gettop(L)-(n_+1)) : n_;
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            if ( lua_istable(L, -1) ) {
+                int i = lua_gettop(L);
+                lua_pushstring(L, name);
+                lua_pushvalue(L, n);
+                lua_settable(L, i);
+                lua_pop(L,1);
+                lua_remove(L, n);
+                res = true;
+            } else {
+                lua_pop(L,1); // nil
+                // could create table here, instead... but I want to get sure this
+                // is stored at the correct place, just to avoid having ghost tables
+                std::cout << "Can't get registry for " << key << std::endl;
+                throwError("LUCE ERROR: can't get registry to store callbacks");
+            }
+            return res;
+        }
+        void unset(const LBase* key, const char* name) {
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            if ( ! lua_istable(L, -1) ) {
+                lua_pop(L,1);
+                return;
+            }
+            int top = lua_gettop(L);
+            lua_getfield(L, top, name);
+            if ( lua_isnil(L,-1) ) {
+                lua_pop(L,1);
+                return;
+            }
+            lua_pushnil(L);
+            lua_settable(L, top);
+            lua_pop(L,1);
+        }
+        bool hasCallback(const LBase* key, const char* name) {
+            bool res = false;
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            if ( lua_istable(L, -1) ) {
+                lua_getfield(L, -1, name);
+                res = lua_isfunction(L, -1);
+                lua_pop(L,1);
+            }
+            lua_pop(L,1);
+            return res;
+        }
+        bool getCallback(const LBase* key, const char* name) {
+            bool res = false;
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            int i = lua_gettop(L);
+            if ( lua_istable(L, -1) ) {
+                lua_getfield(L, -1, name);
+                if ( ! lua_isfunction(L, -1 ) )
+                    lua_pop(L,1); // nil
+                else 
+                    res = true;
+            }
+            lua_remove(L, i);
+            // leaves callback on top
+            return res;
+        }
+
+        //void store(int addr, WeakReference<LBase> o) {
+        void store(int addr, WeakReference<LSelfKill> o) {
+            objects[addr] = o;
         }
 
         // get results from stack
@@ -116,7 +213,7 @@ namespace LUA {
                     lua_pop(L,1);
                 }
                 else
-                    comp = from_luce<Component>(lua_gettop(L));
+                    comp = from_luce<LComponent,Component>(lua_gettop(L));
                 res.add( comp );
             }
             lua_pop(L,1);
@@ -144,7 +241,8 @@ namespace LUA {
 
         const juce::Rectangle<int> getRectangle(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
-            i = (i == -1) ? lua_gettop(L) : i; // ensure we have the real table index
+            i = (i<0) ? lua_gettop(L)-(i+1) : i;
+            //i = (i == -1) ? lua_gettop(L) : i; // ensure we have the real table index
             lua_getmetatable(L, i);
             lua_getfield(L, -1, "__self");
             if ( ! lua_isnil(L, -1) ) { // LRectangle object
@@ -258,25 +356,25 @@ namespace LUA {
             return res;
         }
 
-        template<class T>
-        T* from_luce(int i) {
+        template<class T, class U = T>
+        U* from_luce(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_getfield(L, i, "__self");
             if ( lua_isnil(L, -1) )
                 throwError("given object is not a valid Luce object");
             T **obj = static_cast<T**>(lua_touserdata(L, -1));
+
             lua_remove(L, i); // object
             lua_pop(L,1); // pushed __self
             if(!obj)
                 return nullptr;
-            return *obj;
+            return dynamic_cast<U*>(*obj);
+            //return *obj;
         }
 
         template<class T, class U = T>
         int returnUserdata(const U* udata) {
             if ( udata ) {
-                //DBG(String("size of L at the beginning: ") + String(lua_gettop(L)));
-
                 const T *ldata = static_cast<const T*>( udata );
                 lua_newtable(L);
                 int t = lua_gettop(L);
@@ -534,6 +632,11 @@ namespace LUA {
             int func_index = lua_gettop(L);
             if ( lua_type(L, -1) == LUA_TFUNCTION ) {
                 lua_pushcclosure(L, stacktrace, 0);
+                if ( lua_type(L, -1) == LUA_TNIL ) {
+                    std::cout << "ERROR: callback is not a closure!" << std::endl;
+                    throwError("INTERNAL ERROR: registered callback is not a closure!");
+                }
+
                 int errfunc = lua_gettop(L);
                 lua_pushvalue(L, func_index);
 
@@ -598,6 +701,11 @@ namespace LUA {
 
                 // call callback function
                 //if ( lua_pcall(L, nb_args, nb_ret, errfunc) != 0 ) {
+                if ( nb_ret < 0 ) {
+                    std::cout << "GRAVE!!!!!!!!!!!!!!!!!!! nb_ret -> " << nb_ret << std::endl;
+                    nb_ret = 0;
+                }
+                
                 if ( lua_pcall(L, nb_args, nb_ret, 0) != 0 ) {
                     DBG("failed to execute callback.");
                     status = -1;
@@ -622,32 +730,95 @@ namespace LUA {
             return status;
         }
 
-        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret, 
-                                                                const std::list<var>& args) 
-        {
-            // quick return
-            if ( ! cb.contains(key) || (cb[key] == LUA_REFNIL) )
-                return -1;
+        const int call_cb( const LBase* key, const char *name, int nb_ret, const std::list<var>& args ) {
+            // lock running
+            // ...
+            
+            jassert( L != nullptr );
+            if ( L == nullptr ) {
+                // unlock...
+                std::cout << "No lua state found !" << std::endl;
+                return -2;
+            }
+            if ( ! getCallback(key, name) ) {
+                std::cout << "ERROR: no callback found for class: " << key->myName() << ", with name: " << name << std::endl;
+                return 0; // not found
+            }
 
-            int status = call_cb(cb[key], nb_ret, args);
-            if ( status < 0 ) {
-                DBG("couldn't execute the " + key + " callback.");
+            int status = 0;
+            int func_index = lua_gettop(L);
+            int nb_args = args.size();
+            
+            lua_pushcclosure(L, stacktrace, 0);
+            int errfunc = lua_gettop(L);
+            lua_pushvalue(L, func_index);
+
+            // set arguments
+            for ( auto &it : args ) {
+                if ( it.isInt()
+                        || it.isInt64() 
+                        || it.isDouble()
+                   ) {
+                    lua_pushnumber(L, it);
+                }
+                else if ( it.isBool() ) {
+                    lua_pushboolean(L, (bool)it);
+                }
+                else if ( it.isString() ) {
+                    lua_pushlstring(L, it.toString().toRawUTF8(), it.toString().length() );
+                }
+                else if ( it.isObject() ) {
+                    LRefBase* lr = ((LRefBase*)it.getObject());
+                    String type = lr->getType();
+                    if ( type == "MouseEvent" || type == "LMouseEvent" ) {
+                        returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
+
+                    } else if ( type == "TreeViewItem" ) {
+                        returnUserdata<LTreeViewItem, TreeViewItem>( (TreeViewItem*)lr->getMe() );
+                    }                        
+                    else if ( type == "Properties" ) {
+                        HashMap<String, var>& h = *lr->getHash();
+                        lua_newtable(L);
+                        int t = lua_gettop(L);
+                        for (HashMap<String,var>::Iterator i(h); i.next();) {
+                            lua_pushstring(L, i.getKey().toRawUTF8());
+                            var val( i.getValue() );
+                            if ( val.isString() )
+                                lua_pushstring(L, val.toString().toRawUTF8());
+                            else if ( val.isBool() )
+                                lua_pushboolean(L, val);
+                            else
+                                lua_pushnumber(L, val);
+                            lua_settable(L, t);
+                        }
+                    } else {
+                        std::cout << "type not yet implemented" << std::endl;
+                        lua_pushnil(L);
+                    }
+                    lr = nullptr;
+                }
+                else {
+                    lua_pushnil(L);
+                    std::cout << "type not yet implemented" << std::endl;
+                }
             }
-            else if ( ! status ) {
-                DBG("no callback found for " + key);
+
+            if ( ! (status = ! lua_pcall(L, nb_args, nb_ret, 0)) ) {
+                DBG("failed to execute callback.");
+                status = -1;
+                if ( lua_isstring(L, -1) ) {
+                    const char *err = lua_tostring(L, -1);
+                    lua_pop(L,1);
+                    std::cout << "ERROR:" << err << std::endl;
+                }
             }
+            lua_remove(L, errfunc);
+            lua_remove(L, func_index);
+
+            // unlock
+            // ...
+            
             return status;
-        }
-
-        void unreg( const HashMap<String, int>& cb, const String& key) {
-            luaL_unref(LUA::Get(), LUA_REGISTRYINDEX, cb[key]);
-        }
-
-        void unregAll( const HashMap<String,int>& cb ) {
-            HashMap<String, int>::Iterator i(cb);
-            while(i.next()) {
-                luaL_unref(LUA::Get(), LUA_REGISTRYINDEX, i.getValue());
-            }
         }
 
         const String getError() {

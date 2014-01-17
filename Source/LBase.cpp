@@ -11,48 +11,38 @@
 
 *************************************************************/
 
-#include "LBase_inh.h"
-const char LBase::className[] = "LBase";
-
-const Luna<LBase>::PropertyType LBase::properties[] = {
-    {0,0}
-};
-
-const Luna<LBase>::FunctionType LBase::methods[] = {
-    {0,0}
-};
-
-LBase::LBase(lua_State *Ls)
+LBase::LBase(lua_State *Ls, const String& name)
+     : LSelfKill(name)
 {
     LUA::Set(Ls);
     L = Ls;
+    LUA::reg(this);
 }
 
 LBase::~LBase() 
 {
-    LUA::unregAll(cb);
+    DBG(String("DELETE LBase: ")+ myName());
+    LUA::unreg(this);
+}
+
+void LBase::selfKill() {
+    delete this;
 }
 
 /// protected methods
-void LBase::reg( const String& r ) {
-    cb.set( r, LUA_REFNIL);
-}
-
 void LBase::set( const String& r, int lua_type, int pos ) {
-    luaL_checktype(L, pos, lua_type );
-    cb.set(r, luaL_ref(L, LUA_REGISTRYINDEX));
-    lua_pop(L,1);
+    if ( LUA::set(this, r.toRawUTF8(), pos) )
+        this->registered.set(r, true);
 }
 
-int LBase::callback( const String& r, int nb_res, const std::list<var>& args ) const {
-    return LUA::call_cb(cb, r, nb_res, args);
+int LBase::callback( const String& k, int nb_ret, const std::list<var>& args ) const {
+    return LUA::call_cb(this, k.toRawUTF8(), nb_ret, args);
 }
 
 bool LBase::hasCallback( const String& k ) {
-    return cb.contains( k ) && (cb[k] != LUA_REFNIL);
+    return this->registered[k];
 }
 
 int LBase::readOnly(lua_State*) {
     LUA::throwError("Attempted to set a read-only variable");
-    //luaL_error(L, "Attempted to set a read-only variable");
 }

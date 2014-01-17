@@ -194,6 +194,10 @@ public:
         lua_pushcfunction(L, &Luna < T >::to_string_);
         lua_settable(L, metatable_);
 
+        lua_pushstring(L, "__gc");
+        lua_pushcfunction(L, &Luna < T >::gc_obj_);
+        lua_settable(L, metatable);
+
         lua_pop(L,1); // pop int. mt
         DBG(String("*** registered ") + T::className);
     }
@@ -204,6 +208,8 @@ public:
       */
     static int constructor(lua_State * L) {
         T*  ap = new T(L);
+        WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(ap);
+        LUA::store( (intptr_t)ap, ref );
 
         lua_newtable(L);
         int t = lua_gettop(L);
@@ -211,6 +217,7 @@ public:
         T** a = static_cast<T**>(lua_newuserdata(L, sizeof(T *))); // Push value = userdata
         *a = ap;
 
+        DBG(String("********** new for ") + T::className);
         std::string cn = std::string(T::className) + "_";
         luaL_getmetatable(L, cn.c_str());
         lua_setmetatable(L, -2); // udata metatable_
@@ -284,8 +291,6 @@ public:
         luaL_checktype(L, -1, LUA_TSTRING);
         // TODO: checkudata on object at __self
         luaL_checktype(L, -2, LUA_TTABLE);
-        //DBG(String("**processing getter: ") + String(T::className));
-        //DBG(String(" with ") + String(lua_tostring(L,-2)));
 
         lua_getmetatable(L, 1); // Look up the index of a name
         lua_pushvalue(L, 2);  // Push the name
@@ -340,8 +345,6 @@ public:
       */
     static int property_setter(lua_State * L)
     {
-        //DBG(String("**processing setter: ") + String(T::className));
-        //DBG(String(" with ") + String(lua_tostring(L,-2)));
         lua_getmetatable(L, 1); // Look up the index from name
         lua_pushvalue(L, 2);  //
         lua_rawget(L, -2);        //
@@ -385,7 +388,6 @@ public:
             if ( _index < max_p )
                 return ((*obj)->*(T::properties[_index].setter)) (L);
             else {
-                //DBG("*** inheritence call");
                 _index = _index - max_p;
                 return ((*obj)->*(T::inherits[_index].setter)) (L);
             }
@@ -406,7 +408,6 @@ public:
         if (i < max_m)
             return ((*obj)->*(T::methods[i].func)) (L);
         else {
-            //DBG("calling inherited function");
             i = i - max_m;
             return ((*obj)->*(T::inheritsF[i].func)) (L);
         }
@@ -417,6 +418,8 @@ public:
       @param L Lua State
       */
     static int gc_obj(lua_State * L) {
+        // never used
+        /*
         luaL_checktype(L, -1, LUA_TTABLE);
         lua_getfield(L, -1, "__self");
 
@@ -426,14 +429,36 @@ public:
             *obj = nullptr;
 
         return 0;
+        */
     }
 
     static int gc_obj_(lua_State * L) {
-        T** obj = static_cast < T ** >(lua_touserdata(L, -1));
+        // nothing to do here...
+        //DBG(String(">>>>>>>>> collecting: ") + T::className);
+        //T** obj = static_cast < T ** >(lua_touserdata(L, -1));
+        //int addr = (intptr_t)(*obj);
+        //std::cout << ">>>>>>>>> collecting: "<< + T::className << "(" << (*obj)->baseName() << ")" << std::endl;
+        
+        //std::cout << "MM ?" << ((MessageManager::getInstanceWithoutCreating() == nullptr) ? "CLEAN" : "NOT CLEAN") 
+        //          << std::endl;
+        /*
+        if ( LUA::objects[addr] ) {
+            LBase *b = LUA::objects[addr];
+            if ( b )
+                delete *obj;
+        } else {
+            if( obj && *obj && obj != nullptr )
+                *obj = nullptr;
+        }
+        LUA::objects.erase(addr);
 
-        if( obj && *obj && obj != nullptr )
-            *obj = nullptr;
-
+        if ( LUA::objects.size() == 0 ) {
+            if ( MessageManager::getInstanceWithoutCreating() != nullptr )
+                MessageManager::deleteInstance();
+            std::cout << ((MessageManager::getInstanceWithoutCreating() == nullptr) ? "CLEAN" : "NOT CLEAN") << std::endl;
+        } else
+            std::cout << "leaving " << LUA::objects.size() << " objects on stack" << std::endl;
+        */
         return 0;
     }
 
@@ -468,4 +493,3 @@ public:
     }
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Luna<T>)
 };
-

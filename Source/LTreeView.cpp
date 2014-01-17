@@ -71,7 +71,7 @@ LTreeView::LTreeView(lua_State *L)
     : LComponent(L, this),
       TreeView( /* TODO: add args */ )
 {
-    TreeView::setName(myName);
+    TreeView::setName(myName());
 }
 
 LTreeView::~LTreeView() {

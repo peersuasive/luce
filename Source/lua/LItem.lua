@@ -4,17 +4,11 @@ LUCE TreeViewItem item object
 (c) 2014, Peersuasive Technologies
 --]]
 
---if arg and arg[1] and arg[1]:match("^[Dd]") then
---    print"DEBUG"
---    package.cpath = "debug/?.so;"..package.cpath
---else
-    package.cpath = "./build/?.so;"..package.cpath
---end
-local luce = require"luce"
+local luce
 
 local function new(self, id, val, istop, dblClick, changeOpenness)
-    local comp  = luce:MainComponent():new("container")
-    local field = luce:Label():new(id or "<root>")
+    local comp  = luce:MainComponent("container")
+    local field = luce:Label(id or "<root>")
     field.text = (id or "<root>") .. ( val and " "..val or "")
     field:setMinimumHorizontalScale( 1.0 );
     field:setJustificationType( field.JustificationType.centredLeft );
@@ -41,8 +35,13 @@ end
 local mt = {}
 mt.__index = mt
 local xmeta = setmetatable( {}, {
-    __call = new,
-    __tostring = function()return"LItem"end
+    __call = function(self,debug,...)
+        luce = require( debug and "luce_debug" or "luce" )
+        return setmetatable({}, {
+            __call = new,
+            __tostring = function()return"LItem"end
+        })
+    end,
 })
 
 module(...)

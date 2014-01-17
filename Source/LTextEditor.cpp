@@ -131,18 +131,8 @@ LTextEditor::LTextEditor(lua_State *L)
     : LComponent(L, this),
       TextEditor( /* TODO: add args */ )
 {
-    TextEditor::setName(myName);
+    TextEditor::setName(myName());
     TextEditor::addListener(this);
-
-    reg("escapePressed");
-    reg("returnPressed");
-    reg("performPopupMenuAction");
-
-    reg("textEditorTextChanged");
-    reg("textEditorReturnKeyPressed");
-    reg("textEditorEscapeKeyPressed");
-    reg("textEditorFocusLost");
-
 }
 LTextEditor::~LTextEditor(){}
 

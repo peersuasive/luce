@@ -113,7 +113,7 @@ int LMouseEvent::mouseWasClicked ( lua_State* ) {
 }
 
 int LMouseEvent::getEventRelativeTo ( lua_State* ) {
-    MouseEvent e( MouseEvent::getEventRelativeTo( LUA::from_luce<Component>(2) ) );
+    MouseEvent e( MouseEvent::getEventRelativeTo( LUA::from_luce<LComponent,Component>(2) ) );
     return LUA::returnUserdata<LMouseEvent, MouseEvent>( &e );
 }
 

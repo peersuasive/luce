@@ -14,36 +14,28 @@
 #ifndef __LUCE_LBASE_H
 #define __LUCE_LBASE_H
 
-class LBase
+class LBase : public LSelfKill
 {
-public:    
-    LBase(lua_State*);
+public:
+    LBase(lua_State*, const String& name = "(unnamed)");
     ~LBase();
     
+    virtual void selfKill() override;
+
     //==============================================================================
     int readOnly(lua_State*);
     
-    //==============================================================================
-    static const char className[];
-    static const Luna<LBase>::Inheritence inherits[];
-    static const Luna<LBase>::InheritenceF inheritsF[];
-    static const Luna<LBase>::PropertyType properties[];
-    static const Luna<LBase>::FunctionType methods[];
-
-    static const Luna<LBase>::Enum enums[];
-
 protected:    
     //==============================================================================
-    void reg( const String& );
+    HashMap<String, bool> registered;
     void set( const String& r, int lua_type = LUA_TFUNCTION, int pos = -1);
-    int callback(const String&, int nb_res = 0, const std::list<var>& args = {}) const;
+    int callback(const String& k, int nb_ret = 0, const std::list<var>& args = {}) const;
     bool hasCallback(const String&);
-
 
 private:    
     //==============================================================================
     lua_State *L;
-    
+
     //==============================================================================
     HashMap<String,int> cb;
 

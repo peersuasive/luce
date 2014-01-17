@@ -34,7 +34,7 @@ LTextButton::LTextButton(lua_State *L)
     : LButton(L, this),
       TextButton( /* TODO: add args */ )
 {
-    TextButton::setName(myName);
+    TextButton::setName(myName());
     TextButton::addListener(this);
 }
 

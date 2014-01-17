@@ -26,7 +26,7 @@ LMainComponent::LMainComponent(lua_State *L)
     : LComponent(L, this),
       Component()
 {
-    Component::setName(myName);
+    Component::setName(myName());
 }
 
 LMainComponent::~LMainComponent() {

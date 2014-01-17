@@ -49,10 +49,8 @@ LLabel::LLabel(lua_State *L)
     : LComponent(L, this),
       Label()
 {
-    Label::setName(myName);
+    Label::setName(myName());
     Label::addListener(this);
-
-    reg("labelTextHasChanged");
 }
 
 LLabel::~LLabel() {
@@ -82,7 +80,8 @@ int LLabel::getText(lua_State *L) {
 }
 
 int LLabel::attachToComponent(lua_State *L) {
-    Component *comp = LUA::to_juce<Component>(2);
+    //Component *comp = LUA::to_juce<Component>(2);
+    Component *comp = LUA::from_luce<LComponent,Component>(2);
     bool onLeft = ( LUA::checkAndGetBoolean(2, true) );
     Label::attachToComponent(comp, onLeft);
     return 0;

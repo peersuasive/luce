@@ -1,7 +1,9 @@
 #include "luce.h"
 
 namespace luce {
+#include "LSelfKill.cpp"
 #include "LuaO.cpp"
+#include "MainThread.cpp"
 
 #include "MyLookAndFeel.cpp"
 #include "LBase.cpp"
@@ -23,7 +25,5 @@ namespace luce {
 #include "LTreeViewItem.cpp"
 #include "LStretchableLayoutResizerBar.cpp"
 
-#include "MainThread.cpp"
 #include "Main.cpp"
-
 }

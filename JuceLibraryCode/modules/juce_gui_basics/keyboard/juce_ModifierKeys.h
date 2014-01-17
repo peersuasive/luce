@@ -217,6 +217,8 @@ private:
 
     static ModifierKeys currentModifiers;
     static void updateCurrentModifiers() noexcept;
+
+    JUCE_LEAK_DETECTOR (ModifierKeys)
 };
 
 

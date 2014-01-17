@@ -28,14 +28,6 @@ LButton::LButton(lua_State *Ls, Button* child_, const String& name_)
       LComponent(Ls, child_, name_)
 {
     L = Ls;
-    
-    reg("paintButton");
-    reg("clicked");
-    reg("internalClickCallback");
-    reg("triggerClick");
-    reg("buttonStateChanged");
-
-    reg("buttonClicked");
 }
 
 LButton::~LButton(){

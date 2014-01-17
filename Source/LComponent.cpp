@@ -28,51 +28,24 @@ LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
       currentLookAndFeel(0)
 {
     L = Ls;
-    
-    if ( lua_isstring(L, 2) ) {
-        //myName = lua_tostring(L, 2);
-        myName = LUA::getString(2);
-    }
+    if ( lua_isstring(L, 2) )
+        myName( LUA::getString(2) );
     else        
-        myName = name_;
-    
-    reg("childrenChanged");
-    reg("parentHierarchyChanged");
-    reg("colourChanged");
-    reg("lookAndFeelChanged");
-    reg("userTriedToCloseWindow");
-    reg("modifierKeysChanged");
-    reg("broughtToFront");
-    reg("parentSizeChanged");
-    reg("visibilityChanged");
-    reg("inputAttemptWhenModal");
-    reg("paint");
-    reg("handleCommandMessage");
-    reg("resized");
-    reg("focusGained");
-    reg("paintOverChildren");
-    reg("moved");
-    reg("childBoundsChanged");
-    reg("focusLost");
-    reg("minimisationStateChanged");
-    reg("mouseMove");
-    reg("mouseEnter");
-    reg("mouseExit");
-    reg("mouseDown");
-    reg("mouseDrag");
-    reg("mouseUp");
-    reg("mouseDoubleClick");
-    reg("mouseWheelMove");
-    reg("mouseMagnify");
-    reg("enablementChanged");
-    reg("focusOfChildComponentChanged");
+        myName(name_);
+    //LBase::name( myName );
 }
 
-LComponent::~LComponent(){
+LComponent::~LComponent() {
     if (child) {
+        //child->removeAllChildren();
+        child->deleteAllChildren();
         child.release();
         child = nullptr;
     }
+}
+
+void LComponent::selfKill() {
+    delete this;
 }
 
 // get/set
@@ -116,16 +89,27 @@ int LComponent::isVisible(lua_State*) {
 
 int LComponent::addAndMakeVisible(lua_State *L) {
     if(child)
-        child->addAndMakeVisible( LUA::to_juce<Component>(2) );
+        child->addAndMakeVisible( LUA::from_luce<LComponent, Component>(2) );
     return 0;
 }
 
 int LComponent::addChildComponent(lua_State *L) {
     if(child)
-        child->addChildComponent( LUA::to_juce<Component>(2) );
+        child->addChildComponent( LUA::from_luce<LComponent,Component>(2) );
     return 0;
 }
 
+int LComponent::addChildAndSetID ( lua_State* ) {
+    if (child)
+        child->addChildAndSetID( LUA::from_luce<LComponent,Component>(2), LUA::getString(2) );
+    return 0;
+}
+
+int LComponent::removeChildComponent ( lua_State* ) {
+    if (child)
+        return LUA::returnUserdata<LMainComponent, Component>( child->removeChildComponent( LUA::getNumber(2) ) );
+    return 0;
+}
 
 // callbacks
 int LComponent::repaint(lua_State *L) {
@@ -254,8 +238,9 @@ int LComponent::getName ( lua_State* ) {
     else return 0;
 }
 int LComponent::setName ( lua_State* ) {
+    myName( LUA::getString() );
     if (child)
-        child->setName(LUA::getString());
+        child->setName(myName());
     return 0;
 }
 
@@ -498,6 +483,12 @@ int LComponent::isOnDesktop ( lua_State* ) {
     } else return 0;
 }
 
+int LComponent::getChildComponent ( lua_State* ) {
+    if (child)
+        return LUA::returnUserdata<LMainComponent, Component>( child->getChildComponent( LUA::getNumber(2) ) );
+    else return 0;
+}
+
 /////// setters
 int LComponent::setBoundsInset ( lua_State* ) {
     Array<var> r(LUA::getList());
@@ -653,8 +644,12 @@ int LComponent::removeFromDesktop ( lua_State* ) {
 }
 
 int LComponent::removeAllChildren ( lua_State* ) {
-    if (child)
+    if (child) {
+        //TODO: for each removed child, unset isManaged
+        // or call getNumChildComponents/getChildComponent + isManaged(false)
+        // or deleteAllChildren instead...
         child->removeAllChildren();
+    }
     return 0;
 }
 
@@ -1242,17 +1237,6 @@ int LComponent::setBoundsToFit ( lua_State* ) {
     return 0;
 }
 
-int LComponent::addChildAndSetID ( lua_State* ) {
-    if (child) {
-        // Component* child = LUA::TODO_OBJECT_Component;
-        String componentID = LUA::getString(3);
-        // child->addChildAndSetID( child, componentID );
-        LUA::TODO_OBJECT( "addChildAndSetID,  child, componentID " );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
-
 int LComponent::setColour ( lua_State* ) {
     if (child) {
         int id = LUA::getNumber(2);
@@ -1301,15 +1285,6 @@ int LComponent::getVisibleArea ( lua_State* ) {
         lua_settop(LUA::Get(), 1); // added by TODO
     }
     return 0;
-}
-
-int LComponent::getChildComponent ( lua_State* ) {
-    if (child) {
-        int index = LUA::getNumber(1);
-        // return LUA::TODO_RETURN_OBJECT_Component( child->getChildComponent( index ) );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "Component getChildComponent( index )" );
-    } else return 0;
 }
 
 int LComponent::getLocalArea ( lua_State* ) {

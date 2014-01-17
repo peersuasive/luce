@@ -34,9 +34,7 @@ LStretchableLayoutResizerBar::LStretchableLayoutResizerBar(lua_State *L)
       StretchableLayoutResizerBar( LUA::from_luce<LStretchableLayoutManager>(2), 
                                         (int)LUA::getNumber(3), LUA::getBoolean(4) )
 {
-    StretchableLayoutResizerBar::setName(myName);
-    reg("hasBeenMoved");
-    reg("mouseDoubleClick");
+    StretchableLayoutResizerBar::setName(myName());
 }
 LStretchableLayoutResizerBar::~LStretchableLayoutResizerBar(){}
 

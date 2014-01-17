@@ -9,21 +9,24 @@
 #include <map>
 
 #include "JuceHeader.h"
-
 #ifdef LUA52
 #define LUA_COMPAT_MODULE
 #endif
 
 namespace luce {
 
+#include "LSelfKill.h"
+
 #include <lua.hpp>
-#include "luna5.h"
+#include "LBase.h"
 #include "LuaO.h"
+#include "MainThread.h"
+#include "luna5.h"
 
 #include "LRefBase.h"
 
 #include "MyLookAndFeel.h"
-#include "LBase.h"
+//#include "LBase.h"
 #include "LModifierKeys.h"
 #include "LMouseEvent.h"
 #include "LStretchableLayoutManager.h"
@@ -42,7 +45,6 @@ namespace luce {
 #include "LTreeViewItem.h"
 #include "LStretchableLayoutResizerBar.h"
 
-#include "MainThread.h"
 }
 
 #endif // __LUCE_H

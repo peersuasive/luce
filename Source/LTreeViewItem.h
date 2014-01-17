@@ -101,7 +101,7 @@ public:
 
 private:
     struct LComparator : private LBase {
-        LComparator(lua_State* L) : LBase(L) { reg("compareElements"); }
+        LComparator(lua_State* L) : LBase(L) {}
         const int compareElements( TreeViewItem *first, TreeViewItem *second ) {
             if (hasCallback("compareElements")) {
                 if ( callback("compareElements", 1, 

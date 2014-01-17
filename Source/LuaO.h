@@ -1,8 +1,18 @@
 namespace LUA {
     namespace {
+        std::map<int, WeakReference<LSelfKill>> objects;
+        void store(int addr, WeakReference<LSelfKill> o);
+
+        void reg(const LBase* key);
+        void unreg(const LBase* key);
+        bool set(const LBase* key, const char* name, int n_ = -1);
+        void unset(const LBase* key, const char* name);
+        bool hasCallback(const LBase* key, const char* name);
+
         void Set(lua_State *L_);
         void throwError(const String& err);
         lua_State *Get();
+
         const var getNumber(int i= -1);
         const var checkAndGetNumber(int i=2, var def = 0);
 
@@ -28,8 +38,8 @@ namespace LUA {
             template<class T>
         T* raw_cast(int i=-1);
 
-            template<class T>
-        T* from_luce(int i=-1);
+            template<class T, class U = T>
+        U* from_luce(int i=-1);
 
             template<class T, class U = T>
         int returnUserdata(const U* udata);
@@ -56,11 +66,10 @@ namespace LUA {
         int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ");
 
         const int call_cb(int ref, int nb_ret = 0, const std::list<var>& args = {} );
-        const int call_cb( const HashMap<String,int>& cb, const String& key, int nb_ret = 0, 
+
+        const int call_cb( const LBase* key, const char *name, int nb_ret = 0,
                                                                 const std::list<var>& args = {} );
 
-        void unreg( const HashMap<String, int>& cb, const String& key);
-        void unregAll( const HashMap<String,int>& cb );
         const String getError();
     }
 }

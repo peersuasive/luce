@@ -35,21 +35,17 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
 };
 
 LJUCEApplication::LJUCEApplication(lua_State *L)
-    : LComponent(L)
+    : LBase(L)
 {
-    reg( "initialise");
-    reg( "systemRequestedQuit");
-    reg( "getApplicationName");
-    reg( "getApplicationVersion");
-    reg( "moreThanOneInstanceAllowed");
-    reg( "shutdown");
-    reg( "anotherInstanceStarted");
+    myName( LUA::checkAndGetString(2, "LJUCEApplication") );
 }
 
 LJUCEApplication::~LJUCEApplication() {
     DBG("destroying MW...");
     if ( mainWindow )
         mainWindow = nullptr;
+
+    DBG("END OF LJUCEApplication");
 }
 
 void LJUCEApplication::initialise (const String& commandLine) {
@@ -57,7 +53,7 @@ void LJUCEApplication::initialise (const String& commandLine) {
     if (rc != 1 )
         std::cout << "error at initialise method ("<<rc<<"): " << LUA::getError() << std::endl;
     else
-        mainWindow = LUA::to_juce<Component>();
+        mainWindow = LUA::from_luce<LComponent,Component>();
 }
 
 int LJUCEApplication::initialise( lua_State *L ) {
@@ -110,13 +106,10 @@ int LJUCEApplication::getApplicationVersion(lua_State *L) {
 }
 
 bool LJUCEApplication::moreThanOneInstanceAllowed() {
-    int rc = callback("moreThanOneInstanceAllowed");
-    if(rc) {
-        //return call_cb_get_value();
-        return true;
-    }
-    else
-        return true;
+    if ( hasCallback("moreThanOneInstanceAllowed") )
+        if( callback("moreThanOneInstanceAllowed") )
+            return LUA::getBoolean();
+    return true;
 }
 int LJUCEApplication::moreThanOneInstanceAllowed(lua_State *L) { 
     set("moreThanOneInstanceAllowed");

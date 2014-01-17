@@ -13,6 +13,8 @@
 
 #include "LTreeViewItem_inh.h"
 
+#include <cstdlib>
+
 ////// static methods
 const char LTreeViewItem::className[] = "LTreeViewItem";
 const Luna<LTreeViewItem>::PropertyType LTreeViewItem::properties[] = {
@@ -75,27 +77,12 @@ LTreeViewItem::LTreeViewItem(lua_State *L)
       TreeViewItem( /* TODO: add args */ ),
       comparator(L)
 {
-    reg("itemOpennessChanged");
-    reg("paintOpenCloseButton");
-    reg("itemDropped");
-    reg("paintItem");
-    reg("filesDropped");
-    reg("paintHorizontalConnectingLine");
-    reg("paintVerticalConnectingLine");
-    reg("itemClicked");
-    reg("itemSelectionChanged");
-    reg("itemDoubleClicked");
-
-    reg("getDragSourceDescription");
-    reg("mightContainSubItems");
-    reg("getUniqueName");
-
-    reg("compareElements");
-
-    reg("createItemComponent");
+    myName("LTreeViewItem");
 }
 
-LTreeViewItem::~LTreeViewItem() {}
+LTreeViewItem::~LTreeViewItem() {
+    TreeViewItem::clearSubItems();
+}
 
 /////// callbacks
 void LTreeViewItem::itemOpennessChanged( bool isNowOpen ) {
@@ -267,7 +254,7 @@ int LTreeViewItem::getUniqueName ( lua_State* L ) {
 Component *LTreeViewItem::createItemComponent() {
     if (hasCallback("createItemComponent")) {
         if ( callback("createItemComponent", 1) ) {
-            Component *comp = LUA::from_luce<Component>();
+            Component *comp = LUA::from_luce<LComponent,Component>(-1);
             return comp;
         }
     }
@@ -387,11 +374,6 @@ int LTreeViewItem::setLinesDrawnForSubItems ( lua_State* ) {
     return 0;
 }
 
-int LTreeViewItem::clearSubItems ( lua_State* ) {
-    TreeViewItem::clearSubItems();
-    return 0;
-}
-
 int LTreeViewItem::sortSubItems ( lua_State* ) {
     TreeViewItem::sortSubItems( comparator );
     return 0;
@@ -399,6 +381,11 @@ int LTreeViewItem::sortSubItems ( lua_State* ) {
 
 int LTreeViewItem::setDrawsInLeftMargin ( lua_State* ) {
     TreeViewItem::setDrawsInLeftMargin(LUA::getBoolean());
+    return 0;
+}
+
+int LTreeViewItem::clearSubItems ( lua_State* L) {
+    TreeViewItem::clearSubItems();
     return 0;
 }
 

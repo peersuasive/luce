@@ -68,17 +68,30 @@ int lua_shutdown(lua_State *L) {
     //mainClass->shutdown(); // can't be called from there because... No more Display ?
     //so let's lua call this for us
 
+    DBG("START CLEANING");
+    lua_gc(L, LUA_GCCOLLECT, 0 );
+    // clean instanciated but never used objects
+    if (LUA::objects.size()) {
+        for (auto& it : LUA::objects) {
+            if ( it.second ) {
+                std::cout << "WARNING: object '" << it.second->myName() << "'"
+                    << " instanciated but probably never used -- cleaning" << std::endl;
+                it.second->selfKill();
+            }
+        }
+    }
+    lua_gc(L, LUA_GCCOLLECT, 0 );
+
     DeletedAtShutdown::deleteAll();
     MessageManager::deleteInstance();
     
+
     shutdownJuce_GUI();
     if ( MessageManager::getInstanceWithoutCreating() != nullptr ) {
-        DBG("definitively is there");
-    }
-    else {
-        DBG("ok, gone");
+        DBG("WARNING: an instance of MessageManager still exists !");
     }
 
+    DBG("ENDED CLEANING");
     return 0;
 }
 
@@ -231,8 +244,12 @@ static const luaL_reg luce_lib [] = {
     {NULL, NULL}
 };
 
-//int luaopen_luce_core (lua_State *L) {
-int luaopen_luce (lua_State *L) {
+#ifdef DEBUG
+int luaopen_luce_core_d (lua_State *L) {
+#else
+int luaopen_luce_core (lua_State *L) {
+#endif
+//int luaopen_luce (lua_State *L) {
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     initialiseJuce_GUI();
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;

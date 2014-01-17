@@ -1,7 +1,7 @@
 #ifndef __LJUCE_APPLICATION_H
 #define __LJUCE_APPLICATION_H
 
-class LJUCEApplication : public LComponent,
+class LJUCEApplication : public LBase,
                          public JUCEApplication
 {
 public:

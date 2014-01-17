@@ -7,44 +7,47 @@ LUCE Application Template
 --]]
 
 
+local luce, debug
 if arg and arg[1] and arg[1]:match("^[Dd]") then
-    print"DEBUG"
-    package.cpath = "debug/?.so;"..package.cpath
+    luce = require"luce_debug"
+    debug = true
 else
-    package.cpath = "./build/?.so;"..package.cpath
+    luce = require"luce"
 end
-local luce = require"luce"
 
 ---
 --- create a default JUCEApplication
 ---
-local mainWindow = luce:JUCEApplication():new()
+local mainWindow = luce:JUCEApplication("JUCEApplication")
 
 ---
 --- create a DocumentWindow with name "Document Window"
 ---
-local dw = luce:DocumentWindow():new("Document Window")
+local dw = luce:DocumentWindow("Document Window")
 
 ---
 --- create a MainComponent, to be hosted by the Document Window
 ---
-local mc = luce:MainComponent():new()
-
+local mc = luce:MainComponent("MainComponent")
+mc:setSize{1,1}
 
 --
 -- put components here
 --
 
 local json = io.open("json_sample.json"):read("*a")
-local ltvi = require"LTreeViewItem"
+local ltvi = require"LTreeViewItem"(debug)
 
-local xtv = luce:TreeView():new("Tree View")
 ---
 -- LUCE wrapper template example -- allow creation of new variables, 
 -- having methods indexed, for completion for instance, etc.
 -- could be simplified and optimised
 ---
-local xtv = luce:TreeView():new("Tree View")
+
+-- local xtv3 = luce:TreeView("Tree View3")
+local xtv2 = luce:TreeView("Tree View2")
+local xtv = luce:TreeView("Tree View")
+
 local tv = {}
 for k,v in next, xtv do
     if ( k == "methods" ) then
@@ -66,10 +69,12 @@ setmetatable(tv, {
     end
 })
 
-local tvi = ltvi(nil, require"json".decode(json), tv)
+local tvi = ltvi("nil", require"json".decode(json))--, tv)
+local tvi2 = ltvi("nil", require"json".decode(json))
+
 function tv:refresh(...)
     print("refreshing...")
-    local tvi = ltvi(nil, require"json".decode(json), self)
+    local tvi = ltvi("nil", require"json".decode(json), self)
     self:setRootItem(tvi)
 end
 
@@ -82,10 +87,27 @@ tv:setMultiSelectEnabled( true )
 
 tv:setRootItem( tvi )
 
+local label2 = luce:Label("Another Label")
+label2.text = "(left aligned)"
+label2:setColour( label2.ColourIds.backgroundColourId, "yellow" )
+label2:setJustificationType( label2.JustificationType.left )
+
+
+local label = luce:Label("A Label")
+label.text = "(right aligned)"
+label:setColour( label.ColourIds.backgroundColourId, "red" )
+label:setJustificationType( label.JustificationType.right )
+
+
+
 --
 -- initialise callback, where components are displayed
 --
 mainWindow:initialise(function(...)
+    mc:addAndMakeVisible( label2 )
+    label2:setBounds{ 200, 20, 200, 200 } -- give the button some dimensions
+    mc:addAndMakeVisible( label )
+    label:setBounds{ 200, 240, 200, 200 } -- give the button some dimensions
     mc:addAndMakeVisible( tv ) -- add components to the main component
     tv:setBounds{ 50, 50, 600, 500 }
     --mc:setBounds{ 50, 50, 800, 600 } -- set the component bounds
@@ -103,7 +125,7 @@ mainWindow:initialise(function(...)
                                         -- on screen directly, so that's another way of
                                         -- doing centreWithSize/setCentrePosition
     --dw:setSize{ 800,600 } -- just show the window, top left corner
-    dw:setLookAndFeel(4);
+    --dw:setLookAndFeel(4);
     dw:setVisible(true)
 
 
@@ -125,16 +147,18 @@ end)
 --- and the other one gives control over the loop
 --- so actions can be taken during the process execution
 
--- luce:start( mainWindow ) -- the simplest one, everything's under 
+luce:start( mainWindow ) -- the simplest one, everything's under 
                             -- JUCE control
 
 --- and the non automatic one
 --- the function's executed in a loop within a thread,
 --- so there's no need to loop here
 --- it is set with the same rate than the JUCE's loop (1ms by default)
+--[[
 luce:start_manual( mainWindow, function(...)
-    return keep_going
+   return keep_going
 end )
+--]]
 
 
 luce:shutdown() -- in any case, call this to close cleanly

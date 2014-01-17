@@ -32,10 +32,8 @@ LDocumentWindow::LDocumentWindow(lua_State *L)
     :  LComponent(L, this),
        DocumentWindow( "DocumentWindow", Colours::lightgrey, DocumentWindow::allButtons )
 {
-    DocumentWindow::setName( myName );
+    DocumentWindow::setName( myName() );
     commandManager = new ApplicationCommandManager();
-
-    reg( "closeButtonPressed" );
 
     DocumentWindow::addKeyListener (commandManager->getKeyMappings());
     triggerAsyncUpdate();
@@ -52,7 +50,7 @@ void LDocumentWindow::handleAsyncUpdate() {
 }
 
 int LDocumentWindow::setContentOwned(lua_State*) {
-    DocumentWindow::setContentOwned( LUA::to_juce<Component>(2), LUA::checkAndGetBoolean(2, true) );
+    DocumentWindow::setContentOwned( LUA::from_luce<LComponent,Component>(2), LUA::checkAndGetBoolean(2, true) );
     return 0;
 }
 
