@@ -74,8 +74,10 @@ int lua_shutdown(lua_State *L) {
     if (LUA::objects.size()) {
         for (auto& it : LUA::objects) {
             if ( it.second ) {
-                std::cout << "WARNING: object '" << it.second->myName() << "'"
-                    << " instanciated but not cleaned (either pure LBase or never used) -- cleaning" << std::endl;
+                if ( dynamic_cast<LComponent*>( (LSelfKill*)it.second ) )
+                    std::cout << "WARNING: object '" << it.second->myName() << "'"
+                        << " instanciated but not cleaned (probably never used) -- cleaning" << std::endl;
+
                 it.second->selfKill();
             }
         }
