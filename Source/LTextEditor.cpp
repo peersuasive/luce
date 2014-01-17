@@ -203,7 +203,8 @@ int LTextEditor::textEditorEscapeKeyPressed (lua_State *L) {
 }
 
 void LTextEditor::textEditorFocusLost (TextEditor &t) {
-    callback("textEditorFocusLost");
+    if (hasCallback("textEditorFocusLost"))
+        callback("textEditorFocusLost");
 }
 int LTextEditor::textEditorFocusLost (lua_State *L) {
     set("textEditorFocusLost");
