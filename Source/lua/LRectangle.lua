@@ -141,6 +141,25 @@ function mt:setHeight(h)
     self.h = h
 end
 
+function mt:getRight()
+    return self.x + self.w
+end
+
+function mt:getBottom()
+    return self.y + self.h
+end
+
+function getCentreX()
+    return self.x + self.w / 2
+end
+
+function getCentreY()
+    return self.y + self.h / 2
+end
+function getCentre()
+    return { self.x+w/2, self.y+h/2 }
+end
+
 function mt:dump()
     return { self.x, self.y, self.w, self.h }
 end
