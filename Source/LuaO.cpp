@@ -358,6 +358,12 @@ namespace LUA {
 
         template<class T, class U = T>
         U* from_luce(int i) {
+            // TODO: use check, meaning -- refactor luna5 first
+            /*
+            T* res = Luna<T>::check(L,i);
+            lua_remove(L,i);
+            return dynamic_cast<U*>(res);
+            */
             luaL_checktype(L, i, LUA_TTABLE);
             lua_getfield(L, i, "__self");
             if ( lua_isnil(L, -1) )
