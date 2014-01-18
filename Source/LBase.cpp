@@ -21,7 +21,6 @@ LBase::LBase(lua_State *Ls, const String& name)
 
 LBase::~LBase() 
 {
-    DBG(String("DELETE LBase: ")+ myName());
     LUA::unreg(this);
 }
 
