@@ -44,8 +44,6 @@ local ltvi = require"LTreeViewItem"(debug)
 -- could be simplified and optimised
 ---
 
--- local xtv3 = luce:TreeView("Tree View3")
-local xtv2 = luce:TreeView("Tree View2")
 local xtv = luce:TreeView("Tree View")
 
 local tv = {}
@@ -70,7 +68,6 @@ setmetatable(tv, {
 })
 
 local tvi = ltvi("nil", require"json".decode(json))--, tv)
-local tvi2 = ltvi("nil", require"json".decode(json))
 
 function tv:refresh(...)
     print("refreshing...")
@@ -78,7 +75,7 @@ function tv:refresh(...)
     self:setRootItem(tvi)
 end
 
---tv:setColour( tv.ColourIds.backgroundColourId, "dimgrey" )
+tv:setColour( tv.ColourIds.backgroundColourId, "dimgrey" )
 
 tv:setOpenCloseButtonsVisible(true)
 
@@ -87,27 +84,10 @@ tv:setMultiSelectEnabled( true )
 
 tv:setRootItem( tvi )
 
-local label2 = luce:Label("Another Label")
-label2.text = "(left aligned)"
-label2:setColour( label2.ColourIds.backgroundColourId, "yellow" )
-label2:setJustificationType( label2.JustificationType.left )
-
-
-local label = luce:Label("A Label")
-label.text = "(right aligned)"
-label:setColour( label.ColourIds.backgroundColourId, "red" )
-label:setJustificationType( label.JustificationType.right )
-
-
-
 --
 -- initialise callback, where components are displayed
 --
 mainWindow:initialise(function(...)
-    mc:addAndMakeVisible( label2 )
-    label2:setBounds{ 200, 20, 200, 200 } -- give the button some dimensions
-    mc:addAndMakeVisible( label )
-    label:setBounds{ 200, 240, 200, 200 } -- give the button some dimensions
     mc:addAndMakeVisible( tv ) -- add components to the main component
     tv:setBounds{ 50, 50, 600, 500 }
     --mc:setBounds{ 50, 50, 800, 600 } -- set the component bounds

@@ -184,7 +184,7 @@ new = function(self, name, json, parent)
         return (string.lower(a) < string.lower(b)) and -1 or 1
     end)
     -- use
-    --[[
+    ---[[
     tvi:paintItem(function(...)
        local field = self.name
        local value;
@@ -204,7 +204,7 @@ new = function(self, name, json, parent)
 
     -- or
     
-    ---[[
+    --[[
     tvi:createItemComponent(function(...)
         return createItemComponent(self)
     end)
@@ -212,15 +212,12 @@ new = function(self, name, json, parent)
 
     -- or none at all
 
-    --local mt = tvi.methods
-    --require"pl.pretty".dump( tvi.methods )
     ---[[
     local self = setmetatable(self, {
         __index = tvi.__index
     })
     return self
     --]]
-    --return self
 end
 
 local mt = {}
@@ -236,12 +233,6 @@ local xmeta = setmetatable( {}, {
         })
         return self
     end,
-    --__tostring = function()return"LTreeViewItem"end,
-    --[[
-    __gc = function(t)
-        t.tvi:isManaged(false)
-    end
-    --]]
 })
 
 module(...)
