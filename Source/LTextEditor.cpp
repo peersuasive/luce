@@ -173,13 +173,14 @@ void LTextEditor::performPopupMenuAction( int menuItemID ) {
     else
         TextEditor::performPopupMenuAction(menuItemID);
 }
-int LTextEditor::performPopupMenuAction(lua_State*){
+int LTextEditor::performPopupMenuAction(lua_State*) {
     set("performPopupMenuAction");
     return 0;
 }
 
 void LTextEditor::textEditorTextChanged (TextEditor &t) {
-    callback("textEditorTextChanged");
+    if (hasCallback("textEditorTextChanged"))
+        callback("textEditorTextChanged");
 }
 int LTextEditor::textEditorTextChanged(lua_State *L) {
     set("textEditorTextChanged");
@@ -187,7 +188,8 @@ int LTextEditor::textEditorTextChanged(lua_State *L) {
 }
 
 void LTextEditor::textEditorReturnKeyPressed (TextEditor &t) {
-    callback("textEditorReturnKeyPressed");
+    if(hasCallback("textEditorReturnKeyPressed"))
+        callback("textEditorReturnKeyPressed");
 }
 int LTextEditor::textEditorReturnKeyPressed (lua_State *L) {
     set("textEditorReturnKeyPressed");
@@ -195,7 +197,8 @@ int LTextEditor::textEditorReturnKeyPressed (lua_State *L) {
 }
 
 void LTextEditor::textEditorEscapeKeyPressed (TextEditor &t) {
-    callback("textEditorEscapeKeyPressed");
+    if(hasCallback("textEditorEscapeKeyPressed"))
+        callback("textEditorEscapeKeyPressed");
 }
 int LTextEditor::textEditorEscapeKeyPressed (lua_State *L) {
     set("textEditorEscapeKeyPressed");
