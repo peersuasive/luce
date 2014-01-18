@@ -18,17 +18,17 @@ local luce = require"luce"
 ---
 --- create a default JUCEApplication
 ---
-local mainWindow = luce:JUCEApplication():new()
+local mainWindow = luce:JUCEApplication()
 
 ---
 --- create a DocumentWindow with name "Document Window"
 ---
-local dw = luce:DocumentWindow():new("Document Window")
+local dw = luce:DocumentWindow("Document Window")
 
 ---
 --- create a MainComponent, to be hosted by the Document Window
 ---
-local mc = luce:MainComponent():new()
+local mc = luce:MainComponent()
 
 
 
