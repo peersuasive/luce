@@ -36,6 +36,7 @@ local mt = {}
 mt.__index = mt
 local xmeta = setmetatable( {}, {
     __call = function(self,debug,...)
+        local self = self or {}
         luce = require( debug and "luce_debug" or "luce" )
         return setmetatable({}, {
             __call = new,
@@ -45,4 +46,4 @@ local xmeta = setmetatable( {}, {
 })
 
 module(...)
-return xmeta 
+return xmeta
