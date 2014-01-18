@@ -1,21 +1,11 @@
----
--- LClass( luce:CLASS():new(...) )
--- LClass( "AClass", ... )
----
-local luce = require"luce.core"
-local new = function(_, name, ...)
-    local self = {}
-    local class
-    if("string"==type(name)) then
-        local luce = require"luce"
-        class = luce[name](luce):new(...)
-    else
-        class = name
-    end
-    for k,v in next, class do
+local new = function(self, ...)
+    local self = self or {}
+    local me = self.class.new(class, ...)
+    self.__self = me.__self
+    for k,v in next, me do
         if ( k == "methods" ) then
             for _,f in next, v do
-                self[f] = class[f] -- better than the methods table
+                self[f] = me[f] -- better than the methods table
             end
         -- TODO: find a smart way to get values when dumping
         elseif ( k == "vars" ) then
@@ -27,21 +17,27 @@ local new = function(_, name, ...)
         end
     end
     return setmetatable(self, {
-        __self = class.__self,
-        __index = function(t,k) return class.__index(class, k) end,
+        __tostring = me.__tostring,
+        __self = me.__self,
+        __index = function(t,k) return me.__index(me, k) end,
         __newindex = function(t, k, v)
-            if not ( getmetatable(class).__index(class, k) ) 
-                and not ( getmetatable(class).__newindex(class, k, v) ) then
+            if not ( getmetatable(me).__index(me, k) ) 
+                and not ( getmetatable(me).__newindex(me, k, v) ) then
                 rawset(t,k,v)
             else
-                class[k] = v
+                me[k] = v
             end
         end
     })
 end
 
-local mt = setmetatable({ new = new }, {
-    __call = new
+local mt = setmetatable({}, {
+    __call = function(self, c, ...)
+        assert(c, "Missing base class")
+        return setmetatable({}, {
+            __call = function(_, ...) return new({class=c}, ...) end
+        })
+    end
 })
 module(...)
 return mt
