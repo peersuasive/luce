@@ -10,10 +10,6 @@ local new = function(self, ...)
         -- TODO: find a smart way to get values when dumping
         elseif ( k == "vars" ) then
             self["vars"] = v
-            --for _,f in next, v do
-            --    print("vars", f)
-            --    self[f] = f
-            --end
         else
             self[k] = v
         end
@@ -22,7 +18,6 @@ local new = function(self, ...)
         __tostring = me.__tostring,
         __self = me.__self,
         __index = function(t,k) 
-            print("** index **")
             return me.__index(me, k) 
         end,
         __newindex = function(t, k, v)
