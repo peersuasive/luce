@@ -139,12 +139,9 @@ new = function(self, name, json, parent)
     self.childs = setmetatable({}, {__mode="v"})
 
     local tvi = luce:TreeViewItem()
-    --tvi:isManaged( true )
     self.__self = tvi.__self
-    for _,v in next, tvi.methods do
-        self[v] = function(self,...)
-            return tvi[v](self,...)
-        end
+    for k,v in next, tvi do
+        self[k] = v
     end
     -- remove or override some callbacks and internal methods
     -- ... mightContainSubItems...

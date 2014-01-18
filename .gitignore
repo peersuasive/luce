@@ -4,5 +4,10 @@ local/
 .*.sw*
 .ycm_extra_conf.py
 local/
-build/
+Builds/
 microparser/
+*.sw*
+*.dis
+dis/
+pending/
+dump/

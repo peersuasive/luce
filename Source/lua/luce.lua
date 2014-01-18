@@ -1,5 +1,5 @@
 local luce = require"luce.core"
-local LClass = require"LClass2"
+local LClass = require"LClass"
 
 local mt = {}
 for k,v in next, luce do
