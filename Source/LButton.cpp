@@ -77,7 +77,7 @@ int LButton::triggerClick(lua_State*){
 }
 
 void LButton::lbuttonStateChanged() {
-    if (child)
+    if (child && hasCallback("buttonStateChanged") )
         callback("buttonStateChanged");
 }
 int LButton::buttonStateChanged(lua_State*) {
