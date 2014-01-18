@@ -41,13 +41,11 @@ Downloads
 v0.1 (alpha)
 ------------
 
-* `linux (64b, lua5.1) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.linux64.zip>`_
+* `linux (64b, lua5.1) <https://github.com/peersuasive/luce/releases/download/v0.1/luce.0.1.linux64.zip>`_
 
-* `linux (64b, lua5.1, debug) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.linux64.dbg.zip>`_
+* `linux (64b, lua5.1, debug) <https://github.com/peersuasive/luce/releases/download/v0.1/luce.0.1.linux64.dbg.zip>`_
 
-* `win32 (lua5.2) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.win32.zip>`_
-
-* `win32 (lua5.2, with lua5.2) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.win32_w_lua52.zip>`_
+* `win32 (lua5.2) <https://github.com/peersuasive/luce/releases/download/v0.1/luce.0.1.win32.zip>`_
 
 
 What's implemented so far ?
