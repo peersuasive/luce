@@ -9,9 +9,11 @@ local new = function(self, ...)
             end
         -- TODO: find a smart way to get values when dumping
         elseif ( k == "vars" ) then
-            for _,f in next, v do
-                self[f] = f
-            end
+            self["vars"] = v
+            --for _,f in next, v do
+            --    print("vars", f)
+            --    self[f] = f
+            --end
         else
             self[k] = v
         end
@@ -19,7 +21,10 @@ local new = function(self, ...)
     return setmetatable(self, {
         __tostring = me.__tostring,
         __self = me.__self,
-        __index = function(t,k) return me.__index(me, k) end,
+        __index = function(t,k) 
+            print("** index **")
+            return me.__index(me, k) 
+        end,
         __newindex = function(t, k, v)
             if not ( getmetatable(me).__index(me, k) ) 
                 and not ( getmetatable(me).__newindex(me, k, v) ) then
