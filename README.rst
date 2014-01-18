@@ -9,70 +9,133 @@ A GUI Toolkit for Lua based on JUCE
 What is ``LUCE`` ?
 ==================
 
-    ``LUCE`` is a `Lua <http://lua.org>`_ binding/wrapper to `JUCE <http://www.juce.com>`_.
-        
-    ``JUCE`` is "``an extensive, mature, cross-platform C++ toolkit``". 
-    
-    It has a clean, neat and smart C++ interface for GUI development with very
-    interesting low level features. It is light, fully embeddable, well coded
-    and can be very easily extended with fancy components and visual effects
-    thanks to its low level API.
+``Luce`` is a `Lua <http://lua.org>`_ GUI framework, based on the excellent C++
+portable, embeddable libray `JUCE <http://www.juce.com>`_.
 
-    For more information on ``JUCE``, see `Raw Material Software Ltd. official website
-    <http://www.juce.com>`_.
+Though based on Juce, Luce must be considered a different project than
+Juce as there are some differences between them and the gap will keep growing
+as Luce is developping.
 
-    ``LUCE`` is at the very first stage of development and implements just the bare
-    minimum as a demonstrator, though the core itself is well advanced.
-    
-    The goal of ``LUCE`` is not to write a 1 to 1 binding for ``JUCE`` but
-    rather aims at creating a native GUI toolkit for Lua *based* on ``JUCE``,
-    that is, with a programming interface more on the Lua spirit than the C++
-    spirit.
-    Therefore, something closer 
-    to `tekUI <http://tekui.neoscientists.org>`_ 
-    than `wxLua <http://wxlua.sourceforge.net>`_ 
-    or `QtLua <http://www.nongnu.org/libqtlua>`_.
+Luce has Lua in mind and will be developped for lua developpers.
 
-    Lua essence is to be "``a powerfull, fast, lightweight embeddable scripting language.``"
-    And so would ``Luce`` be too.
+Lua essence is to be "``a powerfull, fast, lightweight embeddable scripting
+language.``" And so would Luce be too.
+
+Luce is light, fast and easily portable, thanks to Lua and Juce itself.
 
     
 Requirements and dependencies
 =============================
 
-    * lua 5.1/luajit (untested with 5.2)
+* lua 5.1/luajit (5.2 in progess)
 
-    * C++11, GCC > 4.6 (should work with CLANG too)
+* C++11, GCC > 4.6 (CLANG supported)
 
-    * Linux (untested with any other OS but shouldn't need a lot of work, if
-      any at all, thanks to ``JUCE``)
+* tested under Linux, Windows and Mac OS X
 
-    * ``JUCE`` 3.0 (optional, to add new features)
+* ``JUCE`` 3.0.X (optional, to add new features)
+
+Downloads
+=========
+
+v0.1 (alpha)
+------------
+
+* `linux (64b, lua5.1) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.linux64.zip>`_
+
+* `linux (64b, lua5.1, debug) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.linux64.dbg.zip>`_
+
+* `win32 (lua5.2) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.win32.zip>`_
+
+* `win32 (lua5.2, with lua5.2) <https://peersuasive.com/luce/distrib/v0.1/luce.0.1.win32_w_lua52.zip>`_
+
+
+What's implemented so far ?
+===========================
+
+* Component
+* Label
+* TextEditor
+* TextButton
+* TreeView / TreeViewItem
+* MouseListener
+* Look And Feel (only C++ at the moment)
+* and growing...
+
+Luce design
+===========
+
+All Luce classes start with a ``L``.
+
+Luce's design is close to Juce's, but has less options as most of them are not
+required with Lua.
+
+For the general GUI design, see Juce.
+
+All widgets are derived from Juce's Component class and Luce's LComponent
+class. All non-widgets classes are derived from LBase. LComponent itself is
+derived from LBase. LBase offers the required link to Lua while LComponent
+offers the required links to Juce.
+
+Most of the callbacks that exist in Juce also exist in Luce; in the same manner
+they need to be overriden in Juce to take effect, they also need to be
+overriden in Luce, that is, as for Luce, that a lua function needs to be
+provided for the callback to be effective. If not callback is provided, the
+default Juce action is called, if any.
+
+All L* classes maps their Juce equivalent or are specific to Luce (like LBase).
+
+All L* classes are overridable within lua code, like any pure lua modules, and
+most of them are partly implemented in Lua. This is particularly useful for
+callback declarations or to add actions to native methods or simply to
+specialise a component with new functionnalities.  This is the mechanism we use
+to implement C++ classes directly in Lua.
+
+There's a limitation, though, unless it's a callback, as it's not possible to
+reimplement a native method in lua -- hence the use of a lua class wrapping the
+native one.
+
+Differences with ``JUCE``
+=========================
+
+For the most part, ``Luce`` uses the same methods than ``JUCE``, but they can
+sometimes have different calling arguments or small behavior differences.
+
+For instance, ``Luce`` doesn't provide any listener class directly (and
+probably won't) but instead wraps the listeners, where relevant, on the C++
+side; as such, there's no point in having ``addListener`` and
+``removeListener`` functions taking a listener class as argument; but one would
+be able to enable or disable such listeners so these methods still exist in
+``Luce`` though they just activate/deactivate the wrapped Listener. 
+
+Some future use cases may reveal the need for such an availability but at the
+moment, we haven't found any.
+
+Another difference is with Rectangle and Point objects, for which we didn't
+find any use to provide natively. These classes are provided as pure lua
+indexed tables and recreated wherever needed. So where a ``JUCE`` method needs
+a ``Rectangle`` or ``Point`` object, a table containing the values must be
+provided instead. Order is always x, y [, w, h ]. In general speaking, it
+respects the order declared in the class constructor. Later on, there'll probably
+be a lua implementation of these classes, to offer some of their most useful
+methods, like ``:reduce()``.
+
+
+
 
 How to use ?
 ============
 
-    For simplicity and reference, ``luce`` uses the same method names than
-    ``JUCE``'s. However, where ``JUCE`` uses getters/setters, we'll prefer a direct
-    access interface instead, whenever possible and obvious, that is. For instance,
-    ``setName("...")`` and ``getName()`` would be replaced with ``name [=
-    "..."]``
+For simplicity and reference, ``luce`` usually uses the same method names than 
+``JUCE``. However, where ``JUCE`` uses getters/setters, Luce offers a direct
+value attribution, whenever possible and obvious, that is. For instance,
+``setName("...")`` and ``getName()`` would be replaced with ``name [=
+"..."]``, though set/get methods are still accessible.
 
-    At the current stage of development, ``luce`` follows the ``JUCE`` general
-    rules for creating GUI applications: a ``JUCEApplication`` object hosts a
-    ``TopLevelWindow`` object which in turn hosts some components.
+So Juce documentation is applicable for most of the Luce components.
 
-    ``JUCE`` uses callbacks and only the most relevant ones are implemented as of now.
-    They are accessed like any normal function in lua, except they're evaluated
-    by the C++ code not the lua interpreter.
-
-    Porting ``JUCE``'s messaging system (``ActionBroadcaster``/``MessageManager``/``...``) to
-    ``LUCE`` will be the next step after the core minimum features were
-    implemented, along with a Lua alternative to ``JUCE``'s ``var`` generic
-    container (in short, it'll be implemented with tables and callbacks).
-
-Example
--------
+Example:
+--------
 
 .. code:: lua
    
@@ -81,8 +144,7 @@ Example
     ---
     --- create a default JUCEApplication
     ---
-    local mainWindow = luce:JUCEApplication()
-    local mainWindow = mainWindow:new()
+    local mainWindow = luce:JUCEApplication():new("My App")
 
     ---
     --- create a DocumentWindow with name "Document Window"
@@ -94,13 +156,13 @@ Example
     ---
     --- create a MainComponent, to be hosted by the Document Window
     ---
-    local mc = luce:MainComponent():new()
+    local mc = luce:MainComponent():new("The Main Component")
 
     ---
     --- create a button named "TheButton" with text "a button"
     ---
     local button = luce:TextButton():new("TheButton")
-    button:setButtonText( "a button")
+    button:setButtonText( "a button" )
 
     --- add a callback for when button is clicked
     button:buttonClicked(function(...)
@@ -250,88 +312,98 @@ Example
 Adding new ``JUCE`` classes
 ===========================
 
-    There are two kinds of classes in ``LUCE``: *full* classes and *wrapper* classes.
-    
-    Full classes are just ``JUCE`` classes extended to be integrated with ``LUCE``,
-    while wrapper classes are there to create some kind of inheritence between
-    ``LUCE`` components.
+There are two kinds of classes in ``LUCE``: *full* classes and *wrapper* classes.
 
-    For the 1st one, see ``LLabel``, ``LTextEditor`` or ``LTextButton``, while
-    the only example for the 2nd kind is ``LComponent``.
+Full classes are just ``JUCE`` classes extended to be integrated with ``LUCE``,
+while wrapper classes are there to create some kind of inheritence between
+``LUCE`` components.
 
-    ``LLabel``, ``LTextEditor`` and ``LTextButton`` extend their respective
-    ``JUCE`` component while inheriting ``LComponent``, which in turn wraps all
-    ``JUCE``'s ``Component`` base class methods.
-    
-    This allows simulating inheritence in ``LUCE`` components, as it wouldn't be
-    possible in a simple way otherwise. Like previously said, we're not aiming
-    at a 1 to 1 binding to ``JUCE``, so more complex mechanisms would be oversized
-    here (unless someone knows a simple way to achieve this, of course !).
+For the 1st one, see ``LLabel``, ``LTextEditor`` or ``LTextButton``, while
+the only example for the 2nd kind is ``LComponent``.
 
-    There is a helper script, ``microparser``, which greatly simplify the job
-    of creating new classes for ``LUCE``. It won't generate a new "ready to use"
-    class but gives a great help by generating the class template and headers
-    with all available methods and callbacks and pre-implementing them.
-    The most obvious ones are fully generated.
+``LLabel``, ``LTextEditor`` and ``LTextButton`` extend their respective
+``JUCE`` component while inheriting ``LComponent``, which in turn wraps all
+``JUCE``'s ``Component`` base class methods.
 
-    To add pseudo-inheritence, use the script ``create_inh.sh``:
+This allows simulating inheritence in ``LUCE`` components, as it wouldn't be
+possible in a simple way otherwise. Like previously said, we're not aiming
+at a 1 to 1 binding to ``JUCE``, so more complex mechanisms would be oversized
+here (unless someone knows a simple way to achieve this, of course !).
 
-    .. code:: sh
+There is a helper script, ``microparser``, which greatly simplify the job
+of creating new classes for ``LUCE``. It won't generate a new "ready to use"
+class but gives a great help by generating the class template and headers
+with all available methods and callbacks and pre-implementing them.
+The most obvious ones are fully generated.
 
-        create_inh.sh <LUCE_CLASS_BASE_NAME>
+To add pseudo-inheritence, use the script ``create_inh.sh``:
+
+.. code:: sh
+
+    ./create_inh.sh <LUCE_CLASS_BASE_NAME>
 
 
-    which generates the ``LCLASS_inh.h`` header to be included in the class.
+which generates the ``LCLASS_inh.h`` header to be included in the class.
 
-    Once the class is created, include it in ``luce.cpp``, ``luce.h`` and reference it in ``Main.cpp``:
+Once the class is created, include it in ``luce.cpp``, ``luce.h`` and reference it in ``Main.cpp``:
 
-    .. code:: c++
+.. code:: c++
 
-        int l_NewClass(lua_State *L) {
-            Luna<LNewClass>::Register(L);
-            return 1;
-        }
+    int l_NewClass(lua_State *L) {
+        Luna<LNewClass>::Register(L);
+        return 1;
+    }
 
-        static const luaL_reg luce_lib [] = {
-            { "NewClass", l_NewClass },
-            [...]
-            {NULL, NULL}
-        };
+    static const luaL_reg luce_lib [] = {
+        { "NewClass", l_NewClass },
+        [...]
+        {NULL, NULL}
+    };
 
  
 
-``Luce`` development stage and future
-=====================================
+``Luce`` Roadmap
+================
 
-    ``LUCE`` is just a few days old and not really useful as it is for more
-    than a demonstrator but it'll become more and more interesting while
-    growing. Any help would be the most welcome so if you have C++, Lua or
-    documenting skills or are just simply interested, don't hesitate to fork and
-    contribute :)
+``LUCE`` is still very young just but is growing fast -- at least as fast as
+our needs for it. Most of the basic widgets are aleady there and it's already
+possible to build some simple applications with it.
+Performances are there too, even if there's no optimisation at all yet.
 
-    The roadmap at the moment is to add more base components and develop a
-    clean, lua-like, API.
+Important missing widgets (like \*Buttons) will be added shortly and lua
+wrapping classes are on their way.
 
-    You may also want to have a look at ``luz``, a simple demonstrator on
-    remotely and dynamically creating a ``Luce`` application, a small *avant
-    goût* of the forthcoming Peersuasive's smart-data oriented architecture
-    ``gadokai`` (yet to be announced).
+Next big steps are:
+
+* message broadcasting between C++/Lua
+
+* a var/Value equivalent usable within lua, even out of any Juce context
+  (that's the still-to-be-announced gadokai's job)
+
+* some minor tasks like overriding LookAndFeel lua side
+
+API documentation will come later as Juce's one is still fully relevant.
+
+You may also want to have a look at `luz <https://github.com/peersuasive/luz>`_,
+a simple demonstrator on remotely and dynamically creating a ``Luce``
+application, a small *avant goût* of the forthcoming Peersuasive's smart-data
+oriented architecture ``gadokai`` (yet to be announced).
 
 
 License.
 ========
 
-    For open source projects, ``LUCE`` is licensed under the terms of the `GPLv3
-    <http://www.gnu.org/licenses/gpl-3.0.html>`_ with some parts being `AGPLv3
-    <http://www.gnu.org/licenses/agpl-3.0.html>`_.
-    
-    For commercial projects and professional support, please contact us at
+For open source projects, ``LUCE`` is licensed under the terms of the `GPLv3
+<http://www.gnu.org/licenses/gpl-3.0.html>`_ with some parts being `AGPLv3
+<http://www.gnu.org/licenses/agpl-3.0.html>`_.
 
-    ``contact``
+For commercial projects and professional support, please contact us at
 
-    ``_at``
+``contact``
 
-    ``peersuasive.com``.
+``_at``
+
+``peersuasive.com``.
 
 
 .. vim:syntax=rst:filetype=rst:spelllang=en
