@@ -21,6 +21,7 @@ class LMouseEvent
 public:
     LMouseEvent(lua_State*);
     LMouseEvent(lua_State*, const MouseEvent&);
+    LMouseEvent(lua_State*, const MouseEvent*);
     ~LMouseEvent();
 
     //==============================================================================

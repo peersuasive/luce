@@ -64,7 +64,13 @@ const Luna<LMouseEvent>::FunctionType LMouseEvent::methods[] = {
 /////// ctor/dtor
 LMouseEvent::LMouseEvent(lua_State *L)
     : LBase(L),
-      MouseEvent( *LUA::from_luce<MouseEvent>(2) )
+      MouseEvent( *LUA::from_luce<LMouseEvent,MouseEvent>(2) )
+{
+}
+
+LMouseEvent::LMouseEvent(lua_State *L, const MouseEvent *e)
+    : LBase(L),
+      MouseEvent(*e) 
 {
 }
 
@@ -73,10 +79,12 @@ LMouseEvent::LMouseEvent(lua_State *L, const MouseEvent& e)
       MouseEvent(e)
 {}
 
-LMouseEvent::~LMouseEvent(){}
+LMouseEvent::~LMouseEvent() {
+}
 
 // custom methods
 int LMouseEvent::getX(lua_State*) {
+    std::cout << "getting x: " << MouseEvent::x << std::endl;
     return LUA::returnNumber( MouseEvent::x );
 }
 int LMouseEvent::getY(lua_State*) {
@@ -112,9 +120,11 @@ int LMouseEvent::mouseWasClicked ( lua_State* ) {
     return LUA::returnBoolean( MouseEvent::mouseWasClicked() );
 }
 
-int LMouseEvent::getEventRelativeTo ( lua_State* ) {
-    MouseEvent e( MouseEvent::getEventRelativeTo( LUA::from_luce<LComponent,Component>(2) ) );
-    return LUA::returnUserdata<LMouseEvent, MouseEvent>( &e );
+int LMouseEvent::getEventRelativeTo ( lua_State* L) {
+    LMouseEvent *e = new LMouseEvent( L, MouseEvent::getEventRelativeTo( LUA::from_luce<LComponent,Component>(2) ) );
+    WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(e);
+    LUA::store( (intptr_t)e, ref );
+    return LUA::returnUserdata<LMouseEvent, MouseEvent>( e );
 }
 
 int LMouseEvent::getDistanceFromDragStartX ( lua_State* ) {
@@ -129,9 +139,11 @@ int LMouseEvent::getPosition ( lua_State* ) {
     return LUA::returnTable( MouseEvent::getPosition() );
 }
 
-int LMouseEvent::withNewPosition ( lua_State* ) {
-    MouseEvent e( MouseEvent::withNewPosition(LUA::getPoint()) );
-    return LUA::returnUserdata<LMouseEvent, MouseEvent>( &e );
+int LMouseEvent::withNewPosition ( lua_State* L ) {
+    LMouseEvent *e = new LMouseEvent( L, MouseEvent::withNewPosition( LUA::getPoint() ) );
+    WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(e);
+    LUA::store( (intptr_t)e, ref );
+    return LUA::returnUserdata<LMouseEvent, MouseEvent>( e );
 }
 
 int LMouseEvent::getMouseDownX ( lua_State* ) {
