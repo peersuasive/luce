@@ -217,7 +217,7 @@ public:
         T** a = static_cast<T**>(lua_newuserdata(L, sizeof(T *))); // Push value = userdata
         *a = ap;
 
-        DBG(String("********** new for ") + T::className);
+        //DBG(String("********** new for ") + T::className);
         std::string cn = std::string(T::className) + "_";
         luaL_getmetatable(L, cn.c_str());
         lua_setmetatable(L, -2); // udata metatable_
