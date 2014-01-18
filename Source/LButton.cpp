@@ -37,7 +37,7 @@ LButton::~LButton(){
 
 /////// callbacks
 void LButton::lpaintButton( Graphics& g,bool isMouseOverButton,bool isButtonDown ) {
-    if (child)
+    if (child && hasCallback("paintButton"))
         callback("paintButton");
 }
 int LButton::paintButton(lua_State*){
@@ -47,7 +47,7 @@ int LButton::paintButton(lua_State*){
 }
 
 void LButton::lclicked( const ModifierKeys& modifiers ) {
-    if (child)
+    if (child && hasCallback("clicked"))
         callback("clicked");
 }
 int LButton::clicked(lua_State*){
@@ -57,7 +57,7 @@ int LButton::clicked(lua_State*){
 }
 
 void LButton::linternalClickCallback( const ModifierKeys& modifierKeys_ ) {
-    if (child)
+    if (child && hasCallback("internalClickCallback"))
         callback("internalClickCallback");
 }
 int LButton::internalClickCallback(lua_State*){
@@ -67,7 +67,7 @@ int LButton::internalClickCallback(lua_State*){
 }
 
 void LButton::ltriggerClick() {
-    if (child)
+    if (child && hasCallback("triggerClick"))
         callback("triggerClick");
 }
 int LButton::triggerClick(lua_State*){
@@ -88,7 +88,7 @@ int LButton::buttonStateChanged(lua_State*) {
 
 // Button::Listener
 void LButton::lbuttonClicked(Button*) {
-    if(child)
+    if(child && hasCallback("buttonClicked"))
         callback("buttonClicked");
 }
 int LButton::buttonClicked(lua_State*) {
