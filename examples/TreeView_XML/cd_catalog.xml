@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Edited by XMLSpy® -->
-<CATALOG>
+<CATALOG purpose="CD Catalog Sample" origin="http://www.w3schools.com/xml/xml_examples.asp">
 	<CD name="Empire Burlesque">
 		<TITLE>Empire Burlesque</TITLE>
 		<ARTIST>Bob Dylan</ARTIST>
