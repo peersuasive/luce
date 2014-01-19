@@ -64,7 +64,8 @@ function mt:withLeft(l)
 end
 
 function mt:withTop(t)
-    return self:new{ self.x, t, self.w, self.h - (t*2) }
+    return self:new{ self.x, t, self.w, (self.y + self.h - t) }
+    --return self:new{ self.x, t, self.w, self.h - (t*2) }
 end
 
 function mt:setTop(t)
@@ -82,12 +83,14 @@ function mt:withRight(l)
 end
 
 function mt:setBottom(b)
-    self.h = self.h - l
+    self.y = (b<self.y) and b or self.y
+    self.h = b - self.y
     return self
 end
 
 function mt:withBottom(b)
-    return self:new{ self.x, self.y, self.w, self.h-l }
+    local y = (b<self.y) and b or self.y
+    return self:new{ self.x, y, self.w, b-y}
 end
 
 function mt:withTrimmedRight(a)
