@@ -17,16 +17,26 @@ local new = function(self, ...)
     return setmetatable(self, {
         __tostring = me.__tostring,
         __self = me.__self,
-        __index = function(t,k) 
+        __index = function(t,k)
             return me.__index(me, k) 
         end,
+        -- FIXME: if returned value is nil, we can't detect if it's a nil index or a nil value !
+        --
         __newindex = function(t, k, v)
-            if not ( getmetatable(me).__index(me, k) ) 
-                and not ( getmetatable(me).__newindex(me, k, v) ) then
+            if not(me.__exists(me,k)) then
                 rawset(t,k,v)
             else
                 me[k] = v
             end
+            --[[
+            if not ( me.__index(me,k)
+                and not ( me.__index(me,k) ) then
+                    rawset(t,k,v)
+                end
+            else
+                me[k] = v
+            end
+            --]]
         end
     })
 end
