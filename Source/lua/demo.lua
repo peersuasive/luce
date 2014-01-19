@@ -1,6 +1,5 @@
 #!/usr/bin/env luajit
 
-local dump = require"pl.pretty".dump
 local debug
 if arg and arg[1] and arg[1]:match("^[Dd]") then
     debug = true
