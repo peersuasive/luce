@@ -4,8 +4,12 @@ LUCE TreeViewItem for JSON
 (c) 2014, Peersuasive Technologies
 --]]
 
+-- pre-declarations
 local luce, LItem
-local new -- pre-declaration
+local new        
+
+-- a default value for unnamed items, that is the root item
+local ROOT = "ROOT"
 
 --
 -- private methods
@@ -42,6 +46,11 @@ local function createItemComponent(self)
     local val = values.value
     local istop = values.top
  
+    -- we're creating a new item (@see LItem for details)
+    -- the first method just activate the TreeViewItem default action
+    -- when left double-click happens
+    -- the second function will open the whole tree by changing TreeView openness
+    -- and refreshing the rootItem
     item = LItem( id, val, istop,
         function(...)self.itemDoubleClicked(self, ...)end,
         function(...)
@@ -52,33 +61,6 @@ local function createItemComponent(self)
         end
     )
     return item
-    --[[
-    item = require"LItem"( id, val, istop, 
-        function(...)self.itemDoubleClicked(self, ...)end,
-        function(...)
-            if(self.parent)then 
-                self.parent:setDefaultOpenness( not(self.parent:areItemsOpenByDefault()) )
-                self.parent:refresh()
-            end 
-        end
-    )
-    return item
-    --]]
-end
-
-local function isArrayxx(t)
-    if ( t and ("table"==type(t)) ) then
-        if ( #t>0 ) then
-            return true
-        end
-        local count = false
-        for _,v in next, t do
-            count = true
-            break
-        end
-        return count and t[1] or false -- indices = array, else = map
-    end
-    return false
 end
 
 local function isArray(t)
@@ -91,17 +73,14 @@ local function isTable(t)
             count=true
             return true
         end
-        --return (t~=0) or (count~=0), #t, (count>0 and count-#t or 0)
         return (#t~=0)
-        --[[
-        if (count==0) then return false,0,0 end -- empty
-        if (#t~=0) and (count~=#t) then return true, #t, (count-#t) end
-        return false, #t, (count>0 and count-#t or 0)
-        --]]
     end
-    return false, 0, 0
+    return false
 end
 
+-- isNowOpen is a boolean provided by the callback
+-- if we have an indexed array, then it's a root item
+-- otherwise, if we have a table, it contains the fields with values
 local function itemOpennessChanged(self, isNowOpen)
     if (isNowOpen) then
         if ( self:getNumSubItems() == 0 ) then
@@ -121,57 +100,42 @@ local function itemOpennessChanged(self, isNowOpen)
                     end
                 end
             end
-            items = {}
         end
     else
-        if not(self.name == "nil") then
+        -- we can clean hidden items to save some memort
+        -- but we don't want to remove the top items
+        -- ROOT is the root item, containing all the children
+        if not(self.name == ROOT) then
             self:clearSubItems()
         end
     end
 end
 
+
+--
+-- new instanciation method
+--
 new = function(self, name, json, parent)
-    --local self = self or setmetatable({}, {__mode="v"})
     local self = {}
-    self.name = name
+    self.name = name or ROOT
     self.json = json
     self.parent = parent
     self.childs = setmetatable({}, {__mode="v"})
 
     local tvi = luce:TreeViewItem()
-    self.__self = tvi.__self
-    for k,v in next, tvi do
-        self[k] = v
-    end
-    -- remove or override some callbacks and internal methods
-    -- ... mightContainSubItems...
-    -- may have a table for callbacks and methods instead of just one for methods
-    self["mightContainSubItems"] = nil
-    self["itemOpennessChanged"] = nil
 
-    function self:setUniqueName(name)
-        self.name = name
-    end
+    -- methods can be locally overriden 
+    -- or reimplemented
+    -- for a quicker access
     function self:getUniqueName(...)
         return self.name
     end
-    --function self:addSubItem(item)
-    --    self.childs[#self.childs+1] = item
-    --    tvi:addSubItem(item)
-    --end
-    --function self:addSubItemSorted(item)
-    --    tvi:addSubItem(item)
-    --end
-    --function self:clearSubItems()
-    --    tvi:clearSubItems()
-    --    self.childs = setmetatable({}, {__mode="v"})
-    --    collectgarbage()
-    --end
-    --function self:getUniqueName(...)
-        tvi:getUniqueName(function(...)
-            return self.name
-        end)
-    --end
+
+    -- callbacks are directly implemented
+    tvi:getUniqueName(function(...)
+        return self.name
+    end)
+
     tvi:mightContainSubItems(function(...)
         return ("table"==type(self.json))
     end)
@@ -183,8 +147,9 @@ new = function(self, name, json, parent)
     tvi:compareElements(function(a, b)
         return (string.lower(a) < string.lower(b)) and -1 or 1
     end)
-    -- use
-    ---[[
+
+    -- to render items, use
+    --[[
     tvi:paintItem(function(...)
        local field = self.name
        local value;
@@ -204,32 +169,37 @@ new = function(self, name, json, parent)
 
     -- or
     
-    --[[
+    ---[[
     tvi:createItemComponent(function(...)
         return createItemComponent(self)
     end)
     --]]
 
-    -- or none at all
+    -- or none at all, which defaults to paintItem, using getUniqueName
 
-    ---[[
-    local self = setmetatable(self, {
-        __index = tvi.__index
+    return setmetatable(self, {
+        -- we're reusing tvi's index but we could also
+        -- loop at the beginning of new and put all methods
+        -- in self -- not really sure there'll be a great performance
+        -- gain, however
+        __index = function(self,k)
+            return tvi[k]
+        end,
+        __tostring = function(self)return "LJSONTreeViewItem("..self.name..")"end
     })
-    return self
-    --]]
 end
 
-local mt = {}
-mt.__index = mt
+-- takes luce instanciation as a required argument, but we could just simply
+-- load it from there
+-- this is just to avoid having to select between debug or release
 local xmeta = setmetatable( {}, {
-    __call = function(self,debug, ...)
+    __call = function(self,core, ...)
         local self = self or {}
-        luce = require(debug and"luce_debug"or"luce")
-        LItem = require"LItem"(debug)
+        luce = assert(core, "Missing luce core instance")
+        LItem = require"LItem"(core)
         self = setmetatable({}, {
             __call = new,
-            __tostring = function()return"LTreeViewItem"end,
+            __tostring = function()return"LJSONTreeViewItem"end,
         })
         return self
     end,

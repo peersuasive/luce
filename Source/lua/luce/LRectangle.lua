@@ -164,19 +164,20 @@ function mt:dump()
     return { self.x, self.y, self.w, self.h }
 end
 
-function new(self, t)
+function new(_, t)
     local self = {}
+    -- TODO: copy instanciation (self.x = t.x, ...)
     local t = t or {}
-    self.x = t[1] or self.x or 0
-    self.y = t[2] or self.y or 0
-    self.w = t[3] or self.w or 0
-    self.h = t[4] or self.h or 0
+    self.x = t[1] or 0
+    self.y = t[2] or 0
+    self.w = t[3] or 0
+    self.h = t[4] or 0
     return setmetatable(self, {
         __index = mt,
         __call = new,
         __self = "LRectangle",
         __tostring = function(self)
-            return "{[0] = "..self.x..", [1] = "..self.y..", [2] = "..self.w..", [3] = "..self.h .. "}"
+            return "LRectangle {x = "..self.x..", y = "..self.y..", w = "..self.w..", h = "..self.h .. "}"
         end,
     })
 end

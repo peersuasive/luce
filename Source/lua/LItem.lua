@@ -35,9 +35,9 @@ end
 local mt = {}
 mt.__index = mt
 local xmeta = setmetatable( {}, {
-    __call = function(self,debug,...)
+    __call = function(self,core,...)
         local self = self or {}
-        luce = require( debug and "luce_debug" or "luce" )
+        luce = assert(core, "Missing luce core instance")
         return setmetatable({}, {
             __call = new,
             __tostring = function()return"LItem"end

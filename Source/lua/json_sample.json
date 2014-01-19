@@ -1,0 +1,26 @@
+[
+    {
+        "address" : "",
+        "phone"    : "",
+        "city"     : "Toulouse",
+        "mobile"   : "",
+        "userid"   : "cberbizier@peersuasive.com",
+        "contact":"cberbizier@peersuasive.com"
+    },
+    {
+        "address":"",
+        "phone":"",
+        "city":"London",
+        "mobile":"",
+        "userid":"testuser@peersuasive.net",
+        "contact":"testuser@peersuasive.net"
+    },
+    {
+        "address":"",
+        "phone":"",
+        "city":"",
+        "mobile":"",
+        "userid":"cberbizier@peersuasive.org",
+        "contact":"cberbizier@peersuasive.org"
+    }
+]

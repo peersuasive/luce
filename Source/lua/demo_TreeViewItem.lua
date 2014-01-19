@@ -1,4 +1,4 @@
-#!/usr/bin/env psm
+#!/usr/bin/env luajit
 
 --[[
 LUCE Application Template
@@ -6,14 +6,11 @@ LUCE Application Template
 (c) 2014, Peersuasive Technologies
 --]]
 
-
-local luce, debug
+local debug
 if arg and arg[1] and arg[1]:match("^[Dd]") then
-    luce = require"luce_debug"
     debug = true
-else
-    luce = require"luce"
 end
+local luce = require"luce"(debug)
 
 ---
 --- create a default JUCEApplication
@@ -36,45 +33,9 @@ mc:setSize{1,1}
 --
 
 local json = io.open("json_sample.json"):read("*a")
-local ltvi = require"LTreeViewItem"(debug)
+local LJSONTreeViewItem = require"LJSONTreeViewItem"(luce)
 
----
--- LUCE wrapper template example -- allow creation of new variables, 
--- having methods indexed, for completion for instance, etc.
--- could be simplified and optimised
----
-
-local xtv = luce:TreeView("Tree View")
-
-local tv = {}
-for k,v in next, xtv do
-    if ( k == "methods" ) then
-        for _,f in next, v do
-            tv[f] = xtv[f] -- better than the methods table
-        end
-    else
-        tv[k] = v
-    end
-end
-setmetatable(tv, {
-    __self = xtv.__self,
-    __index = function(t,k) return xtv.__index(xtv, k) end,
-    __newindex = function(t, k, v)
-        if not ( getmetatable(xtv).__index(xtv, k) ) 
-            and not ( getmetatable(xtv).__newindex(xtv, k, v) ) then
-            rawset(t,k,v)
-        end
-    end
-})
-
-local tvi = ltvi("nil", require"json".decode(json))--, tv)
-
-function tv:refresh(...)
-    print("refreshing...")
-    local tvi = ltvi("nil", require"json".decode(json), self)
-    self:setRootItem(tvi)
-end
-
+local tv = luce:TreeView("Tree View")
 tv:setColour( tv.ColourIds.backgroundColourId, "dimgrey" )
 
 tv:setOpenCloseButtonsVisible(true)
@@ -82,7 +43,13 @@ tv:setOpenCloseButtonsVisible(true)
 tv:setRootItemVisible( false )
 tv:setMultiSelectEnabled( true )
 
+local tvi = LJSONTreeViewItem(nil, require"json".decode(json), tv)
 tv:setRootItem( tvi )
+function tv:refresh(...)
+    print("refreshing...")
+    local tvi = LJSONTreeViewItem("nil", require"json".decode(json), self)
+    self:setRootItem(tvi)
+end
 
 --
 -- initialise callback, where components are displayed

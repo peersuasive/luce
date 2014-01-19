@@ -1,12 +1,11 @@
 #!/usr/bin/env luajit
 
-local luce, debug
+local dump = require"pl.pretty".dump
+local debug
 if arg and arg[1] and arg[1]:match("^[Dd]") then
-    luce = require"luce_debug"
     debug = true
-else
-    luce = require"luce"
 end
+local luce = require"luce"(debug)
 
 ---
 --- create a default JUCEApplication
@@ -90,6 +89,12 @@ label3:setJustificationType( label3.JustificationType.centred )
 local slm = luce:StretchableLayoutManager("unmanaged slm")
 
 local lb = luce:Label("unmanaged label")
+
+
+local bounds = luce:Rectangle( mc:getBounds() )
+print( bounds )
+dump( bounds )
+
 
 
 ---
