@@ -185,6 +185,7 @@ int LTreeView::setRootItem ( lua_State* L) {
     if ( lua_isnil(L, 2) )
         TreeView::setRootItem(nullptr);
     else {
+        TreeView::deleteRootItem();
         //TreeView::setRootItem( LUA::toUserdata<LTreeViewItem>(2) );
         TreeView::setRootItem( LUA::from_luce<LTreeViewItem, TreeViewItem>(2) );
     }
