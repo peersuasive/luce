@@ -89,13 +89,6 @@ local slm = luce:StretchableLayoutManager("unmanaged slm")
 
 local lb = luce:Label("unmanaged label")
 
-
-local bounds = luce:Rectangle( mc:getBounds() )
-print( bounds )
-dump( bounds )
-
-
-
 ---
 --- create a TextEditor
 ---
