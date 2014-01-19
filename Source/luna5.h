@@ -132,6 +132,10 @@ public:
         luaL_newmetatable(L, T::className);
         int metatable = lua_gettop(L);
 
+        lua_pushstring(L, "__exists");
+        lua_pushcfunction(L, &Luna < T >::property_exists);
+        lua_settable(L, metatable);
+
         lua_pushstring(L, "__call");
         lua_pushcfunction(L, &Luna < T >::constructor);
         lua_settable(L, metatable);
@@ -334,6 +338,53 @@ public:
                 _index = _index - max_p;
                 return ((*obj)->*(T::inherits[_index].getter)) (L);
             }
+        }
+        return 1;
+    }
+
+    /**
+      (Used Internally)
+      @param L Lua State
+      @return 
+      */
+    static int property_exists(lua_State * L) {
+        luaL_checktype(L, -1, LUA_TSTRING);
+        // TODO: checkudata on object at __self
+        luaL_checktype(L, -2, LUA_TTABLE);
+
+        lua_getmetatable(L, 1); // Look up the index of a name
+        lua_pushvalue(L, 2);  // Push the name
+        lua_rawget(L, -2);        // Get the index
+        
+        if (lua_isnumber(L, -1)) { // Check if we got a valid index
+            int _index = lua_tonumber(L, -1);
+
+            lua_pushstring(L, "__pn");
+            lua_rawget(L, 3);
+            int max_p = lua_tonumber(L, -1);
+            lua_pop(L,1);
+
+            lua_pushstring(L, "__mn");
+            lua_rawget(L, 3);
+            int max_m = lua_tonumber(L, -1);
+            lua_pop(L,1);
+
+            if( _index & ( 1 << 8 ) ) // A func
+                lua_pushboolean(L, true);
+            else {
+                if ( _index < max_p )
+                    lua_pushboolean(L, true);
+                else {
+                    _index = _index - max_p;
+                    if ( T::inherits[_index].getter )
+                        lua_pushboolean(L, true);
+                    else
+                        lua_pushboolean(L, false);
+                }
+            }
+        } else {
+            lua_pop(L, 2); // metatable and index
+            lua_pushboolean(L, false);
         }
         return 1;
     }
