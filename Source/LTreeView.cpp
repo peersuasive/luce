@@ -20,6 +20,10 @@ const Luna<LTreeView>::PropertyType LTreeView::properties[] = {
     {"multiSelectEnabled", &LTreeView::isMultiSelectEnabled, &LTreeView::setMultiSelectEnabled},
     {"rootItem", &LTreeView::getRootItem, &LTreeView::setRootItem},
     {"rootItemVisible", &LTreeView::isRootItemVisible, &LTreeView::setRootItemVisible},
+    {"defaultOpenness", &LTreeView::areItemsOpenByDefault, &LTreeView::setDefaultOpenness},
+    {"openCloseButtonsVisible", &LTreeView::areOpenCloseButtonsVisible , &LTreeView::setOpenCloseButtonsVisible},
+    {"multiSelectEnabled", &LTreeView::isMultiSelectEnabled, &LTreeView::setMultiSelectEnabled},
+    {"rootItemVisible", &LTreeView::isRootItemVisible, &LTreeView::setRootItemVisible},
     {0,0}
 };
 

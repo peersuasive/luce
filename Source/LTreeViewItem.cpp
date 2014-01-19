@@ -18,6 +18,10 @@
 ////// static methods
 const char LTreeViewItem::className[] = "LTreeViewItem";
 const Luna<LTreeViewItem>::PropertyType LTreeViewItem::properties[] = {
+    {"open", &LTreeViewItem::isOpen, &LTreeViewItem::setOpen},
+    // read-only
+    {"numSubItems", &LTreeViewItem::getNumSubItems, &LBase::readOnly},
+    {"uniqueName", &LTreeViewItem::getUniqueName, &LBase::readOnly},
     {0,0}
 };
 const Luna<LTreeViewItem>::FunctionType LTreeViewItem::methods[] = {
