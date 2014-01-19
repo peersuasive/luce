@@ -489,6 +489,12 @@ int LComponent::getChildComponent ( lua_State* ) {
     else return 0;
 }
 
+int LComponent::getCurrentlyFocusedComponent ( lua_State *L ) {
+    if (child)
+        return LUA::returnUserdata<LMainComponent, Component>( child->getCurrentlyFocusedComponent() );
+    return 0;
+}
+
 /////// setters
 int LComponent::setBoundsInset ( lua_State* ) {
     Array<var> r(LUA::getList());
@@ -1362,14 +1368,6 @@ int LComponent::getParentComponent ( lua_State* ) {
         // return LUA::TODO_RETURN_OBJECT_Component( child->getParentComponent() );
         lua_settop(LUA::Get(), 1); // added by TODO
         return LUA::TODO_OBJECT( "Component getParentComponent()" );
-    } else return 0;
-}
-
-int LComponent::getCurrentlyFocusedComponent ( lua_State* ) {
-    if (child) {
-        // return LUA::TODO_RETURN_OBJECT_Component( child->getCurrentlyFocusedComponent() );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "Component getCurrentlyFocusedComponent()" );
     } else return 0;
 }
 
