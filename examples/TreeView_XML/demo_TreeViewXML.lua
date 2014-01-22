@@ -98,7 +98,7 @@ function tv:refresh(filter_)
             end
         end
         for i=tvi.numSubItems-1, 0, -1 do
-            local un = tvi.getSubItem(i).uniqueName
+            local un = tvi:getSubItem(i).uniqueName
             if not (
                 not(reg) and un:lower():match(filter_) 
                 or (reg and testPattern(un, filter_))
