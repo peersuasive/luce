@@ -440,9 +440,11 @@ namespace LUA {
                 return 1;
             }
         }
-
-        int returnUserdata(MouseEvent* e) {
-            return returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)e );
+        template<class T, class U = T>
+        int storeAndReturnUserdata(U* udata) {
+            WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(udata);
+            LUA::store( (intptr_t)udata, ref );
+            return returnUserdata<T, U>(udata);
         }
 
         int returnBoolean(bool val) {

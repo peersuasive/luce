@@ -43,8 +43,8 @@ namespace LUA {
 
             template<class T, class U = T>
         int returnUserdata(const U* udata);
-
-        int returnUserdata(MouseEvent* e);
+            template<class T, class U = T>
+        int storeAndReturnUserdata(const U* udata);
 
         int returnBoolean(bool val);
         
