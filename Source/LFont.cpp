@@ -93,17 +93,15 @@ const Luna<LFont>::FunctionType LFont::methods[] = {
 
 /////// ctor/dtor
 LFont::LFont(lua_State *L)
-    : LBase(L),
+    : LBase(L, "LFont", true),
       Font()
 {
-    myName("LFont");
 }
 
 LFont::LFont(lua_State*L, const Font& f)
-    : LBase(L),
+    : LBase(L, "LFont (dynamic)", true),
       Font(f)
 {
-    myName("LFont (dynamic)");
 }
 
 LFont::~LFont() {}

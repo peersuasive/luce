@@ -31,7 +31,7 @@ const Luna<LStretchableLayoutManager>::FunctionType LStretchableLayoutManager::m
 };
 
 LStretchableLayoutManager::LStretchableLayoutManager(lua_State *L)
-    : LBase(L),
+    : LBase(L, "LStretchableLayoutManager", true),
       StretchableLayoutManager()
 {
     myName( LUA::checkAndGetString(2, "LStretchableLayoutManager") );

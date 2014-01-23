@@ -17,14 +17,19 @@
 class LSelfKill 
 {
 public:
-    LSelfKill(const String& n = "(unnamed)");
+    LSelfKill(const String& n = "(unnamed)", bool p = true);
     virtual ~LSelfKill();
     virtual void selfKill() = 0;
 
     void myName(const String&);
     const String myName() const;
+
+    const bool pureBase() const;
+protected:
+    void pureBase(bool);
 private:
     String name;
+    bool pure;
 
     WeakReference<LSelfKill>::Master masterReference;
     friend class WeakReference<LSelfKill>;

@@ -266,12 +266,14 @@ int LLabel::setJustificationType(lua_State*) {
 }
 
 int LLabel::getFont ( lua_State *L ) {
-    myFont = new LFont( L, Label::getFont() );
-    return LUA::storeAndReturnUserdata<LFont>( myFont.get() );
+    LFont *f = new LFont( L, Label::getFont() );
+    return LUA::storeAndReturnUserdata<LFont>( f );
+    //myFont = new LFont( L, Label::getFont() );
+    //myFont->setPureBase(false);
+    //return LUA::storeAndReturnUserdata<LFont>( myFont.get() );
 }
 int LLabel::setFont ( lua_State* ) {
-    myFont = LUA::from_luce<LFont>(2);
-    Label::setFont( *myFont );
+    Label::setFont( LUA::from_luce<LFont>(2) );
     return 0;
 }
 

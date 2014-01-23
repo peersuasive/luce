@@ -11,8 +11,8 @@
 
 *************************************************************/
 
-LBase::LBase(lua_State *Ls, const String& name)
-     : LSelfKill(name)
+LBase::LBase(lua_State *Ls, const String& name, bool pure)
+     : LSelfKill(name, pure)
 {
     LUA::Set(Ls);
     L = Ls;

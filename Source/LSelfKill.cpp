@@ -11,8 +11,9 @@
 
 *************************************************************/
 
-LSelfKill::LSelfKill(const String& n) 
-    : name(n)
+LSelfKill::LSelfKill(const String& n, bool p) 
+    : name(n),
+      pure(p)
 {
 }
 
@@ -25,4 +26,12 @@ void LSelfKill::myName(const String& n) {
 }
 const String LSelfKill::myName() const {
     return name;
+}
+
+const bool LSelfKill::pureBase() const {
+    return pure;
+}
+
+void LSelfKill::pureBase(bool p) {
+    pure = p;
 }

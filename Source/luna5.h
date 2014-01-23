@@ -484,15 +484,18 @@ public:
     }
 
     static int gc_obj_(lua_State * L) {
-        // nothing to do here...
-        //DBG(String(">>>>>>>>> collecting: ") + T::className);
-        //T** obj = static_cast < T ** >(lua_touserdata(L, -1));
-        //int addr = (intptr_t)(*obj);
-        //std::cout << ">>>>>>>>> collecting: "<< + T::className << "(" << (*obj)->baseName() << ")" << std::endl;
-        
-        //std::cout << "MM ?" << ((MessageManager::getInstanceWithoutCreating() == nullptr) ? "CLEAN" : "NOT CLEAN") 
-        //          << std::endl;
+        // delete only pure base objects, that is anything but Components
+        T** obj = static_cast < T ** >(lua_touserdata(L, -1));
+        if(obj and *obj) {
+            int ptr = (intptr_t)(*obj);
+            if( LUA::objects[ptr] && LUA::objects[ptr]->pureBase() ) {
+                delete *obj;
+                LUA::objects.erase( ptr );
+            }
+        }
         /*
+        DBG(String(">>>>>>>>> collecting: ") + T::className);
+        T** obj = static_cast < T ** >(lua_touserdata(L, -1));
         if ( LUA::objects[addr] ) {
             LBase *b = LUA::objects[addr];
             if ( b )

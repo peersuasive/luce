@@ -79,11 +79,10 @@ const Luna<LTreeViewItem>::FunctionType LTreeViewItem::methods[] = {
 
 /////// ctor/dtor
 LTreeViewItem::LTreeViewItem(lua_State *L)
-    : LBase(L),
+    : LBase(L, "LTreeViewItem", false),
       TreeViewItem( /* TODO: add args */ ),
       comparator(L)
 {
-    myName("LTreeViewItem");
 }
 
 LTreeViewItem::~LTreeViewItem() {

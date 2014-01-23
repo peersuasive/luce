@@ -35,7 +35,7 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
 };
 
 LJUCEApplication::LJUCEApplication(lua_State *L)
-    : LBase(L)
+    : LBase(L, "LJUCEApplication", false)
 {
     myName( LUA::checkAndGetString(2, "LJUCEApplication") );
 }

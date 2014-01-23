@@ -23,7 +23,7 @@ const Luna<LComponent>::FunctionType LComponent::methods[] = {
 };
 
 LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
-    : LBase(Ls),
+    : LBase(Ls, "LComponent", false),
       child(child_),
       currentLookAndFeel(0)
 {
