@@ -21,7 +21,7 @@ local new = function(self, ...)
         __index = function(t,k)
             if(LDEBUG)then
                 if not(me.__exists(me,k)) then 
-                    printf("WARNING: trying to call non existing key: %s (%s)", k, me.__self) 
+                    print("WARNING: trying to call non existing key:", k, me.__self)
                 end
             end
             return me.__index(me, k) 
@@ -31,12 +31,12 @@ local new = function(self, ...)
         __newindex = function(t, k, v)
             if not(me.__exists(me,k)) then
                 if(LDEBUG)then
-                    printf("NEWINDEX: setting local %s (%s)", k, me.__self)
+                    print("NEWINDEX: setting local", k, me.__self)
                 end
                 rawset(t,k,v)
             else
                 if(LDEBUG)then
-                    printf("NEWINDEX: setting native %s (%s)", k, me.__self)
+                    print("NEWINDEX: setting native", k, me.__self)
                 end
                 me[k] = v
             end
