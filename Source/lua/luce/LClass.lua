@@ -14,6 +14,7 @@ local new = function(self, ...)
             self[k] = v
         end
     end
+    self.__exists = function(k) return me.__exists(me,k) end
     return setmetatable(self, {
         __tostring = me.__tostring,
         __self = me.__self,
