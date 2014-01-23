@@ -275,14 +275,24 @@ int LTreeViewItem::createItemComponent ( lua_State* ) {
 /// end of callbacks
 
 
-// TODO
+// get/setters
+/**
+    deselectOtherItemFirst: defaults to true   
+*/
+int LTreeViewItem::isSelected ( lua_State* ) {
+    return LUA::returnBoolean( TreeViewItem::isSelected() );
+}
+int LTreeViewItem::setSelected ( lua_State* ) {
+    bool shouldBeSelected = LUA::getBoolean(2);
+    bool deselectOtherItemsFirst = LUA::checkAndGetBoolean(2, true);
+    NotificationType shouldNotify = LNotificationType::get(LUA::checkAndGetString(2, "sendNotification"));
+    TreeViewItem::setSelected( shouldBeSelected, deselectOtherItemsFirst, shouldNotify );
+    return 0;
+}
+
 /////// getters
 int LTreeViewItem::isOpen ( lua_State* ) {
     return LUA::returnBoolean( TreeViewItem::isOpen() );
-}
-
-int LTreeViewItem::isSelected ( lua_State* ) {
-    return LUA::returnBoolean( TreeViewItem::isSelected() );
 }
 
 int LTreeViewItem::getItemHeight ( lua_State* ) {
@@ -358,17 +368,6 @@ int LTreeViewItem::getRowNumberInTree ( lua_State* ) {
 /////// setters
 int LTreeViewItem::setOpen ( lua_State* ) {
     TreeViewItem::setOpen(LUA::getBoolean());
-    return 0;
-}
-
-/**
-    deselectOtherItemFirst: defaults to true   
-*/
-int LTreeViewItem::setSelected ( lua_State* ) {
-    bool shouldBeSelected = LUA::getBoolean(2);
-    bool deselectOtherItemsFirst = LUA::checkAndGetBoolean(2, true);
-    NotificationType shouldNotify = LNotificationType::get(LUA::checkAndGetString(2, "sendNotification"));
-    TreeViewItem::setSelected( shouldBeSelected, deselectOtherItemsFirst, shouldNotify );
     return 0;
 }
 
