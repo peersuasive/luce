@@ -292,8 +292,18 @@ int LTreeViewItem::getNumSubItems ( lua_State* ) {
     return LUA::returnNumber( TreeViewItem::getNumSubItems() );
 }
 
-int LTreeViewItem::canBeSelected ( lua_State* ) {
-    return LUA::returnBoolean( TreeViewItem::canBeSelected() );
+bool LTreeViewItem::canBeSelected() const {
+    if(hasCallback("canBeSelected")) {
+        if(callback("canBeSelected"))
+            return LUA::getBoolean();
+    }
+    return true;
+}
+int LTreeViewItem::canBeSelected (lua_State* L) {
+    if(lua_isfunction(L,2))
+        set("canBeSelected");
+    else
+        return this->canBeSelected();
 }
 
 int LTreeViewItem::getSubItem ( lua_State* ) {
