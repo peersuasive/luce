@@ -121,10 +121,11 @@ int LMouseEvent::mouseWasClicked ( lua_State* ) {
 }
 
 int LMouseEvent::getEventRelativeTo ( lua_State* L) {
-    LMouseEvent *e = new LMouseEvent( L, MouseEvent::getEventRelativeTo( LUA::from_luce<LComponent,Component>(2) ) );
-    WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(e);
-    LUA::store( (intptr_t)e, ref );
-    return LUA::returnUserdata<LMouseEvent, MouseEvent>( e );
+    ScopedPointer<LMouseEvent> se (
+        new LMouseEvent( L, MouseEvent::getEventRelativeTo( LUA::from_luce<LComponent,Component>(2) ) ) 
+    );
+    se->myName("LMouseEvent (dynamic)");
+    return LUA::storeAndReturnUserdata<LMouseEvent>( se.get() );
 }
 
 int LMouseEvent::getDistanceFromDragStartX ( lua_State* ) {
@@ -140,10 +141,18 @@ int LMouseEvent::getPosition ( lua_State* ) {
 }
 
 int LMouseEvent::withNewPosition ( lua_State* L ) {
+    ScopedPointer<LMouseEvent> se (
+        new LMouseEvent( L, MouseEvent::withNewPosition( LUA::getPoint() ) ) 
+    );
+    se->myName("LMouseEvent (dynamic)");
+    return LUA::storeAndReturnUserdata<LMouseEvent>( se.get() );
+    /*
     LMouseEvent *e = new LMouseEvent( L, MouseEvent::withNewPosition( LUA::getPoint() ) );
+    e->myName("LMouseEvent (dynamic)");
     WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(e);
     LUA::store( (intptr_t)e, ref );
     return LUA::returnUserdata<LMouseEvent, MouseEvent>( e );
+    */
 }
 
 int LMouseEvent::getMouseDownX ( lua_State* ) {
