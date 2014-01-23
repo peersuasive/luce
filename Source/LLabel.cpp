@@ -80,13 +80,17 @@ const Luna<LLabel>::FunctionType LLabel::methods[] = {
 /////// ctor/dtor
 LLabel::LLabel(lua_State *L)
     : LComponent(L, this),
-      Label()
+      Label(),
+      myFont()
 {
     Label::setName(myName());
     Label::addListener(this);
 }
 
-LLabel::~LLabel(){}
+LLabel::~LLabel() {
+    if(myFont)
+        myFont = nullptr;
+}
 
 int LLabel::addListener(lua_State *L) {
     Label::addListener(this);
@@ -261,6 +265,16 @@ int LLabel::setJustificationType(lua_State*) {
     return 0;
 }
 
+int LLabel::getFont ( lua_State *L ) {
+    myFont = new LFont( L, Label::getFont() );
+    return LUA::storeAndReturnUserdata<LFont>( myFont.get() );
+}
+int LLabel::setFont ( lua_State* ) {
+    myFont = LUA::from_luce<LFont>(2);
+    Label::setFont( *myFont );
+    return 0;
+}
+
 /////// getters
 int LLabel::isBeingEdited ( lua_State* ) {
     return LUA::returnBoolean( Label::isBeingEdited() );
@@ -326,20 +340,5 @@ int LLabel::showEditor ( lua_State* ) {
 
 int LLabel::hideEditor ( lua_State* ) {
     Label::hideEditor(LUA::getBoolean());
-    return 0;
-}
-
-// TODO
-
-// get/setters
-int LLabel::getFont ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Font( Label::getFont() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Font getFont()" );
-}
-int LLabel::setFont ( lua_State* ) {
-    // Label::setFont(LUA::TODO_OBJECT_Font);
-    LUA::TODO_OBJECT( "setFont, LUA::TODO_OBJECT_Font" );
-    lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
 }
