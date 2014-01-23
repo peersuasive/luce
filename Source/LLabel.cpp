@@ -7,44 +7,77 @@
     @copyright 
 
 
-(c) 2013, Peersuasive Technologies
+(c) 2014, Peersuasive Technologies
 
 *************************************************************/
 
-
 #include "LLabel_inh.h"
-const char LLabel::className[] = "LLabel";
 
+////// static methods
+const char LLabel::className[] = "LLabel";
 const Luna<LLabel>::PropertyType LLabel::properties[] = {
-    {"text", &LLabel::getText, &LLabel::setText},
+    {"justificationType", &LLabel::getJustificationType, &LLabel::setJustificationType},
     {"editable", &LLabel::isEditable, &LLabel::setEditable},
     {"minimumHorizontalScale", &LLabel::getMinimumHorizontalScale, &LLabel::setMinimumHorizontalScale},
-    {"justificationType", &LLabel::getJustificationType, &LLabel::setJustificationType},
+    {"font", &LLabel::getFont, &LLabel::setFont},
+    {"text", &LLabel::getText, &LLabel::setText},
     {0,0}
 };
-
 const Luna<LLabel>::FunctionType LLabel::methods[] = {
-    method( LLabel, setText ),
     method( LLabel, getText ),
+    method( LLabel, setText ),
+
+    method( LLabel, getJustificationType ),
+    method( LLabel, setJustificationType ),
+    method( LLabel, isAttachedOnLeft ),
+    method( LLabel, getAttachedComponent ),
+    method( LLabel, getFont ),
+    method( LLabel, setFont ),
+    method( LLabel, getHorizontalBorderSize ),
+    method( LLabel, getVerticalBorderSize ),
+    method( LLabel, getMinimumHorizontalScale ),
+    method( LLabel, setMinimumHorizontalScale ),
+
+    method( LLabel, isEditable ),
+    method( LLabel, setEditable ),
+    method( LLabel, isEditableOnSingleClick ),
+    method( LLabel, isEditableOnDoubleClick ),
+    method( LLabel, createEditorComponent ),
+    method( LLabel, isBeingEdited ),
+    method( LLabel, getCurrentTextEditor ),
+    method( LLabel, showEditor ),
+
+    method( LLabel, doesLossOfFocusDiscardChanges ),
+    method( LLabel, getTextValue ),
+
+    method( LLabel, setBorderSize ),
+
+    method( LLabel, addListener ),
+    method( LLabel, removeListener ),
+
+    method( LLabel, hideEditor ),
 
     method( LLabel, attachToComponent ),
-    method( LLabel, isAttachedOnLeft ),
-    method( LLabel, setEditable ),
-    method( LLabel, isEditable ),
-
-    method( LLabel, getMinimumHorizontalScale),
-    method( LLabel, setMinimumHorizontalScale),
-
-    method( LLabel, getJustificationType),
-    method( LLabel, setJustificationType),
+    method( LLabel, textWasEdited ),
+    method( LLabel, textWasChanged ),
+    method( LLabel, editorShown ),
+    method( LLabel, editorAboutToBeHidden ),
 
     method( LLabel, labelTextChanged ),
 
-    method( LLabel, removeListener ),
+    method( LLabel, textEditorReturnKeyPressed ),
+    method( LLabel, textEditorEscapeKeyPressed ),
+    method( LLabel, textEditorFocusLost ),
+    method( LLabel, textEditorTextChanged ),
+    method( LLabel, valueChanged ),
 
+    //method( LLabel, componentVisibilityChanged ),
+    //method( LLabel, callChangeListeners ),
+    //method( LLabel, componentParentHierarchyChanged ),
     {0,0}
 };
 
+/////// ctor/dtor
 LLabel::LLabel(lua_State *L)
     : LComponent(L, this),
       Label()
@@ -53,45 +86,158 @@ LLabel::LLabel(lua_State *L)
     Label::addListener(this);
 }
 
-LLabel::~LLabel() {
-}
+LLabel::~LLabel(){}
 
-///
-
-int LLabel::setText(lua_State *L) {
-    String text = LUA::getString(2);
-    //if( lua_isstring(L, 2)  ) {
-        //Label::setText( text, LNotificationType::get( LUA::getString(2) ) );
-
-    // I'm not sure this is really collected, so better use strings until checked
-    //if( lua_isuserdata(L, 2)  ) {
-    //    Label::setText( text, *(NotificationType*)(lua_touserdata(L, 2) ) );
-    if( lua_isstring(L, 2)  ) {
-        Label::setText( text, LNotificationType::get( LUA::getString(2) ) );
-    } else {
-        Label::setText( text, NotificationType::dontSendNotification );
-    }
-
+int LLabel::addListener(lua_State *L) {
+    Label::addListener(this);
     return 0;
 }
 
-int LLabel::getText(lua_State *L) {
-    return LUA::returnString( Label::getText() );
+int LLabel::removeListener(lua_State *L) {
+    Label::removeListener(this);
+    return 0;
 }
 
-int LLabel::attachToComponent(lua_State *L) {
-    //Component *comp = LUA::to_juce<Component>(2);
+/////// callbacks
+void LLabel::labelTextChanged(Label *label) {
+    callback("labelTextHasChanged");
+}
+int LLabel::labelTextChanged(lua_State *L) {
+    set("labelTextHasChanged");
+    return 0;
+}
+
+void LLabel::textWasChanged() {
+    if(hasCallback("textWasChanged"))
+        callback("textWasChanged");
+}
+int LLabel::textWasChanged(lua_State*){
+    set("textWasChanged");
+    return 0;
+}
+
+void LLabel::editorAboutToBeHidden( TextEditor* textEditor_ ) {
+    if(hasCallback("editorAboutToBeHidden"))
+        callback("editorAboutToBeHidden");
+    else
+        Label::editorAboutToBeHidden(textEditor_);
+}
+int LLabel::editorAboutToBeHidden(lua_State*){
+    set("editorAboutToBeHidden");
+    return 0;
+}
+
+void LLabel::editorShown( TextEditor* textEditor_ ) {
+    if(hasCallback("editorShown"))
+        callback("editorShown");
+}
+int LLabel::editorShown(lua_State*){
+    set("editorShown");
+    return 0;
+}
+
+void LLabel::textWasEdited() {
+    if(hasCallback("textWasEdited"))
+        callback("textWasEdited");
+}
+int LLabel::textWasEdited(lua_State*){
+    set("textWasEdited");
+    return 0;
+}
+
+void LLabel::textEditorReturnKeyPressed( TextEditor& te) {
+    if(hasCallback("textEditorReturnKeyPressed"))
+        callback("textEditorReturnKeyPressed");
+    else
+        Label::textEditorReturnKeyPressed(te);
+}
+int LLabel::textEditorReturnKeyPressed ( lua_State* ) {
+    set("textEditorReturnKeyPressed");
+    return 0;
+}
+
+void LLabel::textEditorEscapeKeyPressed ( TextEditor& te) {
+    if(hasCallback("textEditorEscapeKeyPressed"))
+        callback("textEditorEscapeKeyPressed");
+    else
+        Label::textEditorEscapeKeyPressed(te);
+}
+int LLabel::textEditorEscapeKeyPressed ( lua_State* ) {
+    set("textEditorEscapeKeyPressed");
+    return 0;
+}
+
+void LLabel::textEditorTextChanged ( TextEditor& te) {
+    if(hasCallback("textEditorTextChanged"))
+        callback("textEditorTextChanged");
+    else
+        Label::textEditorTextChanged(te);
+}
+int LLabel::textEditorTextChanged ( lua_State* ) {
+    set("textEditorTextChanged");
+    return 0;
+}
+
+void LLabel::textEditorFocusLost( TextEditor& te ) {
+    if(hasCallback("textEditorFocusLost"))
+        callback("textEditorFocusLost");
+    else
+        Label::textEditorFocusLost(te);
+}
+int LLabel::textEditorFocusLost ( lua_State* ) {
+    set("textEditorFocusLost");
+    return 0;
+}
+
+void LLabel::valueChanged ( Value& v ) {
+    if(hasCallback("valueChanged"))
+        callback("valueChanged");
+    else
+        Label::valueChanged(v);
+}
+int LLabel::valueChanged ( lua_State* ) {
+    set("valueChanged");
+    return 0;
+}
+
+
+/////// getters/setters
+int LLabel::getText(lua_State*) {
+    return LUA::returnString( Label::getText(LUA::checkAndGetBoolean(2, false)) );
+}
+int LLabel::setText(lua_State *L) {
+    String text = LUA::getString(2);
+    // I'm not sure this is really collected, so better use strings until checked
+    //if( lua_isuserdata(L, 2)  ) {
+    //    Label::setText( text, *(NotificationType*)(lua_touserdata(L, 2) ) );
+    if( lua_isstring(L, 2)  )
+        Label::setText( text, LNotificationType::get( LUA::getString(2) ) );
+    else 
+        Label::setText( text, NotificationType::dontSendNotification );
+    return 0;
+}
+
+// not really sure about a Value implementation... return getText() at the moment
+int LLabel::getTextValue ( lua_State* ) {
+    return LUA::returnString( Label::getText(LUA::checkAndGetBoolean(2, false)) );
+    // return LUA::TODO_RETURN_OBJECT_Value( Label::getTextValue() );
+}
+
+int LLabel::attachToComponent(lua_State *) {
     Component *comp = LUA::from_luce<LComponent,Component>(2);
     bool onLeft = ( LUA::checkAndGetBoolean(2, true) );
     Label::attachToComponent(comp, onLeft);
     return 0;
 }
 
-int LLabel::isAttachedOnLeft(lua_State *L) {
-    return ( LUA::returnBoolean(Label::isAttachedOnLeft()) );
+int LLabel::isAttachedOnLeft(lua_State*) {
+    return LUA::returnBoolean(Label::isAttachedOnLeft());
 }
 
-int LLabel::setEditable(lua_State *L) { // bool sc, bool dc, bool lostOfFocusDiscardChanges
+int LLabel::isEditable(lua_State*) {
+    return LUA::returnBoolean(Label::isEditable());
+}
+int LLabel::setEditable(lua_State*) {
     bool editOnSingleClick = LUA::getBoolean(2);
     bool editOnDoubleClick = LUA::checkAndGetBoolean(2, false);
     bool lossOfFocusDiscardChanged = LUA::checkAndGetBoolean(2, false);
@@ -99,43 +245,101 @@ int LLabel::setEditable(lua_State *L) { // bool sc, bool dc, bool lostOfFocusDis
     return 0;
 }
 
-int LLabel::isEditable(lua_State *L) {
-    return LUA::returnBoolean(Label::isEditable());
+int LLabel::getMinimumHorizontalScale(lua_State*) {
+    return LUA::returnNumber( Label::getMinimumHorizontalScale() );
 }
-
-void LLabel::labelTextChanged(Label *label) {
-    callback("labelTextHasChanged");
-}
-int LLabel::labelTextChanged(lua_State *L) {
-    set("labelTextHasChanged");
-
-    return 0;
-}
-
 int LLabel::setMinimumHorizontalScale(lua_State*) {
     Label::setMinimumHorizontalScale( (float)LUA::getNumber() );
     return 0;
 }
-int LLabel::getMinimumHorizontalScale(lua_State*) {
-    return LUA::returnNumber( Label::getMinimumHorizontalScale() );
-}
 
+int LLabel::getJustificationType(lua_State*) {
+    return LUA::returnNumber( Label::getJustificationType().getFlags() );
+}
 int LLabel::setJustificationType(lua_State*) {
     Label::setJustificationType( (int)LUA::getNumber() );
     return 0;
 }
-int LLabel::getJustificationType(lua_State*) {
-    return LUA::returnNumber( Label::getJustificationType().getFlags() );
+
+/////// getters
+int LLabel::isBeingEdited ( lua_State* ) {
+    return LUA::returnBoolean( Label::isBeingEdited() );
 }
 
-int LLabel::addListener(lua_State *L) {
-    // may want to get a listener, but let's keep it simple
-    // for the time being
-    Label::addListener(this);
+int LLabel::isEditableOnSingleClick ( lua_State* ) {
+    return LUA::returnBoolean( Label::isEditableOnSingleClick() );
+}
+
+int LLabel::getHorizontalBorderSize ( lua_State* ) {
+    return LUA::returnNumber( Label::getHorizontalBorderSize() );
+}
+
+int LLabel::getVerticalBorderSize ( lua_State* ) {
+    return LUA::returnNumber( Label::getVerticalBorderSize() );
+}
+
+int LLabel::doesLossOfFocusDiscardChanges ( lua_State* ) {
+    return LUA::returnBoolean( Label::doesLossOfFocusDiscardChanges() );
+}
+
+int LLabel::isEditableOnDoubleClick ( lua_State* ) {
+    return LUA::returnBoolean( Label::isEditableOnDoubleClick() );
+}
+
+int LLabel::getAttachedComponent ( lua_State* ) {
+    return LUA::returnUserdata<LMainComponent, Component>( Label::getAttachedComponent() );
+}
+
+int LLabel::getCurrentTextEditor ( lua_State* ) {
+    return LUA::returnUserdata<LTextEditor, TextEditor>( Label::getCurrentTextEditor() );
+}
+
+TextEditor* LLabel::createEditorComponent() {
+    if(hasCallback("createEditorComponent")) {
+        if(callback("createEditorComponent"))
+            return LUA::from_luce<LTextEditor, TextEditor>();
+        else
+            return nullptr;
+    }
+    else
+        return LLabel::createEditorComponent();
+}
+int LLabel::createEditorComponent ( lua_State *L ) {
+    if(lua_isfunction(L,2))
+        set("createEditorComponent");
+    else
+        return LUA::returnUserdata<LTextEditor, TextEditor>( Label::createEditorComponent() );
+}
+
+/////// setters
+int LLabel::setBorderSize ( lua_State* ) {
+    int horizontalBorder = LUA::getNumber(2);
+    int verticalBorder = LUA::getNumber(3);
+    Label::setBorderSize( horizontalBorder, verticalBorder );
     return 0;
 }
 
-int LLabel::removeListener(lua_State *L) {
-    Label::removeListener(this);
+int LLabel::showEditor ( lua_State* ) {
+    Label::showEditor();
+    return 0;
+}
+
+int LLabel::hideEditor ( lua_State* ) {
+    Label::hideEditor(LUA::getBoolean());
+    return 0;
+}
+
+// TODO
+
+// get/setters
+int LLabel::getFont ( lua_State* ) {
+    // return LUA::TODO_RETURN_OBJECT_Font( Label::getFont() );
+    lua_settop(LUA::Get(), 1); // added by TODO
+    return LUA::TODO_OBJECT( "Font getFont()" );
+}
+int LLabel::setFont ( lua_State* ) {
+    // Label::setFont(LUA::TODO_OBJECT_Font);
+    LUA::TODO_OBJECT( "setFont, LUA::TODO_OBJECT_Font" );
+    lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
 }
