@@ -30,7 +30,7 @@ namespace luce {
 #include "LModifierKeys.h"
 #include "LMouseEvent.h"
 #include "LStretchableLayoutManager.h"
-
+#include "LFont.h"
 #include "LComponent.h"
 #include "LButton.h"
 #include "LDocumentWindow.h"

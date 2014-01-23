@@ -218,6 +218,10 @@ int l_StretchableLayoutResizerBar(lua_State *L) {
     return 1;
 }
 
+int l_Font(lua_State *L) {
+    Luna<LFont>::Register(L);
+    return 1;
+}
 
 
 //int l_ValueTree(lua_State *L) {
@@ -239,6 +243,7 @@ static const luaL_reg luce_lib [] = {
     { "MouseEvent", l_MouseEvent },
     { "StretchableLayoutManager", l_StretchableLayoutManager },
     { "StretchableLayoutResizerBar", l_StretchableLayoutResizerBar },
+    { "Font", l_Font },
     //{ "ValueTree", l_ValueTree },
     { "start", start },
     { "start_manual", start_manual },
