@@ -24,6 +24,7 @@ const Luna<LTreeView>::PropertyType LTreeView::properties[] = {
     {"openCloseButtonsVisible", &LTreeView::areOpenCloseButtonsVisible , &LTreeView::setOpenCloseButtonsVisible},
     {"multiSelectEnabled", &LTreeView::isMultiSelectEnabled, &LTreeView::setMultiSelectEnabled},
     {"rootItemVisible", &LTreeView::isRootItemVisible, &LTreeView::setRootItemVisible},
+    {"numSelectedItems", &LTreeView::getNumSelectedItems, &LBase::readOnly},
     {0,0}
 };
 
