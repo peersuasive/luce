@@ -81,9 +81,7 @@ LMouseEvent::LMouseEvent(lua_State *L, const MouseEvent& e)
     myName("LMouseEvent (dynamic)");
 }
 
-LMouseEvent::~LMouseEvent() {
-    std::cout << "DELETE LMouseEvent: " << myName() << std::endl;
-}
+LMouseEvent::~LMouseEvent() {}
 
 // custom methods
 int LMouseEvent::getX(lua_State*) {

@@ -273,7 +273,7 @@ int LLabel::getFont ( lua_State *L ) {
     //return LUA::storeAndReturnUserdata<LFont>( myFont.get() );
 }
 int LLabel::setFont ( lua_State* ) {
-    Label::setFont( LUA::from_luce<LFont>(2) );
+    Label::setFont( *LUA::from_luce<LFont>(2) );
     return 0;
 }
 
