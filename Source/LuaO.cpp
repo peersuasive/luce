@@ -199,6 +199,22 @@ namespace LUA {
             return res;
         }
 
+        template<class T>
+        const Array<T> getList(int i) {
+            luaL_checktype(L, i, LUA_TTABLE);
+            lua_pushvalue(L, i);
+            Array<T> res;
+            int len = luaL_getn(L, -1);
+            lua_pushnil(L);
+            while( lua_next(L, -2) != 0 ) {
+                res.add( luaL_checknumber(L, -1) );
+                lua_pop(L, 1);
+            }
+            lua_pop(L, 1);
+            lua_remove(L,i);
+            return res;
+        }
+
         const Array<Component*> getComponentList(int n, int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
@@ -508,6 +524,12 @@ namespace LUA {
             std::list<var> r;
             for (int i=0;i<val.size();++i)
                 r.push_back( val[i] );
+            return returnTable(r);
+        }
+        int returnTable(const StringArray& sa) {
+            std::list<var> r;
+            for(int i=0;i<sa.size();++i)
+                r.push_back(sa[i]);
             return returnTable(r);
         }
 

@@ -23,6 +23,8 @@ namespace LUA {
         const String checkAndGetString(int i=2, String def = String::empty);
 
         const Array<var> getList(int i=-1);
+            template<class T>
+        const Array<T> getList(int i=-1);
         const Array<Component*> getComponentList(int n, int i=-1);
         const juce::Rectangle<int> getRectangle(int i=-1);
         const juce::Point<int> getPoint(int i=-1);
@@ -58,6 +60,7 @@ namespace LUA {
 
         int returnTable(const std::list<var>& val);
         int returnTable(const Array<var>& val);
+        int returnTable( const juce::StringArray& );
         int returnTable( const juce::Rectangle<int>& r );
         int returnTable( const juce::RectangleList<int>& r );
         int returnTable( const juce::Point<int>& r );
