@@ -37,6 +37,7 @@ local xmeta = setmetatable({
     {
     __call = function(self, dbg)
         local luce = dbg and require"luce.core_d" or require"luce.core"
+        if(dbg)then LDEBUG=true end
         return(load_luce(_, luce))
     end
 })

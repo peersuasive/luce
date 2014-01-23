@@ -18,6 +18,11 @@ local new = function(self, ...)
         __tostring = me.__tostring,
         __self = me.__self,
         __index = function(t,k)
+            if(LDEBUG)then
+                if not(me.__exists(me,k)) then 
+                    printf("WARNING: trying to call non existing key: %s (%s)", k, me.__self) 
+                end
+            end
             return me.__index(me, k) 
         end,
         -- FIXME: if returned value is nil, we can't detect if it's a nil index or a nil value !
