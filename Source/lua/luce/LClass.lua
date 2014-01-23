@@ -30,8 +30,14 @@ local new = function(self, ...)
         --
         __newindex = function(t, k, v)
             if not(me.__exists(me,k)) then
+                if(LDEBUG)then
+                    printf("NEWINDEX: setting local %s (%s)", k, me.__self)
+                end
                 rawset(t,k,v)
             else
+                if(LDEBUG)then
+                    printf("NEWINDEX: setting native %s (%s)", k, me.__self)
+                end
                 me[k] = v
             end
             --[[
