@@ -30,7 +30,7 @@ protected:
     HashMap<String, bool> registered;
     void set( const String& r, int lua_type = LUA_TFUNCTION, int pos = -1);
     int callback(const String& k, int nb_ret = 0, const std::list<var>& args = {}) const;
-    bool hasCallback(const String&);
+    bool hasCallback(const String&) const;
 
 private:    
     //==============================================================================

@@ -38,7 +38,7 @@ int LBase::callback( const String& k, int nb_ret, const std::list<var>& args ) c
     return LUA::call_cb(this, k.toRawUTF8(), nb_ret, args);
 }
 
-bool LBase::hasCallback( const String& k ) {
+bool LBase::hasCallback( const String& k ) const {
     return this->registered[k];
 }
 
