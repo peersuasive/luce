@@ -66,18 +66,22 @@ LMouseEvent::LMouseEvent(lua_State *L)
     : LBase(L),
       MouseEvent( *LUA::from_luce<LMouseEvent,MouseEvent>(2) )
 {
+    myName("LMouseEvent");
 }
 
 LMouseEvent::LMouseEvent(lua_State *L, const MouseEvent *e)
     : LBase(L),
       MouseEvent(*e) 
 {
+    myName("LMouseEvent (dynamic)");
 }
 
 LMouseEvent::LMouseEvent(lua_State *L, const MouseEvent& e) 
     : LBase(L),
       MouseEvent(e)
-{}
+{
+    myName("LMouseEvent (dynamic)");
+}
 
 LMouseEvent::~LMouseEvent() {
 }
@@ -124,7 +128,6 @@ int LMouseEvent::getEventRelativeTo ( lua_State* L) {
     ScopedPointer<LMouseEvent> se (
         new LMouseEvent( L, MouseEvent::getEventRelativeTo( LUA::from_luce<LComponent,Component>(2) ) ) 
     );
-    se->myName("LMouseEvent (dynamic)");
     return LUA::storeAndReturnUserdata<LMouseEvent>( se.get() );
 }
 
@@ -144,7 +147,6 @@ int LMouseEvent::withNewPosition ( lua_State* L ) {
     ScopedPointer<LMouseEvent> se (
         new LMouseEvent( L, MouseEvent::withNewPosition( LUA::getPoint() ) ) 
     );
-    se->myName("LMouseEvent (dynamic)");
     return LUA::storeAndReturnUserdata<LMouseEvent>( se.get() );
     /*
     LMouseEvent *e = new LMouseEvent( L, MouseEvent::withNewPosition( LUA::getPoint() ) );
