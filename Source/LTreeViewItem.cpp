@@ -22,6 +22,7 @@ const Luna<LTreeViewItem>::PropertyType LTreeViewItem::properties[] = {
     // read-only
     {"numSubItems", &LTreeViewItem::getNumSubItems, &LBase::readOnly},
     {"uniqueName", &LTreeViewItem::getUniqueName, &LBase::readOnly},
+    {"selected", &LTreeViewItem::setSelected, &LTreeViewItem::isSelected},
     {0,0}
 };
 const Luna<LTreeViewItem>::FunctionType LTreeViewItem::methods[] = {
@@ -349,10 +350,13 @@ int LTreeViewItem::setOpen ( lua_State* ) {
     return 0;
 }
 
+/**
+    deselectOtherItemFirst: defaults to true   
+*/
 int LTreeViewItem::setSelected ( lua_State* ) {
     bool shouldBeSelected = LUA::getBoolean(2);
-    bool deselectOtherItemsFirst = LUA::getBoolean(2);
-    NotificationType shouldNotify = LNotificationType::get(LUA::getString(2));
+    bool deselectOtherItemsFirst = LUA::checkAndGetBoolean(2, true);
+    NotificationType shouldNotify = LNotificationType::get(LUA::checkAndGetString(2, "sendNotification"));
     TreeViewItem::setSelected( shouldBeSelected, deselectOtherItemsFirst, shouldNotify );
     return 0;
 }
