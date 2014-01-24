@@ -318,7 +318,7 @@ TextEditor* LLabel::createEditorComponent() {
             return nullptr;
     }
     else
-        return LLabel::createEditorComponent();
+        return Label::createEditorComponent();
 }
 int LLabel::createEditorComponent ( lua_State *L ) {
     if(lua_isfunction(L,2))
