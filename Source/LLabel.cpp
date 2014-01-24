@@ -104,10 +104,11 @@ int LLabel::removeListener(lua_State *L) {
 
 /////// callbacks
 void LLabel::labelTextChanged(Label *label) {
-    callback("labelTextHasChanged");
+    if(hasCallback("labelTextChanged"))
+        callback("labelTextChanged");
 }
 int LLabel::labelTextChanged(lua_State *L) {
-    set("labelTextHasChanged");
+    set("labelTextChanged");
     return 0;
 }
 
