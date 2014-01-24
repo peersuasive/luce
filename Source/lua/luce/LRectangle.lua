@@ -49,9 +49,10 @@ function mt:removeFromRight(a)
 end
 
 function mt:removeFromBottom(a)
-    local rh
-    rh, self.h = a, self.h - a
-    return self:new{ self.x, self.y, self.w, h }
+    local a = (a<self.h) and a or self.h
+    local r = self:new{ self.x, self.y + self.h - a, self.w, a }
+    self.h = self.h-a
+    return r
 end
 
 function mt:setLeft(l)
