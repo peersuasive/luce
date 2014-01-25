@@ -27,6 +27,7 @@ namespace luce {
 #include "LTreeView.cpp"
 #include "LTreeViewItem.cpp"
 #include "LStretchableLayoutResizerBar.cpp"
+#include "LListBox.cpp"
 
 #include "Main.cpp"
 }

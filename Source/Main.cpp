@@ -232,6 +232,10 @@ int l_Font(lua_State *L) {
     return 1;
 }
 
+int l_ListBox(lua_State *L) {
+    Luna<LListBox>::Register(L);
+    return 1;
+}
 
 //int l_ValueTree(lua_State *L) {
 //    Luna<LValueTree>::Register(L);
@@ -255,6 +259,7 @@ static const luaL_reg luce_lib [] = {
     { "StretchableLayoutManager", l_StretchableLayoutManager },
     { "StretchableLayoutResizerBar", l_StretchableLayoutResizerBar },
     { "Font", l_Font },
+    { "ListBox", l_ListBox},
     //{ "ValueTree", l_ValueTree },
     { "start", start },
     { "start_manual", start_manual },
