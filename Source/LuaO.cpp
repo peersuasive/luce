@@ -315,6 +315,25 @@ namespace LUA {
             return { x, y };
         }
 
+        const juce::SparseSet<int> getSparseSet(int i) {
+            SparseSet<int> s;
+            luaL_checktype(L, i, LUA_TTABLE);
+            lua_pushvalue(L, i);
+            lua_pushnil(L);
+            while(lua_next(L, -2)) {
+                luaL_checktype(L, -1, LUA_TTABLE);
+                lua_rawgeti(L, -1, 1);
+                int min = luaL_checknumber(L, -1);
+                lua_rawgeti(L, -1, 1);
+                int max = luaL_checknumber(L, -1);
+                lua_pop(L,3); // or 2 ?
+                s.addRange( { min, max } );
+            }
+            lua_pop(L,1);
+            lua_remove(L,i);
+            return s;
+        }
+
         const std::list<var> getStdList(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L,i);
@@ -581,6 +600,10 @@ namespace LUA {
             lua_pushnumber(L, r.getEnd());
             lua_rawseti(L, t, 2);
             return 1;
+        }
+
+        int returnTable( const juce::SparseSet<int>& r ) {
+            return returnTable( r.getTotalRange() );
         }
 
         int stacktrace(lua_State *L) {
