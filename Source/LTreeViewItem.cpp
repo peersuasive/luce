@@ -220,11 +220,11 @@ int LTreeViewItem::itemDoubleClicked(lua_State* L) {
 }
 
 var LTreeViewItem::getDragSourceDescription() {
-    if ( callback("getDragSourceDescription", 1) ) {
-        return var( LUA::getString );
-    } else {
+    if(hasCallback("getDragSourceDescription"))
+        if( callback("getDragSourceDescription", 1) )
+            return var( LUA::getString() );
+    else
         return TreeViewItem::getDragSourceDescription();
-    }
 }
 int LTreeViewItem::getDragSourceDescription ( lua_State* ) {
     set("getDragSourceDescription");
@@ -269,6 +269,18 @@ Component *LTreeViewItem::createItemComponent() {
 int LTreeViewItem::createItemComponent ( lua_State* ) {
     set("createItemComponent");
     return 0;
+}
+
+bool LTreeViewItem::isInterestedInDragSource (const DragAndDropTarget::SourceDetails& dragSourceDetails) {
+    if(hasCallback("isInterestedInDragSource")) {
+        callback("isInterestedInDragSource", 1, 
+                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), dragSourceDetails) ) } );
+        return LUA::getBoolean();
+    }
+    return false;
+}
+int LTreeViewItem::isInterestedInDragSource ( lua_State* ) {
+    set("isInterestedInDragSource");
 }
 
 /// end of callbacks
@@ -436,13 +448,6 @@ int LTreeViewItem::getOpennessState ( lua_State* ) {
     // return LUA::TODO_RETURN_OBJECT_XmlElement( TreeViewItem::getOpennessState() );
     lua_settop(LUA::Get(), 1); // added by TODO
     return LUA::TODO_OBJECT( "XmlElement getOpennessState()" );
-}
-
-int LTreeViewItem::isInterestedInDragSource ( lua_State* ) {
-    // DragAndDropTarget::SourceDetails dragSourceDetails = LUA::TODO_OBJECT_DragAndDropTarget::SourceDetails;
-    // return LUA::returnBoolean( TreeViewItem::isInterestedInDragSource( dragSourceDetails ) );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "bool isInterestedInDragSource( dragSourceDetails )" );
 }
 
 int LTreeViewItem::restoreOpennessState ( lua_State* ) {

@@ -56,13 +56,6 @@ public:
     int getOpennessState(lua_State*);
 
     //==============================================================================
-    // already set by LComponent
-    // int paint(lua_State*);
-    // int resized(lua_State*);
-    // int keyPressed(lua_State*);
-    // int colourChanged(lua_State*);
-    // int enablementChanged(lua_State*);
-
     // TODO: dnd listeners
     //int isInterestedInFileDrag(lua_State*);
     //int fileDragEnter(lua_State*);
@@ -70,11 +63,11 @@ public:
     //int fileDragExit(lua_State*);
     //int filesDropped(lua_State*);
 
-    //int isInterestedInDragSource(lua_State*);
-    //int itemDragEnter(lua_State*);
-    //int itemDragMove(lua_State*);
-    //int itemDragExit(lua_State*);
-    //int itemDropped(lua_State*);
+    int isInterestedInDragSource(lua_State*);
+    int itemDragEnter(lua_State*);
+    int itemDragMove(lua_State*);
+    int itemDragExit(lua_State*);
+    int itemDropped(lua_State*);
 
     //==============================================================================
     static const char className[];
@@ -94,17 +87,18 @@ private:
     // void colourChanged() override;
     // void enablementChanged() override;
 
-    //bool isInterestedInFileDrag (const StringArray& files) override;
+    //virtual bool isInterestedInFileDrag (const StringArray& files) override;
     //void fileDragEnter (const StringArray& files, int x, int y) override;
     //void fileDragMove (const StringArray& files, int x, int y) override;
     //void fileDragExit (const StringArray& files) override;
     //void filesDropped (const StringArray& files, int x, int y) override;
 
-    //bool isInterestedInDragSource (const SourceDetails&) override;
-    //void itemDragEnter (const SourceDetails&) override;
-    //void itemDragMove (const SourceDetails&) override;
-    //void itemDragExit (const SourceDetails&) override;
-    //void itemDropped (const SourceDetails&) override;
+    virtual bool isInterestedInDragSource (const SourceDetails&) override;
+    virtual void itemDragEnter (const SourceDetails&) override;
+    virtual void itemDragMove (const SourceDetails&) override;
+    virtual void itemDragExit (const SourceDetails&) override;
+    virtual void itemDropped (const SourceDetails&) override;
+
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LTreeView)

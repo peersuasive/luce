@@ -62,11 +62,11 @@ const Luna<LTreeView>::FunctionType LTreeView::methods[] = {
     //method( LTreeView, fileDragExit ),
     //method( LTreeView, filesDropped ),
 
-    //method( LTreeView, isInterestedInDragSource ),
-    //method( LTreeView, itemDragEnter ),
-    //method( LTreeView, itemDragMove ),
-    //method( LTreeView, itemDragExit ),
-    //method( LTreeView, itemDropped ),
+    method( LTreeView, isInterestedInDragSource ),
+    method( LTreeView, itemDragEnter ),
+    method( LTreeView, itemDragMove ),
+    method( LTreeView, itemDragExit ),
+    method( LTreeView, itemDropped ),
     {0,0}
 };
 
@@ -84,12 +84,20 @@ LTreeView::~LTreeView() {
 
 /////// callbacks
 // TODO: add dnd callbacks
-//int LTreeView::isInterestedInFileDrag ( lua_State* ) {
-//    // StringArray files = LUA::TODO_OBJECT_StringArray;
-//    // return LUA::returnBoolean( TreeView::isInterestedInFileDrag( files ) );
-//    lua_settop(LUA::Get(), 1); // added by TODO
-//    return LUA::TODO_OBJECT( "bool isInterestedInFileDrag( files )" );
+
+//bool LTreeView::isInterestedInFileDrag (const DragAndDropTarget::SourceDetails& dragSourceDetails) {
+//    if(hasCallback("isInterestedInDragSource")) {
+//        callback("isInterestedInDragSource", 1, 
+//                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), dragSourceDetails) ) } );
+//        return LUA::getBoolean();
+//    }
+//    return false;
 //}
+//
+//int LTreeView::isInterestedInFileDrag ( lua_State* ) {
+//    set("isInterestedInDragSource");
+//}
+//
 //
 //int LTreeView::fileDragEnter ( lua_State* ) {
 //    // StringArray files = LUA::TODO_OBJECT_StringArray;
@@ -129,41 +137,53 @@ LTreeView::~LTreeView() {
 //}
 //
 //
-//int LTreeView::isInterestedInDragSource ( lua_State* ) {
-//    // SourceDetails sourcedetails_ = LUA::TODO_OBJECT_SourceDetails;
-//    // return LUA::returnBoolean( TreeView::isInterestedInDragSource( sourcedetails_ ) );
-//    lua_settop(LUA::Get(), 1); // added by TODO
-//    return LUA::TODO_OBJECT( "bool isInterestedInDragSource( sourcedetails_ )" );
-//}
-//
-//int LTreeView::itemDragEnter ( lua_State* ) {
-//    // TreeView::itemDragEnter(LUA::TODO_OBJECT_SourceDetails);
-//    LUA::TODO_OBJECT( "itemDragEnter, LUA::TODO_OBJECT_SourceDetails" );
-//    lua_settop(LUA::Get(), 1); // added by TODO
-//    return 0;
-//}
-//
-//int LTreeView::itemDragMove ( lua_State* ) {
-//    // TreeView::itemDragMove(LUA::TODO_OBJECT_SourceDetails);
-//    LUA::TODO_OBJECT( "itemDragMove, LUA::TODO_OBJECT_SourceDetails" );
-//    lua_settop(LUA::Get(), 1); // added by TODO
-//    return 0;
-//}
-//
-//int LTreeView::itemDragExit ( lua_State* ) {
-//    // TreeView::itemDragExit(LUA::TODO_OBJECT_SourceDetails);
-//    LUA::TODO_OBJECT( "itemDragExit, LUA::TODO_OBJECT_SourceDetails" );
-//    lua_settop(LUA::Get(), 1); // added by TODO
-//    return 0;
-//}
-//
-//int LTreeView::itemDropped ( lua_State* ) {
-//    // TreeView::itemDropped(LUA::TODO_OBJECT_SourceDetails);
-//    LUA::TODO_OBJECT( "itemDropped, LUA::TODO_OBJECT_SourceDetails" );
-//    lua_settop(LUA::Get(), 1); // added by TODO
-//    return 0;
-//}
-//
+bool LTreeView::isInterestedInDragSource (const SourceDetails&) {
+    if(hasCallback("isInterestedInDragSource")) {
+        if ( callback("isInterestedInDragSource", 1) )
+            return LUA::getBoolean();
+    }
+    return false;
+}
+int LTreeView::isInterestedInDragSource ( lua_State* ) {
+    set("isInterestedInDragSource");
+}
+
+void LTreeView::itemDragEnter (const SourceDetails& sd) {
+    if(hasCallback("itemDragEnter"))
+        callback("itemDragEnter", 0, 
+                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+}
+int LTreeView::itemDragEnter ( lua_State* ) {
+    set("itemDragEnter");
+}
+
+void LTreeView::itemDragMove (const SourceDetails& sd) {
+    if(hasCallback("itemDragMove"))
+        callback("itemDragMove", 0, 
+                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+}
+int LTreeView::itemDragMove ( lua_State* ) {
+    set("itemDragMove");
+}
+
+void LTreeView::itemDragExit (const SourceDetails& sd) {
+    if(hasCallback("itemDragExit"))
+        callback("itemDragExit", 0, 
+                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+}
+int LTreeView::itemDragExit ( lua_State* ) {
+    set("itemDragExit");
+}
+
+void LTreeView::itemDropped (const SourceDetails& sd) {
+    if(hasCallback("itemDropped"))
+        callback("itemDropped", 0, 
+                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+}
+int LTreeView::itemDropped ( lua_State* ) {
+    set("itemDropped");
+}
+
 
 /////// getters/setters
 int LTreeView::getIndentSize ( lua_State* ) {

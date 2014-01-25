@@ -138,6 +138,8 @@ private:
     virtual void itemSelectionChanged( bool isNowSelected ) override;
     virtual void itemDoubleClicked( const MouseEvent& e ) override;
 
+    virtual bool isInterestedInDragSource (const DragAndDropTarget::SourceDetails& dragSourceDetails) override;
+
     virtual bool canBeSelected() const override;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LTreeViewItem)
