@@ -304,7 +304,7 @@ int LLabel::isEditableOnDoubleClick ( lua_State* ) {
 }
 
 int LLabel::getAttachedComponent ( lua_State* ) {
-    return LUA::returnUserdata<LMainComponent, Component>( Label::getAttachedComponent() );
+    return LUA::returnUserdata<LJComponent, Component>( Label::getAttachedComponent() );
 }
 
 int LLabel::getCurrentTextEditor ( lua_State* ) {

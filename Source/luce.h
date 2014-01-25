@@ -35,6 +35,7 @@ namespace luce {
 #include "LButton.h"
 #include "LDocumentWindow.h"
 #include "LMainComponent.h"
+#include "LJComponent.h"
 #include "LJUCEApplication.h"
 #include "LLabel.h"
 #include "LNotificationType.h"

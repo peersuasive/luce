@@ -147,6 +147,10 @@ int l_MainComponent(lua_State *L) {
     Luna<LMainComponent>::Register(L);
     return 1;
 }
+int l_JComponent(lua_State *L) {
+    Luna<LJComponent>::Register(L);
+    return 1;
+}
 
 int l_TextButton(lua_State *L) {
     Luna<LTextButton>::Register(L);
@@ -234,6 +238,7 @@ static const luaL_reg luce_lib [] = {
     { "LComponent", l_Component },
     { "DocumentWindow", l_DocumentWindow },
     { "MainComponent", l_MainComponent },
+    { "Component", l_JComponent },
     { "TextButton", l_TextButton },
     { "TextEditor", l_TextEditor },
     { "Label", l_Label },

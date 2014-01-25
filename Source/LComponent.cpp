@@ -107,7 +107,7 @@ int LComponent::addChildAndSetID ( lua_State* ) {
 
 int LComponent::removeChildComponent ( lua_State* ) {
     if (child)
-        return LUA::returnUserdata<LMainComponent, Component>( child->removeChildComponent( LUA::getNumber(2) ) );
+        return LUA::returnUserdata<LJComponent, Component>( child->removeChildComponent( LUA::getNumber(2) ) );
     return 0;
 }
 
@@ -485,13 +485,13 @@ int LComponent::isOnDesktop ( lua_State* ) {
 
 int LComponent::getChildComponent ( lua_State* ) {
     if (child)
-        return LUA::returnUserdata<LMainComponent, Component>( child->getChildComponent( LUA::getNumber(2) ) );
+        return LUA::returnUserdata<LJComponent, Component>( child->getChildComponent( LUA::getNumber(2) ) );
     else return 0;
 }
 
 int LComponent::getCurrentlyFocusedComponent ( lua_State *L ) {
     if (child)
-        return LUA::returnUserdata<LMainComponent, Component>( child->getCurrentlyFocusedComponent() );
+        return LUA::returnUserdata<LJComponent, Component>( child->getCurrentlyFocusedComponent() );
     return 0;
 }
 

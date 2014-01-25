@@ -17,6 +17,7 @@ namespace luce {
 #include "LJUCEApplication.cpp"
 #include "LDocumentWindow.cpp"
 #include "LMainComponent.cpp"
+#include "LJComponent.cpp"
 #include "LLabel.cpp"
 #include "LNotificationType.cpp"
 #include "LTextButton.cpp"
