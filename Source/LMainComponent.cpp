@@ -82,11 +82,8 @@ void LMainComponent::mouseDown(const MouseEvent& e) {
 }
 
 void LMainComponent::mouseDrag(const MouseEvent& e) {
-    if ( hasCallback("mouseDrag") ) {
+    if ( hasCallback("mouseDrag") )
         LComponent::lmouseDrag(e);
-    } else {
-        Component::mouseDrag(e);
-    }
 }
 
 void LMainComponent::mouseUp(const MouseEvent& e) {
