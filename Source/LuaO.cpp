@@ -667,13 +667,13 @@ namespace LUA {
         void lock_running(int ref) {
             locked.add(ref);
         }
-        const int call_cb(int ref, int nb_ret , const std::list<var>& args) {
+        //const int call_cb(int ref, int nb_ret , const std::list<var>& args) {
+        const int call_cb(int ref, int nb_ret) {
             if (is_running(ref)) {
                 DBG("WARNING: callback already running !");
                 return -3;
             }
             lock_running(ref);
-            int nb_args = args.size();
             jassert( L != nullptr );
             if ( L == nullptr ) {
                 unlock(ref);
@@ -693,79 +693,8 @@ namespace LUA {
                 int errfunc = lua_gettop(L);
                 lua_pushvalue(L, func_index);
 
-                // set arguments
-                for ( auto &it : args ) {
-                    if ( it.isInt()
-                            || it.isInt64() 
-                            || it.isDouble()
-                            ) {
-                        lua_pushnumber(L, it);
-                    }
-                    else if ( it.isBool() ) {
-                        lua_pushboolean(L, (bool)it);
-                    }
-                    else if ( it.isString() ) {
-                        lua_pushlstring(L, it.toString().toRawUTF8(), it.toString().length() );
-                    }
-                    else if ( it.isObject() ) {
-                        LRefBase* lr = ((LRefBase*)it.getObject());
-                        String type = lr->getType();
-                        if ( type == "MouseEvent" || type == "LMouseEvent" ) {
-                            //returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
-                            returnUserdata<LMouseEvent, MouseEvent>( static_cast<const MouseEvent*>(lr->getMe()) );
-
-                        } else if ( type == "SourceDetails" ) {
-                            returnUserdata<LSourceDetails>( static_cast<const LSourceDetails*>(lr->getMe()) );
-
-                        } else if ( type == "Component" ) {
-                            returnUserdata<LComponent>( (LComponent*)lr->getMe() );
-                        }
-
-                        else if ( type == "Properties" ) {
-                            HashMap<String, var>& h = *lr->getHash();
-                            lua_newtable(L);
-                            int t = lua_gettop(L);
-                            for (HashMap<String,var>::Iterator i(h); i.next();) {
-                                lua_pushstring(L, i.getKey().toRawUTF8());
-                                var val( i.getValue() );
-                                if ( val.isString() )
-                                    lua_pushstring(L, val.toString().toRawUTF8());
-                                else if ( val.isBool() )
-                                    lua_pushboolean(L, val);
-                                else
-                                    lua_pushnumber(L, val);
-                                lua_settable(L, t);
-                            }
-
-                        } else {
-                            std::cout << "type not yet implemented" << std::endl;
-                            lua_pushnil(L);
-                        }
-                        lr = nullptr;
-                    }
-                    else {
-                        // ça peut etre un tableau, donc _newtable, boucle, recusivité avec ici
-                        // ou un hashmap, idem, mais on pushstring avand le newtable s'il y a lieu, etc.
-                        // ou un objet -- comment je détècte ? le type Binary... du var ?
-                        // en tout cas, probablement, lightuserdata, du moins s'il fait
-                        // partie des types L-implémentés, sinon... ?
-                        // un nouvel objet n'aurait le comportement attendu,
-                        // mais peut-etre implémenter l'instanciation par copie de l'objet avec la L-classe correspondante ?
-                        // et si elle n'existe pas, on se pose pas la question, c'est une erreur, mais il y a peu de chances
-                        // pour que ça arrive puisqu'on est dans notre environnement
-                        lua_pushnil(L);
-                        std::cout << "type not yet implemented" << std::endl;
-                    }
-                }
-
-                // call callback function
                 //if ( lua_pcall(L, nb_args, nb_ret, errfunc) != 0 ) {
-                if ( nb_ret < 0 ) {
-                    std::cout << "GRAVE!!!!!!!!!!!!!!!!!!! nb_ret -> " << nb_ret << std::endl;
-                    nb_ret = 0;
-                }
-                
-                if ( lua_pcall(L, nb_args, nb_ret, 0) != 0 ) {
+                if ( lua_pcall(L, 0, nb_ret, 0) != 0 ) {
                     DBG("failed to execute callback.");
                     status = -1;
                     if ( lua_isstring(L, -1) ) {
@@ -830,11 +759,20 @@ namespace LUA {
                     LRefBase* lr = ((LRefBase*)it.getObject());
                     String type = lr->getType();
                     if ( type == "MouseEvent" || type == "LMouseEvent" ) {
-                        returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
+                        //returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
+                        returnUserdata<LMouseEvent, MouseEvent>( static_cast<const MouseEvent*>(lr->getMe()) );
 
                     } else if ( type == "TreeViewItem" ) {
-                        returnUserdata<LTreeViewItem, TreeViewItem>( (TreeViewItem*)lr->getMe() );
-                    }                        
+                        //returnUserdata<LTreeViewItem, TreeViewItem>( (TreeViewItem*)lr->getMe() );
+                        returnUserdata<LTreeViewItem, TreeViewItem>( static_cast<const TreeViewItem*>(lr->getMe()) );
+
+                    } else if ( type == "SourceDetails" ) {
+                        returnUserdata<LSourceDetails>( static_cast<const LSourceDetails*>(lr->getMe()) );
+
+                    } else if ( type == "Component" ) {
+                        returnUserdata<LJComponent>( (LJComponent*)lr->getMe() );
+                    }
+
                     else if ( type == "Properties" ) {
                         HashMap<String, var>& h = *lr->getHash();
                         lua_newtable(L);
@@ -851,14 +789,14 @@ namespace LUA {
                             lua_settable(L, t);
                         }
                     } else {
-                        std::cout << "type not yet implemented" << std::endl;
+                        std::cout << "argument object type not yet implemented" << std::endl;
                         lua_pushnil(L);
                     }
                     lr = nullptr;
                 }
                 else {
                     lua_pushnil(L);
-                    std::cout << "type not yet implemented" << std::endl;
+                    std::cout << "argument type not yet implemented" << std::endl;
                 }
             }
 
