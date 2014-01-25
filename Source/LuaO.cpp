@@ -688,11 +688,16 @@ namespace LUA {
                         LRefBase* lr = ((LRefBase*)it.getObject());
                         String type = lr->getType();
                         if ( type == "MouseEvent" || type == "LMouseEvent" ) {
-                            returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
+                            //returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
+                            returnUserdata<LMouseEvent, MouseEvent>( static_cast<const MouseEvent*>(lr->getMe()) );
 
-                        } else if ( type == "TreeViewItem" ) {
-                            returnUserdata<LTreeViewItem, TreeViewItem>( (TreeViewItem*)lr->getMe() );
-                        }                        
+                        } else if ( type == "SourceDetails" ) {
+                            returnUserdata<LSourceDetails>( static_cast<const LSourceDetails*>(lr->getMe()) );
+
+                        } else if ( type == "Component" ) {
+                            returnUserdata<LComponent>( (LComponent*)lr->getMe() );
+                        }
+
                         else if ( type == "Properties" ) {
                             HashMap<String, var>& h = *lr->getHash();
                             lua_newtable(L);
@@ -708,6 +713,7 @@ namespace LUA {
                                     lua_pushnumber(L, val);
                                 lua_settable(L, t);
                             }
+
                         } else {
                             std::cout << "type not yet implemented" << std::endl;
                             lua_pushnil(L);

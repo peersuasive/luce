@@ -212,6 +212,11 @@ int l_MouseEvent(lua_State *L) {
     return 1;
 }
 
+int l_SourceDetails(lua_State *L) {
+    Luna<LSourceDetails>::Register(L);
+    return 1;
+}
+
 int l_StretchableLayoutManager(lua_State *L) {
     Luna<LStretchableLayoutManager>::Register(L);
     return 1;
@@ -246,6 +251,7 @@ static const luaL_reg luce_lib [] = {
     { "TreeViewItem", l_TreeViewItem },
     { "ModifierKeys", l_ModifierKeys},
     { "MouseEvent", l_MouseEvent },
+    { "SourceDetails", l_SourceDetails },
     { "StretchableLayoutManager", l_StretchableLayoutManager },
     { "StretchableLayoutResizerBar", l_StretchableLayoutResizerBar },
     { "Font", l_Font },
