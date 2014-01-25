@@ -88,9 +88,12 @@ LListBox::~LListBox() {}
 
 
 bool LListBox::isInterestedInDragSource (const DragAndDropTarget::SourceDetails& sd) {
-    callback("isInterestedInDragSource", 1,
+    if(hasCallback("isInterestedInDragSource")) {
+        callback("isInterestedInDragSource", 1,
             { new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
-    return LUA::getBoolean();
+        return LUA::getBoolean();
+    }
+    return false;
 }
 int LListBox::isInterestedInDragSource(lua_State*) {
     set("isInterestedInDragSource");
@@ -105,16 +108,18 @@ int LListBox::itemDropped(lua_State*) {
 }
 
 void LListBox::itemDragEnter(const DragAndDropTarget::SourceDetails& sd) {
-    callback("itemDragEnter", 0,
-            { new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
+    if(hasCallback("itemDragEnter"))
+        callback("itemDragEnter", 0,
+                { new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
 }
 int LListBox::itemDragEnter(lua_State*) {
     set("itemDragEnter");
 }
 
 void LListBox::itemDragExit(const DragAndDropTarget::SourceDetails& sd) {
-    callback("itemDragExit", 0,
-            { new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
+    if(hasCallback("itemDragExit"))
+        callback("itemDragExit", 0,
+                { new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
 }
 int LListBox::itemDragExit(lua_State*) {
     set("itemDragExit");
