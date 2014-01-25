@@ -58,7 +58,7 @@ LSourceDetails::operator juce::DragAndDropTarget::SourceDetails () const {
 }
 
 int LSourceDetails::getDescription(lua_State*) {
-    return LUA::returnString(description);
+    return LUA::returnString(description.toString());
 }
 int LSourceDetails::setDescription(lua_State*) {
     description = LUA::getString();
