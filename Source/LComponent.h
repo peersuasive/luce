@@ -17,7 +17,7 @@
 class LComponent : public LBase
 {
 public:    
-    LComponent(lua_State*, Component* child = nullptr, const String& name = String::empty);
+    LComponent(lua_State*, Component* child, const String& name = String::empty);
     ~LComponent();
  
     virtual void selfKill() override;
@@ -176,33 +176,33 @@ public:
     int childrenChanged(lua_State*);
     int parentHierarchyChanged(lua_State*);
     int colourChanged(lua_State*);
-    int mouseWheelMove(lua_State*);
     int lookAndFeelChanged(lua_State*);
     int userTriedToCloseWindow(lua_State*);
     int modifierKeysChanged(lua_State*);
     int broughtToFront(lua_State*);
     int parentSizeChanged(lua_State*);
     int visibilityChanged(lua_State*);
-    int mouseDoubleClick(lua_State*);
     int inputAttemptWhenModal(lua_State*);
     int paint(lua_State*);
     int handleCommandMessage(lua_State*);
     int resized(lua_State*);
     int focusGained(lua_State*);
-    int mouseDrag(lua_State*);
     int paintOverChildren(lua_State*);
     int moved(lua_State*);
     int childBoundsChanged(lua_State*);
-    int mouseMove(lua_State*);
     int focusLost(lua_State*);
-    int mouseExit(lua_State*);
     int minimisationStateChanged(lua_State*);
+    int enablementChanged(lua_State*);
+    int focusOfChildComponentChanged(lua_State*);
+    int mouseWheelMove(lua_State*);
+    int mouseDoubleClick(lua_State*);
+    int mouseDrag(lua_State*);
+    int mouseDown(lua_State*);
+    int mouseMove(lua_State*);
+    int mouseExit(lua_State*);
     int mouseEnter(lua_State*);
     int mouseMagnify(lua_State*);
     int mouseUp(lua_State*);
-    int enablementChanged(lua_State*);
-    int mouseDown(lua_State*);
-    int focusOfChildComponentChanged(lua_State*);
     
     //==============================================================================
     static const char className[];
@@ -225,33 +225,33 @@ protected:
     void lchildrenChanged();
     void lparentHierarchyChanged();
     void lcolourChanged();
-    void lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel );
     void llookAndFeelChanged();
     void luserTriedToCloseWindow();
     void lmodifierKeysChanged( const ModifierKeys& modifiers );
     void lbroughtToFront();
     void lparentSizeChanged();
     void lvisibilityChanged();
-    void lmouseDoubleClick( const MouseEvent& event );
     void linputAttemptWhenModal();
     void lpaint( Graphics& g );
     void lhandleCommandMessage( int commandId );
     void lresized();
     void lfocusGained( Component::FocusChangeType cause );
-    void lmouseDrag( const MouseEvent& event );
     void lpaintOverChildren( Graphics& g );
     void lmoved();
     void lchildBoundsChanged( Component* child );
-    void lmouseMove( const MouseEvent& event );
     void lfocusLost( Component::FocusChangeType cause );
-    void lmouseExit( const MouseEvent& event );
     void lminimisationStateChanged( bool isNowMinimised );
+    void lenablementChanged();
+    void lfocusOfChildComponentChanged( Component::FocusChangeType cause );
+    void lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel );
+    void lmouseDown( const MouseEvent& event );
+    void lmouseUp( const MouseEvent& event );
     void lmouseEnter( const MouseEvent& event );
     void lmouseMagnify( const MouseEvent& event,float scaleFactor );
-    void lmouseUp( const MouseEvent& event );
-    void lenablementChanged();
-    void lmouseDown( const MouseEvent& event );
-    void lfocusOfChildComponentChanged( Component::FocusChangeType cause );
+    void lmouseDoubleClick( const MouseEvent& event );
+    void lmouseDrag( const MouseEvent& event );
+    void lmouseMove( const MouseEvent& event );
+    void lmouseExit( const MouseEvent& event );
     
 private:
     //==============================================================================
