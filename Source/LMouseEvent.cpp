@@ -21,6 +21,8 @@ const Luna<LMouseEvent>::PropertyType LMouseEvent::properties[] = {
     {"x", &LMouseEvent::getX, &LBase::readOnly},
     {"y", &LMouseEvent::getY, &LBase::readOnly},
     {"mods", &LMouseEvent::getMods, &LBase::readOnly},
+    {"originalComponent", &LMouseEvent::getOriginalComponent, &LBase::readOnly},
+    {"eventComponent", &LMouseEvent::getEventComponent, &LBase::readOnly},
     {0,0}
 };
 const Luna<LMouseEvent>::FunctionType LMouseEvent::methods[] = {
@@ -85,11 +87,18 @@ LMouseEvent::~LMouseEvent() {}
 
 // custom methods
 int LMouseEvent::getX(lua_State*) {
-    std::cout << "getting x: " << MouseEvent::x << std::endl;
     return LUA::returnNumber( MouseEvent::x );
 }
 int LMouseEvent::getY(lua_State*) {
-    return LUA::returnNumber( MouseEvent::x );
+    return LUA::returnNumber( MouseEvent::y );
+}
+
+int LMouseEvent::getOriginalComponent(lua_State*) {
+    return LUA::returnUserdata<LJComponent, Component>(MouseEvent::originalComponent);
+}
+
+int LMouseEvent::getEventComponent(lua_State*) {
+    return LUA::returnUserdata<LJComponent, Component>(MouseEvent::eventComponent);
 }
 
 int LMouseEvent::getMods(lua_State* L) {
