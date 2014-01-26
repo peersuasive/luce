@@ -85,6 +85,43 @@ LTreeView::~LTreeView() {
 /////// callbacks
 // TODO: add dnd callbacks
 
+void LTreeView::mouseMove(const MouseEvent& e) {
+    LComponent::lmouseMove(e);
+}
+
+void LTreeView::mouseEnter(const MouseEvent& e) {
+    LComponent::lmouseEnter(e);
+}
+
+void LTreeView::mouseExit(const MouseEvent& e) {
+    LComponent::lmouseExit(e);
+}
+
+void LTreeView::mouseDown(const MouseEvent& e) {
+    LComponent::lmouseDown(e);
+}
+
+void LTreeView::mouseDrag(const MouseEvent& e) {
+    LComponent::lmouseDrag(e);
+}
+
+void LTreeView::mouseUp(const MouseEvent& e) {
+    LComponent::lmouseUp(e);
+}
+
+void LTreeView::mouseDoubleClick(const MouseEvent& e) {
+    LComponent::lmouseDoubleClick(e);
+}
+
+void LTreeView::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& wheel) {
+    LComponent::lmouseWheelMove(e, wheel);
+}
+
+void LTreeView::mouseMagnify (const MouseEvent& e, float scaleFactor) {
+    LComponent::lmouseMagnify(e, scaleFactor);
+}
+
+
 //bool LTreeView::isInterestedInFileDrag (const DragAndDropTarget::SourceDetails& dragSourceDetails) {
 //    if(hasCallback("isInterestedInDragSource")) {
 //        callback("isInterestedInDragSource", 1, 
