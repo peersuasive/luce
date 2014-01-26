@@ -65,7 +65,7 @@ int LSourceDetails::setDescription(lua_State*) {
 }
 
 int LSourceDetails::getSourceComponent(lua_State*) {
-    return LUA::returnUserdata<LJComponent, Component>( sourceComponent );
+    return LUA::returnUserdata<LJComponent, Component>( sourceComponent.get() );
 }
 int LSourceDetails::setSourceComponent(lua_State*) {
     sourceComponent = LUA::from_luce<LComponent, Component>(2);
