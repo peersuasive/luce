@@ -64,70 +64,37 @@ void LJComponent::resized() {
 }
 
 void LJComponent::mouseMove(const MouseEvent& e) {
-    if ( hasCallback("mouseMove") ) {
-        LComponent::lmouseMove(e);
-    } else {
-        Component::mouseMove(e);
-    }
+    LComponent::lmouseMove(e);
 }
 
 void LJComponent::mouseEnter(const MouseEvent& e) {
-    if ( hasCallback("mouseEnter") ) {
-        LComponent::lmouseEnter(e);
-    } else {
-        Component::mouseEnter(e);
-    }
+    LComponent::lmouseEnter(e);
 }
 
 void LJComponent::mouseExit(const MouseEvent& e) {
-    if ( hasCallback("mouseExit") ) {
-        LComponent::lmouseExit(e);
-    } else {
-        Component::mouseExit(e);
-    }
+    LComponent::lmouseExit(e);
 }
 
 void LJComponent::mouseDown(const MouseEvent& e) {
-    if ( hasCallback("mouseDown") ) {
-        LComponent::lmouseDown(e);
-    } else {
-        Component::mouseDown(e);
-    }
+    LComponent::lmouseDown(e);
 }
 
 void LJComponent::mouseDrag(const MouseEvent& e) {
-    if ( hasCallback("mouseDrag") )
-        LComponent::lmouseDrag(e);
+    LComponent::lmouseDrag(e);
 }
 
 void LJComponent::mouseUp(const MouseEvent& e) {
-    if ( hasCallback("mouseUp") ) {
-        LComponent::lmouseUp(e);
-    } else {
-        Component::mouseUp(e);
-    }
+    LComponent::lmouseUp(e);
 }
 
 void LJComponent::mouseDoubleClick(const MouseEvent& e) {
-    if ( hasCallback("mouseDoubleClick") ) {
-        LComponent::lmouseDoubleClick(e);
-    } else {
-        Component::mouseDoubleClick(e);
-    }
+    LComponent::lmouseDoubleClick(e);
 }
 
 void LJComponent::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& wheel) {
-    if ( hasCallback("mouseWheelMove") ) {
-        LComponent::lmouseWheelMove(e, wheel);
-    } else {
-        Component::mouseWheelMove(e, wheel);
-    }
+    LComponent::lmouseWheelMove(e, wheel);
 }
 
 void LJComponent::mouseMagnify (const MouseEvent& e, float scaleFactor) {
-    if ( hasCallback("mouseMagnify") ) {
-        LComponent::lmouseMagnify(e, scaleFactor);
-    } else {
-        Component::mouseMagnify(e, scaleFactor);
-    }
+    LComponent::lmouseMagnify(e, scaleFactor);
 }
