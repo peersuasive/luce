@@ -53,7 +53,6 @@ public:
     int deselectRow(lua_State*);
     int updateContent(lua_State*);
 
-
     //==============================================================================
     int isRowSelected(lua_State*);
     int getRowNumberOfComponent(lua_State*);
@@ -91,6 +90,8 @@ public:
     int listBoxItemDoubleClicked(lua_State*);
     
     //==============================================================================
+
+    //==============================================================================
     // drag and drop
     int isInterestedInDragSource(lua_State*);
     int itemDropped(lua_State*);
@@ -108,7 +109,6 @@ public:
     static const Luna<LListBox>::Enum enums[];
 
 private:
-
     //==============================================================================
     // callbacks (ListBoxModel)
     virtual int getNumRows() override;
@@ -132,6 +132,9 @@ private:
     virtual void itemDropped (const DragAndDropTarget::SourceDetails&) override;
     virtual void itemDragEnter(const DragAndDropTarget::SourceDetails& dragSourceDetails) override;
     virtual void itemDragExit(const DragAndDropTarget::SourceDetails& dragSourceDetails) override;
+
+    //==============================================================================
+    virtual void paint(Graphics&) override;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LListBox)

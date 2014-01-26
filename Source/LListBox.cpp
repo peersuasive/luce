@@ -71,13 +71,28 @@ const Luna<LListBox>::FunctionType LListBox::methods[] = {
     method( LListBox, itemDropped),
     method( LListBox, itemDragEnter),
     method( LListBox, itemDragExit),
+
+    method( LListBox, paintListBoxItem ),
+    method( LListBox, getMouseCursorForRow ),
+    method( LListBox, getTooltipForRow ),
+    method( LListBox, refreshComponentForRow ),
+    method( LListBox, getDragSourceDescription ),
+    method( LListBox, getNumRows ),
+    method( LListBox, listBoxItemClicked ),
+    method( LListBox, listWasScrolled ),
+    method( LListBox, selectedRowsChanged ),
+    method( LListBox, deleteKeyPressed ),
+    method( LListBox, returnKeyPressed ),
+    method( LListBox, backgroundClicked ),
+    method( LListBox, listBoxItemDoubleClicked ),
+
     {0,0}
 };
 
 /////// ctor/dtor
 LListBox::LListBox(lua_State *L)
     : LComponent(L, this),
-      ListBox()
+      ListBox("LListBox", this)
 {
     ListBox::setName(myName());
 }
@@ -86,12 +101,13 @@ LListBox::~LListBox() {}
 
 /////// callbacks
 
-
 bool LListBox::isInterestedInDragSource (const DragAndDropTarget::SourceDetails& sd) {
     if(hasCallback("isInterestedInDragSource")) {
-        callback("isInterestedInDragSource", 1,
-            { new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
-        return LUA::getBoolean();
+        if( callback("isInterestedInDragSource", 1,
+            { new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) }) ) 
+        {
+            return LUA::getBoolean();
+        }
     }
     return false;
 }
@@ -133,17 +149,46 @@ int LListBox::startDragAndDrop ( lua_State* ) {
     return 0;
 }
 
+void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int height, bool rowIsSelected ) {
+    if( callback("paintListBoxItem", 1, { rowNumber, width, height, rowIsSelected } ) ) {
+        //std::cout << "top: " << lua_gettop(LUA::Get()) << std::endl;
+        String text = LUA::getString();
+        //std::cout << "item name: " << text.toStdString() << std::endl;
+        //int w = LUA::checkAndGetNumber(2, width);
+        //int h = LUA::checkAndGetNumber(2, height);
+
+        if (rowIsSelected)
+            g.fillAll (Colours::yellow.withAlpha(0.2f));
+
+        g.setColour (Colours::black);
+        g.setFont (height * 0.7f);
+    
+        //g.drawText ( text , 5, 0, w, h, Justification::left, true );
+        g.drawText ( text , 5, 0, width, height, Justification::left, true );
+    }
+}
+int LListBox::paintListBoxItem(lua_State*) {
+    set("paintListBoxItem");
+}
 
 int LListBox::getNumRows() {
-    callback("getNumRows");
+    callback("getNumRows", 1);
     return LUA::getNumber();
 }
 int LListBox::getNumRows(lua_State*) {
     set("getNumRows");
 }
 
+void LListBox::paint(Graphics& g) {
+    if(hasCallback("paint"))
+        LComponent::lpaint(g);
+    else
+        ListBox::paint(g);
+}
+
 void LListBox::listBoxItemClicked( int row, const MouseEvent& e ) {
-    callback("listBoxItemClicked", 0, { row, new LRefBase("MouseEvent", &e) } );
+    if(hasCallback("listBoxItemClicked"))
+        callback("listBoxItemClicked", 0, { row, new LRefBase("MouseEvent", &e) } );
 }
 int LListBox::listBoxItemClicked(lua_State*) {
     set("listBoxItemClicked");
@@ -187,25 +232,6 @@ void LListBox::backgroundClicked() {
 }
 int LListBox::backgroundClicked(lua_State*) {
     set("backgroundClicked");
-}
-
-void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int height, bool rowIsSelected ) {
-    if( callback("paintListBoxItem", 1, { rowNumber, width, height, rowIsSelected } ) ) {
-        String text = LUA::getString(2);
-        int w = LUA::checkAndGetNumber(2, width);
-        int h = LUA::checkAndGetNumber(2, height);
-
-        if (rowIsSelected)
-            g.fillAll (Colours::yellow.withAlpha(0.2f));
-
-        g.setColour (Colours::black);
-        g.setFont (height * 0.7f);
-    
-        g.drawText ( LUA::getString() , 5, 0, w, h, Justification::left, true );
-    }
-}
-int LListBox::paintListBoxItem(lua_State*) {
-    set("paintListBoxItem");
 }
 
 void LListBox::listBoxItemDoubleClicked( int row, const MouseEvent& e ) {
