@@ -176,18 +176,19 @@ int LTreeViewItem::paintVerticalConnectingLine(lua_State*){
 }
 
 void LTreeViewItem::itemClicked( const MouseEvent& e ) {
-    if (! hasCallback("itemClicked") ) {
-        TreeViewItem::itemClicked(e);
-    }
-    else
+    if (hasCallback("itemClicked"))
         callback("itemClicked", 0, { new LRefBase("MouseEvent", &e) });
+    else
+        TreeViewItem::itemClicked(e);
 }
 int LTreeViewItem::itemClicked(lua_State* L) {
     if ( lua_gettop(L) > 1 ) {
         if ( lua_type(L,2) == LUA_TFUNCTION )
             set("itemClicked");
         else
-            TreeViewItem::itemClicked( *LUA::toUserdata<LMouseEvent>(2) );
+            this->itemClicked( *LUA::toUserdata<LMouseEvent>(2) );
+    } else {
+        LUA::throwError("Missing arguments for itemClicked");
     }
     return 0;
 }
