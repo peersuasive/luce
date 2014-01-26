@@ -133,10 +133,10 @@ int l_JUCEApplication(lua_State *L) {
     return 1;
 }
 
-int l_Component(lua_State *L) {
-    Luna<LComponent>::Register(L);
-    return 1;
-}
+//int l_Component(lua_State *L) {
+//    Luna<LComponent>::Register(L);
+//    return 1;
+//}
 
 int l_DocumentWindow(lua_State *L) {
     Luna<LDocumentWindow>::Register(L); //, "DocumentWindow");
@@ -244,7 +244,7 @@ int l_ListBox(lua_State *L) {
 
 static const luaL_reg luce_lib [] = {
     { "JUCEApplication", l_JUCEApplication },
-    { "LComponent", l_Component },
+    //{ "LComponent", l_Component },
     { "DocumentWindow", l_DocumentWindow },
     { "MainComponent", l_MainComponent },
     { "Component", l_JComponent },
