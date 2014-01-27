@@ -737,8 +737,8 @@ namespace LUA {
             int func_index = lua_gettop(L);
             int nb_args = args.size();
             
-            lua_pushcclosure(L, stacktrace, 0);
-            int errfunc = lua_gettop(L);
+            //lua_pushcclosure(L, stacktrace, 0);
+            //int errfunc = lua_gettop(L);
             lua_pushvalue(L, func_index);
 
             // set arguments
@@ -809,7 +809,7 @@ namespace LUA {
                     std::cout << "ERROR:" << err << std::endl;
                 }
             }
-            lua_remove(L, errfunc);
+            //lua_remove(L, errfunc);
             lua_remove(L, func_index);
 
             // unlock
