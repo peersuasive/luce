@@ -229,8 +229,12 @@ var LTreeViewItem::getDragSourceDescription() {
     else
         return TreeViewItem::getDragSourceDescription();
 }
-int LTreeViewItem::getDragSourceDescription ( lua_State* ) {
-    set("getDragSourceDescription");
+int LTreeViewItem::getDragSourceDescription ( lua_State *L ) {
+    if ( lua_isfunction(L, 2) ) {
+        set("getDragSourceDescription");
+        return 0;
+    }
+    return LUA::returnString(this->getDragSourceDescription());
 }
 
 // FIXME: maybe we could just set some variables instead of using callbacks here
