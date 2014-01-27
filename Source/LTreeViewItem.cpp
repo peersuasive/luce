@@ -348,7 +348,7 @@ int LTreeViewItem::getItemWidth ( lua_State* ) {
 }
 
 int LTreeViewItem::getItemPosition ( lua_State* ) {
-    return LUA::returnTable(TreeViewItem::getItemPosition(LUA::getBoolean()));
+    return LUA::returnTable(TreeViewItem::getItemPosition(LUA::checkAndGetBoolean(2, true)));
 }
 
 int LTreeViewItem::getItemIdentifierString ( lua_State* ) {
