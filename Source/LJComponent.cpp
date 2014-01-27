@@ -27,24 +27,11 @@ LJComponent::LJComponent(lua_State *L)
     : LComponent(L, this)
 {
     Component::setName( myName() );
+    REGISTER_CLASS(LJComponent);
 }
 
 LJComponent::~LJComponent() {
     Component::deleteAllChildren();
-}
-
-int LJComponent::startDragging(lua_State*) {
-    String desc = LUA::getString(2);
-    Rectangle<int> pos = LUA::getRectangle(2);
-    if ( ! desc.isEmpty() ) {
-        if( DragAndDropContainer *const dragContainer = 
-                DragAndDropContainer::findParentDragContainerFor( this ) ) {
-            Image dragImage (Component::createComponentSnapshot (pos, true));
-            //Point<int> imageOffset (pos.getPosition() - e.getPosition());
-            dragContainer->startDragging (desc, this, dragImage, true);//, &imageOffset);
-        }
-    }
-    return 0;
 }
 
 void LJComponent::paint(Graphics& g) {

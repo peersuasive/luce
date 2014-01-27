@@ -48,6 +48,26 @@ void LComponent::selfKill() {
     delete this;
 }
 
+int LComponent::startDragging(lua_State *L) {
+    String desc = LUA::getString(2);
+    Rectangle<int> pos = LUA::getRectangle(2);
+    Component *comp;
+    if( lua_type(L, 2) == LUA_TTABLE )
+        comp = LUA::from_luce<LJComponent>(2);
+    else
+        comp = child;
+    if ( ! desc.isEmpty() ) {
+        if( DragAndDropContainer *const dragContainer = 
+                DragAndDropContainer::findParentDragContainerFor( comp ) ) {
+            // TODO: create a snapshot with intersections
+            Image dragImage (child->createComponentSnapshot (pos, true));
+            //Point<int> imageOffset (pos.getPosition() - e.getPosition());
+            dragContainer->startDragging (desc, comp, dragImage, true);//, &imageOffset);
+        }
+    }
+    return 0;
+}
+
 // get/set
 int LComponent::setBounds(lua_State *L) {
     if(child)
@@ -492,6 +512,38 @@ int LComponent::getChildComponent ( lua_State* ) {
 int LComponent::getCurrentlyFocusedComponent ( lua_State *L ) {
     if (child)
         return LUA::returnUserdata<LJComponent, Component>( child->getCurrentlyFocusedComponent() );
+    return 0;
+}
+
+int LComponent::getParentComponent ( lua_State* ) {
+    if (child)
+        return LUA::returnUserdata<LJComponent,Component>( child->getParentComponent() );
+    return 0;
+}
+
+int LComponent::as( lua_State *L ) {
+    if (child) {
+        String c = LUA::getString(2);
+        Component *p;
+        if( lua_isnoneornil(L,2) )
+            p = child;
+        else
+            p = LUA::from_luce<LJComponent, Component>(2);
+        if( LUA::testtype(c, p) )
+            return LUA::casttype(c, p);
+        else
+            return LUA::returnNil();
+    }
+}
+
+int LComponent::findParentComponentOfClass ( lua_State* ) {
+    if (child) {
+        String c = LUA::getString();
+        for (Component* p = child->getParentComponent(); p != nullptr; p = p->getParentComponent())
+            if ( LUA::testtype(c, p) )
+                return LUA::casttype(c, p);
+        return LUA::returnNil();
+    }
     return 0;
 }
 
@@ -1319,14 +1371,6 @@ int LComponent::canModalEventBeSentToComponent ( lua_State* ) {
     } else return 0;
 }
 
-int LComponent::findParentComponentOfClass ( lua_State* ) {
-    if (child) {
-        // return LUA::TODO_RETURN_OBJECT_TargetClass( child->findParentComponentOfClass() );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "TargetClass findParentComponentOfClass()" );
-    } else return 0;
-}
-
 int LComponent::createFocusTraverser ( lua_State* ) {
     if (child) {
         // return LUA::TODO_RETURN_OBJECT_KeyboardFocusTraverser( child->createFocusTraverser() );
@@ -1367,14 +1411,6 @@ int LComponent::getPeer ( lua_State* ) {
         // return LUA::TODO_RETURN_OBJECT_ComponentPeer( child->getPeer() );
         lua_settop(LUA::Get(), 1); // added by TODO
         return LUA::TODO_OBJECT( "ComponentPeer getPeer()" );
-    } else return 0;
-}
-
-int LComponent::getParentComponent ( lua_State* ) {
-    if (child) {
-        // return LUA::TODO_RETURN_OBJECT_Component( child->getParentComponent() );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "Component getParentComponent()" );
     } else return 0;
 }
 

@@ -131,6 +131,7 @@ LTextEditor::LTextEditor(lua_State *L)
     : LComponent(L, this),
       TextEditor( /* TODO: add args */ )
 {
+    REGISTER_CLASS(LTextEditor);
     TextEditor::setName(myName());
     TextEditor::addListener(this);
 }

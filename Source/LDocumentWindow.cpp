@@ -32,6 +32,8 @@ LDocumentWindow::LDocumentWindow(lua_State *L)
     :  LComponent(L, this),
        DocumentWindow( "DocumentWindow", Colours::lightgrey, DocumentWindow::allButtons )
 {
+    REGISTER_CLASS(LDocumentWindow);
+
     DocumentWindow::setName( myName() );
     commandManager = new ApplicationCommandManager();
 

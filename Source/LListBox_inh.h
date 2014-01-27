@@ -45,6 +45,8 @@ const Luna<LListBox>::Inheritence LListBox::inherits[] = {
 };
 
 const Luna<LListBox>::InheritenceF LListBox::inheritsF[] = {
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),
     method( LComponent, findColour ),

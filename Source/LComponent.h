@@ -21,6 +21,10 @@ public:
     ~LComponent();
  
     virtual void selfKill() override;
+
+    int as(lua_State*);
+    int startDragging(lua_State*);
+
     //==============================================================================
     int setExplicitFocusOrder(lua_State*);
     int getExplicitFocusOrder(lua_State*);

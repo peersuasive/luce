@@ -45,6 +45,8 @@ const Luna<LStretchableLayoutResizerBar>::Inheritence LStretchableLayoutResizerB
 };
 
 const Luna<LStretchableLayoutResizerBar>::InheritenceF LStretchableLayoutResizerBar::inheritsF[] = {
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),
     method( LComponent, findColour ),

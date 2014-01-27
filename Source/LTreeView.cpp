@@ -76,6 +76,7 @@ LTreeView::LTreeView(lua_State *L)
       TreeView( /* TODO: add args */ )
 {
     TreeView::setName(myName());
+    REGISTER_CLASS( LTreeView );
 }
 
 LTreeView::~LTreeView() {

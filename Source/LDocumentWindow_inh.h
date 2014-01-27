@@ -48,6 +48,8 @@ const Luna<LDocumentWindow>::Inheritence LDocumentWindow::inherits[] = {
 };
 
 const Luna<LDocumentWindow>::InheritenceF LDocumentWindow::inheritsF[] = {
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),
     method( LComponent, findColour ),

@@ -45,6 +45,8 @@ const Luna<LLabel>::Inheritence LLabel::inherits[] = {
 };
 
 const Luna<LLabel>::InheritenceF LLabel::inheritsF[] = {
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),
     method( LComponent, findColour ),

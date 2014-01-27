@@ -36,6 +36,7 @@ LTextButton::LTextButton(lua_State *L)
 {
     TextButton::setName(myName());
     TextButton::addListener(this);
+    REGISTER_CLASS(LTextButton);
 }
 
 LTextButton::~LTextButton(){}

@@ -22,7 +22,6 @@ const Luna<LStretchableLayoutResizerBar>::PropertyType LStretchableLayoutResizer
 };
 const Luna<LStretchableLayoutResizerBar>::FunctionType LStretchableLayoutResizerBar::methods[] = {
     method( LStretchableLayoutResizerBar, mouseDrag ),
-    //method( LStretchableLayoutResizerBar, paint ),
     //method( LStretchableLayoutResizerBar, mouseDown ),
     method( LStretchableLayoutResizerBar, hasBeenMoved ),
     {0,0}
@@ -35,6 +34,7 @@ LStretchableLayoutResizerBar::LStretchableLayoutResizerBar(lua_State *L)
                                         (int)LUA::getNumber(3), LUA::getBoolean(4) )
 {
     StretchableLayoutResizerBar::setName(myName());
+    REGISTER_CLASS(LStretchableLayoutResizerBar);
 }
 LStretchableLayoutResizerBar::~LStretchableLayoutResizerBar(){}
 

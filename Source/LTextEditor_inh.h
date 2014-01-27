@@ -45,6 +45,8 @@ const Luna<LTextEditor>::Inheritence LTextEditor::inherits[] = {
 };
 
 const Luna<LTextEditor>::InheritenceF LTextEditor::inheritsF[] = {
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),
     method( LComponent, findColour ),

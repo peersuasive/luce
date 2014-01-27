@@ -85,6 +85,7 @@ LLabel::LLabel(lua_State *L)
 {
     Label::setName(myName());
     Label::addListener(this);
+    REGISTER_CLASS(LLabel);
 }
 
 LLabel::~LLabel() {

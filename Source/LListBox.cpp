@@ -95,6 +95,7 @@ LListBox::LListBox(lua_State *L)
       ListBox("LListBox", this)
 {
     ListBox::setName(myName());
+    REGISTER_CLASS(LListBox);
 }
 
 LListBox::~LListBox() {}

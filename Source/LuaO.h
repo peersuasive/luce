@@ -78,5 +78,37 @@ namespace LUA {
                                                                 const std::list<var>& args = {} );
 
         const String getError();
+
+        typedef int(*constructor_t)(Component* udata);
+        typedef std::map<String, constructor_t> types_t;
+        types_t types, testtypes;
+
+        template<class T>
+        int luacast(Component* udata) { return returnUserdata<T,Component>(udata); }
+
+        template<class T>
+        int testcast(Component* udata) {
+            return( dynamic_cast<T*>(udata) != nullptr );
+        }
+
+        template<class T>
+        void register_class(String const& n) {
+            types.insert( std::make_pair(n, &luacast<T>));
+            testtypes.insert( std::make_pair(n, &testcast<T>));
+        }
+        
+        int casttype(String const& n, Component* udata) {
+            types_t::iterator i = types.find(n);
+            if( i==types.end() ) return 0;
+            return i->second(udata);
+        }
+
+        int testtype(String const& n, Component* udata) {
+            types_t::iterator i = testtypes.find(n);
+            if( i==testtypes.end() ) return 0;
+            return i->second(udata);
+        }
     }
 }
+
+#define REGISTER_CLASS(T) LUA::register_class<T>(#T)

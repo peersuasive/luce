@@ -45,6 +45,8 @@ const Luna<LTreeView>::Inheritence LTreeView::inherits[] = {
 };
 
 const Luna<LTreeView>::InheritenceF LTreeView::inheritsF[] = {
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),
     method( LComponent, findColour ),

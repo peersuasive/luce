@@ -55,6 +55,8 @@ const Luna<LTextButton>::Inheritence LTextButton::inherits[] = {
 
 const Luna<LTextButton>::InheritenceF LTextButton::inheritsF[] = {
     // LComponent
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LButton, getExplicitFocusOrder ),
     method( LButton, setExplicitFocusOrder ),
     method( LButton, findColour ),

@@ -21,8 +21,6 @@ public:
     LJComponent(lua_State*);
     ~LJComponent();
 
-    int startDragging(lua_State*);
-
     static const char className[];
     static const Luna<LJComponent>::Inheritence inherits[];
     static const Luna<LJComponent>::InheritenceF inheritsF[];

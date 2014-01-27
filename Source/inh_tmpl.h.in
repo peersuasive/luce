@@ -44,6 +44,8 @@ const Luna<%CLASS%>::Inheritence %CLASS%::inherits[] = {
 };
 
 const Luna<%CLASS%>::InheritenceF %CLASS%::inheritsF[] = {
+    method( LComponent, as ),
+    method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),
     method( LComponent, findColour ),
