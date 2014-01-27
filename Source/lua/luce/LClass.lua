@@ -31,12 +31,12 @@ local new = function(self, ...)
         __newindex = function(t, k, v)
             if not(me.__exists(me,k)) then
                 if(LDEBUG)then
-                    print("NEWINDEX: setting local", k, me.__self)
+                    --print("NEWINDEX: setting local", k, me.__self)
                 end
                 rawset(t,k,v)
             else
                 if(LDEBUG)then
-                    print("NEWINDEX: setting native", k, me.__self)
+                    --print("NEWINDEX: setting native", k, me.__self)
                 end
                 me[k] = v
             end
