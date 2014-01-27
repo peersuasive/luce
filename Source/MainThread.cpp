@@ -22,9 +22,21 @@ MainThread::~MainThread() {
     luaL_unref(LUA::Get(), LUA_REGISTRYINDEX, cb_ref);
 }
 
+// returns 0 or 1
+const int run_cb(lua_State *L, int ref) {
+    int status = 0;
+    lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+    if ( lua_pcall(L, 0, 1, 0) )
+        LUA::throwError( "Error while running start function");
+    status = lua_toboolean(L,-1);
+    lua_pop(L, 1);
+    return status;
+}
+
 void MainThread::run() {
     lua_State *L = LUA::Get();
     bool keep_running = true;
+    MessageManagerLock mml (Thread::getCurrentThread());
     while (! threadShouldExit() && keep_running) {
         keep_running = MessageManager::getInstance()->runDispatchLoopUntil(0);
         /*
@@ -40,8 +52,9 @@ void MainThread::run() {
         }
         */
         
-        MessageManagerLock mml (Thread::getCurrentThread());
         if (mml.lockWasGained()) {
+            keep_running = (run_cb(L, cb_ref) == 0);
+            /*
             int rc = LUA::call_cb(cb_ref, 1);
             if ( rc < 0 ) {
                 const char *err = lua_tostring(L, -1);
@@ -59,6 +72,7 @@ void MainThread::run() {
                 }
                 lua_pop(L, 1);
             }
+            */
         }
     }
 }
