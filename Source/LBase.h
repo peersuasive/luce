@@ -19,11 +19,12 @@ class LBase : public LSelfKill
 public:
     LBase(lua_State*, const String& name = "(unnamed)", bool pure = true);
     ~LBase();
-    
+
     virtual void selfKill() override;
 
     //==============================================================================
     int readOnly(lua_State*);
+    int writeOnly(lua_State*);
     
 protected:    
     //==============================================================================
