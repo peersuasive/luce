@@ -24,6 +24,8 @@ const Luna<LTreeViewItem>::PropertyType LTreeViewItem::properties[] = {
     {"uniqueName", &LTreeViewItem::getUniqueName, &LBase::readOnly},
     {"selected", &LTreeViewItem::isSelected, &LTreeViewItem::setSelected},
     {"rowNumberInTree", &LTreeViewItem::getRowNumberInTree, &LBase::readOnly},
+    {"itemHeight", &LTreeViewItem::getItemHeight, &LBase::readOnly},
+    {"itemPosition", &LTreeViewItem::getItemPosition, &LBase::readOnly},
     {0,0}
 };
 const Luna<LTreeViewItem>::FunctionType LTreeViewItem::methods[] = {
