@@ -20,6 +20,7 @@ const Luna<LListBox>::PropertyType LListBox::properties[] = {
     {"outlineThickness", &LListBox::getOutlineThickness, &LListBox::setOutlineThickness},
     {"selectedRows", &LListBox::getSelectedRows, &LListBox::setSelectedRows},
     {"verticalPosition", &LListBox::getVerticalPosition, &LListBox::setVerticalPosition},
+    {"multipleSelectionEnabled", &LBase::writeOnly, &LListBox::setMultipleSelectionEnabled},
     //{"model", &LListBox::getModel, &LListBox::setModel},
     {0,0}
 };
