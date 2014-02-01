@@ -129,6 +129,21 @@ public:
         lua_pushcfunction(L, &Luna < T >::constructor);
         lua_setfield(L, nt, "new");
 
+        // set static values, like enums...
+        
+        for ( int i = 0; T::enums[i].name; ++i ) {
+            lua_pushstring(L, T::enums[i].name);
+            lua_newtable(L);
+            int subt = lua_gettop(L);
+            int ii = 1;
+            for ( auto& it : T::enums[i].values ) {
+                lua_pushstring(L, it.first.c_str());
+                lua_pushnumber(L, it.second);
+                lua_settable(L, subt);
+            }
+            lua_settable(L, nt);
+        }
+
         luaL_newmetatable(L, T::className);
         int metatable = lua_gettop(L);
 
@@ -252,6 +267,7 @@ public:
         }
         lua_settable(L, t);
 
+        /* gone at the class level... But repeat anyway for instance*/
         // set static values, like enums...
         for ( int i = 0; T::enums[i].name; ++i ) {
             lua_pushstring(L, T::enums[i].name);
