@@ -9,6 +9,7 @@ namespace luce {
 #include "LBase.cpp"
 #include "LModifierKeys.cpp"
 #include "LMouseEvent.cpp"
+#include "LColour.cpp"
 #include "LStretchableLayoutManager.cpp"
 #include "LFont.cpp"
 #include "LSourceDetails.cpp"

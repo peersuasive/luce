@@ -133,6 +133,11 @@ int l_JUCEApplication(lua_State *L) {
     return 1;
 }
 
+int l_Colour(lua_State *L) {
+    Luna<LColour>::Register(L);
+    return 1;
+}
+
 //int l_Component(lua_State *L) {
 //    Luna<LComponent>::Register(L);
 //    return 1;
@@ -249,6 +254,7 @@ int l_ListBox(lua_State *L) {
 static const luaL_reg luce_lib [] = {
     { "JUCEApplication", l_JUCEApplication },
     //{ "LComponent", l_Component },
+    { "Colour", l_Colour },
     { "DocumentWindow", l_DocumentWindow },
     { "MainComponent", l_MainComponent },
     { "Component", l_JComponent },
@@ -282,7 +288,6 @@ int luaopen_luce_core (lua_State *L) {
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     //luaL_register(L,"luce.core", luce_lib);
     //luaL_register(L,"luce", luce_lib);
-    //l_NotificationType(L);
 
     lua_newtable(L);
     int i = lua_gettop(L);
