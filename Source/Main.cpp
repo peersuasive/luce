@@ -157,29 +157,33 @@ int l_TextButton(lua_State *L) {
     return 1;
 }
 
-// until I'm sure this is really collected by the gc, I'll stick to strings
 void l_NotificationType(lua_State *L) {
     lua_newtable(L);
-        //NotificationType *n1 = (NotificationType*)lua_newuserdata(L, sizeof(NotificationType));
-        //*n1 = NotificationType::dontSendNotification;
-        lua_pushstring(L, "dontSendNotification");
-        lua_setfield(L, -2, "dontSendNotification");
-
-        //NotificationType *n2 = (NotificationType*)lua_newuserdata(L, sizeof(NotificationType));
-        //*n2 = NotificationType::sendNotification;
-        lua_pushstring(L, "sendNotification");
-        lua_setfield(L, -2, "sendNotification");
-
-        //NotificationType *n3 = (NotificationType*)lua_newuserdata(L, sizeof(NotificationType));
-        //*n3 = NotificationType::sendNotificationSync;
-        lua_pushstring(L, "sendNotificationSync");
-        lua_setfield(L, -2, "sendNotificationSync");
-
-        //NotificationType *n4 = (NotificationType*)lua_newuserdata(L, sizeof(NotificationType));
-        //*n4 = NotificationType::sendNotificationAsync;
-        lua_pushstring(L, "sendNotificationAsync");
-        lua_setfield(L, -2, "sendNotificationAsync");
+    int n = lua_gettop(L);
+    for(auto& it : LConstants::lnotification) {
+        lua_pushnumber(L, it.second);
+        lua_setfield(L, -2, it.first);
+    }
     lua_setfield(L, -2, "NotificationType");
+}
+
+void l_JustificationType(lua_State *L) {
+    lua_newtable(L);
+    for(auto& it : LConstants::ljustification) {
+        lua_pushnumber(L, it.second);
+        lua_setfield(L, -2, it.first);
+    }
+    lua_setfield(L, -2, "JustificationType");
+}
+
+void l_Colours(lua_State *L) {
+    lua_newtable(L);
+    int n = lua_gettop(L);
+    for(auto& it : LConstants::lcolours) {
+        lua_pushstring(L, it);
+        lua_setfield(L, -2, it);
+    }
+    lua_setfield(L, -2, "Colours");
 }
 
 int l_Label(lua_State *L) {
@@ -290,6 +294,8 @@ int luaopen_luce_core (lua_State *L) {
     }
     
     l_NotificationType(L);
+    l_JustificationType(L);
+    l_Colours(L);
 
     return 1;
 }

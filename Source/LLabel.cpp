@@ -213,11 +213,8 @@ int LLabel::getText(lua_State*) {
 }
 int LLabel::setText(lua_State *L) {
     String text = LUA::getString(2);
-    // I'm not sure this is really collected, so better use strings until checked
-    //if( lua_isuserdata(L, 2)  ) {
-    //    Label::setText( text, *(NotificationType*)(lua_touserdata(L, 2) ) );
     if( lua_isstring(L, 2)  )
-        Label::setText( text, LNotificationType::get( LUA::getString(2) ) );
+        Label::setText( text, (NotificationType)LUA::getNumber<int>(2) );
     else 
         Label::setText( text, NotificationType::dontSendNotification );
     return 0;

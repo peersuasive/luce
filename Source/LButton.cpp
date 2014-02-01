@@ -115,10 +115,10 @@ int LButton::getToggleState ( lua_State* ) {
     } else return 0;
 }
 int LButton::setToggleState ( lua_State* ) {
-    bool shouldBeOn = LUA::getBoolean();
-    String notif = LUA::getString();
+    bool shouldBeOn = LUA::getBoolean(2);
+    int notif = LUA::getNumber<int>(2);
     if (child)
-        child->setToggleState( shouldBeOn, LNotificationType::get(notif) );
+        child->setToggleState( shouldBeOn, (NotificationType)notif );
     return 0;
 }
 
@@ -128,10 +128,10 @@ int LButton::getRadioGroupId ( lua_State* ) {
     else return 0;
 }
 int LButton::setRadioGroupId ( lua_State* ) {
-    int newGroupId = LUA::getNumber();
-    String notif = LUA::getString();
+    int newGroupId = LUA::getNumber<int>(2);
+    int notif = LUA::getNumber<int>(2);
     if (child)
-        child->setRadioGroupId( newGroupId, LNotificationType::get(notif) );
+        child->setRadioGroupId( newGroupId, (NotificationType)notif );
     return 0;
 }
 

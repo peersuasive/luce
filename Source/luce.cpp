@@ -20,7 +20,6 @@ namespace luce {
 #include "LMainComponent.cpp"
 #include "LJComponent.cpp"
 #include "LLabel.cpp"
-#include "LNotificationType.cpp"
 #include "LTextButton.cpp"
 #include "LTextEditor.cpp"
 //#include "LValueTree.cpp"

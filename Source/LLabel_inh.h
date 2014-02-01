@@ -229,24 +229,5 @@ const Luna<LLabel>::Enum LLabel::enums[] = {
         { "textColourId"      , textColourId },
         { "outlineColourId"   , outlineColourId }
     }},
-
-    { "JustificationType", {
-        { "left"                , Justification::left },
-        { "right"               , Justification::right },
-        { "horizontallyCentred" , Justification::horizontallyCentred },
-        { "top"                 , Justification::top },
-        { "bottom"              , Justification::bottom },
-        { "verticallyCentred"   , Justification::verticallyCentred },
-        { "horizontallyJustified", Justification::horizontallyJustified },
-        { "centred"             , Justification::centred },
-        { "centredLeft"         , Justification::centredLeft },
-        { "centredRight"        , Justification::centredRight },
-        { "centredTop"          , Justification::centredTop },
-        { "centredBottom"       , Justification::centredBottom },
-        { "topLeft"             , Justification::topLeft },
-        { "topRight"            , Justification::topRight },
-        { "bottomLeft"          , Justification::bottomLeft },
-        { "bottomRight"         , Justification::bottomRight }
-    }},
     {0}
 };

@@ -312,7 +312,7 @@ int LListBox::getSelectedRows ( lua_State* ) {
 }
 int LListBox::setSelectedRows ( lua_State* ) {
     SparseSet<int> setOfRowsToBeSelected = LUA::getSparseSet(2);
-    NotificationType shouldNotify = LNotificationType::get(LUA::checkAndGetString(2, "sendNotification"));
+    NotificationType shouldNotify = (NotificationType)LUA::checkAndGetNumber<int>(2, NotificationType::sendNotification);
     ListBox::setSelectedRows( setOfRowsToBeSelected, shouldNotify );
     return 0;
 }

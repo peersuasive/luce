@@ -303,7 +303,7 @@ int LTreeViewItem::isSelected ( lua_State* ) {
 int LTreeViewItem::setSelected ( lua_State* ) {
     bool shouldBeSelected = LUA::getBoolean(2);
     bool deselectOtherItemsFirst = LUA::checkAndGetBoolean(2, true);
-    NotificationType shouldNotify = LNotificationType::get(LUA::checkAndGetString(2, "sendNotification"));
+    NotificationType shouldNotify = (NotificationType)LUA::checkAndGetNumber<int>(2, NotificationType::sendNotification);
     TreeViewItem::setSelected( shouldBeSelected, deselectOtherItemsFirst, shouldNotify );
     return 0;
 }
