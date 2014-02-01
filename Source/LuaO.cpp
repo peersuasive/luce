@@ -135,7 +135,19 @@ namespace LUA {
                 lua_remove(L, i);
             return def;
         }
-        
+        template<class T>
+        const T getNumber(int i) {
+            return luaL_checknumber(L, i);
+        }
+        template<class T>
+        const T checkAndGetNumber(int i, T def) {
+            if (lua_type(L, i) == LUA_TNUMBER)
+                return getNumber(i);
+            if(lua_type(L,i) == LUA_TNIL)
+                lua_remove(L, i);
+            return def;
+        }
+
         const bool getBoolean(int i) {
             luaL_checktype(L, i, LUA_TBOOLEAN);
             bool res = lua_toboolean(L, i);
@@ -255,6 +267,7 @@ namespace LUA {
             */
         }
 
+        /*
         const juce::Rectangle<int> getRectangle(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             i = (i<0) ? lua_gettop(L)-(i+1) : i;
@@ -289,6 +302,45 @@ namespace LUA {
             lua_remove(L,i); // original argument
 
             return { x, y, w, h };
+        }
+        */
+        template<class T>
+        const juce::Rectangle<T> getRectangle(int i) {
+            luaL_checktype(L, i, LUA_TTABLE);
+            i = (i<0) ? lua_gettop(L)-(i+1) : i;
+            lua_getmetatable(L, i);
+            lua_getfield(L, -1, "__self");
+            if ( ! lua_isnil(L, -1) ) { // LRectangle object
+                if ( std::string( lua_tostring(L, -1) ) == "LRectangle" ) {
+                    lua_pop(L,1); // __self
+                    lua_getfield(L, i, "dump"); // provided by LRectangle
+                    lua_pushvalue(L, i); // push self
+                    if ( lua_pcall(L, 1, 1, 0) != 0 ) // get self as argument
+                        lua_error(L);
+                } else {
+                    throwError("Wrong object given as a LRectangle");
+                }
+            } else { // a table
+                lua_pushvalue(L, i);
+            }
+            int ind = lua_gettop(L);
+            lua_rawgeti(L, ind, 1);
+            T x = luaL_checknumber(L, -1);
+            lua_rawgeti(L, ind, 2);
+            T y = luaL_checknumber(L, -1);
+            lua_rawgeti(L, ind, 3);
+            T w = luaL_checknumber(L, -1);
+            lua_rawgeti(L, ind, 4);
+            T h = luaL_checknumber(L, -1);
+
+            lua_pop(L, 5); // table + x, y, w, h
+            lua_pop(L,1); // mt or nil
+            lua_remove(L,i); // original argument
+
+            return { x, y, w, h };
+        }
+        const juce::Rectangle<int> getRectangle(int i) {
+            return getRectangle<int>(i);
         }
 
         const juce::Point<int> getPoint(int i) {

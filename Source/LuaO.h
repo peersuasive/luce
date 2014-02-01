@@ -16,6 +16,11 @@ namespace LUA {
         const var getNumber(int i= -1);
         const var checkAndGetNumber(int i=2, var def = 0);
 
+        template<class T>
+        const T getNumber(int i= -1);
+        template<class T>
+        const T checkAndGetNumber(int i=2, T def = 0);
+
         const bool getBoolean(int i = -1);
         const bool checkAndGetBoolean(int i=2, int def = false);
 
@@ -26,7 +31,11 @@ namespace LUA {
             template<class T>
         const Array<T> getList(int i=-1);
         const Array<Component*> getComponentList(int n, int i=-1);
+
         const juce::Rectangle<int> getRectangle(int i=-1);
+            template<class T>
+        const juce::Rectangle<T> getRectangle(int i=-1);
+
         const juce::Point<int> getPoint(int i=-1);
         const juce::Range<int> getRange(int i=-1);
         const juce::SparseSet<int> getSparseSet(int i=-1);
