@@ -11,8 +11,17 @@ local function load_luce(self, core)
         if ("table"==type(v)) then
             mt[k] = v
         elseif k:match("^[A-Z]") then
-            local l = LClass( v() )
-            mt[k] = function(self,...) return l(...) end
+            local loaded = v()
+            local l = LClass( loaded )
+            lmt = {
+                new = function(self,...) return l(...) end
+            }
+            for a,b in next, loaded do
+                lmt[a] = b
+            end
+            mt[k] = setmetatable(lmt, {
+                __call = function(self,...) return l(...) end,
+            })
         else
             mt[k] = v
         end
@@ -39,7 +48,7 @@ local xmeta = setmetatable({
         local luce = dbg and require"luce.core_d" or require"luce.core"
         if(dbg)then LDEBUG=true end
         return(load_luce(_, luce))
-    end
+    end,
 })
 
 module(...)
