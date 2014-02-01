@@ -76,14 +76,14 @@ print( "is attached on left ?", label:isAttachedOnLeft())
 --- set a colour for background and align text to the right
 local label2 = luce:Label("Another Label")
 label2.text = "(left aligned)"
-label2:setColour( label2.ColourIds.backgroundColourId, "yellow" )
-label2:setJustificationType( label2.JustificationType.right )
+label2:setColour( luce.Label.ColourIds.backgroundColourId, "yellow" )
+label2:setJustificationType( luce.JustificationType.right )
 
 --- centre text
 local label3 = luce:Label("(left aligned text)")
 label3.text = "(centered)"
-label3:setColour( label3.ColourIds.backgroundColourId, "red" )
-label3:setJustificationType( label3.JustificationType.centred )
+label3:setColour( luce.Label.ColourIds.backgroundColourId, "red" )
+label3:setJustificationType( luce.JustificationType.centred )
 
 local slm = luce:StretchableLayoutManager("unmanaged slm")
 
@@ -145,10 +145,10 @@ dw:closeButtonPressed(function(...)
 end)
 
 --- callback used when quit is asked
-local keep_going = true
+local stop_now = false
 mainWindow:systemRequestedQuit(function(...)
     print("** MainWindow system requested quit")
-    keep_going = false
+    stop_now = true
     mainWindow:shutdown()
     mainWindow:quit()
 end)
@@ -168,11 +168,7 @@ end)
 --- so there's no need to loop here
 --- it is set with the same rate than the JUCE's loop (1ms by default)
 luce:start_manual( mainWindow, function(...)
-    local status = true
-    if ( not keep_going ) then
-        status = false
-    end
-    return status
+    return stop_now
 end )
 
 
