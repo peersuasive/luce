@@ -1,6 +1,7 @@
 local new = function(self, ...)
     local self = self or {}
-    local me = self.class.new(class, ...)
+    --local me = self.class.new(class, ...)
+    local me = self.class.new(...)
     self.__self = me.__self
     for k,v in next, me do
         if ( k == "methods" ) then
