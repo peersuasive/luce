@@ -138,6 +138,21 @@ int l_Colour(lua_State *L) {
     return 1;
 }
 
+int l_AffineTransform(lua_State *L) {
+    Luna<LAffineTransform>::Register(L);
+    return 1;
+}
+
+int l_Path(lua_State *L) {
+    Luna<LPath>::Register(L);
+    return 1;
+}
+
+int l_Graphics(lua_State *L) {
+    Luna<LGraphics>::Register(L);
+    return 1;
+}
+
 //int l_Component(lua_State *L) {
 //    Luna<LComponent>::Register(L);
 //    return 1;
@@ -255,6 +270,9 @@ static const luaL_reg luce_lib [] = {
     { "JUCEApplication", l_JUCEApplication },
     //{ "LComponent", l_Component },
     { "Colour", l_Colour },
+    { "AffineTransform", l_AffineTransform },
+    { "Path", l_Path },
+    { "Graphics", l_Graphics },
     { "DocumentWindow", l_DocumentWindow },
     { "MainComponent", l_MainComponent },
     { "Component", l_JComponent },
