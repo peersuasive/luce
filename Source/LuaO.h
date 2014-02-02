@@ -36,7 +36,14 @@ namespace LUA {
             template<class T>
         const juce::Rectangle<T> getRectangle(int i=-1);
 
+        const juce::Line<int> getLine(int i=-1);
+            template<class T>
+        const juce::Line<T> getLine(int i=-1);
+
         const juce::Point<int> getPoint(int i=-1);
+            template<class T>
+        const juce::Point<T> getPoint(int i=-1);
+
         const juce::Range<int> getRange(int i=-1);
         const juce::SparseSet<int> getSparseSet(int i=-1);
         const std::list<var> getStdList(int i=-1);
@@ -71,11 +78,21 @@ namespace LUA {
         int returnTable(const std::list<var>& val);
         int returnTable(const Array<var>& val);
         int returnTable( const juce::StringArray& );
-        int returnTable( const juce::Rectangle<int>& r );
-        int returnTable( const juce::RectangleList<int>& r );
-        int returnTable( const juce::Point<int>& r );
+        //int returnTable( const juce::RectangleList<int>& r );
         int returnTable( const juce::Range<int>& r );
         int returnTable( const juce::SparseSet<int>& r);
+
+        template<class T>
+        int returnTable( const juce::Rectangle<T>& r );
+        int returnTable( const juce::Rectangle<int>& r );
+
+        template<class T>
+        int returnTable( const juce::Point<T>& r );
+        int returnTable( const juce::Point<int>& r );
+
+        template<class T>
+        int returnTable( const juce::Line<T>& r );
+        int returnTable( const juce::Line<int>& r );
 
         int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ");
 

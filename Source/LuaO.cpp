@@ -343,16 +343,60 @@ namespace LUA {
             return getRectangle<int>(i);
         }
 
-        const juce::Point<int> getPoint(int i) {
+        template<class T>
+        const juce::Line<T> getLine(int i) {
+            luaL_checktype(L, i, LUA_TTABLE);
+            i = (i<0) ? lua_gettop(L)-(i+1) : i;
+            lua_getmetatable(L, i);
+            lua_getfield(L, -1, "__self");
+            if ( ! lua_isnil(L, -1) ) { // LRectangle object
+                if ( std::string( lua_tostring(L, -1) ) == "LLine" ) {
+                    lua_pop(L,1); // __self
+                    lua_getfield(L, i, "dump"); // provided by LRectangle
+                    lua_pushvalue(L, i); // push self
+                    if ( lua_pcall(L, 1, 1, 0) != 0 ) // get self as argument
+                        lua_error(L);
+                } else {
+                    throwError("Wrong object given as a LLine");
+                }
+            } else { // a table
+                lua_pushvalue(L, i);
+            }
+            int ind = lua_gettop(L);
+            lua_rawgeti(L, ind, 1);
+            T x = luaL_checknumber(L, -1);
+            lua_rawgeti(L, ind, 2);
+            T y = luaL_checknumber(L, -1);
+            lua_rawgeti(L, ind, 3);
+            T x1 = luaL_checknumber(L, -1);
+            lua_rawgeti(L, ind, 4);
+            T y1 = luaL_checknumber(L, -1);
+
+            lua_pop(L, 5); // table + x, y, w, h
+            lua_pop(L,1); // mt or nil
+            lua_remove(L,i); // original argument
+
+            return { x, y, x1, y1 };
+        }
+        const juce::Line<int> getLine(int i) {
+            return getLine<int>(i);
+        }
+
+
+        template<class T>
+        const juce::Point<T> getPoint(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             lua_rawgeti(L, -1, 1);
-            int x = luaL_checknumber(L, -1);
+            T x = luaL_checknumber(L, -1);
             lua_rawgeti(L, -2, 2);
-            int y = luaL_checknumber(L, -1);
+            T y = luaL_checknumber(L, -1);
             lua_pop(L, 3);
             lua_remove(L,i);
             return { x, y };
+        }
+        const juce::Point<int> getPoint(int i) {
+            return getPoint<int>(i);
         }
 
         const juce::Range<int> getRange(int i) {
@@ -613,7 +657,8 @@ namespace LUA {
         // we could set a table with x, y, width, height instead of an array
         // or we could also implement the rectangle class to get all the facilities
         // it offers ?
-        int returnTable( const juce::Rectangle<int>& r ) {
+        template<class T>
+        int returnTable( const juce::Rectangle<T>& r ) {
             lua_newtable(L);
             int t = lua_gettop(L);
             lua_pushnumber(L, r.getX());
@@ -626,15 +671,19 @@ namespace LUA {
             lua_rawseti(L, t, 4);
             return 1;
         }
-
-        int returnTable( const juce::RectangleList<int>& r ) {
-            // TODO
-            //
-            // for each rectangle, create a list of numbers
-            return 0;
+        int returnTable( const juce::Rectangle<int>& r ) {
+            return returnTable<int>(r);
         }
 
-        int returnTable( const juce::Point<int>& r ) {
+        //int returnTable( const juce::RectangleList<int>& r ) {
+        //    // TODO
+        //    //
+        //    // for each rectangle, create a list of numbers
+        //    return 0;
+        //}
+
+        template<class T>
+        int returnTable( const juce::Point<T>& r ) {
             lua_newtable(L);
             int t = lua_gettop(L);
             lua_pushnumber(L, r.getX());
@@ -642,6 +691,9 @@ namespace LUA {
             lua_pushnumber(L, r.getY());
             lua_rawseti(L, t, 2);
             return 1;
+        }
+        int returnTable( const juce::Point<int>& r ) {
+            return returnTable<int>(r);
         }
 
         int returnTable( const juce::Range<int>& r ) {
@@ -656,6 +708,24 @@ namespace LUA {
 
         int returnTable( const juce::SparseSet<int>& r ) {
             return returnTable( r.getTotalRange() );
+        }
+
+        template<class T>
+        int returnTable( const juce::Line<T>& l ) {
+            lua_newtable(L);
+            int t = lua_gettop(L);
+            lua_pushnumber(L, l.getStartX());
+            lua_rawseti(L, t, 1);
+            lua_pushnumber(L, l.getStartY());
+            lua_rawseti(L, t, 2);
+            lua_pushnumber(L, l.getEndX());
+            lua_rawseti(L, t, 3);
+            lua_pushnumber(L, l.getEndY());
+            lua_rawseti(L, t, 4);
+            return 1;
+        }
+        int returnTable( const juce::Line<int>& l ) {
+            return returnTable<int>( l );
         }
 
         int stacktrace(lua_State *L) {
