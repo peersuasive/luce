@@ -11,6 +11,8 @@
 
 *************************************************************/
 
+// TODO: make a lua class of this
+
 #include "LKeyPress_inh.h"
 
 ////// static methods
@@ -41,22 +43,52 @@ const Luna<LKeyPress>::FunctionType LKeyPress::methods[] = {
 };
 
 LKeyPress::LKeyPress(lua_State *L)
-    : LBase(L, "LKeyPress", true),
+    : LBase(L, "LKeyPress (invalid)",true),
       KeyPress()
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
 }
 
 LKeyPress::LKeyPress(lua_State *L, const KeyPress& class_)
-    : LBase(L, "LKeyPress", true),
-      KeyPress( class_ )
+    : LBase(L, "LKeyPress (dyn)", true),
+      KeyPress(class_)
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
 }
 
-LKeyPress::~LKeyPress() {}
+int LKeyPress::lnew(lua_State *L)
+{
+    if (lua_isnoneornil(L,2))
+        return LUA::storeAndReturnUserdata<LKeyPress>( new LKeyPress(L, KeyPress()) );
+
+    int keyCode = 0;
+    if ( lua_isnumber(L,2) )
+        keyCode = LUA::getNumber<int>(2);
+    else {
+        String kc = LUA::getString(2);
+        keyCode = (int)kc[0];
+    }
+ 
+    //int keyCode = LUA::getNumber<int>(2);
+    if(lua_isnoneornil(L,2))
+        return LUA::storeAndReturnUserdata<LKeyPress>( new LKeyPress(L, KeyPress(keyCode)) );
+    
+    ModifierKeys mods;
+    if(lua_isnumber(L,2))
+        mods = (ModifierKeys)LUA::getNumber<int>(2);
+    else
+        mods = *LUA::from_luce<LModifierKeys>(2);
+    juce_wchar text = LUA::checkAndGetString(2, String::empty)[0];
+    return LUA::storeAndReturnUserdata<LKeyPress>( new LKeyPress(L, KeyPress(keyCode, mods, text)) );
+
+    // TODO: copy constructor
+}
+
+LKeyPress::~LKeyPress() {
+    std::cout << "DESTROYING KEY PRESS" << std::endl;
+}
+
+int LKeyPress::isValid ( lua_State* ) {
+    return LUA::returnBoolean( KeyPress::isValid() );
+}
 
 int LKeyPress::getTextCharacter ( lua_State* ) {
     return LUA::returnString( String(KeyPress::getTextCharacter()) );
@@ -87,18 +119,14 @@ int LKeyPress::isKeyCurrentlyDown ( lua_State* ) {
     return LUA::returnBoolean( KeyPress::isKeyCurrentlyDown( keyCode ) );
 }
 
-int LKeyPress::isValid ( lua_State* ) {
-    return LUA::returnBoolean( KeyPress::isValid() );
-}
-
 int LKeyPress::getModifiers ( lua_State *L ) {
     return LUA::storeAndReturnUserdata<LModifierKeys>( new LModifierKeys(L,
         KeyPress::getModifiers()
     ));
 }
 
-int LKeyPress::createFromDescription ( lua_State* ) {
-    return LUA::storeAndReturnUserdata<LKeyPress>( new LKeyPress(LUA::Get(),
+int LKeyPress::createFromDescription ( lua_State *L ) {
+    return LUA::storeAndReturnUserdata<LKeyPress>( new LKeyPress(L,
         KeyPress::createFromDescription( LUA::getString(2) )
     ));
 }

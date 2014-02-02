@@ -20,12 +20,9 @@ class LKeyPress
 {
 public:
     LKeyPress(lua_State*);
-    LKeyPress(lua_State*, const KeyPress&);
+    LKeyPress(lua_State*, const KeyPress& class_);
+    static int lnew(lua_State*);
     ~LKeyPress();
-
-    //==============================================================================
-
-    //==============================================================================
 
     //==============================================================================
     int getTextCharacter(lua_State*);
@@ -49,11 +46,6 @@ public:
     static const Luna<LKeyPress>::Enum enums[];
 
 private:
-
-    //==============================================================================
-    // callbacks
-
-
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LKeyPress)
 };
