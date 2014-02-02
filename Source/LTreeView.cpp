@@ -187,36 +187,48 @@ int LTreeView::isInterestedInDragSource ( lua_State* ) {
 }
 
 void LTreeView::itemDragEnter (const SourceDetails& sd) {
-    if(hasCallback("itemDragEnter"))
+    if(hasCallback("itemDragEnter")) {
+        ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
         callback("itemDragEnter", 0, 
-                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+                { new LRefBase( "SourceDetails", lsd ) });
+                //{ new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+    }
 }
 int LTreeView::itemDragEnter ( lua_State* ) {
     set("itemDragEnter");
 }
 
 void LTreeView::itemDragMove (const SourceDetails& sd) {
-    if(hasCallback("itemDragMove"))
+    if(hasCallback("itemDragMove")) {
+        ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
         callback("itemDragMove", 0, 
-                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+                { new LRefBase( "SourceDetails", lsd ) });
+                //{ new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+    }
 }
 int LTreeView::itemDragMove ( lua_State* ) {
     set("itemDragMove");
 }
 
 void LTreeView::itemDragExit (const SourceDetails& sd) {
-    if(hasCallback("itemDragExit"))
+    if(hasCallback("itemDragExit")) {
+        ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
         callback("itemDragExit", 0, 
-                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+                { new LRefBase( "SourceDetails", lsd ) });
+                //{ new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+    }
 }
 int LTreeView::itemDragExit ( lua_State* ) {
     set("itemDragExit");
 }
 
 void LTreeView::itemDropped (const SourceDetails& sd) {
-    if(hasCallback("itemDropped"))
+    if(hasCallback("itemDropped")) {
+        ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
         callback("itemDropped", 0, 
-                { new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+                { new LRefBase( "SourceDetails", lsd ) });
+                //{ new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
+    }
 }
 int LTreeView::itemDropped ( lua_State* ) {
     set("itemDropped");
