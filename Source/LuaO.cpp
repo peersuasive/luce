@@ -14,7 +14,7 @@ namespace LUA {
 
         lua_State *L = nullptr;
         void Set(lua_State *L_) {
-            if ( L == nullptr ) L = L_;
+            if ( !L || L == nullptr ) L = L_;
         }
         lua_State *Get() {
             return L;
@@ -137,12 +137,14 @@ namespace LUA {
         }
         template<class T>
         const T getNumber(int i) {
-            return luaL_checknumber(L, i);
+            T n = luaL_checknumber(L, i);
+            lua_remove(L, i);
+            return n;
         }
         template<class T>
         const T checkAndGetNumber(int i, T def) {
             if (lua_type(L, i) == LUA_TNUMBER)
-                return getNumber(i);
+                return getNumber<T>(i);
             if(lua_type(L,i) == LUA_TNIL)
                 lua_remove(L, i);
             return def;
