@@ -123,7 +123,7 @@ public:
        */
     // TODO: check inherited classes and add inherited methods
     static void Register(lua_State * L, const char *namespac = NULL, bool is_inh = false ) {
-        DBG(String("**registering ") + T::className);
+        //DBG(String("**registering ") + T::className);
         lua_newtable(L);
         int nt = lua_gettop(L);
         lua_pushcfunction(L, &Luna < T >::lconstructor);
@@ -132,16 +132,25 @@ public:
         // set static values, like enums...
         
         for ( int i = 0; T::enums[i].name; ++i ) {
-            lua_pushstring(L, T::enums[i].name);
-            lua_newtable(L);
-            int subt = lua_gettop(L);
+            bool is_root = false;
+            int subt;
+            if(T::enums[i].name == "") { // is table name is empty, place directly in the main component table
+                is_root=true;
+                subt = nt;
+            }
+            else {
+                lua_pushstring(L, T::enums[i].name);
+                lua_newtable(L);
+                subt = lua_gettop(L);
+            }
             int ii = 1;
             for ( auto& it : T::enums[i].values ) {
                 lua_pushstring(L, it.first.c_str());
                 lua_pushnumber(L, it.second);
                 lua_settable(L, subt);
             }
-            lua_settable(L, nt);
+            if(!is_root)
+                lua_settable(L, nt);
         }
 
         luaL_newmetatable(L, T::className);
@@ -218,7 +227,7 @@ public:
         lua_settable(L, metatable);
 
         lua_pop(L,1); // pop int. mt
-        DBG(String("*** registered ") + T::className);
+        //DBG(String("*** registered ") + T::className);
     }
 
     /**
