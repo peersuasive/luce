@@ -83,7 +83,6 @@ LGraphics::LGraphics(lua_State *L, juce::Graphics& class_)
 {
     if ( lua_isstring(L, 2) )
         myName( lua_tostring(L, 2) );
-    // set g
     g = &class_;
 }
 
@@ -348,18 +347,23 @@ int LGraphics::drawDashedLine ( lua_State* ) {
     return 0;
 }
 
-
-// TODO
-// getters
-int LGraphics::fillPath ( lua_State* ) {
-    // Path path = *LUA::from_luce<LPath>(2); // TODO;
-    // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    //g->fillPath( path, transform );
-    LUA::TODO_OBJECT( "fillPath,  path, transform " );
-    lua_settop(LUA::Get(), 1); // added by TODO
+int LGraphics::fillPath ( lua_State *L ) {
+    Path path = *LUA::from_luce<LPath>(2);
+    AffineTransform transform = AffineTransform::identity;
+    if(! lua_isnoneornil(L,2))
+        transform = LAffineTransform::fromLuce( LUA::getList<float>(2) );
+    g->fillPath( path, transform );
     return 0;
 }
 
+int LGraphics::addTransform ( lua_State* ) {
+    g->addTransform( LAffineTransform::fromLuce( LUA::getList<float>(2) ) );
+    return 0;
+}
+
+
+// TODO
+// getters
 int LGraphics::strokePath ( lua_State* ) {
     // Path path = *LUA::from_luce<LPath>(2); // TODO;
     // PathStrokeType strokeType = *LUA::from_luce<LPathStrokeType>(2); // TODO;
@@ -377,25 +381,14 @@ int LGraphics::setFillType ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::addTransform ( lua_State* ) {
-    //g->addTransform(*LUA::from_luce<LAffineTransform>(2); // TODO);
-    LUA::TODO_OBJECT( "addTransform, *LUA::from_luce<LAffineTransform>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
 int LGraphics::fillRectList ( lua_State* ) {
     // override
     //g->fillRectList(*LUA::from_luce<LRectangleList>(2); // TODO);
     LUA::TODO_OBJECT( "fillRectList, *LUA::from_luce<LRectangleList>(2); // TODO" );
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
-
     // override
     //g->fillRectList(*LUA::from_luce<LRectangleList>(2); // TODO);
-    LUA::TODO_OBJECT( "fillRectList, *LUA::from_luce<LRectangleList>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
 }
 
 int LGraphics::setGradientFill ( lua_State* ) {
