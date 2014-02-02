@@ -148,6 +148,11 @@ int l_Path(lua_State *L) {
     return 1;
 }
 
+int l_Image(lua_State *L) {
+    Luna<LImage>::Register(L);
+    return 1;
+}
+
 int l_Graphics(lua_State *L) {
     Luna<LGraphics>::Register(L);
     return 1;
@@ -177,7 +182,12 @@ int l_TextButton(lua_State *L) {
     return 1;
 }
 
-void l_NotificationType(lua_State *L) {
+int l_ToggleButton(lua_State *L) {
+    Luna<LToggleButton>::Register(L);
+    return 1;
+}
+
+void l_C_NotificationType(lua_State *L) {
     lua_newtable(L);
     int n = lua_gettop(L);
     for(auto& it : LConstants::lnotification) {
@@ -187,7 +197,7 @@ void l_NotificationType(lua_State *L) {
     lua_setfield(L, -2, "NotificationType");
 }
 
-void l_JustificationType(lua_State *L) {
+void l_C_JustificationType(lua_State *L) {
     lua_newtable(L);
     for(auto& it : LConstants::ljustification) {
         lua_pushnumber(L, it.second);
@@ -196,7 +206,7 @@ void l_JustificationType(lua_State *L) {
     lua_setfield(L, -2, "JustificationType");
 }
 
-void l_Colours(lua_State *L) {
+void l_C_Colours(lua_State *L) {
     lua_newtable(L);
     int n = lua_gettop(L);
     for(auto& it : LConstants::lcolours) {
@@ -204,6 +214,16 @@ void l_Colours(lua_State *L) {
         lua_setfield(L, -2, it);
     }
     lua_setfield(L, -2, "Colours");
+}
+
+void l_C_FocusChangeType(lua_State *L) {
+    lua_newtable(L);
+    int n = lua_gettop(L);
+    for(auto& it : LConstants::lfocuschangetype) {
+        lua_pushnumber(L, it.second);
+        lua_setfield(L, -2, it.first);
+    }
+    lua_setfield(L, -2, "FocusChangeType");
 }
 
 int l_Label(lua_State *L) {
@@ -228,6 +248,11 @@ int l_TreeViewItem(lua_State *L) {
 
 int l_ModifierKeys(lua_State *L) {
     Luna<LModifierKeys>::Register(L);
+    return 1;
+}
+
+int l_KeyPress(lua_State *L) {
+    Luna<LKeyPress>::Register(L);
     return 1;
 }
 
@@ -272,16 +297,19 @@ static const luaL_reg luce_lib [] = {
     { "Colour", l_Colour },
     { "AffineTransform", l_AffineTransform },
     { "Path", l_Path },
+    { "Image", l_Image },
     { "Graphics", l_Graphics },
     { "DocumentWindow", l_DocumentWindow },
     { "MainComponent", l_MainComponent },
     { "Component", l_JComponent },
     { "TextButton", l_TextButton },
+    { "ToggleButton", l_ToggleButton },
     { "TextEditor", l_TextEditor },
     { "Label", l_Label },
     { "TreeView", l_TreeView },
     { "TreeViewItem", l_TreeViewItem },
     { "ModifierKeys", l_ModifierKeys},
+    { "KeyPress", l_KeyPress },
     { "MouseEvent", l_MouseEvent },
     { "SourceDetails", l_SourceDetails },
     { "StretchableLayoutManager", l_StretchableLayoutManager },
@@ -316,9 +344,10 @@ int luaopen_luce_core (lua_State *L) {
         lua_settable(L, i);
     }
     
-    l_NotificationType(L);
-    l_JustificationType(L);
-    l_Colours(L);
+    l_C_NotificationType(L);
+    l_C_JustificationType(L);
+    l_C_Colours(L);
+    l_C_FocusChangeType(L);
 
     return 1;
 }

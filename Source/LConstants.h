@@ -17,7 +17,7 @@
 #include "JuceHeader.h"
 
 namespace LConstants {
-    namespace {
+namespace {
     std::list<const char*> lcolours = {
         "transparentBlack",
         "transparentWhite",
@@ -186,7 +186,12 @@ namespace LConstants {
         { "sendNotificationAsync" , NotificationType::sendNotificationSync }
     };
 
-    }
+    std::map<const char *, int> lfocuschangetype = {
+        { "focusChangedByMouseClick", Component::focusChangedByMouseClick },
+        { "focusChangedByTabKey", Component::focusChangedByTabKey },
+        { "focusChangedDirectly", Component::focusChangedDirectly },
+    };
+}
 };
 
 #endif // LCONSTANTS_H

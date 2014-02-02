@@ -28,19 +28,22 @@ const Luna<LModifierKeys>::InheritenceF LModifierKeys::inheritsF[] = {
 };
 
 const Luna<LModifierKeys>::Enum LModifierKeys::enums[] = {
-    { "Flags", {
-        { "noModifiers"            , noModifiers },
-        { "shiftModifier"          , shiftModifier },
-        { "ctrlModifier"           , ctrlModifier },
-        { "altModifier"            , altModifier },
-        { "leftButtonModifier"     , leftButtonModifier },
-        { "rightButtonModifier"    , rightButtonModifier },
-        { "middleButtonModifier"   , middleButtonModifier },
-        { "commandModifier"        , commandModifier },
-        { "popupMenuClickModifier" , popupMenuClickModifier},
-        { "allKeyboardModifiers"   , shiftModifier | ctrlModifier | altModifier | commandModifier },
-        { "allMouseButtonModifiers", leftButtonModifier | rightButtonModifier | middleButtonModifier },
-        { "ctrlAltCommandModifiers", ctrlModifier | altModifier | commandModifier }
+    { "", {
+        { "noModifiers"            , ModifierKeys::Flags::noModifiers },
+        { "shiftModifier"          , ModifierKeys::Flags::shiftModifier },
+        { "ctrlModifier"           , ModifierKeys::Flags::ctrlModifier },
+        { "altModifier"            , ModifierKeys::Flags::altModifier },
+        { "leftButtonModifier"     , ModifierKeys::Flags::leftButtonModifier },
+        { "rightButtonModifier"    , ModifierKeys::Flags::rightButtonModifier },
+        { "middleButtonModifier"   , ModifierKeys::Flags::middleButtonModifier },
+        { "commandModifier"        , ModifierKeys::Flags::commandModifier },
+        { "popupMenuClickModifier" , ModifierKeys::Flags::popupMenuClickModifier},
+        { "allKeyboardModifiers"   , ModifierKeys::Flags::allKeyboardModifiers},
+        { "allMouseButtonModifiers", ModifierKeys::Flags::allMouseButtonModifiers},
+        { "ctrlAltCommandModifiers", ModifierKeys::Flags::ctrlAltCommandModifiers},
+        //{ "allKeyboardModifiers"   , shiftModifier | ctrlModifier | altModifier | commandModifier },
+        //{ "allMouseButtonModifiers", leftButtonModifier | rightButtonModifier | middleButtonModifier },
+        //{ "ctrlAltCommandModifiers", ctrlModifier | altModifier | commandModifier }
     }},
     {0}
 };

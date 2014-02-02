@@ -13,7 +13,6 @@
 
 #include "LButton_inh.h"
 
-////// static methods
 const char LButton::className[] = "LButton";
 const Luna<LButton>::PropertyType LButton::properties[] = {
     {0,0}
@@ -22,7 +21,6 @@ const Luna<LButton>::FunctionType LButton::methods[] = {
     {0,0}
 };
 
-/////// ctor/dtor
 LButton::LButton(lua_State *Ls, Button* child_, const String& name_)
     : child(child_),
       LComponent(Ls, child_, name_)
@@ -234,17 +232,26 @@ int LButton::setRepeatSpeed ( lua_State* ) {
     return 0;
 }
 
-// TODO
-// getters
-int LButton::isRegisteredForShortcut ( lua_State* ) {
-    if (child) {
-        // KeyPress keypress_ = LUA::TODO_OBJECT_KeyPress;
-        // return LUA::returnBoolean( child->isRegisteredForShortcut( keypress_ ) );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "bool isRegisteredForShortcut( keypress_ )" );
-    } else return 0;
+int LButton::addShortcut ( lua_State *L ) {
+    if (child)
+        child->addShortcut( *LUA::from_luce<LKeyPress>(2) );
+    return 0;
 }
 
+int LButton::setState ( lua_State* ) {
+    if (child)
+        child->setState( (Button::ButtonState)LUA::getNumber<int>(2) );
+    return 0;
+}
+
+int LButton::isRegisteredForShortcut ( lua_State* ) {
+    if (child)
+        return LUA::returnBoolean( child->isRegisteredForShortcut( *LUA::from_luce<LKeyPress>(2) ) );
+    return 0;
+}
+
+// TODO
+// getters
 int LButton::getCommandID ( lua_State* ) {
     if (child) {
         // return LUA::TODO_RETURN_OBJECT_CommandID( child->getCommandID() );
@@ -253,42 +260,13 @@ int LButton::getCommandID ( lua_State* ) {
     } else return 0;
 }
 
+// could make a callback instead of using Value
 int LButton::getToggleStateValue ( lua_State* ) {
     if (child) {
         // return LUA::TODO_RETURN_OBJECT_Value( child->getToggleStateValue() );
         lua_settop(LUA::Get(), 1); // added by TODO
         return LUA::TODO_OBJECT( "Value getToggleStateValue()" );
     } else return 0;
-}
-
-//int LButton::removeListener ( lua_State* ) {
-//    if (child)
-//        child->removeListener((Button::Listener*)child);
-//    return 0;
-//}
-//
-//int LButton::addListener ( lua_State* ) {
-//    if (child)
-//        child->addListener(child);
-//    return 0;
-//}
-
-int LButton::addShortcut ( lua_State* ) {
-    if (child) {
-        // child->addShortcut(LUA::TODO_OBJECT_KeyPress);
-        LUA::TODO_OBJECT( "addShortcut, LUA::TODO_OBJECT_KeyPress" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
-
-int LButton::setState ( lua_State* ) {
-    if (child) {
-        // child->setState(LUA::TODO_OBJECT_ButtonState);
-        LUA::TODO_OBJECT( "setState, LUA::TODO_OBJECT_ButtonState" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
 }
 
 int LButton::setCommandToTrigger ( lua_State* ) {

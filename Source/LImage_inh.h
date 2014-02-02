@@ -18,21 +18,21 @@
 
 */
 
-// LGraphics inheritage
-const Luna<LGraphics>::Inheritence LGraphics::inherits[] = {
+// LImage inheritage
+const Luna<LImage>::Inheritence LImage::inherits[] = {
     {0,0}
 };
 
-const Luna<LGraphics>::InheritenceF LGraphics::inheritsF[] = {
+const Luna<LImage>::InheritenceF LImage::inheritsF[] = {
     {0,0}
 };
 
-const Luna<LGraphics>::Enum LGraphics::enums[] = {
-    { "ResamplingQuality", {
-        { "lowResamplingQuality"   , Graphics::lowResamplingQuality },
-        { "mediumResamplingQuality", Graphics::mediumResamplingQuality },
-        { "highResamplingQuality"  , Graphics::highResamplingQuality },
+const Luna<LImage>::Enum LImage::enums[] = {
+    { "PixelFormat", {
+        { "UnknownFormat", Image::UnknownFormat },
+        { "RGB", Image::RGB },
+        { "ARGB", Image::ARGB },
+        { "SingleChannel", Image::SingleChannel },
     }},
-
     {0}
 };

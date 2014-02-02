@@ -28,5 +28,16 @@ const Luna<LButton>::InheritenceF LButton::inheritsF[] = {
 };
 
 const Luna<LButton>::Enum LButton::enums[] = {
+    { "ConnectedEdgeFlags", {
+        { "ConnectedOnLeft"   , Button::ConnectedOnLeft },
+        { "ConnectedOnRight"  , Button::ConnectedOnRight },
+        { "ConnectedOnTop"    , Button::ConnectedOnTop },
+        { "ConnectedOnBottom" , Button::ConnectedOnBottom },
+    }},
+    { "ButtonState", {
+        { "buttonNormal" , Button::buttonNormal },
+        { "buttonOver"   , Button::buttonOver },
+        { "buttonDown"   , Button::buttonDown },
+    }},
     {0}
 };

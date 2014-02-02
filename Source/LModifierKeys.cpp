@@ -13,6 +13,8 @@
 
 #include "LModifierKeys_inh.h"
 
+// TODO: implement this in lua
+
 ////// static methods
 const char LModifierKeys::className[] = "LModifierKeys";
 const Luna<LModifierKeys>::PropertyType LModifierKeys::properties[] = {

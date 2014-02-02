@@ -14,12 +14,12 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
   
-(c) 2013-2014, Peersuasive Technologies
+(c) 2014, Peersuasive Technologies
 
 */
 
 // LButton inheritage
-const Luna<LTextButton>::Inheritence LTextButton::inherits[] = {
+const Luna<LToggleButton>::Inheritence LToggleButton::inherits[] = {
     // LComponent
     {"size", &LButton::getSize, &LButton::setSize}, // artificial
     {"explicitFocusOrder", &LButton::getExplicitFocusOrder, &LButton::setExplicitFocusOrder},
@@ -53,7 +53,7 @@ const Luna<LTextButton>::Inheritence LTextButton::inherits[] = {
     {0,0}
 };
 
-const Luna<LTextButton>::InheritenceF LTextButton::inheritsF[] = {
+const Luna<LToggleButton>::InheritenceF LToggleButton::inheritsF[] = {
     // LComponent
     method( LComponent, as ),
     method( LComponent, startDragging ),
@@ -272,7 +272,7 @@ const Luna<LTextButton>::InheritenceF LTextButton::inheritsF[] = {
     {0,0}
 };
 
-const Luna<LTextButton>::Enum LTextButton::enums[] = {
+const Luna<LToggleButton>::Enum LToggleButton::enums[] = {
     { "ConnectedEdgeFlags", {
         { "ConnectedOnLeft"   , Button::ConnectedOnLeft },
         { "ConnectedOnRight"  , Button::ConnectedOnRight },
@@ -286,10 +286,7 @@ const Luna<LTextButton>::Enum LTextButton::enums[] = {
     }},
 
     { "ColourIds", {
-        { "buttonColourId"   , buttonColourId },
-        { "buttonOnColourId" , buttonOnColourId },
-        { "textColourOffId"  , textColourOffId },
-        { "textColourOnId"   , textColourOnId },
+        { "textColourId", textColourId },
     }},
     {0}
 };
