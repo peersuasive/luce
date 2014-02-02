@@ -82,9 +82,7 @@ int LKeyPress::lnew(lua_State *L)
     // TODO: copy constructor
 }
 
-LKeyPress::~LKeyPress() {
-    std::cout << "DESTROYING KEY PRESS" << std::endl;
-}
+LKeyPress::~LKeyPress() {}
 
 int LKeyPress::isValid ( lua_State* ) {
     return LUA::returnBoolean( KeyPress::isValid() );
