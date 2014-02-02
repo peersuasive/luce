@@ -11,3 +11,4 @@ microparser/
 dis/
 pending/
 dump/
+create_class.sh

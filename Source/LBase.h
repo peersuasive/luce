@@ -18,6 +18,7 @@ class LBase : public LSelfKill
 {
 public:
     LBase(lua_State*, const String& name = "(unnamed)", bool pure = true);
+    static int lnew(lua_State*);
     ~LBase();
 
     virtual void selfKill() override;

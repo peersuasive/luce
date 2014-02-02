@@ -24,6 +24,10 @@ LBase::~LBase()
     LUA::unreg(this);
 }
 
+int LBase::lnew(lua_State *L) {
+    return 0;
+}
+
 void LBase::selfKill() {
     delete this;
 }

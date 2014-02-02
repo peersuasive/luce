@@ -126,7 +126,7 @@ public:
         DBG(String("**registering ") + T::className);
         lua_newtable(L);
         int nt = lua_gettop(L);
-        lua_pushcfunction(L, &Luna < T >::constructor);
+        lua_pushcfunction(L, &Luna < T >::lconstructor);
         lua_setfield(L, nt, "new");
 
         // set static values, like enums...
@@ -286,6 +286,11 @@ public:
         lua_setmetatable(L, -2);
 
         return 1;
+    }
+
+    static int lconstructor(lua_State * L) {
+        int top = T::lnew(L);
+        return (!top) ? constructor(L) : top;
     }
 
     /**
