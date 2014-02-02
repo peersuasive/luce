@@ -68,9 +68,9 @@ mainWindow:initialise(function(...)
 end)
 
 --- callback used when quit is asked
-local keep_going = true
+local stop_now = false
 mainWindow:systemRequestedQuit(function(...)
-    keep_going = false
+    stop_now = true
     mainWindow:shutdown()
     mainWindow:quit()
 end)
@@ -90,7 +90,7 @@ end)
 --- so there's no need to loop here
 --- it is set with the same rate than the JUCE's loop (1ms by default)
 luce:start_manual( mainWindow, function(...)
-    return keep_going
+    return stop_now
 end )
 
 
