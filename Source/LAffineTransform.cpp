@@ -18,6 +18,7 @@
 ////// static methods
 const char LAffineTransform::className[] = "LAffineTransform";
 const Luna<LAffineTransform>::PropertyType LAffineTransform::properties[] = {
+    { "identity", &LAffineTransform::getIdentity, &LBase::readOnly },
     {0,0}
 };
 const Luna<LAffineTransform>::FunctionType LAffineTransform::methods[] = {
@@ -62,6 +63,12 @@ LAffineTransform::LAffineTransform(lua_State *L, const AffineTransform& class_)
 }
 
 LAffineTransform::~LAffineTransform() {}
+
+int LAffineTransform::getIdentity(lua_State *L) {
+    return LUA::storeAndReturnUserdata<LAffineTransform>( new LAffineTransform(L,
+        AffineTransform::identity
+    ));
+}
 
 AffineTransform LAffineTransform::fromLuce( float mat00, float mat01, float mat02, 
         float mat10, float mat11, float mat12) 

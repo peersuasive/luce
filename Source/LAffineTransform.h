@@ -21,6 +21,7 @@ class LAffineTransform
 public:
     LAffineTransform(lua_State*);
     LAffineTransform(lua_State*, const AffineTransform&);
+    int getIdentity(lua_State*); // TODO: implement static methods !
     ~LAffineTransform();
 
     static AffineTransform fromLuce( float mat00, float mat01, float mat02, 
