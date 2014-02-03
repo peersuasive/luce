@@ -15,6 +15,8 @@ namespace luce {
 #include "LPath.cpp"
 #include "LImage.cpp"
 #include "LGraphics.cpp"
+#include "LGlyphArrangement.cpp"
+#include "LPositionedGlyph.cpp"
 #include "LStretchableLayoutManager.cpp"
 #include "LFont.cpp"
 #include "LSourceDetails.cpp"

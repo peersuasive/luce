@@ -197,6 +197,16 @@ int l_Graphics(lua_State *L) {
     return 1;
 }
 
+int l_GlyphArrangement(lua_State *L) {
+    Luna<LGlyphArrangement>::Register(L);
+    return 1;
+}
+
+int l_PositionedGlyph(lua_State *L) {
+    Luna<LPositionedGlyph>::Register(L);
+    return 1;
+}
+
 //int l_Component(lua_State *L) {
 //    Luna<LComponent>::Register(L);
 //    return 1;
@@ -305,6 +315,8 @@ static const luaL_reg luce_lib [] = {
     { "Path", l_Path },
     { "Image", l_Image },
     { "Graphics", l_Graphics },
+    { "GlyphArrangement", l_GlyphArrangement },
+    { "PositionedGlyph", l_PositionedGlyph },
     { "DocumentWindow", l_DocumentWindow },
     { "MainComponent", l_MainComponent },
     { "Component", l_JComponent },

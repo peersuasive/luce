@@ -36,6 +36,8 @@ namespace luce {
 #include "LPath.h"
 #include "LImage.h"
 #include "LGraphics.h"
+#include "LGlyphArrangement.h"
+#include "LPositionedGlyph.h"
 #include "LStretchableLayoutManager.h"
 #include "LFont.h"
 #include "LSourceDetails.h"
