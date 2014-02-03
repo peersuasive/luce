@@ -65,6 +65,7 @@ const Luna<LGraphics>::FunctionType LGraphics::methods[] = {
     method( LGraphics, drawRoundedRectangle ),
     method( LGraphics, drawLine ),
     method( LGraphics, setOpacity ),
+    method( LGraphics, setColour ),
     {0,0}
 };
 
@@ -72,24 +73,30 @@ const Luna<LGraphics>::FunctionType LGraphics::methods[] = {
 LGraphics::LGraphics(lua_State *L)
     : LBase(L, "LGraphics", true)
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
-
-    // set g with Image
 }
 
 LGraphics::LGraphics(lua_State *L, juce::Graphics& class_)
     : LBase(L, "LGraphics", true)
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
     g = &class_;
 }
 
-LGraphics::~LGraphics() {}
+LGraphics::~LGraphics() {
+    if(g) {
+        g.release();
+        g = nullptr;
+    }
+}
 
 Graphics* LGraphics::getGraphics() {
     return this->g;
+}
+LGraphics::operator juce::Graphics* () const {
+    return this->g;
+}
+
+void LGraphics::setGraphics(Graphics& g_) {
+    g = &g_;
 }
 
 /////// getters
@@ -217,10 +224,10 @@ int LGraphics::restoreState ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::drawText ( lua_State* ) {
+int LGraphics::drawText ( lua_State *L ) {
     String text = LUA::getString(2);
     Rectangle<int> area ( LUA::getRectangle<int>(2) );
-    Justification justificationType = LUA::getNumber<int>(2);
+    Justification justificationType = (Justification)LUA::getNumber<int>(2);
     bool useEllipsesIfTooBig = LUA::getBoolean(2);
     g->drawText( text, area, justificationType, useEllipsesIfTooBig );
     return 0;
@@ -316,6 +323,11 @@ int LGraphics::drawLine ( lua_State *L ) {
 
 int LGraphics::setOpacity ( lua_State* ) {
     g->setOpacity(LUA::getNumber<float>());
+    return 0;
+}
+
+int LGraphics::setColour ( lua_State* ) {
+    g->setColour( Colours::findColourForName( LUA::getString(2), Colours::black ) );
     return 0;
 }
 

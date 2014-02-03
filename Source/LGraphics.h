@@ -23,6 +23,9 @@ public:
     ~LGraphics();
 
     Graphics* getGraphics();
+    void setGraphics(Graphics&);
+    operator juce::Graphics* () const;
+    
 
     //==============================================================================
     int resetToDefaultState(lua_State*);
@@ -64,6 +67,7 @@ public:
     int drawRoundedRectangle(lua_State*);
     int drawLine(lua_State*);
     int setOpacity(lua_State*);
+    int setColour(lua_State*);
 
     //==============================================================================
     int isVectorDevice(lua_State*);
