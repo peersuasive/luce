@@ -88,6 +88,10 @@ LGraphics::LGraphics(lua_State *L, juce::Graphics& class_)
 
 LGraphics::~LGraphics() {}
 
+Graphics* LGraphics::getGraphics() {
+    return this->g;
+}
+
 /////// getters
 int LGraphics::isVectorDevice ( lua_State* ) {
     return LUA::returnBoolean(g->isVectorDevice() );

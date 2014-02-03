@@ -310,22 +310,26 @@ namespace LUA {
         const juce::Rectangle<T> getRectangle(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             i = (i<0) ? lua_gettop(L)-(i+1) : i;
-            lua_getmetatable(L, i);
-            lua_getfield(L, -1, "__self");
-            if ( ! lua_isnil(L, -1) ) { // LRectangle object
-                if ( std::string( lua_tostring(L, -1) ) == "LRectangle" ) {
-                    lua_pop(L,1); // __self
-                    lua_getfield(L, i, "dump"); // provided by LRectangle
-                    lua_pushvalue(L, i); // push self
-                    if ( lua_pcall(L, 1, 1, 0) != 0 ) // get self as argument
-                        lua_error(L);
-                } else {
-                    throwError("Wrong object given as a LRectangle");
+            if ( lua_getmetatable(L, i) > 0 ) {
+                lua_getfield(L, -1, "__self");
+                if ( ! lua_isnil(L, -1) ) { // LRectangle object
+                    if ( std::string( lua_tostring(L, -1) ) == "LRectangle" ) {
+                        lua_pop(L,1); // __self
+                        lua_getfield(L, i, "dump"); // provided by LRectangle
+                        lua_pushvalue(L, i); // push self
+                        if ( lua_pcall(L, 1, 1, 0) != 0 ) // get self as argument
+                            lua_error(L);
+                    } else {
+                        throwError("Wrong object given as a LRectangle");
+                    }
                 }
-            } else { // a table
+            }
+            else { // a table
+                lua_pushnil(L);
                 lua_pushvalue(L, i);
             }
             int ind = lua_gettop(L);
+
             lua_rawgeti(L, ind, 1);
             T x = luaL_checknumber(L, -1);
             lua_rawgeti(L, ind, 2);

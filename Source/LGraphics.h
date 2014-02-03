@@ -22,6 +22,8 @@ public:
     LGraphics(lua_State*, juce::Graphics&);
     ~LGraphics();
 
+    Graphics* getGraphics();
+
     //==============================================================================
     int resetToDefaultState(lua_State*);
     int drawImageAt(lua_State*);
@@ -73,7 +75,6 @@ public:
     int isClipEmpty(lua_State*);
 
     //==============================================================================
-
     static const char className[];
     static const Luna<LGraphics>::Inheritence inherits[];
     static const Luna<LGraphics>::InheritenceF inheritsF[];
