@@ -79,6 +79,9 @@ public:
     int isClipEmpty(lua_State*);
 
     //==============================================================================
+    int ScopedSaveState(lua_State*);
+
+    //==============================================================================
     static const char className[];
     static const Luna<LGraphics>::Inheritence inherits[];
     static const Luna<LGraphics>::InheritenceF inheritsF[];

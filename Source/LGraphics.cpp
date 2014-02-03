@@ -66,6 +66,8 @@ const Luna<LGraphics>::FunctionType LGraphics::methods[] = {
     method( LGraphics, drawLine ),
     method( LGraphics, setOpacity ),
     method( LGraphics, setColour ),
+    
+    method( LGraphics, ScopedSaveState ),
     {0,0}
 };
 
@@ -97,6 +99,13 @@ LGraphics::operator juce::Graphics* () const {
 
 void LGraphics::setGraphics(Graphics& g_) {
     g = &g_;
+}
+
+// TODO: check this
+int LGraphics::ScopedSaveState(lua_State *L) {
+    Graphics::ScopedSaveState state( *g.get() );
+    lua_pushlightuserdata(L, (void*)&state);
+    return 1;
 }
 
 /////// getters
