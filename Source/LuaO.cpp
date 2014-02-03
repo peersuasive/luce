@@ -890,6 +890,9 @@ namespace LUA {
                         //returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
                         returnUserdata<LMouseEvent, MouseEvent>( static_cast<const MouseEvent*>(lr->getMe()) );
 
+                    } else if ( type == "Graphics" ) {
+                        returnUserdata<LGraphics>( (LGraphics*)lr->getMe() );
+
                     } else if ( type == "TreeViewItem" ) {
                         //returnUserdata<LTreeViewItem, TreeViewItem>( (TreeViewItem*)lr->getMe() );
                         returnUserdata<LTreeViewItem, TreeViewItem>( static_cast<const TreeViewItem*>(lr->getMe()) );
@@ -899,8 +902,7 @@ namespace LUA {
 
                     } else if ( type == "Component" ) {
                         returnUserdata<LJComponent>( (LJComponent*)lr->getMe() );
-                    }
-
+                    } 
                     else if ( type == "Properties" ) {
                         HashMap<String, var>& h = *lr->getHash();
                         lua_newtable(L);
