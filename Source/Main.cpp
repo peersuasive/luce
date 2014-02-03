@@ -128,6 +128,45 @@ int start_manual( lua_State *L ) {
 }
 
 //==============================================================================
+void l_C_NotificationType(lua_State *L) {
+    lua_newtable(L);
+    int n = lua_gettop(L);
+    for(auto& it : LConstants::lnotification) {
+        lua_pushnumber(L, it.second);
+        lua_setfield(L, -2, it.first);
+    }
+    lua_setfield(L, -2, "NotificationType");
+}
+
+void l_C_JustificationType(lua_State *L) {
+    lua_newtable(L);
+    for(auto& it : LConstants::ljustification) {
+        lua_pushnumber(L, it.second);
+        lua_setfield(L, -2, it.first);
+    }
+    lua_setfield(L, -2, "JustificationType");
+}
+
+void l_C_Colours(lua_State *L) {
+    lua_newtable(L);
+    int n = lua_gettop(L);
+    for(auto& it : LConstants::lcolours) {
+        lua_pushstring(L, it);
+        lua_setfield(L, -2, it);
+    }
+    lua_setfield(L, -2, "Colours");
+}
+
+void l_C_FocusChangeType(lua_State *L) {
+    lua_newtable(L);
+    int n = lua_gettop(L);
+    for(auto& it : LConstants::lfocuschangetype) {
+        lua_pushnumber(L, it.second);
+        lua_setfield(L, -2, it.first);
+    }
+    lua_setfield(L, -2, "FocusChangeType");
+}
+
 int l_JUCEApplication(lua_State *L) {
     Luna<LJUCEApplication>::Register(L);
     return 1;
@@ -185,45 +224,6 @@ int l_TextButton(lua_State *L) {
 int l_ToggleButton(lua_State *L) {
     Luna<LToggleButton>::Register(L);
     return 1;
-}
-
-void l_C_NotificationType(lua_State *L) {
-    lua_newtable(L);
-    int n = lua_gettop(L);
-    for(auto& it : LConstants::lnotification) {
-        lua_pushnumber(L, it.second);
-        lua_setfield(L, -2, it.first);
-    }
-    lua_setfield(L, -2, "NotificationType");
-}
-
-void l_C_JustificationType(lua_State *L) {
-    lua_newtable(L);
-    for(auto& it : LConstants::ljustification) {
-        lua_pushnumber(L, it.second);
-        lua_setfield(L, -2, it.first);
-    }
-    lua_setfield(L, -2, "JustificationType");
-}
-
-void l_C_Colours(lua_State *L) {
-    lua_newtable(L);
-    int n = lua_gettop(L);
-    for(auto& it : LConstants::lcolours) {
-        lua_pushstring(L, it);
-        lua_setfield(L, -2, it);
-    }
-    lua_setfield(L, -2, "Colours");
-}
-
-void l_C_FocusChangeType(lua_State *L) {
-    lua_newtable(L);
-    int n = lua_gettop(L);
-    for(auto& it : LConstants::lfocuschangetype) {
-        lua_pushnumber(L, it.second);
-        lua_setfield(L, -2, it.first);
-    }
-    lua_setfield(L, -2, "FocusChangeType");
 }
 
 int l_Label(lua_State *L) {
