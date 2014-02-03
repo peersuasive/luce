@@ -59,21 +59,35 @@ const Luna<LColour>::FunctionType LColour::methods[] = {
 
 LColour::LColour(lua_State *L)
     : LBase(L, "LColour", true),
-      Colour( /* TODO: add args */ )
+      Colour()
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
 }
 
 LColour::LColour(lua_State *L, const Colour& class_)
     : LBase(L, "LColour", true),
       Colour( class_ )
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
 }
 
 LColour::~LColour() {}
+
+int LColour::lnew(lua_State *L) {
+    if(! lua_isnumber(L, 2) && lua_isstring(L, 2) )
+        return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
+            Colours::findColourForName( LUA::getString(2), Colours::black) 
+        ));
+
+    if( lua_isnumber(L,2) ) // uint32 argb
+        return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Colour( LUA::getNumber<uint32>(2) ) ) );
+
+    if( lua_istable(L,2) ) // copy constructor
+        return LUA::storeAndReturnUserdata<LColour>( new LColour(L, *LUA::from_luce<LColour>(2)) );
+
+
+    return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Colour()) );
+    // TODO: argb, RGB, ARGB, HSBA
+    //       will have to implement a workaround to distinguish float from uint8 !!
+}
 
 int LColour::fromRGB ( lua_State *L ) {
     uint8 red   = LUA::getNumber<uint8>(2);
