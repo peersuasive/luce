@@ -122,6 +122,8 @@ public:
        @param namespac Namespace to load into, if black the global namespace is assumed
        */
     // TODO: check inherited classes and add inherited methods
+    // TODO: add another array for static methods,
+    //       like we'd need one for Time::getCurrentTime, for instance
     static void Register(lua_State * L, const char *namespac = NULL, bool is_inh = false ) {
         //DBG(String("**registering ") + T::className);
         lua_newtable(L);
