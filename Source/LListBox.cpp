@@ -161,6 +161,7 @@ int LListBox::startDragAndDrop ( lua_State* ) {
     return 0;
 }
 
+/*
 void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int height, bool rowIsSelected ) {
     if( callback("paintListBoxItem", 1, { rowNumber, width, height, rowIsSelected } ) ) {
         //std::cout << "top: " << lua_gettop(LUA::Get()) << std::endl;
@@ -178,6 +179,15 @@ void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int heig
         //g.drawText ( text , 5, 0, w, h, Justification::left, true );
         g.drawText ( text , 5, 0, width, height, Justification::left, true );
     }
+}
+*/
+
+void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int height, bool rowIsSelected ) {
+    ScopedPointer<LGraphics> lg = new LGraphics(LUA::Get(), g);
+    callback("paintListBoxItem", 0, { 
+            rowNumber,
+            new LRefBase("Graphics", lg.get()),
+            width, height, rowIsSelected } );
 }
 int LListBox::paintListBoxItem(lua_State*) {
     set("paintListBoxItem");
