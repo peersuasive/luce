@@ -7,7 +7,7 @@
     @copyright 
 
 
-(c) 2013, Peersuasive Technologies
+(c) 2014, Peersuasive Technologies
 
 *************************************************************/
 
@@ -24,35 +24,37 @@ public:
     ~LTime();
 
     //==============================================================================
-    int waitForMillisecondCounter(lua_State*);
+    static int s_getMillisecondCounterHiRes(lua_State*);
+    static int s_currentTimeMillis(lua_State*);
+    static int s_getWeekdayName(lua_State*);
+    static int s_waitForMillisecondCounter(lua_State*);
+    static int s_getMillisecondCounter(lua_State*);
+    static int s_getMonthName(lua_State*);
+    static int s_secondsToHighResolutionTicks(lua_State*);
+    static int s_highResolutionTicksToSeconds(lua_State*);
+    static int s_getCurrentTime(lua_State*);
+    static int s_getHighResolutionTicksPerSecond(lua_State*);
+    static int s_getHighResolutionTicks(lua_State*);
+    static int s_getApproximateMillisecondCounter(lua_State*);
 
     //==============================================================================
-    int getApproximateMillisecondCounter(lua_State*);
     int toMilliseconds(lua_State*);
     int getMonth(lua_State*);
-    int getWeekdayName(lua_State*);
-    int getMinutes(lua_State*);
-    int highResolutionTicksToSeconds(lua_State*);
-    int getMillisecondCounter(lua_State*);
+    int getTimeZone(lua_State*);
     int getHours(lua_State*);
-    int getHighResolutionTicksPerSecond(lua_State*);
     int getSeconds(lua_State*);
     int getDayOfMonth(lua_State*);
-    int getMonthName(lua_State*);
-    int getHighResolutionTicks(lua_State*);
     int getMilliseconds(lua_State*);
-    int currentTimeMillis(lua_State*);
     int getDayOfYear(lua_State*);
-    int setSystemTimeToThisTime(lua_State*);
     int getHoursInAmPmFormat(lua_State*);
-    int getTimeZone(lua_State*);
+    int setSystemTimeToThisTime(lua_State*);
     int toString(lua_State*);
     int formatted(lua_State*);
-    int secondsToHighResolutionTicks(lua_State*);
+    int getWeekdayName(lua_State*);
     int getDayOfWeek(lua_State*);
-    int getMillisecondCounterHiRes(lua_State*);
+    int getMonthName(lua_State*);
     int getYear(lua_State*);
-    int getCurrentTime(lua_State*);
+    int getMinutes(lua_State*);
     int isDaylightSavingTime(lua_State*);
     int isAfternoon(lua_State*);
 
