@@ -18,7 +18,7 @@
 
 namespace LConstants {
 namespace {
-    std::list<const char*> lcolours = {
+    std::list<const char*> lColours = {
         "transparentBlack",
         "transparentWhite",
         "black",
@@ -160,7 +160,7 @@ namespace {
         "yellowgreen"
     };
     
-    std::map<const char*, int> ljustification = {
+    std::map<const char*, int> lJustificationType = {
         { "left", juce::Justification::left },
         { "right", juce::Justification::right },
         { "horizontallyCentred", juce::Justification::horizontallyCentred },
@@ -179,14 +179,14 @@ namespace {
         { "bottomRight", juce::Justification::bottomRight },
     };
 
-    std::map<const char *, int> lnotification = {
+    std::map<const char *, int> lNotificationType = {
         { "dontSendNotification"  , NotificationType::dontSendNotification },
         { "sendNotification"      , NotificationType::sendNotification },
         { "sendNotificationSync"  , NotificationType::sendNotificationAsync },
         { "sendNotificationAsync" , NotificationType::sendNotificationSync }
     };
 
-    std::map<const char *, int> lfocuschangetype = {
+    std::map<const char *, int> lFocusChangeType = {
         { "focusChangedByMouseClick", Component::focusChangedByMouseClick },
         { "focusChangedByTabKey", Component::focusChangedByTabKey },
         { "focusChangedDirectly", Component::focusChangedDirectly },

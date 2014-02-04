@@ -40,14 +40,6 @@ int lua_main(void) {
     return 0;
 }
 
-String *myStr;
-void *mm_cb(void*) {
-    myStr = new String("yo?");
-    std::cout << "loop ?" << std::endl;
-    
-    return myStr;
-}   
-
 int lua_main_manual(lua_State *L, const int& cb_ref) {
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     
@@ -57,8 +49,6 @@ int lua_main_manual(lua_State *L, const int& cb_ref) {
     MainThread myThread("Main luce Thread", L, cb_ref);
     myThread.run();
 
-    //String anotherStr("other str");
-    //instance->callFunctionOnMessageThread( mm_cb, &anotherStr );
     //MessageManager::getInstance()->runDispatchLoop();
 
     return 0;
@@ -128,214 +118,98 @@ int start_manual( lua_State *L ) {
 }
 
 //==============================================================================
-void l_C_NotificationType(lua_State *L) {
-    lua_newtable(L);
-    int n = lua_gettop(L);
-    for(auto& it : LConstants::lnotification) {
-        lua_pushnumber(L, it.second);
-        lua_setfield(L, -2, it.first);
-    }
-    lua_setfield(L, -2, "NotificationType");
+#define l_c(c) \
+void l_C_##c(lua_State *L) \
+{ \
+    lua_newtable(L); \
+    int n = lua_gettop(L); \
+    for(auto& it : LConstants::l##c) { \
+        lua_pushnumber(L, it.second); \
+        lua_setfield(L, -2, it.first); \
+    } \
+    lua_setfield(L, -2, #c); \
 }
-
-void l_C_JustificationType(lua_State *L) {
-    lua_newtable(L);
-    for(auto& it : LConstants::ljustification) {
-        lua_pushnumber(L, it.second);
-        lua_setfield(L, -2, it.first);
-    }
-    lua_setfield(L, -2, "JustificationType");
+#define l_cs(c) \
+void l_C_##c(lua_State *L) \
+{ \
+    lua_newtable(L); \
+    int n = lua_gettop(L); \
+    for(auto& it : LConstants::l##c) { \
+        lua_pushstring(L, it); \
+        lua_setfield(L, -2, it); \
+    } \
+    lua_setfield(L, -2, #c); \
 }
+#define dc(c,L) l_C_##c(L)
 
-void l_C_Colours(lua_State *L) {
-    lua_newtable(L);
-    int n = lua_gettop(L);
-    for(auto& it : LConstants::lcolours) {
-        lua_pushstring(L, it);
-        lua_setfield(L, -2, it);
-    }
-    lua_setfield(L, -2, "Colours");
+#define l_class(c) \
+int l_##c (lua_State *L) \
+{\
+    Luna<L##c>::Register(L); \
+    return 1; \
 }
+#define d(c) {#c, l_##c}
 
-void l_C_FocusChangeType(lua_State *L) {
-    lua_newtable(L);
-    int n = lua_gettop(L);
-    for(auto& it : LConstants::lfocuschangetype) {
-        lua_pushnumber(L, it.second);
-        lua_setfield(L, -2, it.first);
-    }
-    lua_setfield(L, -2, "FocusChangeType");
-}
+l_c(NotificationType)
+l_c(JustificationType)
+l_c(FocusChangeType)
+l_cs(Colours)
 
-int l_JUCEApplication(lua_State *L) {
-    Luna<LJUCEApplication>::Register(L);
-    return 1;
-}
-
-int l_Colour(lua_State *L) {
-    Luna<LColour>::Register(L);
-    return 1;
-}
-
-int l_AffineTransform(lua_State *L) {
-    Luna<LAffineTransform>::Register(L);
-    return 1;
-}
-
-int l_Path(lua_State *L) {
-    Luna<LPath>::Register(L);
-    return 1;
-}
-
-int l_Image(lua_State *L) {
-    Luna<LImage>::Register(L);
-    return 1;
-}
-
-int l_Graphics(lua_State *L) {
-    Luna<LGraphics>::Register(L);
-    return 1;
-}
-
-int l_GlyphArrangement(lua_State *L) {
-    Luna<LGlyphArrangement>::Register(L);
-    return 1;
-}
-
-int l_PositionedGlyph(lua_State *L) {
-    Luna<LPositionedGlyph>::Register(L);
-    return 1;
-}
-
-//int l_Component(lua_State *L) {
-//    Luna<LComponent>::Register(L);
-//    return 1;
-//}
-
-int l_DocumentWindow(lua_State *L) {
-    Luna<LDocumentWindow>::Register(L); //, "DocumentWindow");
-    return 1;
-}
-
-int l_MainComponent(lua_State *L) {
-    Luna<LMainComponent>::Register(L);
-    return 1;
-}
-int l_JComponent(lua_State *L) {
-    Luna<LJComponent>::Register(L);
-    return 1;
-}
-
-int l_TextButton(lua_State *L) {
-    Luna<LTextButton>::Register(L);
-    return 1;
-}
-
-int l_ToggleButton(lua_State *L) {
-    Luna<LToggleButton>::Register(L);
-    return 1;
-}
-
-int l_Label(lua_State *L) {
-    Luna<LLabel>::Register(L);
-    return 1;
-}
-
-int l_TextEditor(lua_State *L) {
-    Luna<LTextEditor>::Register(L);
-    return 1;
-}
-
-int l_TreeView(lua_State *L) {
-    Luna<LTreeView>::Register(L);
-    return 1;
-}
-
-int l_TreeViewItem(lua_State *L) {
-    Luna<LTreeViewItem>::Register(L);
-    return 1;
-}
-
-int l_ModifierKeys(lua_State *L) {
-    Luna<LModifierKeys>::Register(L);
-    return 1;
-}
-
-int l_KeyPress(lua_State *L) {
-    Luna<LKeyPress>::Register(L);
-    return 1;
-}
-
-int l_MouseEvent(lua_State *L) {
-    Luna<LMouseEvent>::Register(L);
-    return 1;
-}
-
-int l_SourceDetails(lua_State *L) {
-    Luna<LSourceDetails>::Register(L);
-    return 1;
-}
-
-int l_StretchableLayoutManager(lua_State *L) {
-    Luna<LStretchableLayoutManager>::Register(L);
-    return 1;
-}
-
-int l_StretchableLayoutResizerBar(lua_State *L) {
-    Luna<LStretchableLayoutResizerBar>::Register(L);
-    return 1;
-}
-
-int l_Font(lua_State *L) {
-    Luna<LFont>::Register(L);
-    return 1;
-}
-
-int l_ListBox(lua_State *L) {
-    Luna<LListBox>::Register(L);
-    return 1;
-}
-
-int l_Time(lua_State *L) {
-    Luna<LTime>::Register(L);
-    return 1;
-}
-
-
-//int l_ValueTree(lua_State *L) {
-//    Luna<LValueTree>::Register(L);
-//    return 1;
-//}
+l_class(JUCEApplication)
+l_class(Colour)
+l_class(AffineTransform)
+l_class(Path)
+l_class(Image)
+l_class(Graphics)
+l_class(GlyphArrangement)
+l_class(PositionedGlyph)
+l_class(DocumentWindow)
+l_class(MainComponent)
+l_class(JComponent)
+l_class(TextButton)
+l_class(ToggleButton)
+l_class(Label)
+l_class(TextEditor)
+l_class(TreeView)
+l_class(TreeViewItem)
+l_class(ModifierKeys)
+l_class(KeyPress)
+l_class(MouseEvent)
+l_class(SourceDetails)
+l_class(StretchableLayoutManager)
+l_class(StretchableLayoutResizerBar)
+l_class(Font)
+l_class(ListBox)
+l_class(Time)
 
 static const luaL_reg luce_lib [] = {
-    { "JUCEApplication", l_JUCEApplication },
-    //{ "LComponent", l_Component },
-    { "Colour", l_Colour },
-    { "AffineTransform", l_AffineTransform },
-    { "Path", l_Path },
-    { "Image", l_Image },
-    { "Graphics", l_Graphics },
-    { "GlyphArrangement", l_GlyphArrangement },
-    { "PositionedGlyph", l_PositionedGlyph },
-    { "DocumentWindow", l_DocumentWindow },
-    { "MainComponent", l_MainComponent },
+    d(JUCEApplication),
+    d(Colour),
+    d(AffineTransform),
+    d(Path),
+    d(Image),
+    d(Graphics),
+    d(GlyphArrangement),
+    d(PositionedGlyph),
+    d(DocumentWindow),
+    d(MainComponent),
     { "Component", l_JComponent },
-    { "TextButton", l_TextButton },
-    { "ToggleButton", l_ToggleButton },
-    { "TextEditor", l_TextEditor },
-    { "Label", l_Label },
-    { "TreeView", l_TreeView },
-    { "TreeViewItem", l_TreeViewItem },
-    { "ModifierKeys", l_ModifierKeys},
-    { "KeyPress", l_KeyPress },
-    { "MouseEvent", l_MouseEvent },
-    { "SourceDetails", l_SourceDetails },
-    { "StretchableLayoutManager", l_StretchableLayoutManager },
-    { "StretchableLayoutResizerBar", l_StretchableLayoutResizerBar },
-    { "Font", l_Font },
-    { "ListBox", l_ListBox},
-    { "Time", l_Time},
-    //{ "ValueTree", l_ValueTree },
+    d(TextButton),
+    d(ToggleButton),
+    d(TextEditor),
+    d(Label),
+    d(TreeView),
+    d(TreeViewItem),
+    d(ModifierKeys),
+    d(KeyPress),
+    d(MouseEvent),
+    d(SourceDetails),
+    d(StretchableLayoutManager),
+    d(StretchableLayoutResizerBar),
+    d(Font),
+    d(ListBox),
+    d(Time),
+
     { "start", start },
     { "start_manual", start_manual },
     { "shutdown", lua_shutdown },
@@ -347,12 +221,9 @@ int luaopen_luce_core_d (lua_State *L) {
 #else
 int luaopen_luce_core (lua_State *L) {
 #endif
-//int luaopen_luce (lua_State *L) {
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     initialiseJuce_GUI();
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
-    //luaL_register(L,"luce.core", luce_lib);
-    //luaL_register(L,"luce", luce_lib);
 
     lua_newtable(L);
     int i = lua_gettop(L);
@@ -362,11 +233,10 @@ int luaopen_luce_core (lua_State *L) {
         lua_pushcfunction(L, luce_lib[f].func);
         lua_settable(L, i);
     }
-    
-    l_C_NotificationType(L);
-    l_C_JustificationType(L);
-    l_C_Colours(L);
-    l_C_FocusChangeType(L);
+    dc(NotificationType, L);
+    dc(JustificationType, L);
+    dc(Colours, L);
+    dc(FocusChangeType, L);
 
     return 1;
 }
