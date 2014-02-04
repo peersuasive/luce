@@ -87,7 +87,8 @@ public:
 
         complexTransform = getTransformWith (t);
         isOnlyTranslated = false;
-        isRotated = (complexTransform.mat01 != 0 || complexTransform.mat10 != 0);
+        isRotated = (complexTransform.mat01 != 0 || complexTransform.mat10 != 0
+                      || complexTransform.mat00 < 0 || complexTransform.mat11 < 0);
     }
 
     float getPhysicalPixelScaleFactor() const noexcept
@@ -284,8 +285,8 @@ public:
 
         const float fontHeight = font.getHeight();
         edgeTable = typeface->getEdgeTableForGlyph (glyphNumber,
-                                                    AffineTransform::scale (fontHeight * font.getHorizontalScale(), fontHeight)
-                                                        .followedBy (font.getTypeface()->getVerticalHintingTransform (fontHeight)));
+                                                    AffineTransform::scale (fontHeight * font.getHorizontalScale(),
+                                                                            fontHeight), fontHeight);
     }
 
     Font font;
@@ -2487,7 +2488,7 @@ public:
                 AffineTransform t (transform.getTransformWith (AffineTransform::scale (fontHeight * font.getHorizontalScale(), fontHeight)
                                                                                .followedBy (trans)));
 
-                const ScopedPointer<EdgeTable> et (font.getTypeface()->getEdgeTableForGlyph (glyphNumber, t));
+                const ScopedPointer<EdgeTable> et (font.getTypeface()->getEdgeTableForGlyph (glyphNumber, t, fontHeight));
 
                 if (et != nullptr)
                     fillShape (new EdgeTableRegionType (*et), false);

@@ -26,13 +26,30 @@
         <MODULEPATH id="juce_gui_extra" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <LINUX_MAKE targetFolder="Builds/MingW" extraCompilerFlags="-std=gnu++11&#10;-Wno-unused-result"
+    <LINUX_MAKE targetFolder="Builds/MingW" extraCompilerFlags="-std=gnu++11&#10;-Wno-unused-result&#10;-DLUA52"
                 extraLinkerFlags="-std=gnu++11&#10;-shared">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" libraryPath="" isDebug="0" optimisation="2" targetName="luce"
                        linuxArchitecture="-m32"/>
         <CONFIGURATION name="Debug" libraryPath="" isDebug="1" optimisation="1" targetName="luce"
                        linuxArchitecture="-m32"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+    <LINUX_MAKE targetFolder="Builds/Linux-lua5.2" extraCompilerFlags="-std=c++11&#10;-Wno-unused-result&#10;-I/usr/include/lua5.2&#10;-fPIC&#10;-DLUA52"
+                extraLinkerFlags="-std=c++11&#10;-fPIC&#10;-shared">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="luce"/>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="luce"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
