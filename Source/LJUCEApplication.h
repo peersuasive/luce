@@ -42,6 +42,7 @@ public:
     static const Luna<LJUCEApplication>::InheritenceF inheritsF[];
     static const Luna<LJUCEApplication>::PropertyType properties[];
     static const Luna<LJUCEApplication>::FunctionType methods[];
+    static const Luna<LJUCEApplication>::StaticType statics[];
 
     static const Luna<LJUCEApplication>::Enum enums[];
 private:

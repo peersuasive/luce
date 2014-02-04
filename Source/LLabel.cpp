@@ -78,6 +78,10 @@ const Luna<LLabel>::FunctionType LLabel::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LLabel>::StaticType LLabel::statics[] = {
+    {0,0}
+};
+
 LLabel::LLabel(lua_State *L)
     : LComponent(L, this),
       Label(),

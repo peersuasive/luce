@@ -64,6 +64,7 @@ public:
     static const Luna<LImage>::InheritenceF inheritsF[];
     static const Luna<LImage>::PropertyType properties[];
     static const Luna<LImage>::FunctionType methods[];
+    static const Luna<LImage>::StaticType statics[];
     static const Luna<LImage>::Enum enums[];
 
 private:

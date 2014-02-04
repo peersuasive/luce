@@ -22,6 +22,10 @@ const Luna<LMainComponent>::FunctionType LMainComponent::methods[] = {
     {0,0}
 };
 
+const Luna<LMainComponent>::StaticType LMainComponent::statics[] = {
+    {0,0}
+};
+
 LMainComponent::LMainComponent(lua_State *L) 
     : LComponent(L, this),
       Component()

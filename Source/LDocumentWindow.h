@@ -21,6 +21,7 @@ public:
     static const Luna<LDocumentWindow>::InheritenceF inheritsF[];
     static const Luna<LDocumentWindow>::PropertyType properties[];
     static const Luna<LDocumentWindow>::FunctionType methods[];
+    static const Luna<LDocumentWindow>::StaticType statics[];
 
     static const Luna<LDocumentWindow>::Enum enums[];
 private:

@@ -75,6 +75,7 @@ public:
     static const Luna<LTreeView>::InheritenceF inheritsF[];
     static const Luna<LTreeView>::PropertyType properties[];
     static const Luna<LTreeView>::FunctionType methods[];
+    static const Luna<LTreeView>::StaticType statics[];
 
     static const Luna<LTreeView>::Enum enums[];
 private:

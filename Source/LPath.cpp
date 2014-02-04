@@ -64,6 +64,10 @@ const Luna<LPath>::FunctionType LPath::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LPath>::StaticType LPath::statics[] = {
+    {0,0}
+};
+
 LPath::LPath(lua_State *L)
     : LBase(L, "LPath", true),
       Path()

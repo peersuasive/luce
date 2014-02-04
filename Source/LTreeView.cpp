@@ -71,6 +71,10 @@ const Luna<LTreeView>::FunctionType LTreeView::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LTreeView>::StaticType LTreeView::statics[] = {
+    {0,0}
+};
+
 LTreeView::LTreeView(lua_State *L)
     : LComponent(L, this),
       TreeView( /* TODO: add args */ )

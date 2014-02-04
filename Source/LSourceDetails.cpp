@@ -32,6 +32,10 @@ const Luna<LSourceDetails>::FunctionType LSourceDetails::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LSourceDetails>::StaticType LSourceDetails::statics[] = {
+    {0,0}
+};
+
 LSourceDetails::LSourceDetails(lua_State *L)
     : LBase(L, "LSourceDetails", true)
 {

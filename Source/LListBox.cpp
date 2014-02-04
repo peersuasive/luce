@@ -91,6 +91,10 @@ const Luna<LListBox>::FunctionType LListBox::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LListBox>::StaticType LListBox::statics[] = {
+    {0,0}
+};
+
 LListBox::LListBox(lua_State *L)
     : LComponent(L, this),
       ListBox("LListBox", this)

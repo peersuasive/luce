@@ -80,6 +80,10 @@ const Luna<LTreeViewItem>::FunctionType LTreeViewItem::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LTreeViewItem>::StaticType LTreeViewItem::statics[] = {
+    {0,0}
+};
+
 LTreeViewItem::LTreeViewItem(lua_State *L)
     : LBase(L, "LTreeViewItem", false),
       TreeViewItem( /* TODO: add args */ ),

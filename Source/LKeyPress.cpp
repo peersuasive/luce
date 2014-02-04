@@ -42,6 +42,10 @@ const Luna<LKeyPress>::FunctionType LKeyPress::methods[] = {
     {0,0}
 };
 
+const Luna<LKeyPress>::StaticType LKeyPress::statics[] = {
+    {0,0}
+};
+
 LKeyPress::LKeyPress(lua_State *L)
     : LBase(L, "LKeyPress (invalid)",true),
       KeyPress()

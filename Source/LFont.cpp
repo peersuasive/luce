@@ -92,6 +92,10 @@ const Luna<LFont>::FunctionType LFont::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LFont>::StaticType LFont::statics[] = {
+    {0,0}
+};
+
 LFont::LFont(lua_State *L)
     : LBase(L, "LFont", true),
       Font()

@@ -28,6 +28,10 @@ const Luna<LToggleButton>::FunctionType LToggleButton::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LToggleButton>::StaticType LToggleButton::statics[] = {
+    {0,0}
+};
+
 LToggleButton::LToggleButton(lua_State *L)
     : LButton(L, this),
       ToggleButton()

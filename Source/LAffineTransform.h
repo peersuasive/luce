@@ -62,6 +62,7 @@ public:
     static const Luna<LAffineTransform>::InheritenceF inheritsF[];
     static const Luna<LAffineTransform>::PropertyType properties[];
     static const Luna<LAffineTransform>::FunctionType methods[];
+    static const Luna<LAffineTransform>::StaticType statics[];
     static const Luna<LAffineTransform>::Enum enums[];
 
 private:

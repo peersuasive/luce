@@ -25,6 +25,8 @@ namespace luce {
 
 #include "LRefBase.h"
 
+#include "base/LTime.h"
+
 #include "MyLookAndFeel.h"
 //#include "LBase.h"
 #include "LModifierKeys.h"
@@ -41,7 +43,7 @@ namespace luce {
 #include "LStretchableLayoutManager.h"
 #include "LFont.h"
 #include "LSourceDetails.h"
-#include "LTime.h"
+//#include "LTime.h"
 
 #include "LComponent.h"
 #include "LButton.h"

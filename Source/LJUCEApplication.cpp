@@ -34,6 +34,10 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
     {0,0}
 };
 
+const Luna<LJUCEApplication>::StaticType LJUCEApplication::statics[] = {
+    {0,0}
+};
+
 LJUCEApplication::LJUCEApplication(lua_State *L)
     : LBase(L, "LJUCEApplication", false)
 {

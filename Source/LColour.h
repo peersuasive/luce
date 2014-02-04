@@ -72,6 +72,7 @@ public:
     static const Luna<LColour>::InheritenceF inheritsF[];
     static const Luna<LColour>::PropertyType properties[];
     static const Luna<LColour>::FunctionType methods[];
+    static const Luna<LColour>::StaticType statics[];
     static const Luna<LColour>::Enum enums[];
 
 private:

@@ -71,6 +71,7 @@ public:
     static const Luna<LButton>::InheritenceF inheritsF[];
     static const Luna<LButton>::PropertyType properties[];
     static const Luna<LButton>::FunctionType methods[];
+    static const Luna<LButton>::StaticType statics[];
     
     static const Luna<LButton>::Enum enums[];
 protected:

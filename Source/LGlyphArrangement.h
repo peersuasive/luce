@@ -50,6 +50,7 @@ public:
     static const Luna<LGlyphArrangement>::InheritenceF inheritsF[];
     static const Luna<LGlyphArrangement>::PropertyType properties[];
     static const Luna<LGlyphArrangement>::FunctionType methods[];
+    static const Luna<LGlyphArrangement>::StaticType statics[];
     static const Luna<LGlyphArrangement>::Enum enums[];
 
 private:

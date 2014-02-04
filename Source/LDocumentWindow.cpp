@@ -28,6 +28,10 @@ const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
     {0,0}
 };
 
+const Luna<LDocumentWindow>::StaticType LDocumentWindow::statics[] = {
+    {0,0}
+};
+
 LDocumentWindow::LDocumentWindow(lua_State *L)
     :  LComponent(L, this),
        DocumentWindow( "DocumentWindow", Colours::lightgrey, DocumentWindow::allButtons )

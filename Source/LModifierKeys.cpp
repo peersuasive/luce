@@ -50,6 +50,10 @@ const Luna<LModifierKeys>::FunctionType LModifierKeys::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LModifierKeys>::StaticType LModifierKeys::statics[] = {
+    {0,0}
+};
+
 LModifierKeys::LModifierKeys(lua_State *L)
     : LBase(L),
       ModifierKeys( LUA::getNumber() )

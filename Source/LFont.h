@@ -88,6 +88,7 @@ public:
     static const Luna<LFont>::InheritenceF inheritsF[];
     static const Luna<LFont>::PropertyType properties[];
     static const Luna<LFont>::FunctionType methods[];
+    static const Luna<LFont>::StaticType statics[];
     static const Luna<LFont>::Enum enums[];
 
 private:

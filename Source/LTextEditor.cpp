@@ -127,6 +127,10 @@ const Luna<LTextEditor>::FunctionType LTextEditor::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LTextEditor>::StaticType LTextEditor::statics[] = {
+    {0,0}
+};
+
 LTextEditor::LTextEditor(lua_State *L)
     : LComponent(L, this),
       TextEditor( /* TODO: add args */ )

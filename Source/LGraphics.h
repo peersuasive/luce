@@ -87,6 +87,7 @@ public:
     static const Luna<LGraphics>::InheritenceF inheritsF[];
     static const Luna<LGraphics>::PropertyType properties[];
     static const Luna<LGraphics>::FunctionType methods[];
+    static const Luna<LGraphics>::StaticType statics[];
     static const Luna<LGraphics>::Enum enums[];
 
 private:

@@ -33,6 +33,10 @@ const Luna<LPositionedGlyph>::FunctionType LPositionedGlyph::methods[] = {
     {0,0}
 };
 
+const Luna<LPositionedGlyph>::StaticType LPositionedGlyph::statics[] = {
+    {0,0}
+};
+
 LPositionedGlyph::LPositionedGlyph(lua_State *L)
     : LBase(L, "LPositionedGlyph", true),
       PositionedGlyph()

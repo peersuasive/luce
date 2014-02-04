@@ -57,6 +57,10 @@ const Luna<LColour>::FunctionType LColour::methods[] = {
     {0,0}
 };
 
+const Luna<LColour>::StaticType LColour::statics[] = {
+    {0,0}
+};
+
 LColour::LColour(lua_State *L)
     : LBase(L, "LColour", true),
       Colour()

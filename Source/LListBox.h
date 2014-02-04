@@ -106,6 +106,7 @@ public:
     static const Luna<LListBox>::InheritenceF inheritsF[];
     static const Luna<LListBox>::PropertyType properties[];
     static const Luna<LListBox>::FunctionType methods[];
+    static const Luna<LListBox>::StaticType statics[];
     static const Luna<LListBox>::Enum enums[];
 
 private:

@@ -16,6 +16,7 @@ all modifications are (c) 2013 Peersuasive Technologies
 #include <type_traits>
 
 #define method(class, name) {#name, &class::name}
+#define smethod(class, name) {#name, &class::s_##name}
 
 template < class T > 
 class Luna {
@@ -57,6 +58,11 @@ public:
     struct FunctionType {
         const char* name;
         int (T::*func) (lua_State *);
+    };
+
+    struct StaticType {
+        const char* name;
+        int (*func) (lua_State*);
     };
 
     struct Enum {
@@ -131,8 +137,13 @@ public:
         lua_pushcfunction(L, &Luna < T >::lconstructor);
         lua_setfield(L, nt, "new");
 
+        // static methods
+        for (int i = 0; T::statics[i].name; ++i) {
+            lua_pushcfunction(L, T::statics[i].func);
+            lua_setfield(L, nt, T::statics[i].name);
+        }
+
         // set static values, like enums...
-        
         for ( int i = 0; T::enums[i].name; ++i ) {
             bool is_root = false;
             int subt;

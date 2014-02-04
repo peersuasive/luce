@@ -37,6 +37,7 @@ public:
     static const Luna<LToggleButton>::InheritenceF inheritsF[];
     static const Luna<LToggleButton>::PropertyType properties[];
     static const Luna<LToggleButton>::FunctionType methods[];
+    static const Luna<LToggleButton>::StaticType statics[];
     static const Luna<LToggleButton>::Enum enums[];
 
 private:

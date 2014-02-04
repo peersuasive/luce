@@ -43,6 +43,7 @@ public:
     static const Luna<LStretchableLayoutManager>::InheritenceF inheritsF[];
     static const Luna<LStretchableLayoutManager>::PropertyType properties[];
     static const Luna<LStretchableLayoutManager>::FunctionType methods[];
+    static const Luna<LStretchableLayoutManager>::StaticType statics[];
     static const Luna<LStretchableLayoutManager>::Enum enums[];
 
 private:

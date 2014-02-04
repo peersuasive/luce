@@ -50,6 +50,10 @@ const Luna<LTime>::FunctionType LTime::methods[] = {
     {0,0}
 };
 
+const Luna<LTime>::StaticType LTime::statics[] = {
+    {0,0}
+};
+
 LTime::LTime(lua_State *L)
     : LBase(L, "LTime", true),
       Time()

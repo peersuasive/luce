@@ -125,6 +125,7 @@ public:
     static const Luna<LTextEditor>::InheritenceF inheritsF[];
     static const Luna<LTextEditor>::PropertyType properties[];
     static const Luna<LTextEditor>::FunctionType methods[];
+    static const Luna<LTextEditor>::StaticType statics[];
     static const Luna<LTextEditor>::Enum enums[];
 
 private:

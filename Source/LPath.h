@@ -76,6 +76,7 @@ public:
     static const Luna<LPath>::InheritenceF inheritsF[];
     static const Luna<LPath>::PropertyType properties[];
     static const Luna<LPath>::FunctionType methods[];
+    static const Luna<LPath>::StaticType statics[];
     static const Luna<LPath>::Enum enums[];
 
 private:

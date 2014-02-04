@@ -63,6 +63,7 @@ public:
     static const Luna<LMouseEvent>::InheritenceF inheritsF[];
     static const Luna<LMouseEvent>::PropertyType properties[];
     static const Luna<LMouseEvent>::FunctionType methods[];
+    static const Luna<LMouseEvent>::StaticType statics[];
     static const Luna<LMouseEvent>::Enum enums[];
 
 private:

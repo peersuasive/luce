@@ -46,6 +46,10 @@ const Luna<LAffineTransform>::FunctionType LAffineTransform::methods[] = {
     {0,0}
 };
 
+const Luna<LAffineTransform>::StaticType LAffineTransform::statics[] = {
+    {0,0}
+};
+
 LAffineTransform::LAffineTransform(lua_State *L)
     : LBase(L, "LAffineTransform", true),
       AffineTransform()

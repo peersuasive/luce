@@ -43,6 +43,7 @@ public:
     static const Luna<LKeyPress>::InheritenceF inheritsF[];
     static const Luna<LKeyPress>::PropertyType properties[];
     static const Luna<LKeyPress>::FunctionType methods[];
+    static const Luna<LKeyPress>::StaticType statics[];
     static const Luna<LKeyPress>::Enum enums[];
 
 private:

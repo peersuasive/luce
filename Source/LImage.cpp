@@ -49,6 +49,10 @@ const Luna<LImage>::FunctionType LImage::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LImage>::StaticType LImage::statics[] = {
+    {0,0}
+};
+
 LImage::LImage(lua_State *L)
     : LBase(L, "LImage", true),
       Image()

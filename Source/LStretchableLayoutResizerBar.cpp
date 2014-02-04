@@ -28,6 +28,10 @@ const Luna<LStretchableLayoutResizerBar>::FunctionType LStretchableLayoutResizer
 };
 
 /////// ctor/dtor
+const Luna<LStretchableLayoutResizerBar>::StaticType LStretchableLayoutResizerBar::statics[] = {
+    {0,0}
+};
+
 LStretchableLayoutResizerBar::LStretchableLayoutResizerBar(lua_State *L)
     : LComponent(L, this),
       StretchableLayoutResizerBar( LUA::from_luce<LStretchableLayoutManager>(2), 

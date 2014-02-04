@@ -40,6 +40,10 @@ const Luna<LGlyphArrangement>::FunctionType LGlyphArrangement::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LGlyphArrangement>::StaticType LGlyphArrangement::statics[] = {
+    {0,0}
+};
+
 LGlyphArrangement::LGlyphArrangement(lua_State *L)
     : LBase(L, "LGlyphArrangement", true),
       GlyphArrangement()

@@ -30,6 +30,10 @@ const Luna<LStretchableLayoutManager>::FunctionType LStretchableLayoutManager::m
     {0,0}
 };
 
+const Luna<LStretchableLayoutManager>::StaticType LStretchableLayoutManager::statics[] = {
+    {0,0}
+};
+
 LStretchableLayoutManager::LStretchableLayoutManager(lua_State *L)
     : LBase(L, "LStretchableLayoutManager", true),
       StretchableLayoutManager()

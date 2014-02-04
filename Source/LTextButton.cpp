@@ -30,6 +30,10 @@ const Luna<LTextButton>::FunctionType LTextButton::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LTextButton>::StaticType LTextButton::statics[] = {
+    {0,0}
+};
+
 LTextButton::LTextButton(lua_State *L)
     : LButton(L, this),
       TextButton( /* TODO: add args */ )

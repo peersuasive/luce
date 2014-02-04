@@ -45,6 +45,7 @@ public:
     static const Luna<LPositionedGlyph>::InheritenceF inheritsF[];
     static const Luna<LPositionedGlyph>::PropertyType properties[];
     static const Luna<LPositionedGlyph>::FunctionType methods[];
+    static const Luna<LPositionedGlyph>::StaticType statics[];
     static const Luna<LPositionedGlyph>::Enum enums[];
 
 private:

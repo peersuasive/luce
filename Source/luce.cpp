@@ -5,6 +5,8 @@ namespace luce {
 #include "LuaO.cpp"
 #include "MainThread.cpp"
 
+#include "base/LTime.cpp"
+
 #include "MyLookAndFeel.cpp"
 #include "LBase.cpp"
 #include "LModifierKeys.cpp"
@@ -20,7 +22,7 @@ namespace luce {
 #include "LStretchableLayoutManager.cpp"
 #include "LFont.cpp"
 #include "LSourceDetails.cpp"
-#include "LTime.cpp"
+//#include "LTime.cpp"
 
 #include "LComponent.cpp"
 #include "LButton.cpp"

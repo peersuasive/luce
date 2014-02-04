@@ -214,6 +214,7 @@ public:
     static const Luna<LComponent>::InheritenceF inheritsF[];
     static const Luna<LComponent>::PropertyType properties[];
     static const Luna<LComponent>::FunctionType methods[];
+    static const Luna<LComponent>::StaticType statics[];
     
     static const Luna<LComponent>::Enum enums[];
 protected:    

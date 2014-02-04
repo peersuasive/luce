@@ -26,6 +26,7 @@ public:
     static const Luna<LJComponent>::InheritenceF inheritsF[];
     static const Luna<LJComponent>::PropertyType properties[];
     static const Luna<LJComponent>::FunctionType methods[];
+    static const Luna<LJComponent>::StaticType statics[];
 
     static const Luna<LJComponent>::Enum enums[];
 private:

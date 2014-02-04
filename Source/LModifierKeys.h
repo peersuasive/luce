@@ -56,6 +56,7 @@ public:
     static const Luna<LModifierKeys>::InheritenceF inheritsF[];
     static const Luna<LModifierKeys>::PropertyType properties[];
     static const Luna<LModifierKeys>::FunctionType methods[];
+    static const Luna<LModifierKeys>::StaticType statics[];
     static const Luna<LModifierKeys>::Enum enums[];
 
 private:

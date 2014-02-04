@@ -72,6 +72,10 @@ const Luna<LGraphics>::FunctionType LGraphics::methods[] = {
 };
 
 /////// ctor/dtor
+const Luna<LGraphics>::StaticType LGraphics::statics[] = {
+    {0,0}
+};
+
 LGraphics::LGraphics(lua_State *L)
     : LBase(L, "LGraphics", true)
 {

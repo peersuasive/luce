@@ -37,6 +37,7 @@ public:
     static const Luna<LStretchableLayoutResizerBar>::InheritenceF inheritsF[];
     static const Luna<LStretchableLayoutResizerBar>::PropertyType properties[];
     static const Luna<LStretchableLayoutResizerBar>::FunctionType methods[];
+    static const Luna<LStretchableLayoutResizerBar>::StaticType statics[];
     static const Luna<LStretchableLayoutResizerBar>::Enum enums[];
 
 private:

@@ -62,6 +62,7 @@ public:
     static const Luna<LTime>::InheritenceF inheritsF[];
     static const Luna<LTime>::PropertyType properties[];
     static const Luna<LTime>::FunctionType methods[];
+    static const Luna<LTime>::StaticType statics[];
     static const Luna<LTime>::Enum enums[];
 
 private:
