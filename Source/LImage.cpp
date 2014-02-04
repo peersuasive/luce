@@ -50,6 +50,7 @@ const Luna<LImage>::FunctionType LImage::methods[] = {
 
 /////// ctor/dtor
 const Luna<LImage>::StaticType LImage::statics[] = {
+    smethod( LImage, null ),
     {0,0}
 };
 
@@ -70,6 +71,14 @@ LImage::LImage(lua_State *L, const Image& class_)
 }
 
 LImage::~LImage() {}
+
+/////// statics
+
+int LImage::s_null(lua_State *L) {
+    return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
+         Image::null
+    ));
+}
 
 /////// getters/setters
 int LImage::getPixelAt ( lua_State *L ) {
