@@ -956,6 +956,39 @@ namespace LUA {
             }
             return err;
         }
+
+        const char* lua_getnumtype(int i) {
+            if (lua_isnumber(L, i)) return "int";
+            else if (!lua_istable(L, i)) return NULL;
+            lua_getfield(L, i, "__type");
+            const char *res = lua_tostring(L,-1);
+            lua_pop(L,1);
+            return res;
+        }
+        template<class T>
+        T luaL_getlnumber(const char *t, int i = -1) {
+            if(lua_istable(L,i))
+                lua_rawgeti(L, i, 1);
+            else lua_pushvalue(L,i);
+            if(!lua_isnumber(L, -1)) {
+                lua_pushfstring(L, "Expected LNumber, got %s", lua_typename(L,lua_type(L,-1)));
+                lua_error(L);
+            }
+            T n = lua_tonumber(L,-1);
+            lua_pop(L,1);
+            lua_remove(L, i);
+            return n;
+        }
+
+        bool isoftype(const char *t, int i) {
+            return lua_getnumtype(i) == t;
+        }
+        #define lua_isoftype(t,i) isoftype(#t, i)
+        #define cn_1(p)   luaL_getlnumber<p>( #p )
+        #define cn_2(p,i) luaL_getlnumber<p>( #p, i )
+        #define cn_sel(x,p,i,FUNC, ...) FUNC
+        #define luaL_checknum(...) cn_sel(,##__VA_ARGS__, cn_2(__VA_ARGS__), cn_1(__VA_ARGS__),)
+
     }
 }
 

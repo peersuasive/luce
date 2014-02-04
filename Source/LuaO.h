@@ -134,6 +134,11 @@ namespace LUA {
             if( i==testtypes.end() ) return 0;
             return i->second(udata);
         }
+
+        template<class T>
+        T luaL_getnum(const char *t, int i = -1);
+        const char* lua_getnumtype(int i = -1);
+
     }
 }
 
