@@ -180,7 +180,10 @@ l_class(StretchableLayoutManager)
 l_class(StretchableLayoutResizerBar)
 l_class(Font)
 l_class(ListBox)
+// core
 l_class(Time)
+l_class(BigInteger)
+l_class(Random)
 
 static const luaL_reg luce_lib [] = {
     d(JUCEApplication),
@@ -208,7 +211,10 @@ static const luaL_reg luce_lib [] = {
     d(StretchableLayoutResizerBar),
     d(Font),
     d(ListBox),
+    // core
     d(Time),
+    d(BigInteger),
+    d(Random),
 
     { "start", start },
     { "start_manual", start_manual },

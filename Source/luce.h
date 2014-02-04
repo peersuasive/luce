@@ -26,6 +26,8 @@ namespace luce {
 #include "LRefBase.h"
 
 #include "base/LTime.h"
+#include "base/LBigInteger.h"
+#include "base/LRandom.h"
 
 #include "MyLookAndFeel.h"
 //#include "LBase.h"

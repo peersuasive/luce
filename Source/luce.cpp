@@ -6,6 +6,8 @@ namespace luce {
 #include "MainThread.cpp"
 
 #include "base/LTime.cpp"
+#include "base/LBigInteger.cpp"
+#include "base/LRandom.cpp"
 
 #include "MyLookAndFeel.cpp"
 #include "LBase.cpp"
