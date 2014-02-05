@@ -23,10 +23,8 @@ const Luna<LFont>::PropertyType LFont::properties[] = {
     {"typefaceStyle", &LFont::getTypefaceStyle, &LFont::setTypefaceStyle},
     {"extraKerningFactor", &LFont::getExtraKerningFactor, &LFont::setExtraKerningFactor},
     {"horizontalScale", &LFont::getHorizontalScale, &LFont::setHorizontalScale},
-    {"fallbackFontStyle", &LFont::getFallbackFontStyle, &LFont::setFallbackFontStyle},
     {"styleFlags", &LFont::getStyleFlags, &LFont::setStyleFlags},
     {"typefaceName", &LFont::getTypefaceName, &LFont::setTypefaceName},
-    {"fallbackFontName", &LFont::getFallbackFontName, &LFont::setFallbackFontName},
     {0,0}
 };
 const Luna<LFont>::FunctionType LFont::methods[] = {
@@ -44,14 +42,10 @@ const Luna<LFont>::FunctionType LFont::methods[] = {
     method( LFont, setExtraKerningFactor ),
     method( LFont, getHorizontalScale ),
     method( LFont, setHorizontalScale ),
-    method( LFont, getFallbackFontStyle ),
-    method( LFont, setFallbackFontStyle ),
     method( LFont, getStyleFlags ),
     method( LFont, setStyleFlags ),
     method( LFont, getTypefaceName ),
     method( LFont, setTypefaceName ),
-    method( LFont, getFallbackFontName ),
-    method( LFont, setFallbackFontName ),
 
     method( LFont, setSizeAndStyle ),
     method( LFont, setHeightWithoutChangingWidth ),
@@ -59,7 +53,6 @@ const Luna<LFont>::FunctionType LFont::methods[] = {
 
     method( LFont, getStringWidth ),
 
-    method( LFont, fromString ),
     method( LFont, italicised ),
     method( LFont, boldened ),
     method( LFont, withStyle ),
@@ -72,29 +65,36 @@ const Luna<LFont>::FunctionType LFont::methods[] = {
     method( LFont, getAvailableStyles ),
     method( LFont, getDescent ),
     method( LFont, getDescentInPoints ),
-    method( LFont, findAllTypefaceStyles ),
 
     method( LFont, toString ),
-    method( LFont, getDefaultSansSerifFontName ),
-    method( LFont, getDefaultMonospacedFontName ),
-    method( LFont, getDefaultStyle ),
 
-    method( LFont, findAllTypefaceNames ),
-    method( LFont, getDefaultSerifFontName ),
     method( LFont, getStringWidthFloat ),
-    method( LFont, getDefaultTypefaceForFont ),
     method( LFont, getAscentInPoints ),
     method( LFont, getAscent ),
     method( LFont, getTypeface ),
     method( LFont, getGlyphPositions ),
-    method( LFont, findFonts ),
     {0,0}
 };
 
 /////// ctor/dtor
 const Luna<LFont>::StaticType LFont::statics[] = {
+    smethod( LFont, getDefaultSansSerifFontName ),
+    smethod( LFont, getDefaultMonospacedFontName ),
+    smethod( LFont, getDefaultStyle ),
+    smethod( LFont, getDefaultSerifFontName ),
+    smethod( LFont, getDefaultTypefaceForFont ),
+    smethod( LFont, findFonts ),
+    smethod( LFont, findAllTypefaceStyles ),
+    smethod( LFont, findAllTypefaceNames ),
+    smethod( LFont, getFallbackFontName ),
+    smethod( LFont, setFallbackFontName ),
+    smethod( LFont, getFallbackFontStyle ),
+    smethod( LFont, setFallbackFontStyle ),
+    smethod( LFont, fromString ),
+
     {0,0}
 };
+
 
 LFont::LFont(lua_State *L)
     : LBase(L, "LFont", true),
@@ -108,7 +108,100 @@ LFont::LFont(lua_State*L, const Font& f)
 {
 }
 
+int LFont::lnew(lua_State *L) {
+    if (lua_isnoneornil(L,2))
+        return LUA::storeAndReturnUserdata<LFont>( new LFont(L, Font()) );
+    
+    if (lua_isnumber(L, 2)) {
+        float fontHeight = LUA::getNumber<float>(2);
+        int styleFlag = LUA::checkAndGetNumber<int>(2, Font::FontStyleFlags::plain);
+        return LUA::storeAndReturnUserdata<LFont>( new LFont(L, 
+            Font( fontHeight, styleFlag )
+        ));
+    }
+
+    if (lua_isstring(L, 2)) {
+        String typefaceName = LUA::getString(2);
+        if(lua_isnumber(L,2)) {
+            float fontHeight = LUA::getNumber<float>(2);
+            int styleFlag = LUA::getNumber<int>(2);
+            return LUA::storeAndReturnUserdata<LFont>( new LFont(L, 
+                Font( typefaceName, fontHeight, styleFlag )
+            ));
+        }
+        String typefaceStyle = LUA::getString(2);
+        float fontHeight = LUA::getNumber<float>(2);
+        return LUA::storeAndReturnUserdata<LFont>( new LFont(L, 
+            Font( typefaceName, typefaceStyle, fontHeight )
+        ));
+    }
+
+    // TODO: copy constructor, Typeface...
+    LUA::TODO_OBJECT( "Font(&Font), Font(Typeface::Ptr)" );
+    lua_settop(LUA::Get(), 1);
+}
+
 LFont::~LFont() {}
+
+
+///// statics
+int LFont::s_getDefaultSansSerifFontName ( lua_State* ) {
+    return LUA::returnString( Font::getDefaultSansSerifFontName() );
+}
+
+int LFont::s_getDefaultMonospacedFontName ( lua_State* ) {
+    return LUA::returnString( Font::getDefaultMonospacedFontName() );
+}
+
+int LFont::s_getDefaultStyle ( lua_State* ) {
+    return LUA::returnString( Font::getDefaultStyle() );
+}
+
+int LFont::s_getDefaultSerifFontName ( lua_State* ) {
+    return LUA::returnString( Font::getDefaultSerifFontName() );
+}
+
+/**
+    returns a table of strings
+*/
+int LFont::s_findFonts ( lua_State* ) {
+    //Font::findFonts(LUA::getList());
+    StringArray s;
+    Array<Font> list;
+    Font::findFonts(list);
+    for(int i=0;i<list.size();++i)
+        s.add( list[i].toString() );
+    return LUA::returnTable(s);
+}
+
+int LFont::s_findAllTypefaceStyles ( lua_State* ) {
+    return LUA::returnTable( Font::findAllTypefaceStyles(LUA::getString(2)) );
+}
+
+int LFont::s_findAllTypefaceNames ( lua_State* ) {
+    return LUA::returnTable( Font::findAllTypefaceNames() );
+}
+
+int LFont::s_getFallbackFontName ( lua_State* ) {
+    return LUA::returnString( Font::getFallbackFontName() );
+}
+int LFont::s_setFallbackFontName ( lua_State* ) {
+    Font::setFallbackFontName(LUA::getString());
+    return 0;
+}
+
+int LFont::s_getFallbackFontStyle ( lua_State* ) {
+    return LUA::returnString( Font::getFallbackFontStyle() );
+}
+int LFont::s_setFallbackFontStyle ( lua_State* ) {
+    Font::setFallbackFontStyle(LUA::getString());
+    return 0;
+}
+
+int LFont::s_fromString ( lua_State *L ) {
+    LFont *f = new LFont( L, Font::fromString(LUA::getString(2)) );
+    return LUA::storeAndReturnUserdata<LFont>( f );
+}
 
 /////// getters/setters
 int LFont::getTypefaceStyle ( lua_State* ) {
@@ -151,14 +244,6 @@ int LFont::setHorizontalScale ( lua_State* ) {
     return 0;
 }
 
-int LFont::getFallbackFontStyle ( lua_State* ) {
-    return LUA::returnString( Font::getFallbackFontStyle() );
-}
-int LFont::setFallbackFontStyle ( lua_State* ) {
-    Font::setFallbackFontStyle(LUA::getString());
-    return 0;
-}
-
 int LFont::getStyleFlags ( lua_State* ) {
     return LUA::returnNumber( Font::getStyleFlags() );
 }
@@ -183,14 +268,6 @@ int LFont::setBold ( lua_State* ) {
     return 0;
 }
 
-int LFont::getFallbackFontName ( lua_State* ) {
-    return LUA::returnString( Font::getFallbackFontName() );
-}
-int LFont::setFallbackFontName ( lua_State* ) {
-    Font::setFallbackFontName(LUA::getString());
-    return 0;
-}
-
 /////// getters
 int LFont::getAscent ( lua_State* ) {
     return LUA::returnNumber( Font::getAscent() );
@@ -198,11 +275,6 @@ int LFont::getAscent ( lua_State* ) {
 
 int LFont::getStringWidth ( lua_State* ) {
     return LUA::returnNumber( Font::getStringWidth( LUA::getString(2) ) );
-}
-
-int LFont::fromString ( lua_State *L ) {
-    LFont *f = new LFont( L, Font::fromString(LUA::getString(2)) );
-    return LUA::storeAndReturnUserdata<LFont>( f );
 }
 
 int LFont::boldened ( lua_State *L ) {
@@ -223,25 +295,9 @@ int LFont::getDescent ( lua_State* ) {
     return LUA::returnNumber( Font::getDescent() );
 }
 
-int LFont::findAllTypefaceNames ( lua_State* ) {
-    return LUA::returnTable( Font::findAllTypefaceNames() );
-}
-
-int LFont::findAllTypefaceStyles ( lua_State* ) {
-    return LUA::returnTable( Font::findAllTypefaceStyles(LUA::getString(2)) );
-}
-
 int LFont::withStyle ( lua_State *L ) {
     LFont *f = new LFont( L, Font::withStyle((int)LUA::getNumber(2)) );
     return LUA::storeAndReturnUserdata<LFont>( f );
-}
-
-int LFont::getDefaultSansSerifFontName ( lua_State* ) {
-    return LUA::returnString( Font::getDefaultSansSerifFontName() );
-}
-
-int LFont::getDefaultMonospacedFontName ( lua_State* ) {
-    return LUA::returnString( Font::getDefaultMonospacedFontName() );
 }
 
 int LFont::getHeightInPoints ( lua_State* ) {
@@ -253,10 +309,6 @@ int LFont::withTypefaceStyle ( lua_State *L ) {
     return LUA::storeAndReturnUserdata<LFont>( f );
 }
 
-int LFont::getDefaultStyle ( lua_State* ) {
-    return LUA::returnString( Font::getDefaultStyle() );
-}
-
 int LFont::withHeight ( lua_State *L ) {
     LFont *f = new LFont( L, Font::withHeight((float)LUA::getNumber(2)) );
     return LUA::storeAndReturnUserdata<LFont>( f );
@@ -264,10 +316,6 @@ int LFont::withHeight ( lua_State *L ) {
 
 int LFont::getDescentInPoints ( lua_State* ) {
     return LUA::returnNumber( Font::getDescentInPoints() );
-}
-
-int LFont::getDefaultSerifFontName ( lua_State* ) {
-    return LUA::returnString( Font::getDefaultSerifFontName() );
 }
 
 int LFont::toString ( lua_State* ) {
@@ -299,19 +347,6 @@ int LFont::isUnderlined ( lua_State* ) {
 int LFont::italicised ( lua_State *L ) {
     LFont *f = new LFont( L, Font::italicised() );
     return LUA::storeAndReturnUserdata<LFont>( f );
-}
-
-/**
-    returns a table of strings
-*/
-int LFont::findFonts ( lua_State* ) {
-    //Font::findFonts(LUA::getList());
-    StringArray s;
-    Array<Font> list;
-    Font::findFonts(list);
-    for(int i=0;i<list.size();++i)
-        s.add( list[i].toString() );
-    return LUA::returnTable(s);
 }
 
 /////// setters
@@ -350,7 +385,7 @@ int LFont::setUnderline ( lua_State* ) {
 
 // TODO
 // getters
-int LFont::getDefaultTypefaceForFont ( lua_State* ) {
+int LFont::s_getDefaultTypefaceForFont ( lua_State* ) {
     // Font font = LUA::TODO_OBJECT_Font;
     // return LUA::TODO_RETURN_OBJECT_Typeface::Ptr( Font::getDefaultTypefaceForFont( font ) );
     lua_settop(LUA::Get(), 1); // added by TODO

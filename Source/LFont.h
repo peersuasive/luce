@@ -21,7 +21,23 @@ class LFont
 public:
     LFont(lua_State*);
     LFont(lua_State*, const Font&);
+    static int lnew(lua_State*);
     ~LFont();
+    
+    //==============================================================================
+    static int s_getDefaultSansSerifFontName(lua_State*);
+    static int s_getDefaultMonospacedFontName(lua_State*);
+    static int s_getDefaultStyle(lua_State*);
+    static int s_getDefaultSerifFontName(lua_State*);
+    static int s_getDefaultTypefaceForFont(lua_State*);
+    static int s_findFonts(lua_State*);
+    static int s_findAllTypefaceStyles(lua_State*);
+    static int s_findAllTypefaceNames(lua_State*);
+    static int s_setFallbackFontName(lua_State*);
+    static int s_getFallbackFontStyle(lua_State*);
+    static int s_setFallbackFontStyle(lua_State*);
+    static int s_getFallbackFontName(lua_State*);
+    static int s_fromString(lua_State*);
 
     //==============================================================================
     int setTypefaceStyle(lua_State*);
@@ -34,46 +50,33 @@ public:
     int getExtraKerningFactor(lua_State*);
     int setHorizontalScale(lua_State*);
     int getHorizontalScale(lua_State*);
-    int setFallbackFontStyle(lua_State*);
-    int getFallbackFontStyle(lua_State*);
     int setStyleFlags(lua_State*);
     int getStyleFlags(lua_State*);
     int setTypefaceName(lua_State*);
     int getTypefaceName(lua_State*);
     int setBold(lua_State*);
     int isBold(lua_State*);
-    int setFallbackFontName(lua_State*);
-    int getFallbackFontName(lua_State*);
 
     //==============================================================================
     int setHeightWithoutChangingWidth(lua_State*);
     int getGlyphPositions(lua_State*);
-    int findFonts(lua_State*);
     int setSizeAndStyle(lua_State*);
     int setUnderline(lua_State*);
 
     //==============================================================================
     int getAscent(lua_State*);
     int getStringWidth(lua_State*);
-    int fromString(lua_State*);
     int boldened(lua_State*);
     int withHorizontalScale(lua_State*);
     int getAvailableStyles(lua_State*);
     int getDescent(lua_State*);
-    int findAllTypefaceStyles(lua_State*);
     int withStyle(lua_State*);
-    int getDefaultSansSerifFontName(lua_State*);
-    int getDefaultMonospacedFontName(lua_State*);
     int getHeightInPoints(lua_State*);
     int withTypefaceStyle(lua_State*);
-    int getDefaultStyle(lua_State*);
-    int findAllTypefaceNames(lua_State*);
     int withHeight(lua_State*);
     int getDescentInPoints(lua_State*);
-    int getDefaultSerifFontName(lua_State*);
     int toString(lua_State*);
     int getStringWidthFloat(lua_State*);
-    int getDefaultTypefaceForFont(lua_State*);
     int withExtraKerningFactor(lua_State*);
     int withPointHeight(lua_State*);
     int getAscentInPoints(lua_State*);
