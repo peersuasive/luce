@@ -20,6 +20,7 @@ namespace luce {
 #include <lua.hpp>
 #include "LBase.h"
 #include "LuaO.h"
+#include "LuceO.h"
 #include "MainThread.h"
 #include "luna5.h"
 

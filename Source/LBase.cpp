@@ -15,6 +15,7 @@ LBase::LBase(lua_State *Ls, const String& name, bool pure)
      : LSelfKill(name, pure)
 {
     LUA::Set(Ls);
+    LUCE::Set(Ls);
     L = Ls;
     LUA::reg(this);
 }

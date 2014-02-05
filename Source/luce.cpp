@@ -3,6 +3,7 @@
 namespace luce {
 #include "LSelfKill.cpp"
 #include "LuaO.cpp"
+#include "LuceO.cpp"
 #include "MainThread.cpp"
 
 #include "base/LTime.cpp"

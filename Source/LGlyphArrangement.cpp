@@ -135,10 +135,12 @@ int LGlyphArrangement::stretchRangeOfGlyphs ( lua_State* ) {
 }
 
 int LGlyphArrangement::draw ( lua_State *L ) {
-    Graphics *g = (Graphics*)LUA::from_luce<LGraphics>(2);
+    const Graphics& g = (const Graphics&)*LUA::from_luce<LGraphics>(2);
     if(lua_isnoneornil(L,2))
-        GlyphArrangement::draw(*g);
-    GlyphArrangement::draw(*g, *LUA::from_luce<LAffineTransform>(2) );
+        GlyphArrangement::draw(g);
+
+    AffineTransform aff = LUCE::luce_toaffinetransform(2);
+    GlyphArrangement::draw(g, aff);
     return 0;
 }
 

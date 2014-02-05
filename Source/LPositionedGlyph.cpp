@@ -96,10 +96,11 @@ int LPositionedGlyph::createPath ( lua_State* ) {
 }
 
 int LPositionedGlyph::draw ( lua_State *L ) {
-    Graphics *g = (Graphics*)LUA::from_luce<LGraphics>(2);
+    const Graphics &g = (const Graphics&)*LUA::from_luce<LGraphics>(2);
     if(lua_isnoneornil(L,2))
-        PositionedGlyph::draw(*g);
-    PositionedGlyph::draw(*g, *LUA::from_luce<LAffineTransform>(2) );
+        PositionedGlyph::draw(g);
+    AffineTransform aff = LUCE::luce_toaffinetransform(2);
+    PositionedGlyph::draw(g, aff);
     return 0;
 }
 
