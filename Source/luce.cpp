@@ -25,7 +25,7 @@ namespace luce {
 #include "LStretchableLayoutManager.cpp"
 #include "LFont.cpp"
 #include "LSourceDetails.cpp"
-//#include "LTime.cpp"
+#include "LTimer.cpp"
 
 #include "LComponent.cpp"
 #include "LButton.cpp"

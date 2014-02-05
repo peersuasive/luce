@@ -46,7 +46,7 @@ namespace luce {
 #include "LStretchableLayoutManager.h"
 #include "LFont.h"
 #include "LSourceDetails.h"
-//#include "LTime.h"
+#include "LTimer.h"
 
 #include "LComponent.h"
 #include "LButton.h"

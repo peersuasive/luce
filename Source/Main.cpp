@@ -176,6 +176,7 @@ l_class(ModifierKeys)
 l_class(KeyPress)
 l_class(MouseEvent)
 l_class(SourceDetails)
+l_class(Timer)
 l_class(StretchableLayoutManager)
 l_class(StretchableLayoutResizerBar)
 l_class(Font)
@@ -207,6 +208,7 @@ static const luaL_reg luce_lib [] = {
     d(KeyPress),
     d(MouseEvent),
     d(SourceDetails),
+    d(Timer),
     d(StretchableLayoutManager),
     d(StretchableLayoutResizerBar),
     d(Font),
