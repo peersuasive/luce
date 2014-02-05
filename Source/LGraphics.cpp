@@ -284,7 +284,8 @@ int LGraphics::setFont ( lua_State *L ) {
 }
 
 int LGraphics::fillRect ( lua_State* ) {
-    g->fillRect(LUA::getRectangle<float>(2));
+    g->fillRect( LUCE::luce_torectangle<float>(2) );
+    return 0;
 }
 
 int LGraphics::setPixel ( lua_State* ) {
