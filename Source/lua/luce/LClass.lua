@@ -1,7 +1,13 @@
 local new = function(self, ...)
     local self = self or {}
     --local me = self.class.new(class, ...)
-    local me = self.class.new(...)
+    --local me = self.class.new(...)
+    local r, me = pcall(self.class.new, ...)
+    if not(r) then
+        local name = (getmetatable(self.class) or {__tostring=function()return"none"end}).__tostring()
+        require"pl.pretty".dump( self )
+        error("LClass::"..name.."::new: "..(me or""), 2)
+    end
     self.__self = me.__self
     for k,v in next, me do
         if ( k == "methods" ) then
