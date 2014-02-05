@@ -49,7 +49,12 @@ namespace LUA {
         bool set(const LBase* key, const char* name, int n_) {
             bool res = false;
             if ( ! lua_isfunction(L, n_) )
-                throwError("LUCE ERROR: callback is not a function");
+                throwError(
+                    String("LUCE ERROR: from ") 
+                    + String(key->getBaseName()) 
+                    + String(": callback ") 
+                    + String(name) 
+                    + String(" is not a valid function."));
         
             int n = (n_<0) ? (lua_gettop(L)-(n_+1)) : n_;
             lua_pushlightuserdata(L, (void*)key);

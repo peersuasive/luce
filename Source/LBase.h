@@ -27,6 +27,7 @@ public:
     int readOnly(lua_State*);
     int writeOnly(lua_State*);
     
+    const String getBaseName() const;
 protected:    
     //==============================================================================
     HashMap<String, bool> registered;

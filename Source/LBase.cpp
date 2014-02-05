@@ -54,3 +54,7 @@ int LBase::readOnly(lua_State*) {
 int LBase::writeOnly(lua_State*) {
     LUA::returnNil();
 }
+
+const String LBase::getBaseName() const {
+    return myName();
+}
