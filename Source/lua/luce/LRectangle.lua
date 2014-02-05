@@ -1,4 +1,23 @@
+local luce, new = nil, nil
+local myType = "LRectangle"
 local mt = {}
+
+local function hypot(a,b)
+    math.sqrt(a*a + b*b)
+end
+
+local function limit(l, u, v)
+    return (v < l) and l
+        or ( (u < v) and upperLimit or v )
+end
+local function min(a, b)
+    return (b < a) and b or a;
+end
+
+local function max(a, b)
+    return (a < b) and b or a;
+end
+
 
 function mt:reduce(d, dy)
     local d, dy = d, dy or d
@@ -153,43 +172,210 @@ function mt:getBottom()
     return self.y + self.h
 end
 
-function getCentreX()
+function mt:getCentreX()
     return self.x + self.w / 2
 end
 
-function getCentreY()
+function mt:getCentreY()
     return self.y + self.h / 2
 end
-function getCentre()
+function mt:getCentre()
     return { self.x+w/2, self.y+h/2 }
 end
 
-function mt:dump()
-    return { self.x, self.y, self.w, self.h }
+function mt:isEmpty()
+    return ( (self.h == 0) and (self.w==0) )
 end
 
-function new(_, t)
+function mt:contains(other, y, w, h)
+    local other = (w and luce:Rectangle(other,y,w,h)) 
+            or (y and luce:Point(other,y)) 
+            or other
+    local t = other.__ltype
+    if("LRectangle"==t)then
+        return self.x <= other.x 
+            and self.y <= other.y
+            and self.x + self.w >= other.x + other.w 
+            and self.y + self.h >= other.y + other.h
+    elseif("LPoint"==t)then
+        return other.x >= self.x 
+            and other.y >= self.y 
+            and other.x < self.x + self.w 
+            and other.y < self.y + self.h
+    else
+        error("Wrong object given to contains")
+    end
+end
+function mt:intersects(other)
+    -- Rectangle or Line
+    local other = other
+    local t = other.__ltype or type(other)
+    if(t=="table" and #other==4)then
+            other = luce:Rectangle(other) end
+    local t = other.__ltype
+    if("LRectangle"==t)then
+        return self.x + self.w > other.x
+            and self.y + self.h > other.y
+            and self.x < other.x + other.w
+            and self.y < other.y + other.h
+            and self.w > 0 and h > 0
+            and other.w > 0 and other.h > 0
+
+    elseif("LLine"==t)then
+        return self:contains( other:getStart() )
+            or self:contains( other:getEnd() )
+            or other:intersects( luce:Line(self:getTopLeft()    , self:getTopRight())    )
+            or other:intersects( luce:Line(self:getTopRight()   , self:getBottomRight()) )
+            or other:intersects( luce:Line(self:getBottomRight(), self:getBottomLeft())  )
+            or other:intersects( luce:Line(self:getBottomLeft() , self:getTopLeft())     )
+    else
+        error("Wrong object given to intersects")
+    end
+end
+
+function mt:getSmallestIntegerContainer()
+    -- int
+    local x1 = math.floor( self.x )
+    local y1 = math.floor( self.y )
+    local x2 = math.ceil( self.x + self.w )
+    local y2 = math.ceil( self.y + self.h )
+    return self:new({ x1, y1, x2 - x1, y2 - y1 }, "int")
+end
+
+function mt:copyWithRounding(result)
+    if(result.__type == "int")then
+        return result:getSmallestIntegerContainer()
+    else
+        return self:new({self.x, self.y, self.w, self.h}, result.__type)
+    end
+end
+
+function mt:enlargeIfAdjacent(other)
+    if (self.x == other.x) 
+        and (self:getRight() == other:getRight())
+        and ((other:getBottom() >= self.y)
+            and (other.y <= self:getBottom()))
+    then
+        local newY = min (self.y, other.y)
+        self.h = max(self:getBottom(), other:getBottom()) - newY
+        self.y = newY
+        return true;
+    end
+
+    if (self.y == other.y) and (self:getBottom() == other:getBottom())
+         and ((other.getRight() >= pos.x) 
+            and (other.pos.x <= getRight()))
+    then
+        local newX = min(self.x, other.x)
+        w = max(self:getRight(), other:getRight()) - newX
+        self.x = newX
+        return true
+    end
+    return false
+end
+
+function mt:toType(t)
+    return self:new({ self.x, self.y, self.w, self.h }, t)
+end
+
+-- [[ STATICS ]] --
+
+local function leftTopRightBottom(self, left, top, right, bottom)
+    return self:new{left, top, right - left, bottom - top}
+end
+mt.leftTopRightBottom = leftTopRightBottom
+
+-- [[ INTERNAL ]] --
+
+local __index = {
+    leftTopRightBottom = leftTopRightBottom,
+}
+
+function mt:copy()
+    return self:new({self.x, self.y, self.w, self.h})
+end
+
+function mt:dump()
+    return { self.x, self.y, self.w, self.h, __type = self.__type }
+end
+
+function mt:toString()
+    return string.format("%s %s %s %s", self.x, self.y, self.w, self.h)
+end
+
+function mt:type()
+    return self.__type
+end
+
+new = function(me, t, __type)
+    -- TODO: Point constructor, x,y,w,h constructor, w,h constructor
     local self = {}
-    -- TODO: copy instanciation (self.x = t.x, ...)
+    if(t and not("table"==type(t)))then
+        error("LRectangle: table expected, got "..type(t), 2)
+    end
     local t = t or {}
-    self.x = t[1] or 0
-    self.y = t[2] or 0
-    self.w = t[3] or 0
-    self.h = t[4] or 0
+    self.x = t[1] or t.x or 0
+    self.y = t[2] or t.y or 0
+    self.w = t[3] or t.w or 0
+    self.h = t[4] or t.h or 0
+    self.__type = __type or t.__type or me.__type or "int"
+    self.__ltype = myType
     return setmetatable(self, {
         __index = mt,
         __call = new,
-        __self = "LRectangle",
+        __self = myType,
         __tostring = function(self)
-            return "LRectangle {x = "..self.x..", y = "..self.y..", w = "..self.w..", h = "..self.h .. "}"
+            return string.format("%s %s %s %s", self.x, self.y, self.w, self.h)
+        end,
+        __add = function(self, delta)
+            local delta = luce:Point(delta)
+            return self:new{self.x + delta.x, self.y + delta.y, self.w, self.h}
+        end,
+        __sub = function(self, delta)
+            local delta = luce:Point(delta)
+            return self:new{self.x - delta.x, self.y - delta.y, self.w, self.h}
+        end,
+        __mul = function(self, scale)
+            if("number"==type(scale))then
+            return self:new{self.x*scale, self.y*scale, self.w*scale, self.h*scale}
+                       :copyWithRounding(self)
+            else
+            return self:new{self.x*scale.x, self.y*scale.y, self.w*scale.x, self.h*scale.y}
+                       :copyWithRounding(self)
+            end
+        end,
+        __div = function(self, scale)
+            if("number"==type(scale))then
+            return self:new{self.x/scale, self.y/scale, self.w/scale, self.h/scale}
+                       :copyWithRounding(self)
+            else
+            return self:new{self.x/scale.x, self.y/scale.y, self.w/scale.x, self.h/scale.y}
+                       :copyWithRounding(self)
+            end
+
         end,
     })
 end
-
 mt.new = new
+-- TODO: check if it works as expected !!!
+setmetatable(mt, {__index=__index})
+
+local xmeta = setmetatable({}, {
+    __call = function(self,core,...)
+        local self = self or {}
+        luce = assert(core, "Missing luce core instance")
+        self = setmetatable({}, {
+            __call = new,
+            __tostring = function()return myType end,
+        })
+        return self
+    end
+})
+--[[
 local xmeta = setmetatable({}, {
     __call = new,
-    new = new
+    __index = __index,
 })
+--]]
 module(...)
 return xmeta

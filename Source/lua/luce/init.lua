@@ -30,14 +30,22 @@ local function load_luce(self, core)
     end
 
     -- pure lua modules
-    local LRectangle = require"luce.LRectangle"
-    mt.Rectangle = function(self, ...) return LRectangle(...) end
+    --local LRectangle = require"luce.LRectangle"
+    --local LRectangleList = require"luce.LRectangleList"
+    --mt.Rectangle = function(self, ...) return LRectangle(...) end
+    --mt.RectangleList = function(self, ...) return LRectangleList(...) end
 
     local xmeta = setmetatable(mt, {
         __index = mt
     })
     return xmeta
 end
+
+local LModules = {
+    "Rectangle",
+    "RectangleList",
+    "AffineTransform",
+}
 
 local xmeta = setmetatable({ 
         new = function(self, dbg)
@@ -49,7 +57,17 @@ local xmeta = setmetatable({
     __call = function(self, dbg)
         local luce = dbg and require"luce.core_d" or require"luce.core"
         if(dbg)then LDEBUG=true end
-        return(load_luce(_, luce))
+        
+        local luce_m = load_luce(_, luce)
+        -- load lua modules
+        for _,m in next, LModules do
+            local mm = require("luce.L"..m)( luce )
+            luce_m[m] = function(self,...) return mm(...) end
+        end
+
+        return luce_m
+        --return(load_luce(_, luce))
+
     end,
 })
 
