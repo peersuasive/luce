@@ -832,8 +832,10 @@ int LComponent::inputAttemptWhenModal(lua_State*){
 }
 
 void LComponent::lpaint( Graphics& g ) {
-    if (child)
-        callback("paint");
+    if (child) {
+        ScopedPointer<LGraphics> lg = new LGraphics(LUA::Get(), g);
+        callback( "paint", 0, { new LRefBase("Graphics", lg.get()) } );
+    }
 }
 int LComponent::paint(lua_State*) {
     if (child)
