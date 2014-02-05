@@ -78,7 +78,6 @@ namespace LUA {
         int returnTable(const std::list<var>& val);
         int returnTable(const Array<var>& val);
         int returnTable( const juce::StringArray& );
-        //int returnTable( const juce::RectangleList<int>& r );
         int returnTable( const juce::Range<int>& r );
         int returnTable( const juce::SparseSet<int>& r);
 
