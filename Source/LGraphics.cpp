@@ -285,7 +285,6 @@ int LGraphics::setFont ( lua_State *L ) {
 
 int LGraphics::fillRect ( lua_State* ) {
     g->fillRect(LUA::getRectangle<float>(2));
-    // TODO: fillRect( RectangleList<float> )
 }
 
 int LGraphics::setPixel ( lua_State* ) {
@@ -342,8 +341,11 @@ int LGraphics::setOpacity ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::setColour ( lua_State* ) {
-    g->setColour( Colours::findColourForName( LUA::getString(2), Colours::black ) );
+int LGraphics::setColour ( lua_State *L ) {
+    if(lua_istable(L,2))
+        g->setColour( *LUA::from_luce<LColour>(2) );
+    else
+        g->setColour( Colours::findColourForName( LUA::getString(2), Colours::black ) );
     return 0;
 }
 
@@ -393,11 +395,72 @@ int LGraphics::addTransform ( lua_State* ) {
     return 0;
 }
 
+int LGraphics::setImageResamplingQuality ( lua_State* ) {
+    g->setImageResamplingQuality ( (Graphics::ResamplingQuality)LUA::getNumber<int>(2) );
+    return 0;
+}
+
+int LGraphics::drawImageAt ( lua_State* ) {
+    Image imageToDraw = *LUA::from_luce<LImage>(2);
+    int topLeftX = LUA::getNumber<int>(2);
+    int topLeftY = LUA::getNumber<int>(2);
+    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
+    g->drawImageAt( imageToDraw, topLeftX, topLeftY, fillAlphaChannelWithCurrentBrush );
+    return 0;
+}
+
+int LGraphics::drawImage ( lua_State* ) {
+    Image imageToDraw = *LUA::from_luce<LImage>(2);
+    int destX        = LUA::getNumber<int>(2);
+    int destY        = LUA::getNumber<int>(2);
+    int destWidth    = LUA::getNumber<int>(2);
+    int destHeight   = LUA::getNumber<int>(2);
+    int sourceX      = LUA::getNumber<int>(2);
+    int sourceY      = LUA::getNumber<int>(2);
+    int sourceWidth  = LUA::getNumber<int>(2);
+    int sourceHeight = LUA::getNumber<int>(2);
+    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
+    g->drawImage( imageToDraw, destX, destY, destWidth, destHeight, sourceX, sourceY, sourceWidth, sourceHeight, fillAlphaChannelWithCurrentBrush );
+    return 0;
+}
+
+int LGraphics::drawImageTransformed ( lua_State* ) {
+    Image imageToDraw = *LUA::from_luce<LImage>(2);
+    AffineTransform transform = *LUA::from_luce<LAffineTransform>(2);
+    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
+    g->drawImageTransformed( imageToDraw, transform, fillAlphaChannelWithCurrentBrush );
+    return 0;
+}
+
+int LGraphics::setTiledImageFill ( lua_State* ) {
+    Image imageToUse = *LUA::from_luce<LImage>(2);
+    int anchorX = LUA::getNumber<int>(2);
+    int anchorY = LUA::getNumber<int>(2);
+    float opacity = LUA::getNumber<float>(2);
+    g->setTiledImageFill( imageToUse, anchorX, anchorY, opacity );
+    return 0;
+}
 
 // TODO
 // getters
+
+// setters
+int LGraphics::drawImageWithin ( lua_State* ) {
+    Image imageToDraw = *LUA::from_luce<LImage>(2);
+    int destX = LUA::getNumber<int>(2);
+    int destY = LUA::getNumber<int>(2);
+    int destWidth = LUA::getNumber<int>(2);
+    int destHeight = LUA::getNumber<int>(2);
+    //RectanglePlacement placementWithinTarget = *LUA::from_luce<LRectanglePlacement>(2); // TODO;
+    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
+    //g->drawImageWithin( imageToDraw, destX, destY, destWidth, destHeight, placementWithinTarget, fillAlphaChannelWithCurrentBrush );
+    LUA::TODO_OBJECT( "drawImageWithin" );
+    lua_settop(LUA::Get(), 1); // added by TODO
+    return 0;
+}
+
 int LGraphics::strokePath ( lua_State* ) {
-    // Path path = *LUA::from_luce<LPath>(2); // TODO;
+    // Path path = *LUA::from_luce<LPath>(2);
     // PathStrokeType strokeType = *LUA::from_luce<LPathStrokeType>(2); // TODO;
     // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
     //g->strokePath( path, strokeType, transform );
@@ -414,13 +477,17 @@ int LGraphics::setFillType ( lua_State* ) {
 }
 
 int LGraphics::fillRectList ( lua_State* ) {
-    // override
-    //g->fillRectList(*LUA::from_luce<LRectangleList>(2); // TODO);
-    LUA::TODO_OBJECT( "fillRectList, *LUA::from_luce<LRectangleList>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-    // override
-    //g->fillRectList(*LUA::from_luce<LRectangleList>(2); // TODO);
+    LUCE::NumType t = LUCE::luce_numtype(2);
+    if( LUCE::luce_isnumtype(int, t) ) {
+        RectangleList<int> rl = LUCE::luce_torectanglelist(2);
+        g->fillRectList( rl );
+    } else if(LUCE::luce_isnumtype(float, t)) {
+        RectangleList<float> rl = LUCE::luce_torectanglelist<float>(2);
+        g->fillRectList( rl );
+    } else {
+        std::cout << "ERROR: unknown type for rl: " << t << std::endl;
+    }
+    //g->fillRectList( *LUA::from_luce<LRectangleList>(2) )
 }
 
 int LGraphics::setGradientFill ( lua_State* ) {
@@ -430,76 +497,8 @@ int LGraphics::setGradientFill ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::setImageResamplingQuality ( lua_State* ) {
-    //g->setImageResamplingQuality(*LUA::from_luce<LResamplingQuality>(2); // TODO);
-    LUA::TODO_OBJECT( "setImageResamplingQuality, *LUA::from_luce<LResamplingQuality>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
 
-int LGraphics::drawImageAt ( lua_State* ) {
-    // Image imageToDraw = *LUA::from_luce<LImage>(2); // TODO;
-    int topLeftX = LUA::getNumber<int>(2);
-    int topLeftY = LUA::getNumber<int>(2);
-    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    //g->drawImageAt( imageToDraw, topLeftX, topLeftY, fillAlphaChannelWithCurrentBrush );
-    LUA::TODO_OBJECT( "drawImageAt,  imageToDraw, topLeftX, topLeftY, fillAlphaChannelWithCurrentBrush " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LGraphics::drawImage ( lua_State* ) {
-    // Image imageToDraw = *LUA::from_luce<LImage>(2); // TODO;
-    int destX        = LUA::getNumber<int>(2);
-    int destY        = LUA::getNumber<int>(2);
-    int destWidth    = LUA::getNumber<int>(2);
-    int destHeight   = LUA::getNumber<int>(2);
-    int sourceX      = LUA::getNumber<int>(2);
-    int sourceY      = LUA::getNumber<int>(2);
-    int sourceWidth  = LUA::getNumber<int>(2);
-    int sourceHeight = LUA::getNumber<int>(2);
-    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    //g->drawImage( imageToDraw, destX, destY, destWidth, destHeight, sourceX, sourceY, sourceWidth, sourceHeight, fillAlphaChannelWithCurrentBrush );
-    LUA::TODO_OBJECT( "drawImage,  imageToDraw, destX, destY, destWidth, destHeight, sourceX, sourceY, sourceWidth, sourceHeight, fillAlphaChannelWithCurrentBrush " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LGraphics::drawImageWithin ( lua_State* ) {
-    // Image imageToDraw = *LUA::from_luce<LImage>(2); // TODO;
-    int destX = LUA::getNumber<int>(2);
-    int destY = LUA::getNumber<int>(2);
-    int destWidth = LUA::getNumber<int>(2);
-    int destHeight = LUA::getNumber<int>(2);
-    // RectanglePlacement placementWithinTarget = *LUA::from_luce<LRectanglePlacement>(2); // TODO;
-    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    //g->drawImageWithin( imageToDraw, destX, destY, destWidth, destHeight, placementWithinTarget, fillAlphaChannelWithCurrentBrush );
-    LUA::TODO_OBJECT( "drawImageWithin,  imageToDraw, destX, destY, destWidth, destHeight, placementWithinTarget, fillAlphaChannelWithCurrentBrush " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LGraphics::drawImageTransformed ( lua_State* ) {
-    // Image imageToDraw = *LUA::from_luce<LImage>(2); // TODO;
-    // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    //g->drawImageTransformed( imageToDraw, transform, fillAlphaChannelWithCurrentBrush );
-    LUA::TODO_OBJECT( "drawImageTransformed,  imageToDraw, transform, fillAlphaChannelWithCurrentBrush " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LGraphics::setTiledImageFill ( lua_State* ) {
-    // Image imageToUse = *LUA::from_luce<LImage>(2); // TODO;
-    int anchorX = LUA::getNumber<int>(2);
-    int anchorY = LUA::getNumber<int>(2);
-    float opacity = LUA::getNumber<float>(2);
-    //g->setTiledImageFill( imageToUse, anchorX, anchorY, opacity );
-    LUA::TODO_OBJECT( "setTiledImageFill,  imageToUse, anchorX, anchorY, opacity " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
+// probably won't do
 int LGraphics::getInternalContext ( lua_State* ) {
     // CHECK
     // return LUA::storeAndReturnUserdata<LLowLevelGraphicsContext>( new LLowLevelGraphicsContext(LUA::Get(),
