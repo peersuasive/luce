@@ -97,8 +97,11 @@ LGraphics::~LGraphics() {
 Graphics* LGraphics::getGraphics() {
     return this->g;
 }
-LGraphics::operator juce::Graphics* () const {
+LGraphics::operator Graphics* () const {
     return this->g;
+}
+LGraphics::operator const Graphics& () const {
+    return *this->g.get();
 }
 
 void LGraphics::setGraphics(Graphics& g_) {

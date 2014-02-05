@@ -24,8 +24,8 @@ public:
 
     Graphics* getGraphics();
     void setGraphics(Graphics&);
-    operator juce::Graphics* () const;
-    
+    operator Graphics* () const;
+    operator const Graphics& () const;
 
     //==============================================================================
     int resetToDefaultState(lua_State*);
