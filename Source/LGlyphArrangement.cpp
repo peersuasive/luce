@@ -138,9 +138,10 @@ int LGlyphArrangement::draw ( lua_State *L ) {
     const Graphics& g = (const Graphics&)*LUA::from_luce<LGraphics>(2);
     if(lua_isnoneornil(L,2))
         GlyphArrangement::draw(g);
-
-    AffineTransform aff = LUCE::luce_toaffinetransform(2);
-    GlyphArrangement::draw(g, aff);
+    else {
+        AffineTransform aff = LUCE::luce_toaffinetransform(2);
+        GlyphArrangement::draw(g, aff);
+    }
     return 0;
 }
 
