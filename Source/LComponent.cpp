@@ -857,9 +857,13 @@ void LComponent::lresized() {
     if (child)
         callback("resized");
 }
-int LComponent::resized(lua_State*){
-    if (child)
-        set("resized");
+int LComponent::resized(lua_State *L) {
+    if (child) {
+        if(lua_isfunction(L,2))
+            set("resized");
+        else
+            child->resized();
+    }
     return 0;
 }
 
