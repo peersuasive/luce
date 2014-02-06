@@ -77,126 +77,119 @@ const Luna<LGraphics>::StaticType LGraphics::statics[] = {
 };
 
 LGraphics::LGraphics(lua_State *L)
-    : LBase(L, "LGraphics", true)
+    : LBase(L, "LGraphics", true),
+      Graphics(Image::null)
 {
+    // invalid, just there for luna
 }
 
 LGraphics::LGraphics(lua_State *L, juce::Graphics& class_)
-    : LBase(L, "LGraphics", true)
+    : LBase(L, "LGraphics", true),
+      Graphics(class_.getInternalContext())
 {
-    g = &class_;
 }
 
 LGraphics::~LGraphics() {
-    if(g) {
-        g.release();
-        g = nullptr;
-    }
 }
 
 Graphics* LGraphics::getGraphics() {
-    return this->g;
+    return *this;
 }
 LGraphics::operator Graphics* () const {
-    return this->g;
+    return *this;
 }
 LGraphics::operator const Graphics& () const {
-    return *this->g.get();
+    return *(*this);
 }
 
-void LGraphics::setGraphics(Graphics& g_) {
-    g = &g_;
-}
-
-// TODO: check this
 int LGraphics::ScopedSaveState(lua_State *L) {
-    Graphics::ScopedSaveState state( *g.get() );
+    Graphics::ScopedSaveState state( *this );
     lua_pushlightuserdata(L, (void*)&state);
     return 1;
 }
 
 /////// getters
 int LGraphics::isVectorDevice ( lua_State* ) {
-    return LUA::returnBoolean(g->isVectorDevice() );
+    return LUA::returnBoolean(Graphics::isVectorDevice() );
 }
 
 int LGraphics::getCurrentFont ( lua_State *L ) {
     return LUA::storeAndReturnUserdata<LFont>( new LFont(L,
-         g->getCurrentFont()
+         Graphics::getCurrentFont()
     ));
 }
 
 int LGraphics::getClipBounds ( lua_State* ) {
-    return LUA::returnTable(g->getClipBounds() );
+    return LUA::returnTable(Graphics::getClipBounds() );
 }
 
 int LGraphics::reduceClipRegion ( lua_State* ) {
     Rectangle<int> area ( LUA::getRectangle(2) );
-    return LUA::returnBoolean(g->reduceClipRegion( area ) );
+    return LUA::returnBoolean(Graphics::reduceClipRegion( area ) );
 
     // override
     // RectangleList<int> clipRegion = *LUA::from_luce<LRectangleList>(2); // TODO;
-    // return LUA::returnBoolean(g->reduceClipRegion( clipRegion ) );
+    // return LUA::returnBoolean(Graphics::reduceClipRegion( clipRegion ) );
 
     // override
     // Path path = *LUA::from_luce<LPath>(2); // TODO;
     // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    // return LUA::returnBoolean(g->reduceClipRegion( path, transform ) );
+    // return LUA::returnBoolean(Graphics::reduceClipRegion( path, transform ) );
 
     // override
     // Image image = *LUA::from_luce<LImage>(2); // TODO;
     // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    // return LUA::returnBoolean(g->reduceClipRegion( image, transform ) );
+    // return LUA::returnBoolean(Graphics::reduceClipRegion( image, transform ) );
 }
 
 int LGraphics::clipRegionIntersects ( lua_State* ) {
-    return LUA::returnBoolean(g->clipRegionIntersects( LUA::getRectangle(2) ) );
+    return LUA::returnBoolean(Graphics::clipRegionIntersects( LUA::getRectangle(2) ) );
 }
 
 int LGraphics::isClipEmpty ( lua_State* ) {
-    return LUA::returnBoolean(g->isClipEmpty() );
+    return LUA::returnBoolean(Graphics::isClipEmpty() );
 }
 
 /////// setters
 int LGraphics::resetToDefaultState ( lua_State* ) {
-    g->resetToDefaultState();
+    Graphics::resetToDefaultState();
     return 0;
 }
 
 int LGraphics::fillAll ( lua_State *L ) {
     if(lua_isnoneornil(L, 2))
-        g->fillAll();
+        Graphics::fillAll();
     else if (lua_isstring(L, 2))
-        g->fillAll( Colours::findColourForName( LUA::getString(2), Colours::black ) );
+        Graphics::fillAll( Colours::findColourForName( LUA::getString(2), Colours::black ) );
     else
-        g->fillAll( *LUA::from_luce<LColour>(2) );
+        Graphics::fillAll( *LUA::from_luce<LColour>(2) );
     return 0;
 }
 
 int LGraphics::fillEllipse ( lua_State* ) {
-     g->fillEllipse(LUA::getRectangle<float>(2));
+     Graphics::fillEllipse(LUA::getRectangle<float>(2));
     return 0;
 }
 
 int LGraphics::drawEllipse ( lua_State* ) {
     Rectangle<float> area ( LUA::getRectangle<float>(2) );
     float lineThickness = LUA::getNumber<float>(2);
-    g->drawEllipse( area, lineThickness );
+    Graphics::drawEllipse( area, lineThickness );
     return 0;
 }
 
 int LGraphics::saveState ( lua_State* ) {
-    g->saveState();
+    Graphics::saveState();
     return 0;
 }
 
 int LGraphics::excludeClipRegion ( lua_State* ) {
-    g->excludeClipRegion(LUA::getRectangle(2));
+    Graphics::excludeClipRegion(LUA::getRectangle(2));
     return 0;
 }
 
 int LGraphics::endTransparencyLayer ( lua_State* ) {
-    g->endTransparencyLayer();
+    Graphics::endTransparencyLayer();
     return 0;
 }
 
@@ -214,7 +207,7 @@ int LGraphics::fillCheckerBoard ( lua_State *L ) {
     else
         Colour colour2 = *LUA::from_luce<LColour>(2);
 
-    g->fillCheckerBoard( area, checkWidth, checkHeight, colour1, colour2 );
+    Graphics::fillCheckerBoard( area, checkWidth, checkHeight, colour1, colour2 );
     return 0;
 }
 
@@ -222,21 +215,21 @@ int LGraphics::drawHorizontalLine ( lua_State* ) {
     int y = LUA::getNumber<int>(2);
     float left = LUA::getNumber<float>(2);
     float right = LUA::getNumber<float>(2);
-    g->drawHorizontalLine( y, left, right );
+    Graphics::drawHorizontalLine( y, left, right );
     return 0;
 }
 
 int LGraphics::setOrigin ( lua_State* ) {
-    g->setOrigin( LUA::getPoint(2) );
+    Graphics::setOrigin( LUA::getPoint(2) );
 }
 
 int LGraphics::beginTransparencyLayer ( lua_State* ) {
-    g->beginTransparencyLayer(LUA::getNumber<float>());
+    Graphics::beginTransparencyLayer(LUA::getNumber<float>());
     return 0;
 }
 
 int LGraphics::restoreState ( lua_State* ) {
-    g->restoreState();
+    Graphics::restoreState();
     return 0;
 }
 
@@ -245,7 +238,7 @@ int LGraphics::drawText ( lua_State *L ) {
     Rectangle<int> area ( LUA::getRectangle<int>(2) );
     Justification justificationType = (Justification)LUA::getNumber<int>(2);
     bool useEllipsesIfTooBig = LUA::getBoolean(2);
-    g->drawText( text, area, justificationType, useEllipsesIfTooBig );
+    Graphics::drawText( text, area, justificationType, useEllipsesIfTooBig );
     return 0;
 }
 
@@ -255,14 +248,14 @@ int LGraphics::drawFittedText ( lua_State* ) {
     Justification justificationFlags = LUA::getNumber<int>(2);
     int maximumNumberOfLines = LUA::getNumber<int>(2);
     float minimumHorizontalScale = LUA::checkAndGetNumber<float>(2, 0.7f);
-    g->drawFittedText( text, area, justificationFlags, maximumNumberOfLines, minimumHorizontalScale );
+    Graphics::drawFittedText( text, area, justificationFlags, maximumNumberOfLines, minimumHorizontalScale );
     return 0;
 }
 
 int LGraphics::fillRoundedRectangle ( lua_State* ) {
     Rectangle<float> rectangle ( LUA::getRectangle<float>(2) );
     float cornerSize = LUA::getNumber<float>(2);
-    g->fillRoundedRectangle( rectangle, cornerSize );
+    Graphics::fillRoundedRectangle( rectangle, cornerSize );
     return 0;
 }
 
@@ -271,27 +264,27 @@ int LGraphics::drawMultiLineText ( lua_State* ) {
     int startX = LUA::getNumber<int>(2);
     int baselineY = LUA::getNumber<int>(2);
     int maximumLineWidth = LUA::getNumber<int>(2);
-    g->drawMultiLineText( text, startX, baselineY, maximumLineWidth );
+    Graphics::drawMultiLineText( text, startX, baselineY, maximumLineWidth );
     return 0;
 }
 
 int LGraphics::setFont ( lua_State *L ) {
     if(lua_isnumber(L,2))
-        g->setFont(LUA::getNumber<float>(2));
+        Graphics::setFont(LUA::getNumber<float>(2));
     else
-        g->setFont( *LUA::from_luce<LFont>(2) );
+        Graphics::setFont( *LUA::from_luce<LFont>(2) );
     return 0;
 }
 
 int LGraphics::fillRect ( lua_State* ) {
-    g->fillRect( LUCE::luce_torectangle<float>(2) );
+    Graphics::fillRect( LUCE::luce_torectangle<float>(2) );
     return 0;
 }
 
 int LGraphics::setPixel ( lua_State* ) {
     int x = LUA::getNumber<int>(2);
     int y = LUA::getNumber<int>(2);
-    g->setPixel( x, y );
+    Graphics::setPixel( x, y );
     return 0;
 }
 
@@ -300,7 +293,7 @@ int LGraphics::drawSingleLineText ( lua_State* ) {
     int startX = LUA::getNumber<int>(2);
     int baselineY = LUA::getNumber<int>(2);
     Justification justification = LUA::getNumber<int>(2);
-    g->drawSingleLineText( text, startX, baselineY, justification );
+    Graphics::drawSingleLineText( text, startX, baselineY, justification );
     return 0;
 }
 
@@ -308,14 +301,14 @@ int LGraphics::drawVerticalLine ( lua_State* ) {
     int x = LUA::getNumber<int>(2);
     float top = LUA::getNumber<float>(2);
     float bottom = LUA::getNumber<float>(2);
-    g->drawVerticalLine( x, top, bottom );
+    Graphics::drawVerticalLine( x, top, bottom );
     return 0;
 }
 
 int LGraphics::drawRect ( lua_State* ) {
     Rectangle<float> rectangle ( LUA::getRectangle<float>(2) );
     int lineThickness = LUA::checkAndGetNumber<int>(2, 1);
-    g->drawRect( rectangle, lineThickness );
+    Graphics::drawRect( rectangle, lineThickness );
     return 0;
 }
 
@@ -323,30 +316,30 @@ int LGraphics::drawRoundedRectangle ( lua_State* ) {
     Rectangle<float> rectangle ( LUA::getRectangle<float>(2) );
     float cornerSize = LUA::getNumber<float>(2);
     float lineThickness = LUA::getNumber<float>(2);
-    g->drawRoundedRectangle( rectangle, cornerSize, lineThickness );
+    Graphics::drawRoundedRectangle( rectangle, cornerSize, lineThickness );
     return 0;
 }
 
 int LGraphics::drawLine ( lua_State *L ) {
     Line<float> line = LUA::getLine<float>(2);
     if(lua_isnumber(L,2)) 
-        g->drawLine( line, LUA::getNumber<float>(2) );
+        Graphics::drawLine( line, LUA::getNumber<float>(2) );
     else
-        g->drawLine( line );
+        Graphics::drawLine( line );
 
     return 0;
 }
 
 int LGraphics::setOpacity ( lua_State* ) {
-    g->setOpacity(LUA::getNumber<float>());
+    Graphics::setOpacity(LUA::getNumber<float>());
     return 0;
 }
 
 int LGraphics::setColour ( lua_State *L ) {
     if(lua_istable(L,2))
-        g->setColour( *LUA::from_luce<LColour>(2) );
+        Graphics::setColour( *LUA::from_luce<LColour>(2) );
     else
-        g->setColour( Colours::findColourForName( LUA::getString(2), Colours::black ) );
+        Graphics::setColour( Colours::findColourForName( LUA::getString(2), Colours::black ) );
     return 0;
 }
 
@@ -355,7 +348,7 @@ int LGraphics::drawArrow ( lua_State* ) {
     float lineThickness = LUA::getNumber<float>(2);
     float arrowheadWidth = LUA::getNumber<float>(2);
     float arrowheadLength = LUA::getNumber<float>(2);
-    g->drawArrow( line, lineThickness, arrowheadWidth, arrowheadLength );
+    Graphics::drawArrow( line, lineThickness, arrowheadWidth, arrowheadLength );
     return 0;
 }
 
@@ -375,7 +368,7 @@ int LGraphics::drawDashedLine ( lua_State* ) {
     int numDashLengths = LUA::getNumber<int>(2);
     float lineThickness = LUA::checkAndGetNumber<float>(2, 1.0f);
     int dashIndexToStartFrom = LUA::checkAndGetNumber<int>(2, 0);
-    g->drawDashedLine( line, dashLengths, numDashLengths, lineThickness, dashIndexToStartFrom );
+    Graphics::drawDashedLine( line, dashLengths, numDashLengths, lineThickness, dashIndexToStartFrom );
 
     //LUA::TODO_OBJECT( "drawDashedLine,  line, dashLengths, numDashLengths, lineThickness, dashIndexToStartFrom " );
     //lua_settop(LUA::Get(), 1); // added by TODO
@@ -387,17 +380,17 @@ int LGraphics::fillPath ( lua_State *L ) {
     AffineTransform transform = AffineTransform::identity;
     if(! lua_isnoneornil(L,2))
         transform = LAffineTransform::fromLuce( LUA::getList<float>(2) );
-    g->fillPath( path, transform );
+    Graphics::fillPath( path, transform );
     return 0;
 }
 
 int LGraphics::addTransform ( lua_State* ) {
-    g->addTransform( LAffineTransform::fromLuce( LUA::getList<float>(2) ) );
+    Graphics::addTransform( LAffineTransform::fromLuce( LUA::getList<float>(2) ) );
     return 0;
 }
 
 int LGraphics::setImageResamplingQuality ( lua_State* ) {
-    g->setImageResamplingQuality ( (Graphics::ResamplingQuality)LUA::getNumber<int>(2) );
+    Graphics::setImageResamplingQuality ( (Graphics::ResamplingQuality)LUA::getNumber<int>(2) );
     return 0;
 }
 
@@ -406,7 +399,7 @@ int LGraphics::drawImageAt ( lua_State* ) {
     int topLeftX = LUA::getNumber<int>(2);
     int topLeftY = LUA::getNumber<int>(2);
     bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    g->drawImageAt( imageToDraw, topLeftX, topLeftY, fillAlphaChannelWithCurrentBrush );
+    Graphics::drawImageAt( imageToDraw, topLeftX, topLeftY, fillAlphaChannelWithCurrentBrush );
     return 0;
 }
 
@@ -421,7 +414,7 @@ int LGraphics::drawImage ( lua_State* ) {
     int sourceWidth  = LUA::getNumber<int>(2);
     int sourceHeight = LUA::getNumber<int>(2);
     bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    g->drawImage( imageToDraw, destX, destY, destWidth, destHeight, sourceX, sourceY, sourceWidth, sourceHeight, fillAlphaChannelWithCurrentBrush );
+    Graphics::drawImage( imageToDraw, destX, destY, destWidth, destHeight, sourceX, sourceY, sourceWidth, sourceHeight, fillAlphaChannelWithCurrentBrush );
     return 0;
 }
 
@@ -429,7 +422,7 @@ int LGraphics::drawImageTransformed ( lua_State* ) {
     Image imageToDraw = *LUA::from_luce<LImage>(2);
     AffineTransform transform = *LUA::from_luce<LAffineTransform>(2);
     bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    g->drawImageTransformed( imageToDraw, transform, fillAlphaChannelWithCurrentBrush );
+    Graphics::drawImageTransformed( imageToDraw, transform, fillAlphaChannelWithCurrentBrush );
     return 0;
 }
 
@@ -438,7 +431,7 @@ int LGraphics::setTiledImageFill ( lua_State* ) {
     int anchorX = LUA::getNumber<int>(2);
     int anchorY = LUA::getNumber<int>(2);
     float opacity = LUA::getNumber<float>(2);
-    g->setTiledImageFill( imageToUse, anchorX, anchorY, opacity );
+    Graphics::setTiledImageFill( imageToUse, anchorX, anchorY, opacity );
     return 0;
 }
 
@@ -454,7 +447,7 @@ int LGraphics::drawImageWithin ( lua_State* ) {
     int destHeight = LUA::getNumber<int>(2);
     //RectanglePlacement placementWithinTarget = *LUA::from_luce<LRectanglePlacement>(2); // TODO;
     bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    //g->drawImageWithin( imageToDraw, destX, destY, destWidth, destHeight, placementWithinTarget, fillAlphaChannelWithCurrentBrush );
+    //Graphics::drawImageWithin( imageToDraw, destX, destY, destWidth, destHeight, placementWithinTarget, fillAlphaChannelWithCurrentBrush );
     LUA::TODO_OBJECT( "drawImageWithin" );
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
@@ -464,14 +457,14 @@ int LGraphics::strokePath ( lua_State* ) {
     // Path path = *LUA::from_luce<LPath>(2);
     // PathStrokeType strokeType = *LUA::from_luce<LPathStrokeType>(2); // TODO;
     // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    //g->strokePath( path, strokeType, transform );
+    //Graphics::strokePath( path, strokeType, transform );
     LUA::TODO_OBJECT( "strokePath,  path, strokeType, transform " );
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
 }
 
 int LGraphics::setFillType ( lua_State* ) {
-    //g->setFillType(*LUA::from_luce<LFillType>(2); // TODO);
+    //Graphics::setFillType(*LUA::from_luce<LFillType>(2); // TODO);
     LUA::TODO_OBJECT( "setFillType, *LUA::from_luce<LFillType>(2); // TODO" );
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
@@ -481,18 +474,18 @@ int LGraphics::fillRectList ( lua_State* ) {
     LUCE::NumType t = LUCE::luce_numtype(2);
     if( LUCE::luce_isnumtype(int, t) ) {
         RectangleList<int> rl = LUCE::luce_torectanglelist(2);
-        g->fillRectList( rl );
+        Graphics::fillRectList( rl );
     } else if(LUCE::luce_isnumtype(float, t)) {
         RectangleList<float> rl = LUCE::luce_torectanglelist<float>(2);
-        g->fillRectList( rl );
+        Graphics::fillRectList( rl );
     } else {
         std::cout << "ERROR: unknown type for rl: " << t << std::endl;
     }
-    //g->fillRectList( *LUA::from_luce<LRectangleList>(2) )
+    //Graphics::fillRectList( *LUA::from_luce<LRectangleList>(2) )
 }
 
 int LGraphics::setGradientFill ( lua_State* ) {
-    //g->setGradientFill(*LUA::from_luce<LColourGradient>(2); // TODO);
+    //Graphics::setGradientFill(*LUA::from_luce<LColourGradient>(2); // TODO);
     LUA::TODO_OBJECT( "setGradientFill, *LUA::from_luce<LColourGradient>(2); // TODO" );
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
@@ -503,7 +496,7 @@ int LGraphics::setGradientFill ( lua_State* ) {
 int LGraphics::getInternalContext ( lua_State* ) {
     // CHECK
     // return LUA::storeAndReturnUserdata<LLowLevelGraphicsContext>( new LLowLevelGraphicsContext(LUA::Get(),
-    //     g->getInternalContext()
+    //     Graphics::getInternalContext()
     // ));
     lua_settop(LUA::Get(), 1); // added by TODO
     return LUA::TODO_OBJECT( "LowLevelGraphicsContext getInternalContext()" );

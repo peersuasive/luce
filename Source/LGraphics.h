@@ -15,7 +15,8 @@
 #define __LUCE_LGRAPHICS_H
 
 class LGraphics
-    : public LBase
+    : public LBase,
+      public Graphics
 {
 public:
     LGraphics(lua_State*);
@@ -23,7 +24,6 @@ public:
     ~LGraphics();
 
     Graphics* getGraphics();
-    void setGraphics(Graphics&);
     operator Graphics* () const;
     operator const Graphics& () const;
 
@@ -91,9 +91,6 @@ public:
     static const Luna<LGraphics>::Enum enums[];
 
 private:
-    //==============================================================================
-    ScopedPointer<Graphics> g;
-
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LGraphics)
 };
