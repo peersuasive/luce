@@ -833,8 +833,12 @@ int LComponent::inputAttemptWhenModal(lua_State*){
 
 void LComponent::lpaint( Graphics& g ) {
     if (child) {
-        ScopedPointer<LGraphics> lg = new LGraphics(LUA::Get(), g);
-        callback( "paint", 0, { new LRefBase("Graphics", lg.get()) } );
+        //ScopedPointer<LGraphics> lg = new LGraphics(LUA::Get(), &g);
+        //callback( "paint", 0, { new LRefBase("Graphics", lg.get()) } );
+        // WORKAROUND to luajit crash when using pointers -- but this eats a lot of CPU !
+        //lua_gc(LUA::Get(), LUA_GCCOLLECT, 0);
+        LGraphics lg( LUA::Get(), g );
+        callback( "paint", 0, { new LRefBase("Graphics", &lg) } );
     }
 }
 int LComponent::paint(lua_State*) {

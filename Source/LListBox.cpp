@@ -187,11 +187,12 @@ void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int heig
 */
 
 void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int height, bool rowIsSelected ) {
-    ScopedPointer<LGraphics> lg = new LGraphics(LUA::Get(), g);
+    LGraphics lg(LUA::Get(), g);
     callback("paintListBoxItem", 0, { 
             rowNumber,
-            new LRefBase("Graphics", lg.get()),
+            new LRefBase("Graphics", &lg),
             width, height, rowIsSelected } );
+
 }
 int LListBox::paintListBoxItem(lua_State*) {
     set("paintListBoxItem");
