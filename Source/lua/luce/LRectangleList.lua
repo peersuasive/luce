@@ -396,7 +396,6 @@ function mt:type(__type)
 end
 
 new = function(me, t, __type)
-    print("lr:", me, t, __type)
     local self = {}
     local t = t or {}
     self.__type = __type or t.__type or (me and me.__type) or "int"

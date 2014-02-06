@@ -89,13 +89,8 @@ namespace {
 
     template<class T>
     const juce::RectangleList<T> luce_torectanglelist(int i) {
-        std::cout << "1: " << lua_gettop(L) << std::endl;
         juce::RectangleList<T> rl;
         int res = luce_pushvalue(i);
-        std::cout << "2: " << res << ", " << lua_typename(L, lua_type(L, -1)) << std::endl;
-        std::cout << "num type :" << lua_tostring(L, -3) << std::endl;
-        std::cout << "luce type:" << lua_tostring(L,-2) << std::endl;
-        std::cout << "lua type :" << lua_typename(L, lua_type(L, -1)) << std::endl;
         if ( res ) {
             lua_pushnil(L);
             while(lua_next(L, -2)) {
@@ -106,7 +101,6 @@ namespace {
             lua_pop(L, 1);
         }
         lua_pop(L, 1); // 3 ???
-        std::cout << "END: " << lua_gettop(L) << std::endl;
         return rl;
     }
     const juce::RectangleList<int> luce_torectanglelist(int i) {
