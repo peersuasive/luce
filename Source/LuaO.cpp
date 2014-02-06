@@ -800,64 +800,10 @@ namespace LUA {
         void lock_running(int ref) {
             locked.add(ref);
         }
-        //const int call_cb(int ref, int nb_ret , const std::list<var>& args) {
-        const int call_cb(int ref, int nb_ret) {
-            if (is_running(ref)) {
-                DBG("WARNING: callback already running !");
-                return -3;
-            }
-            lock_running(ref);
-            jassert( L != nullptr );
-            if ( L == nullptr ) {
-                unlock(ref);
-                std::cout << "No lua state found !" << std::endl;
-                return -2;
-            }
-            int status = 0;
-            lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-            int func_index = lua_gettop(L);
-            if ( lua_type(L, -1) == LUA_TFUNCTION ) {
-                lua_pushcclosure(L, stacktrace, 0);
-                if ( lua_type(L, -1) == LUA_TNIL ) {
-                    std::cout << "ERROR: callback is not a closure!" << std::endl;
-                    throwError("INTERNAL ERROR: registered callback is not a closure!");
-                }
-
-                int errfunc = lua_gettop(L);
-                lua_pushvalue(L, func_index);
-
-                //if ( lua_pcall(L, nb_args, nb_ret, errfunc) != 0 ) {
-                if ( lua_pcall(L, 0, nb_ret, 0) != 0 ) {
-                    DBG("failed to execute callback.");
-                    status = -1;
-                    if ( lua_isstring(L, -1) ) {
-                        const char *err = lua_tostring(L, -1);
-                        lua_pop(L,1);
-
-                        std::cout << "ERROR:" << err << std::endl;
-                    }
-
-                }
-                else {
-                    status = 1;
-                }
-                lua_remove(L, errfunc);
-                lua_remove(L, func_index);
-            } else {
-                DBG("no cb found for ?");
-                lua_remove(L, func_index);
-            }
-            unlock(ref);
-            return status;
-        }
 
         const int call_cb( const LBase* key, const char *name, int nb_ret, const std::list<var>& args ) {
-            // lock running
-            // ...
-            
             jassert( L != nullptr );
             if ( L == nullptr ) {
-                // unlock...
                 std::cout << "No lua state found !" << std::endl;
                 return -2;
             }
@@ -951,9 +897,6 @@ namespace LUA {
             //lua_remove(L, errfunc);
             lua_remove(L, func_index);
 
-            // unlock
-            // ...
-            
             return status;
         }
 
