@@ -937,12 +937,16 @@ namespace LUA {
 
             if ( ! (status = ! lua_pcall(L, nb_args, nb_ret, 0)) ) {
                 DBG("failed to execute callback.");
+                // Get out, a failure's a failure
+                lua_error(L);
+                /*
                 status = -1;
                 if ( lua_isstring(L, -1) ) {
                     const char *err = lua_tostring(L, -1);
                     lua_pop(L,1);
                     std::cout << "ERROR:" << err << std::endl;
                 }
+                */
             }
             //lua_remove(L, errfunc);
             lua_remove(L, func_index);
