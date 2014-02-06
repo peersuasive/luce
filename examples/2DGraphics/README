@@ -1,0 +1,4 @@
+2D Graphics Demo -- this is only a subset of JUCE's 2D Rendering demo,
+mainly to demonstrate availability of JUCE's graphics features in luce.
+
+Only LineDemo and GlyphDemo at the moment, comment out/edit demo name in Demo.lua
