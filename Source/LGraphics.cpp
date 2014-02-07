@@ -321,11 +321,21 @@ int LGraphics::drawRoundedRectangle ( lua_State* ) {
 }
 
 int LGraphics::drawLine ( lua_State *L ) {
-    Line<float> line = LUA::getLine<float>(2);
-    if(lua_isnumber(L,2)) 
-        Graphics::drawLine( line, LUA::getNumber<float>(2) );
-    else
-        Graphics::drawLine( line );
+    if (lua_gettop(L) > 5)
+        Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
+                LUA::getNumber<float>(4), LUA::getNumber<float>(5), LUA::getNumber<float>(6) );
+
+    else if (lua_gettop(L) > 4)
+        Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
+                LUA::getNumber<float>(4), LUA::getNumber<float>(5) );
+
+    else {
+        Line<float> line = LUA::getLine<float>(2);
+        if(lua_isnumber(L,2)) 
+            Graphics::drawLine( line, LUA::getNumber<float>(2) );
+        else
+            Graphics::drawLine( line );
+    }
 
     return 0;
 }
