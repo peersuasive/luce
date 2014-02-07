@@ -40,7 +40,7 @@ const Luna<LRandom>::StaticType LRandom::statics[] = {
 
 LRandom::LRandom(lua_State *L)
     : LBase(L, "LRandom", true),
-      Random( /* TODO: add args */ )
+      Random()
 {
 }
 
@@ -64,9 +64,7 @@ int LRandom::setSeed ( lua_State* ) {
 
 /////// statics
 int LRandom::s_getSystemRandom ( lua_State *L ) {
-    return LUA::storeAndReturnUserdata<LRandom>( new LRandom(L,
-        Random::getSystemRandom()
-    ));
+    return LUA::returnUserdata<LRandom>( &Random::getSystemRandom() );
 }
 
 /////// getters
