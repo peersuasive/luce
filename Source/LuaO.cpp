@@ -882,7 +882,10 @@ namespace LUA {
             }
 
             if ( ! (status = ! lua_pcall(L, nb_args, nb_ret, 0)) ) {
-                DBG("failed to execute callback.");
+                const char *msg = lua_tostring(L,-1);
+                lua_pop(L,1);
+                lua_pushfstring(L, "Failed to execute callback '%s': %s", name, msg);
+                DBG(String("failed to execute callback: ") + name);
                 // Get out, a failure's a failure
                 lua_error(L);
                 /*
