@@ -481,7 +481,7 @@ int LGraphics::fillRectList ( lua_State* ) {
     } else {
         std::cout << "ERROR: unknown type for rl: " << t << std::endl;
     }
-    //Graphics::fillRectList( *LUA::from_luce<LRectangleList>(2) )
+    return 0;
 }
 
 int LGraphics::setGradientFill ( lua_State* ) {
