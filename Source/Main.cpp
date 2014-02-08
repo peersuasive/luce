@@ -227,7 +227,11 @@ static const luaL_reg luce_lib [] = {
 #ifdef DEBUG
 int luaopen_luce_core_d (lua_State *L) {
 #else
+#ifdef SQUISH
+int luaopen_core (lua_State *L) {
+#else
 int luaopen_luce_core (lua_State *L) {
+#endif
 #endif
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     initialiseJuce_GUI();
