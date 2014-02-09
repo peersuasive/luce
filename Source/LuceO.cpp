@@ -61,7 +61,7 @@ namespace {
         lua_remove(L, -4);    // original result
         lua_remove(L, top);   // copy of object -- CHECK: can't remember if getfield replaces the table
         lua_remove(L, i);     // original object
-        return luaL_getn(L,-1);
+        return lua_objlen(L, -1);
     }
 
     template<class T>

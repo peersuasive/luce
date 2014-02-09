@@ -3,12 +3,12 @@
 
 #ifdef LUA52
 //#define LUA_COMPAT_MODULE
-#define lua_objlen(L,i)     lua_rawlen(L, (i))
-
-//int luaL_getn(lua_State *L, int idx) {
-//    return luaL_len(L, idx);
-//}
-//typedef luaL_Reg luaL_reg;
+#define lua_objlen(L,i)           lua_rawlen(L, (i))
+//#define lua_strlen(L,i)           lua_rawlen(L, (i))
+//#define lua_equal(L,idx1,idx2)    lua_compare(L,(idx1),(idx2),LUA_OPEQ)
+//#define lua_lessthan(L,idx1,idx2) lua_compare(L,(idx1),(idx2),LUA_OPLT)
+//#define luaL_getn(L,i)            luaL_len(L,(i))
+typedef luaL_Reg luaL_reg;
 #endif
 
 namespace LUA {
@@ -190,7 +190,6 @@ namespace LUA {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             Array<var> res;
-            int len = luaL_getn(L, -1);
             lua_pushnil(L);
             while( lua_next(L, -2) != 0 ) {
                 switch( lua_type(L, -1) ) {
@@ -226,7 +225,6 @@ namespace LUA {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             Array<T> res;
-            int len = luaL_getn(L, -1);
             lua_pushnil(L);
             while( lua_next(L, -2) != 0 ) {
                 res.add( luaL_checknumber(L, -1) );
@@ -448,7 +446,6 @@ namespace LUA {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L,i);
             std::list<var> res;
-            int len = luaL_getn(L, -1);
             lua_pushnil(L);
             while( lua_next(L, -2) != 0 ) {
                 switch( lua_type(L, -1) ) {
