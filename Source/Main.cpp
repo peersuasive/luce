@@ -186,7 +186,7 @@ l_class(Time)
 l_class(BigInteger)
 l_class(Random)
 
-static const luaL_reg luce_lib [] = {
+static const luaL_Reg luce_lib [] = {
     d(JUCEApplication),
     d(Colour),
     d(AffineTransform),
