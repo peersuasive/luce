@@ -18,7 +18,7 @@ base component
 
 --[[ REQUIREMENTS ]]------------------------------------------------------------
 local luce = require"luce"()
-local className = "LLineDemo"
+local className = "LLinesDemo"
 
 local function new(self, name)
     -- init
@@ -29,13 +29,12 @@ local function new(self, name)
     local comp = require"GraphicsDemoBase"(self.name)
  
     local offset = comp.SlowerBouncingNumber()
-    local positions = { comp.SlowerBouncingNumber(), comp.SlowerBouncingNumber(), 
-        comp.SlowerBouncingNumber(), comp.SlowerBouncingNumber(), comp.SlowerBouncingNumber(), 
-        comp.SlowerBouncingNumber(), comp.SlowerBouncingNumber(), comp.SlowerBouncingNumber() }
+    local positions = { nil, nil, nil, nil, nil, nil, nil, nil }
+    for i=1, 8 do positions[i] = comp.SlowerBouncingNumber() end
 
     local function drawDemo(self, g)
         do
-            local verticalLines = luce:RectangleList(_, "float")
+            local verticalLines = luce:RectangleList()
             local pos = offset:getValue()
 
             for x=1, comp:getWidth() do
@@ -44,12 +43,12 @@ local function new(self, name)
                 verticalLines:addWithoutMerging( luce:Rectangle{ x, y - length * 0.5, 1.0, length} )
             end
 
-            g:setColour( luce.Colour(luce.Colours.blue):withAlpha( comp:getAlpha() ) )
+            g:setColour( luce.Colour(luce.Colours.blue):withAlpha( self.getAlpha() ) )
             g:fillRectList (verticalLines)
         end
 
         do
-            local horizontalLines = luce:RectangleList(_, "float")
+            local horizontalLines = luce:RectangleList()
             local pos = offset:getValue();
 
             for y = 1, comp:getHeight() do
@@ -67,15 +66,15 @@ local function new(self, name)
         local w = comp:getWidth()
         local h = comp:getHeight()
 
-        g:drawLine (positions[1]:getValue() * w,
+        g:drawLine ({positions[1]:getValue() * w,
                     positions[2]:getValue() * h,
                     positions[3]:getValue() * w,
-                    positions[4]:getValue() * h)
+                    positions[4]:getValue() * h})
 
-        g:drawLine (positions[5]:getValue() * w,
+        g:drawLine ({positions[5]:getValue() * w,
                     positions[6]:getValue() * h,
                     positions[7]:getValue() * w,
-                    positions[8]:getValue() * h)
+                    positions[8]:getValue() * h})
     end
     self.drawDemo = drawDemo
 
@@ -96,5 +95,5 @@ local function new(self, name)
     })
 end
 
-module(...)
+--module(...)
 return new(...)

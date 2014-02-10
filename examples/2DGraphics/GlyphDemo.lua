@@ -54,5 +54,5 @@ local function new(self)
     })
 end
 
-module(...)
+--module(...)
 return new(...)

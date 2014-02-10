@@ -85,5 +85,5 @@ local function new(demoComp)
     })
 end
 
-module(...)
+--module(...)
 return new

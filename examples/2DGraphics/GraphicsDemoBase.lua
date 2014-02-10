@@ -259,5 +259,5 @@ local xmeta = setmetatable({},{
     __tostring = function()return className end,
 })
 
-module(...)
+--module(...)
 return xmeta

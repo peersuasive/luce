@@ -1,24 +1,75 @@
-#!/usr/bin/env psm
-local debug
-if arg and arg[1] and arg[1]:match("^[Dd]") then
-    debug = true
+#!/usr/bin/env lua
+
+local args = {...}
+
+local demos = {
+    GlyphDemo = "GlyphDemo",
+    LinesDemo  = "LinesDemo"
+}
+local animations = {
+    rotation = true,
+    position = true,
+    shear    = true,
+    size     = true,
+}
+local demo = "GlyphDemo"
+local usage = function()
+    print("Usage: Demo.lua [options] [demo]")
+    print(" demo: one of GlypDemo, LinesDemo (default: GlyphDemo)")
+    print("options:")
+    print(" -d <animation> [-d ...]    disable selected animation")
+    print("                can be one of rotation, position, shear, size or all (default: all enabled)")  
+    print()
 end
-local luce = require"luce"(debug)
+if(#args>0)then
+    for i,o in next, args do
+    if("-h"==o) or ("--help"==o)then
+        usage()
+        os.exit()
+    elseif(o:match("^%-"))then
+        if("-d"==o)then
+            local a = args[i+1]
+            if("all"==a)then
+                animations.rotation = false
+                animations.position = false
+                animations.shear    = false
+                animations.size     = false
+            elseif( animations[a] ) then
+                animations[a] = false
+            else 
+                print(string.format("unknown animation: %s, ignoring", a))
+            end
+            args[i+1] = ""
+        else
+            print(string.format("unknown option: %s\n", o))
+            usage()
+            os.exit(1)
+        end
+    else
+        if not(""==o)then
+        if not(demos[o])then
+            print(string.format("Unknow demo '%s', using default (%s)", o, demo))
+        end
+        end
+        demo = demos[o] or "GlyphDemo"
+    end
+    end
+end
+
+local luce = require"luce"()
 
 local mainWindow = luce:JUCEApplication()
 local dw = luce:DocumentWindow("Document Window")
 local mc = luce:MainComponent("Main Component")
 mc:setSize{1,1}
 
-local demo = "GlyphDemo"
-local demo = "LineDemo"
 
 local demoHolder = require"DemoHolder"(demo)
 
-demoHolder.animations.animateRotation = true
-demoHolder.animations.animatePosition = true
-demoHolder.animations.animateShear    = true
-demoHolder.animations.animateSize     = true
+demoHolder.animations.animateRotation = animations.rotation
+demoHolder.animations.animatePosition = animations.position
+demoHolder.animations.animateShear    = animations.shear
+demoHolder.animations.animateSize     = animations.size
 
 mc:resized(function()
     demoHolder:setBounds( luce:Rectangle(mc:getLocalBounds()) )
