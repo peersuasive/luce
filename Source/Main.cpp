@@ -224,14 +224,17 @@ static const luaL_Reg luce_lib [] = {
     {NULL, NULL}
 };
 
+void register_enums(lua_State *L) {
+    dc(NotificationType, L);
+    dc(JustificationType, L);
+    dc(Colours, L);
+    dc(FocusChangeType, L);
+}
+
 #ifdef DEBUG
 int luaopen_luce_core_d (lua_State *L) {
 #else
-#ifdef SQUISH
-int luaopen_core (lua_State *L) {
-#else
 int luaopen_luce_core (lua_State *L) {
-#endif
 #endif
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     initialiseJuce_GUI();
@@ -245,12 +248,28 @@ int luaopen_luce_core (lua_State *L) {
         lua_pushcfunction(L, luce_lib[f].func);
         lua_settable(L, i);
     }
-    dc(NotificationType, L);
-    dc(JustificationType, L);
-    dc(Colours, L);
-    dc(FocusChangeType, L);
-
+    register_enums(L);
     return 1;
+}
+
+static const luaL_Reg lucecore_lib [] = {
+    {"core", luaopen_luce_core},
+    {NULL, NULL}
+};
+
+int luaopen_core(lua_State *L) {
+    DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
+    initialiseJuce_GUI();
+    juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+ 
+#if LUA_VERSION_NUM > 501
+    luaL_requiref(L, "luce.core", luaopen_luce_core, 1);
+#else
+    luaL_register(L, "luce.core", luce_lib);
+    register_enums(L);
+#endif
+
+    return 0;
 }
 
 #ifdef __cplusplus
