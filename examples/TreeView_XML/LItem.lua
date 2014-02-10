@@ -45,5 +45,4 @@ local xmeta = setmetatable( {}, {
     end,
 })
 
-module(...)
 return xmeta

@@ -21,7 +21,7 @@ function memoize(s)
 end
 
 local debug
-if args and args[1]:match("^[Dd]") then
+if args and args[1] and args[1]:match("^[Dd]") then
     debug = true
     table.remove(args, 1)
 end
@@ -253,9 +253,9 @@ mainWindow:initialise(function(...)
 end)
 
 --- callback used when quit is asked
-local keep_going = true
+local stop_now = false
 mainWindow:systemRequestedQuit(function(...)
-    keep_going = false
+    stop_now = true
     mainWindow:shutdown()
     mainWindow:quit()
 end)
@@ -264,7 +264,7 @@ end)
 --luce:start( mainWindow )
 ---[[
 luce:start_manual( mainWindow, function(...)
-    return keep_going
+    return stop_now
 end )
 --]]
 
