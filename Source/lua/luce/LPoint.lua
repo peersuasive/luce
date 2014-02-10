@@ -175,5 +175,5 @@ local xmeta = setmetatable({}, {
     __call = new,
     new = new
 })
-module(...)
+--module(...)
 return xmeta

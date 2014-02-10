@@ -280,5 +280,5 @@ local xmeta = setmetatable({}, {
     end
 })
 
-module(...)
+--module(...)
 return xmeta
