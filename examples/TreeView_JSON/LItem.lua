@@ -11,7 +11,7 @@ local function new(self, id, val, istop, dblClick, changeOpenness)
     local field = luce:Label(id or "<root>")
     field.text = (id or "<root>") .. ( val and " "..val or "")
     field:setMinimumHorizontalScale( 1.0 );
-    field:setJustificationType( field.JustificationType.centredLeft );
+    field:setJustificationType( luce.JustificationType.centredLeft );
     comp:addAndMakeVisible( field )
     comp:addMouseListener(true)
     comp:resized(function(...)
@@ -45,5 +45,4 @@ local xmeta = setmetatable( {}, {
     end,
 })
 
-module(...)
 return xmeta
