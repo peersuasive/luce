@@ -235,16 +235,28 @@ int LGraphics::restoreState ( lua_State* ) {
 
 int LGraphics::drawText ( lua_State *L ) {
     String text = LUA::getString(2);
-    Rectangle<int> area ( LUA::getRectangle<int>(2) );
+    Rectangle<int> area;
+    if(!lua_istable(L, 2))
+        area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
+                LUA::getNumber<int>(4), LUA::getNumber<int>(5) };
+    else
+        area = LUCE::luce_torectangle(2);
+
     Justification justificationType = (Justification)LUA::getNumber<int>(2);
     bool useEllipsesIfTooBig = LUA::getBoolean(2);
     Graphics::drawText( text, area, justificationType, useEllipsesIfTooBig );
     return 0;
 }
 
-int LGraphics::drawFittedText ( lua_State* ) {
+int LGraphics::drawFittedText ( lua_State *L ) {
     String text = LUA::getString(2);
-    Rectangle<int> area ( LUA::getRectangle<int>(2) );
+    Rectangle<int> area;
+    if(!lua_istable(L, 2))
+        area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
+                LUA::getNumber<int>(4), LUA::getNumber<int>(5) };
+    else
+        area = LUCE::luce_torectangle(2);
+
     Justification justificationFlags = LUA::getNumber<int>(2);
     int maximumNumberOfLines = LUA::getNumber<int>(2);
     float minimumHorizontalScale = LUA::checkAndGetNumber<float>(2, 0.7f);
@@ -252,10 +264,16 @@ int LGraphics::drawFittedText ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::fillRoundedRectangle ( lua_State* ) {
-    Rectangle<float> rectangle ( LUA::getRectangle<float>(2) );
-    float cornerSize = LUA::getNumber<float>(2);
-    Graphics::fillRoundedRectangle( rectangle, cornerSize );
+int LGraphics::fillRoundedRectangle ( lua_State *L ) {
+    Rectangle<float> area;
+    if(!lua_istable(L, 2))
+        area = { LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
+                LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) };
+    else
+        area = LUCE::luce_torectangle<float>(2);
+
+    float cornerSize = LUCE::luce_tonumber<float>(2);
+    Graphics::fillRoundedRectangle( area, cornerSize );
     return 0;
 }
 
@@ -276,8 +294,27 @@ int LGraphics::setFont ( lua_State *L ) {
     return 0;
 }
 
-int LGraphics::fillRect ( lua_State* ) {
-    Graphics::fillRect( LUCE::luce_torectangle<float>(2) );
+int LGraphics::fillRect ( lua_State *L ) {
+    if( LUCE::luce_isoftype(LRectangle, 2) || lua_istable(L, 2) ) {
+        if( LUCE::luce_isofnumtype(int, 2) )
+            Graphics::fillRect( LUCE::luce_torectangle(2) );
+        else
+            Graphics::fillRect( LUCE::luce_torectangle<float>(2) );
+
+        return 0;
+    }
+
+    if( LUCE::luce_isoftype(LNumber, 2) ||lua_isnumber(L, 2) ) {
+        if( LUCE::luce_isofnumtype(int, 2) )
+            Graphics::fillRect( LUCE::luce_tonumber(2), LUCE::luce_tonumber(3),
+                                    LUCE::luce_tonumber(4), LUCE::luce_tonumber(5) );
+        else
+            Graphics::fillRect( LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
+                                    LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) );
+        return 0;
+    }
+    lua_pushfstring(L, "Graphics::fillRect: wrong or missing parameters");
+    lua_error(L);
     return 0;
 }
 
