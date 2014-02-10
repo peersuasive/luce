@@ -92,6 +92,7 @@ void LButton::lbuttonClicked(Button*) {
 int LButton::buttonClicked(lua_State*) {
     if(child)
         set("buttonClicked");
+    return 0;
 }
 
 /////// getters/setters

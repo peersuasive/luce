@@ -25,7 +25,7 @@ public:
 
     Graphics* getGraphics();
     operator Graphics* () const;
-    operator const Graphics& () const;
+    //operator const Graphics& () const;
 
     //==============================================================================
     int resetToDefaultState(lua_State*);

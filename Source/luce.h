@@ -13,11 +13,10 @@
 #define LUA_COMPAT_MODULE
 #endif
 
+#include <lua.hpp>
 namespace luce {
 
 #include "LSelfKill.h"
-
-#include <lua.hpp>
 #include "LBase.h"
 #include "LuaO.h"
 #include "LuceO.h"

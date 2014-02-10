@@ -66,6 +66,7 @@ int LSourceDetails::getDescription(lua_State*) {
 }
 int LSourceDetails::setDescription(lua_State*) {
     description = LUA::getString();
+    return 0;
 }
 
 int LSourceDetails::getSourceComponent(lua_State*) {
@@ -73,6 +74,7 @@ int LSourceDetails::getSourceComponent(lua_State*) {
 }
 int LSourceDetails::setSourceComponent(lua_State*) {
     sourceComponent = LUA::from_luce<LComponent, Component>(2);
+    return 0;
 }
 
 int LSourceDetails::getLocalPosition(lua_State*) {
@@ -80,4 +82,5 @@ int LSourceDetails::getLocalPosition(lua_State*) {
 }
 int LSourceDetails::setLocalPosition(lua_State*) {
     localPosition = LUA::getPoint(2);
+    return 0;
 }

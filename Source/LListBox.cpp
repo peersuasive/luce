@@ -121,6 +121,7 @@ bool LListBox::isInterestedInDragSource (const DragAndDropTarget::SourceDetails&
 }
 int LListBox::isInterestedInDragSource(lua_State*) {
     set("isInterestedInDragSource");
+    return 0;
 }
 
 void LListBox::itemDropped (const DragAndDropTarget::SourceDetails& sd) {
@@ -131,6 +132,7 @@ void LListBox::itemDropped (const DragAndDropTarget::SourceDetails& sd) {
 }
 int LListBox::itemDropped(lua_State*) {
     set("itemDropped");
+    return 0;
 }
 
 void LListBox::itemDragEnter(const DragAndDropTarget::SourceDetails& sd) {
@@ -143,6 +145,7 @@ void LListBox::itemDragEnter(const DragAndDropTarget::SourceDetails& sd) {
 }
 int LListBox::itemDragEnter(lua_State*) {
     set("itemDragEnter");
+    return 0;
 }
 
 void LListBox::itemDragExit(const DragAndDropTarget::SourceDetails& sd) {
@@ -155,6 +158,7 @@ void LListBox::itemDragExit(const DragAndDropTarget::SourceDetails& sd) {
 }
 int LListBox::itemDragExit(lua_State*) {
     set("itemDragExit");
+    return 0;
 }
 
 int LListBox::startDragAndDrop ( lua_State* ) {
@@ -196,6 +200,7 @@ void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int heig
 }
 int LListBox::paintListBoxItem(lua_State*) {
     set("paintListBoxItem");
+    return 0;
 }
 
 int LListBox::getNumRows() {
@@ -204,6 +209,7 @@ int LListBox::getNumRows() {
 }
 int LListBox::getNumRows(lua_State*) {
     set("getNumRows");
+    return 0;
 }
 
 void LListBox::paint(Graphics& g) {
@@ -219,6 +225,7 @@ void LListBox::listBoxItemClicked( int row, const MouseEvent& e ) {
 }
 int LListBox::listBoxItemClicked(lua_State*) {
     set("listBoxItemClicked");
+    return 0;
 }
 
 void LListBox::listWasScrolled() {
@@ -227,6 +234,7 @@ void LListBox::listWasScrolled() {
 }
 int LListBox::listWasScrolled(lua_State*) {
     set("listWasScrolled");
+    return 0;
 }
 
 void LListBox::selectedRowsChanged( int lastRowSelected ) {
@@ -235,6 +243,7 @@ void LListBox::selectedRowsChanged( int lastRowSelected ) {
 }
 int LListBox::selectedRowsChanged(lua_State*) {
     set("selectedRowsChanged");
+    return 0;
 }
 
 void LListBox::deleteKeyPressed( int lastRowSelected ) {
@@ -243,6 +252,7 @@ void LListBox::deleteKeyPressed( int lastRowSelected ) {
 }
 int LListBox::deleteKeyPressed(lua_State*) {
     set("deleteKeyPressed");
+    return 0;
 }
 
 void LListBox::returnKeyPressed( int lastRowSelected ) {
@@ -251,6 +261,7 @@ void LListBox::returnKeyPressed( int lastRowSelected ) {
 }
 int LListBox::returnKeyPressed(lua_State*) {
     set("returnKeyPressed");
+    return 0;
 }
 
 void LListBox::backgroundClicked() {
@@ -259,6 +270,7 @@ void LListBox::backgroundClicked() {
 }
 int LListBox::backgroundClicked(lua_State*) {
     set("backgroundClicked");
+    return 0;
 }
 
 void LListBox::listBoxItemDoubleClicked( int row, const MouseEvent& e ) {
@@ -267,18 +279,24 @@ void LListBox::listBoxItemDoubleClicked( int row, const MouseEvent& e ) {
 }
 int LListBox::listBoxItemDoubleClicked(lua_State*) {
     set("listBoxItemDoubleClicked");
+    return 0;
 }
 
 Component* LListBox::refreshComponentForRow (int rowNumber, bool isRowSelected, Component* existingComponentToUpdate) {
     if(hasCallback("refreshComponentForRow ")) {
-        callback("refreshComponentForRow", 0, 
-                { rowNumber, isRowSelected, new LRefBase("Component", existingComponentToUpdate) });
+        if ( callback("refreshComponentForRow", 1, 
+                { rowNumber, isRowSelected, new LRefBase("Component", existingComponentToUpdate) }) ) 
+        {
+            return LUA::from_luce<Component>(2);
+        } 
+        else return nullptr;
     }
     else
         return nullptr;
 }
 int LListBox::refreshComponentForRow (lua_State*) {
     set("refreshComponentForRow");
+    return 0;
 }
 
 // TODO: implement tables in args
@@ -292,6 +310,7 @@ var LListBox::getDragSourceDescription (const SparseSet<int>& currentlySelectedR
 }
 int LListBox::getDragSourceDescription (lua_State*) {
     set("getDragSourceDescription");
+    return 0;
 }
 
 String LListBox::getTooltipForRow (int row) {
@@ -303,6 +322,7 @@ String LListBox::getTooltipForRow (int row) {
 }
 int LListBox::getTooltipForRow (lua_State*) {
     set("getTooltipForRow");
+    return 0;
 }
 
 // TODO: MouseCursor
@@ -313,6 +333,8 @@ MouseCursor LListBox::getMouseCursorForRow (int row) {
 }
 int LListBox::getMouseCursorForRow (lua_State*) {
     //set("getMouseCursorForRow");
+
+    return 0;
 }
 
 /////// getters/setters
@@ -434,6 +456,7 @@ int LListBox::selectRow ( lua_State* ) {
 
 int LListBox::setHeaderComponent ( lua_State* ) {
     ListBox::setHeaderComponent( LUA::from_luce<LComponent, Component>(2) );
+    return 0;
 }
 
 int LListBox::selectRangeOfRows ( lua_State* ) {

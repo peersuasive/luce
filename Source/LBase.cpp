@@ -49,10 +49,11 @@ bool LBase::hasCallback( const String& k ) const {
 
 int LBase::readOnly(lua_State*) {
     LUA::throwError("Attempted to set a read-only variable");
+    return 0;
 }
 
 int LBase::writeOnly(lua_State*) {
-    LUA::returnNil();
+    return LUA::returnNil();
 }
 
 const String LBase::getBaseName() const {

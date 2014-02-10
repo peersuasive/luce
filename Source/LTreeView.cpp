@@ -188,6 +188,7 @@ bool LTreeView::isInterestedInDragSource (const SourceDetails&) {
 }
 int LTreeView::isInterestedInDragSource ( lua_State* ) {
     set("isInterestedInDragSource");
+    return 0;
 }
 
 void LTreeView::itemDragEnter (const SourceDetails& sd) {
@@ -200,6 +201,7 @@ void LTreeView::itemDragEnter (const SourceDetails& sd) {
 }
 int LTreeView::itemDragEnter ( lua_State* ) {
     set("itemDragEnter");
+    return 0;
 }
 
 void LTreeView::itemDragMove (const SourceDetails& sd) {
@@ -212,6 +214,7 @@ void LTreeView::itemDragMove (const SourceDetails& sd) {
 }
 int LTreeView::itemDragMove ( lua_State* ) {
     set("itemDragMove");
+    return 0;
 }
 
 void LTreeView::itemDragExit (const SourceDetails& sd) {
@@ -219,11 +222,11 @@ void LTreeView::itemDragExit (const SourceDetails& sd) {
         ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
         callback("itemDragExit", 0, 
                 { new LRefBase( "SourceDetails", lsd ) });
-                //{ new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
     }
 }
 int LTreeView::itemDragExit ( lua_State* ) {
     set("itemDragExit");
+    return 0;
 }
 
 void LTreeView::itemDropped (const SourceDetails& sd) {
@@ -231,11 +234,11 @@ void LTreeView::itemDropped (const SourceDetails& sd) {
         ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
         callback("itemDropped", 0, 
                 { new LRefBase( "SourceDetails", lsd ) });
-                //{ new LRefBase( "SourceDetails", new LSourceDetails(LUA::Get(), sd ) ) } );
     }
 }
 int LTreeView::itemDropped ( lua_State* ) {
     set("itemDropped");
+    return 0;
 }
 
 
@@ -341,6 +344,7 @@ int LTreeView::setOpenCloseButtonsVisible ( lua_State* ) {
 
 int LTreeView::scrollToKeepItemVisible ( lua_State* ) {
     TreeView::scrollToKeepItemVisible( LUA::toUserdata<LTreeViewItem>(2) );
+    return 0;
 }
 
 // TODO

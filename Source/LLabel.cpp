@@ -324,8 +324,10 @@ TextEditor* LLabel::createEditorComponent() {
         return Label::createEditorComponent();
 }
 int LLabel::createEditorComponent ( lua_State *L ) {
-    if(lua_isfunction(L,2))
+    if(lua_isfunction(L,2)) {
         set("createEditorComponent");
+        return 0;
+    }
     else
         return LUA::returnUserdata<LTextEditor, TextEditor>( Label::createEditorComponent() );
 }

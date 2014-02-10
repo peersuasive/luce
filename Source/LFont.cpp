@@ -139,6 +139,7 @@ int LFont::lnew(lua_State *L) {
     // TODO: copy constructor, Typeface...
     LUA::TODO_OBJECT( "Font(&Font), Font(Typeface::Ptr)" );
     lua_settop(LUA::Get(), 1);
+    return LUA::returnNil();
 }
 
 LFont::~LFont() {}

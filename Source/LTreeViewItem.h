@@ -120,6 +120,7 @@ private:
         }
         int compareElements(lua_State*) {
             set("compareElements");
+            return 0;
         }
     };
 

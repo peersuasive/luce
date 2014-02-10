@@ -497,7 +497,7 @@ namespace LUA {
             return res;
         }
 
-        template<class T, class U = T>
+        template<class T, class U>
         U* from_luce(int i) {
             // TODO: use check, meaning -- refactor luna5 first
             /*
@@ -519,7 +519,7 @@ namespace LUA {
             //return *obj;
         }
 
-        template<class T, class U = T>
+        template<class T, class U>
         int returnUserdata(const U* udata) {
             if ( udata ) {
                 const T *ldata = static_cast<const T*>( udata );
@@ -717,7 +717,11 @@ namespace LUA {
         }
 
         int returnTable( const juce::SparseSet<int>& r ) {
-            return returnTable( r.getTotalRange() );
+            std::list<var> l;
+            for (int i=0; i<r.size(); ++i)
+                l.push_back(r[i]);
+            return returnTable(l);
+            //return returnTable( r.getTotalRange() );
         }
 
         template<class T>

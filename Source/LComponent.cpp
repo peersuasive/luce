@@ -534,6 +534,7 @@ int LComponent::as( lua_State *L ) {
         else
             return LUA::returnNil();
     }
+    return LUA::returnNil();
 }
 
 int LComponent::findParentComponentOfClass ( lua_State* ) {

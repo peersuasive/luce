@@ -98,9 +98,9 @@ Graphics* LGraphics::getGraphics() {
 LGraphics::operator Graphics* () const {
     return *this;
 }
-LGraphics::operator const Graphics& () const {
-    return *(*this);
-}
+//LGraphics::operator const Graphics& () const {
+//    return *(*this);
+//}
 
 int LGraphics::ScopedSaveState(lua_State *L) {
     Graphics::ScopedSaveState state( *this );
@@ -221,6 +221,7 @@ int LGraphics::drawHorizontalLine ( lua_State* ) {
 
 int LGraphics::setOrigin ( lua_State* ) {
     Graphics::setOrigin( LUA::getPoint(2) );
+    return 0;
 }
 
 int LGraphics::beginTransparencyLayer ( lua_State* ) {

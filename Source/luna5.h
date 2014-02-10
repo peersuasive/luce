@@ -524,6 +524,7 @@ public:
 
         return 0;
         */
+        return 0;
     }
 
     static int gc_obj_(lua_State * L) {

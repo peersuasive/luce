@@ -227,9 +227,12 @@ int LTreeViewItem::itemDoubleClicked(lua_State* L) {
 }
 
 var LTreeViewItem::getDragSourceDescription() {
-    if(hasCallback("getDragSourceDescription"))
+    if(hasCallback("getDragSourceDescription")) {
         if( callback("getDragSourceDescription", 1) )
             return var( LUA::getString() );
+        else
+            return LUA::returnNil();
+    }
     else
         return TreeViewItem::getDragSourceDescription();
 }
@@ -249,8 +252,10 @@ bool LTreeViewItem::mightContainSubItems() {
         return false;
 }
 int LTreeViewItem::mightContainSubItems ( lua_State* L ) {
-    if ( lua_type(L, 2) == LUA_TFUNCTION )
-        set("mightContainSubItems");
+    if ( lua_type(L, 2) == LUA_TFUNCTION ) {
+        set("mightContainSubItems"); 
+        return 0;
+    }
     else
         return LUA::returnBoolean( mightContainSubItems() );
 }
@@ -262,8 +267,10 @@ String LTreeViewItem::getUniqueName() const {
         return String::empty;
 }
 int LTreeViewItem::getUniqueName ( lua_State* L ) {
-    if ( lua_type(L, 2) == LUA_TFUNCTION )
+    if ( lua_type(L, 2) == LUA_TFUNCTION ) {
         set("getUniqueName");
+        return 0;
+    }
     else
         return LUA::returnString( getUniqueName() );
 }
@@ -292,6 +299,7 @@ bool LTreeViewItem::isInterestedInDragSource (const DragAndDropTarget::SourceDet
 }
 int LTreeViewItem::isInterestedInDragSource ( lua_State* ) {
     set("isInterestedInDragSource");
+    return 0;
 }
 
 /// end of callbacks
@@ -333,8 +341,10 @@ bool LTreeViewItem::canBeSelected() const {
     return true;
 }
 int LTreeViewItem::canBeSelected (lua_State* L) {
-    if(lua_isfunction(L,2))
+    if(lua_isfunction(L,2)) {
         set("canBeSelected");
+        return 0;
+    }
     else
         return this->canBeSelected();
 }
@@ -403,6 +413,7 @@ int LTreeViewItem::addSubItem ( lua_State* ) {
 // set a comparator callback
 int LTreeViewItem::compareElements(lua_State* L) {
     comparator.compareElements(L);
+    return 0;
 }
 // NOTE: could even set a full callback here, instead of using comparator
 int LTreeViewItem::addSubItemSorted ( lua_State* ) {

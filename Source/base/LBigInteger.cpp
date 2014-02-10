@@ -168,6 +168,7 @@ int LBigInteger::compare ( lua_State* ) {
 /////// setters
 int LBigInteger::loadFromMemoryBlock ( lua_State* ) {
     BigInteger::loadFromMemoryBlock( MemoryBlock().fromBase64Encoding( StringRef( LUA::getString(2) ) ) );
+    return 0;
 }
 
 int LBigInteger::exponentModulo ( lua_State* ) {
