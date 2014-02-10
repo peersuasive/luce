@@ -23,6 +23,11 @@ namespace {
         if ( !L || L == nullptr ) L = L_;
     }
 
+    void throw_error(const char *msg) {
+        //lua_pushstring(L, msg);
+        lua_error(L);
+    }
+
     const char* luce_typename(int i) {
         if (!lua_istable(L, i)) return NULL;
         lua_getfield(L, i, "__ltype");
@@ -40,10 +45,9 @@ namespace {
     int luce_pushvalue(int i = -1) {
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
         const char *ltype = luce_typename(i);
-        if(! ltype) {
-            lua_pushfstring(L, "Expected LObject, got %s", lua_typename(L,lua_type(L,-1)));
-            lua_error(L);
-        }
+        if(! ltype)
+            throw_error(lua_pushfstring(L, "Expected LObject, got %s", lua_typename(L,lua_type(L,-1))));
+        
         const char *numtype = luce_numtype(i);
         lua_pushvalue(L,i);
         int top = lua_gettop(L);
@@ -51,10 +55,9 @@ namespace {
         lua_pushvalue(L, i); // self
         if ( lua_pcall(L, 1, 1, 0) != 0 ) // push self as the only argument, expects one result
             lua_error(L);
-        if(lua_isnoneornil(L,-1)) {
-            lua_pushfstring(L, "Dumped result error: expected something, got nil");
-            lua_error(L);
-        }
+        if(lua_isnoneornil(L,-1))
+            throw_error(lua_pushfstring(L, "Dumped result error: expected something, got nil"));
+        
         lua_pushstring(L, numtype);
         lua_pushstring(L, ltype);
         lua_pushvalue(L, -3); // result
@@ -64,9 +67,59 @@ namespace {
         return lua_objlen(L, -1);
     }
 
+    int luce_pushnumber(int i = -1) {
+        if(!lua_isnumber(L,i))
+            return 0;
+        lua_pushstring(L, "number");
+        lua_pushstring(L, "int");
+        lua_pushvalue(L, i);
+        lua_remove(L, i);
+        return 1;
+    }
+    template<class T>
+    const T luce_tonumber(int i) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
+        int res;
+        if(!luce_typename(i))
+            res = luce_pushnumber(i);
+        else
+            res = luce_pushvalue(i);
+        if(res) {
+            int ind = lua_gettop(L);
+            lua_rawgeti(L, ind, 1);
+            T n = luaL_checknumber(L, -1);
+            lua_pop(L, 3); // ltype + type + num*4
+            return n;
+        }
+        else
+            throw_error(lua_pushfstring(L, "Luce Error: expected Number, got %s with size %d", 
+                        lua_typename(L,lua_type(L,-1)), lua_objlen(L, -1)));
+    
+        lua_pop(L,3);
+        return 0;
+    }
+    const int luce_tonumber(int i) {
+        return luce_tonumber<int>(i);
+    }
+
+    int luce_pushtable(int i = -1) {
+        if(!lua_istable(L,i))
+            return 0;
+        int res = lua_objlen(L, i);
+        lua_pushstring(L, "table");
+        lua_pushstring(L, "int");
+        lua_pushvalue(L, i);
+        lua_remove(L, i);
+        return res;
+    }
     template<class T>
     const juce::Rectangle<T> luce_torectangle(int i) {
-        int res = luce_pushvalue(i);
+        int res;
+        if(!luce_typename(i))
+            res = luce_pushtable(i);
+        else
+            res = luce_pushvalue(i);
+
         if(res) {
             int ind = lua_gettop(L);
             lua_rawgeti(L, ind, 1);
@@ -79,7 +132,9 @@ namespace {
             T h = luaL_checknumber(L, -1);
             lua_pop(L, 6); // ltype + type + num*4
             return { x, y, w, h };
-        }
+        } else
+            throw_error(lua_pushfstring(L, "Luce Error: expected Rectangle, got %s with size %d", 
+                        lua_typename(L,lua_type(L,-1)), lua_objlen(L, -1)));
         lua_pop(L,3); // type, ltype, nil
         return {};
     }

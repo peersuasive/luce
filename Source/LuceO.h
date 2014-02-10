@@ -3,9 +3,15 @@ namespace {
     typedef const char* NumType;
     void Set(lua_State *L_);
 
+    void throw_error(const char *);
+
     const char* luce_typename(int i = -1);
     const char* luce_numtype(int i = -1);
-    
+ 
+    template<class T>
+    const T luce_tonumber(int i = -1);
+    const int luce_tonumber(int i);
+
     template<class T>
     const juce::Rectangle<T> luce_torectangle(int i = -1);
     const juce::Rectangle<int> luce_torectangle(int i);
