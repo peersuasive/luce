@@ -22,6 +22,11 @@ public:
     LMainComponent(lua_State*);
     ~LMainComponent();
 
+    //==============================================================================
+    int setMillisecondsBeforeTipAppears(lua_State*);
+    int displayTip(lua_State*);
+    int hideTip(lua_State*);
+    
     static const char className[];
     static const Luna<LMainComponent>::Inheritence inherits[];
     static const Luna<LMainComponent>::InheritenceF inheritsF[];
@@ -31,6 +36,9 @@ public:
 
     static const Luna<LMainComponent>::Enum enums[];
 private:
+    //==============================================================================
+    TooltipWindow ttw;
+
     //==============================================================================
     virtual void paint (Graphics& g) override;
     virtual void resized () override;

@@ -19,6 +19,9 @@ const Luna<LMainComponent>::PropertyType LMainComponent::properties[] = {
 };
 
 const Luna<LMainComponent>::FunctionType LMainComponent::methods[] = {
+    method(LMainComponent, setMillisecondsBeforeTipAppears),   
+    method(LMainComponent, displayTip),
+    method(LMainComponent, hideTip),
     {0,0}
 };
 
@@ -28,8 +31,10 @@ const Luna<LMainComponent>::StaticType LMainComponent::statics[] = {
 
 LMainComponent::LMainComponent(lua_State *L) 
     : LComponent(L, this),
-      Component()
+      Component(),
+      ttw()
 {
+    ttw.setMillisecondsBeforeTipAppears(200);
     Component::setName(myName());
     REGISTER_CLASS(LMainComponent);
 }
@@ -121,4 +126,20 @@ void LMainComponent::mouseMagnify (const MouseEvent& e, float scaleFactor) {
     } else {
         Component::mouseMagnify(e, scaleFactor);
     }
+}
+
+// tooltips
+int LMainComponent::setMillisecondsBeforeTipAppears(lua_State*) {
+    ttw.setMillisecondsBeforeTipAppears( LUCE::luce_tonumber<int>(2) );
+    return 0;
+}
+
+int LMainComponent::displayTip(lua_State*) {
+    ttw.displayTip( LUCE::luce_topoint<int>(2), LUA::getString(3) );
+    return 0;
+}
+
+int LMainComponent::hideTip(lua_State*) {
+    ttw.hideTip();
+    return 0;
 }
