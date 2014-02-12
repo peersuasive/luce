@@ -168,6 +168,7 @@ l_class(MainComponent);
 l_class(JComponent);
 l_class(TextButton);
 l_class(ToggleButton);
+l_class(HyperlinkButton);
 l_class(Label);
 l_class(TextEditor);
 l_class(TreeView);
@@ -200,6 +201,7 @@ static const luaL_Reg luce_lib [] = {
     { "Component", l_JComponent },
     d(TextButton),
     d(ToggleButton),
+    d(HyperlinkButton),
     d(TextEditor),
     d(Label),
     d(TreeView),

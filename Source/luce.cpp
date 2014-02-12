@@ -36,6 +36,7 @@ namespace luce {
 #include "LLabel.cpp"
 #include "LTextButton.cpp"
 #include "LToggleButton.cpp"
+#include "LHyperlinkButton.cpp"
 #include "LTextEditor.cpp"
 //#include "LValueTree.cpp"
 #include "LTreeView.cpp"
