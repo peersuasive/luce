@@ -85,8 +85,11 @@ int LDocumentWindow::addAndMakeVisible(lua_State *L) {
 }
 
 void LDocumentWindow::closeButtonPressed() {
-    callback( "closeButtonPressed" );
-    JUCEApplication::getInstance()->systemRequestedQuit();
+    if(hasCallback("closeButtonPressed"))
+        if ( ! callback( "closeButtonPressed" ) )
+            JUCEApplication::getInstance()->systemRequestedQuit();
+    else
+        JUCEApplication::getInstance()->systemRequestedQuit();
 }
 
 int LDocumentWindow::closeButtonPressed(lua_State *L) {
