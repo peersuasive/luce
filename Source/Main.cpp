@@ -253,7 +253,11 @@ int luaopen_luce_core (lua_State *L) {
 }
 
 static const luaL_Reg lucecore_lib [] = {
+#ifdef DEBUG
+    {"core", luaopen_luce_core_d},
+#else
     {"core", luaopen_luce_core},
+#endif
     {NULL, NULL}
 };
 
