@@ -31,7 +31,8 @@ const Luna<LFont>::Enum LFont::enums[] = {
     { "FontStyleFlags", {
         { "plain"  , plain  },
         { "bold"   , bold   },
-        { "italic" , italic }
+        { "italic" , italic },
+        { "underlined", underlined },
     }},
     {0}
 };
