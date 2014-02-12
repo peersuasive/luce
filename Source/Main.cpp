@@ -150,41 +150,41 @@ int l_##c (lua_State *L) \
 }
 #define d(c) {#c, l_##c}
 
-l_c(NotificationType)
-l_c(JustificationType)
-l_c(FocusChangeType)
-l_cs(Colours)
+l_c(NotificationType);
+l_c(JustificationType);
+l_c(FocusChangeType);
+l_cs(Colours);
 
-l_class(JUCEApplication)
-l_class(Colour)
-l_class(AffineTransform)
-l_class(Path)
-l_class(Image)
-l_class(Graphics)
-l_class(GlyphArrangement)
-l_class(PositionedGlyph)
-l_class(DocumentWindow)
-l_class(MainComponent)
-l_class(JComponent)
-l_class(TextButton)
-l_class(ToggleButton)
-l_class(Label)
-l_class(TextEditor)
-l_class(TreeView)
-l_class(TreeViewItem)
-l_class(ModifierKeys)
-l_class(KeyPress)
-l_class(MouseEvent)
-l_class(SourceDetails)
-l_class(Timer)
-l_class(StretchableLayoutManager)
-l_class(StretchableLayoutResizerBar)
-l_class(Font)
-l_class(ListBox)
+l_class(JUCEApplication);
+l_class(Colour);
+l_class(AffineTransform);
+l_class(Path);
+l_class(Image);
+l_class(Graphics);
+l_class(GlyphArrangement);
+l_class(PositionedGlyph);
+l_class(DocumentWindow);
+l_class(MainComponent);
+l_class(JComponent);
+l_class(TextButton);
+l_class(ToggleButton);
+l_class(Label);
+l_class(TextEditor);
+l_class(TreeView);
+l_class(TreeViewItem);
+l_class(ModifierKeys);
+l_class(KeyPress);
+l_class(MouseEvent);
+l_class(SourceDetails);
+l_class(Timer);
+l_class(StretchableLayoutManager);
+l_class(StretchableLayoutResizerBar);
+l_class(Font);
+l_class(ListBox);
 // core
-l_class(Time)
-l_class(BigInteger)
-l_class(Random)
+l_class(Time);
+l_class(BigInteger);
+l_class(Random);
 
 static const luaL_Reg luce_lib [] = {
     d(JUCEApplication),
