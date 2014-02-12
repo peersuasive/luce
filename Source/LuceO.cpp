@@ -112,6 +112,7 @@ namespace {
         lua_remove(L, i);
         return res;
     }
+
     template<class T>
     const juce::Rectangle<T> luce_torectangle(int i) {
         int res;
@@ -179,6 +180,32 @@ namespace {
         return {};
     }
     
+    template<class T>
+    const juce::Point<T> luce_topoint(int i) {
+        int res;
+        if(!luce_typename(i))
+            res = luce_pushtable(i);
+        else
+            res = luce_pushvalue(i);
+
+        if(res) {
+            int ind = lua_gettop(L);
+            lua_rawgeti(L, ind, 1);
+            T x = luaL_checknumber(L, -1);
+            lua_rawgeti(L, ind, 2);
+            T y = luaL_checknumber(L, -1);
+            lua_pop(L, 4); // ltype + type + num*2
+            return { x, y };
+        } else
+            throw_error(lua_pushfstring(L, "Luce Error: expected Point, got %s with size %d", 
+                        lua_typename(L,lua_type(L,-1)), lua_objlen(L, -1)));
+        lua_pop(L,3); // type, ltype, nil
+        return {};
+    }
+    const juce::Point<int> luce_topoint(int i) {
+        return luce_topoint<int>(i);
+    }
+
     bool isofnumtype(const char *t, int i) {
         return luce_numtype(i) == t;
     }
