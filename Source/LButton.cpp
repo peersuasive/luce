@@ -37,7 +37,7 @@ LButton::~LButton(){
 void LButton::lpaintButton( Graphics& g,bool isMouseOverButton,bool isButtonDown ) {
     if (child && hasCallback("paintButton")) {
         callback("paintButton", 0, { 
-            new LRefBase("Graphics", &lg),
+            new LRefBase("Graphics", &g),
             isMouseOverButton, isButtonDown } );
     }
 }
