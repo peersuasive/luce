@@ -27,7 +27,7 @@ Luce is light, fast and easily portable, thanks to Lua and Juce itself.
 Requirements and dependencies
 =============================
 
-* lua 5.1/luajit (5.2 in progess)
+* lua 5.1/lua 5.2/luajit
 
 * C++11, GCC > 4.6 (CLANG supported)
 
@@ -38,34 +38,66 @@ Requirements and dependencies
 Downloads
 =========
 
-v0.1 (alpha)
+v0.2 (alpha)
 ------------
 
-* `linux (64b, lua5.1) <https://github.com/peersuasive/luce/releases/download/v0.1/luce.0.1.linux64.zip>`_
+* `linux (64b, lua5.1) <https://github.com/peersuasive/luce/releases/download/v0.2/luce.0.2.Linux_Windows.zip>`_
 
-* `linux (64b, lua5.1, debug) <https://github.com/peersuasive/luce/releases/download/v0.1/luce.0.1.linux64.dbg.zip>`_
-
-* `win32 (lua5.2) <https://github.com/peersuasive/luce/releases/download/v0.1/luce.0.1.win32.zip>`_
+* `win32 (32b, lua5.2) <https://github.com/peersuasive/luce/releases/download/v0.2/luce.0.2.Linux_Windows.zip>`_
 
 
 What's implemented so far ?
 ===========================
 
+some of the most common widgets and components are already there
+
+* Colour
 * Component
+* Font
+* GlyphArrangement
+* Graphics
+* HyperlinkButton
+* Image
+* JUCEApplication
 * Label
-* TextEditor
+* ListBox
+* Path
+* PositionedGlyph
+* SourceDetails
+* StretchableLayoutManager
+* StretchableLayoutResizerBar
 * TextButton
+* TextEditor
+* Timer
+* ToggleButton
 * TreeView / TreeViewItem
-* MouseListener
-* Look And Feel (only C++ at the moment)
 * and growing...
+
+some of the special classes are also there
+
+* MouseListener
+* TooltipWindow
+* Look And Feel (only C++ at the moment)
+* KeyPress
+* MouseEvent
+* ModifierKeys
+* and so on...
+
+and some components are implemented in pure lua
+
+* Rectangle
+* RectangleList
+* Line
+* Point
+* AffineTransform
+
 
 Luce design
 ===========
 
 All Luce classes start with a ``L``.
 
-Luce's design is close to Juce's, but has less options as most of them are not
+Luce design is close to Juce's, but has less options as most of them are not
 required with Lua.
 
 For the general GUI design, see Juce.
@@ -75,7 +107,7 @@ class. All non-widgets classes are derived from LBase. LComponent itself is
 derived from LBase. LBase offers the required link to Lua while LComponent
 offers the required links to Juce.
 
-Most of the callbacks that exist in Juce also exist in Luce; in the same manner
+Most of the callbacks existing in Juce also exist in Luce; in the same manner
 they need to be overriden in Juce to take effect, they also need to be
 overriden in Luce, that is, as for Luce, that a lua function needs to be
 provided for the callback to be effective. If not callback is provided, the
@@ -117,8 +149,6 @@ provided instead. Order is always x, y [, w, h ]. In general speaking, it
 respects the order declared in the class constructor. Later on, there'll probably
 be a lua implementation of these classes, to offer some of their most useful
 methods, like ``:reduce()``.
-
-
 
 
 How to use ?
