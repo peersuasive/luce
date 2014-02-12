@@ -563,15 +563,13 @@ int LTextEditor::setTemporaryUnderlining ( lua_State* ) {
     return 0;
 }
 
-int LTextEditor::getFont ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Font( TextEditor::getFont() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Font getFont()" );
+int LTextEditor::getFont ( lua_State *L ) {
+    return LUA::storeAndReturnUserdata<LFont>( new LFont(L, 
+        TextEditor::getFont()
+    ));
 }
 int LTextEditor::setFont ( lua_State* ) {
-    // TextEditor::setFont(LUA::TODO_OBJECT_Font);
-    LUA::TODO_OBJECT( "setFont, LUA::TODO_OBJECT_Font" );
-    lua_settop(LUA::Get(), 1); // added by TODO
+    TextEditor::setFont( *LUA::from_luce<LFont>(2) );
     return 0;
 }
 
