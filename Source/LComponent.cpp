@@ -1411,7 +1411,7 @@ int LComponent::getIndexOfChildComponent ( lua_State* ) {
 bool LComponent::lkeyPressed ( const KeyPress& k ) {
     if (child && hasCallback("keyPressed")) {
         callback("keyPressed", 1, { new LRefBase("KeyPress", &k ) });
-        return LUA::getBoolean();
+        return LUA::checkAndGetBoolean(-1, false);
     }
     return false;
 }
