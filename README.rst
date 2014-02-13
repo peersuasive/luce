@@ -110,10 +110,10 @@ offers the required links to Juce.
 Most of the callbacks existing in Juce also exist in Luce; in the same manner
 they need to be overriden in Juce to take effect, they also need to be
 overriden in Luce, that is, as for Luce, that a lua function needs to be
-provided for the callback to be effective. If not callback is provided, the
+provided for the callback to be effective. If no callback is provided, the
 default Juce action is called, if any.
 
-All L* classes maps their Juce equivalent or are specific to Luce (like LBase).
+All L* classes map their Juce equivalent or are specific to Luce (like LBase).
 
 All L* classes are overridable within lua code, like any pure lua modules, and
 most of them are partly implemented in Lua. This is particularly useful for
@@ -167,30 +167,30 @@ Example:
 
 .. code:: lua
    
-    local luce = require"luce"
+    local luce = require"luce"()
    
     ---
     --- create a default JUCEApplication
     ---
-    local mainWindow = luce:JUCEApplication():new("My App")
+    local mainWindow = luce:JUCEApplication("My App")
 
     ---
     --- create a DocumentWindow with name "Document Window"
     ---
-    local dw = luce:DocumentWindow():new("Document Window")
+    local dw = luce:DocumentWindow("Document Window")
     -- rename it
     dw.name = "LUCE Example Application"
 
     ---
     --- create a MainComponent, to be hosted by the Document Window
     ---
-    local mc = luce:MainComponent():new("The Main Component")
+    local mc = luce:MainComponent("The Main Component")
 
     ---
     --- create a button named "TheButton" with text "a button"
     ---
-    local button = luce:TextButton():new("TheButton")
-    button:setButtonText( "a button" )
+    local button = luce:TextButton("TheButton")
+    button:setButtonText( "a button" ) -- or button.buttonText = "a button", like button2 below
 
     --- add a callback for when button is clicked
     button:buttonClicked(function(...)
@@ -198,7 +198,7 @@ Example:
     end)
 
     --- change component look and feel
-    local button2 = luce:TextButton():new("TheButton2")
+    local button2 = luce:TextButton("TheButton2")
     button2.buttonText = "button with a different look and feel"
 
     --- add a callback for when button is clicked
@@ -212,7 +212,7 @@ Example:
     ---
     --- create a Label
     ---
-    local label = luce:Label():new("A Label")
+    local label = luce:Label("A Label")
 
     --- Label's setText has an optional parameter to send a notification when its content's changed
     --- by default, it sends nothing:
@@ -220,7 +220,7 @@ Example:
 
     --- set a callback for label text changes
     label:labelTextChanged(function(...)
-        print("Label text has changed: ", label:getText())
+        print("Label text has changed: ", label:getText()) -- or label.text
     end)
     --- but we could use one of the three notification methods accepted:
     --- sendNotification, sendNotificationSync or sendNotificationAsync
@@ -237,21 +237,21 @@ Example:
 
 
     --- set a colour for background and align text to the right
-    local label2 = luce:Label():new("Another Label")
+    local label2 = luce:Label("Another Label")
     label2.text = "(left aligned)"
-    label2:setColour( label2.ColourIds.backgroundColourId, "yellow" )
-    label2:setJustificationType( label2.JustificationType.right )
+    label2:setColour( label2.ColourIds.backgroundColourId, luce.Colours.yellow )
+    label2:setJustificationType( luce.JustificationType.right )
 
     --- centre text
-    local label3 = luce:Label():new("(left aligned text)")
+    local label3 = luce:Label("(left aligned text)")
     label3.text = "(centered)"
-    label3:setColour( label3.ColourIds.backgroundColourId, "red" )
-    label3:setJustificationType( label3.JustificationType.centred )
+    label3:setColour( label3.ColourIds.backgroundColourId, luce.Colours.red )
+    label3:setJustificationType( luce.JustificationType.centred )
 
     ---
     --- create a TextEditor
     ---
-    local te = luce:TextEditor():new("Text Editor")
+    local te = luce:TextEditor("Text Editor")
 
     --- directly set bounds for this component
     te.bounds = { 200, 250, 200, 200 } -- x, y, w, h
@@ -304,10 +304,10 @@ Example:
     end)
 
     --- callback used when quit is asked
-    local keep_going = true
+    local stop_now = false
     mainWindow:systemRequestedQuit(function(...)
         print("** MainWindow system requested quit")
-        keep_going = false
+        stop_now = true
         mainWindow:shutdown()
         mainWindow:quit()
     end)
@@ -327,18 +327,15 @@ Example:
     --- so there's no need to loop here
     --- it is set with the same rate than the JUCE's loop (1ms by default)
     luce:start_manual( mainWindow, function(...)
-        local status = true
-        if ( not keep_going ) then
-            status = false
-        end
-        return status
+        -- do some stuff, like zmq:poll(), for instance
+        return stop_now
     end )
 
 
     luce:shutdown() -- in any case, call this to close cleanly
 
-Adding new ``JUCE`` classes
-===========================
+Adding new classes to ``JUCE``
+==============================
 
 There are two kinds of classes in ``LUCE``: *full* classes and *wrapper* classes.
 
@@ -395,20 +392,25 @@ Once the class is created, include it in ``luce.cpp``, ``luce.h`` and reference 
 
 ``LUCE`` is still very young just but is growing fast -- at least as fast as
 our needs for it. Most of the basic widgets are aleady there and it's already
-possible to build some simple applications with it.
-Performances are there too, even if there's no optimisation at all yet.
-
-Important missing widgets (like \*Buttons) will be added shortly and lua
-wrapping classes are on their way.
+possible to build full applications with it.
+Performances are there too, even if there isn't any optimisation done yet.
 
 Next big steps are:
 
-* message broadcasting between C++/Lua
+* implementating a high level API (porcelaine) to simplify the process of
+  creating new applications and reduce the number of required calls and methods
+  to the native (JUCE) API
 
-* a var/Value equivalent usable within lua, even out of any Juce context
-  (that's the still-to-be-announced gadokai's job)
+* more low level binding, like box2d, to be able to create our own fancy widgets
+
+* an equivalent to JUCE's message broadcasting, between C++/Lua but also between
+  any components (gadokai? pure ømq?)
+
+* a var/Value equivalent usable within lua, even out of any JUCE context (gadokai? ømq?)
 
 * some minor tasks like overriding LookAndFeel lua side
+
+* optimisation, if required (there's a looooot of room for optimisation, no worry at all on this side)
 
 API documentation will come later as Juce's one is still fully relevant.
 
