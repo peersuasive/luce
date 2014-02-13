@@ -11,6 +11,8 @@
 
 *************************************************************/
 
+// TODO: reimplement this as a lua class
+
 #include "LColour_inh.h"
 
 ////// static methods
