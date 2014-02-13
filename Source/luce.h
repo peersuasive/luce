@@ -38,6 +38,7 @@ namespace luce {
 #include "LConstants.h"
 #include "LAffineTransform.h"
 #include "LPath.h"
+#include "LPathStrokeType.h"
 #include "LImage.h"
 #include "LGraphics.h"
 #include "LGlyphArrangement.h"

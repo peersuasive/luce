@@ -159,6 +159,7 @@ l_class(JUCEApplication);
 l_class(Colour);
 l_class(AffineTransform);
 l_class(Path);
+l_class(PathStrokeType);
 l_class(Image);
 l_class(Graphics);
 l_class(GlyphArrangement);
@@ -193,6 +194,7 @@ static const luaL_Reg luce_lib [] = {
     d(Colour),
     d(AffineTransform),
     d(Path),
+    d(PathStrokeType),
     d(Image),
     d(Graphics),
     d(GlyphArrangement),

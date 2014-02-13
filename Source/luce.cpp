@@ -18,6 +18,7 @@ namespace luce {
 #include "LColour.cpp"
 #include "LAffineTransform.cpp"
 #include "LPath.cpp"
+#include "LPathStrokeType.cpp"
 #include "LImage.cpp"
 #include "LGraphics.cpp"
 #include "LGlyphArrangement.cpp"
