@@ -103,8 +103,11 @@ namespace {
     }
 
     int luce_pushtable(int i = -1) {
-        if(!lua_istable(L,i))
+        if(!lua_istable(L,i)) {
+            //throw_error(lua_pushfstring(L, "Luce Error: expected LObject or table, got %s", 
+            //            lua_typename(L,lua_type(L,-1))));
             return 0;
+        }
         int res = lua_objlen(L, i);
         lua_pushstring(L, "table");
         lua_pushstring(L, "int");
@@ -225,6 +228,32 @@ namespace {
         }
         lua_pop(L, 3); // type, ltype, nil
         return {};
+    }
+
+    template<class T>
+    const T* luce_getnumarray(int i) {
+        int res = luce_pushtable(i);
+        if(res) {
+            T *p;
+            T arr[res];
+            int ind = lua_gettop(L);
+            for(int i=1;i<=ind;++i) {
+                lua_rawgeti(L, ind, i);
+                T n = luaL_checknumber(L, -1);
+                arr[i-1] = n;
+                lua_pop(L,1);
+            }
+            lua_pop(L, 3); // ltype + type + table
+            p = arr;
+            return p;
+        } else
+            throw_error(lua_pushfstring(L, "Luce Error: expected Number array, got %s with size %d", 
+                        lua_typename(L,lua_type(L,-1)), lua_objlen(L, -1)));
+        lua_pop(L,3); // type, ltype, nil
+        return NULL;
+    }
+    const int* luce_getnumarray(int i) {
+        return luce_getnumarray<int>(i);
     }
 
     bool isofnumtype(const char *t, int i) {
