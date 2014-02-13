@@ -25,8 +25,6 @@ public:
     ~LColour();
 
     //==============================================================================
-
-    //==============================================================================
     int getHSB(lua_State*);
 
     //==============================================================================
@@ -50,6 +48,7 @@ public:
     int getHue(lua_State*);
     int fromHSV(lua_State*);
     int greyLevel(lua_State*);
+    int isOpaque(lua_State*);
     int isTransparent(lua_State*);
     int withAlpha(lua_State*);
     int getARGB(lua_State*);
@@ -65,6 +64,7 @@ public:
     int withHue(lua_State*);
     int withMultipliedSaturation(lua_State*);
 
+
     //==============================================================================
 
     static const char className[];
@@ -76,11 +76,6 @@ public:
     static const Luna<LColour>::Enum enums[];
 
 private:
-
-    //==============================================================================
-    // callbacks
-
-
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LColour)
 };

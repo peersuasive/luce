@@ -11,6 +11,7 @@
 
 *************************************************************/
 
+// TODO: implement static methods
 // TODO: reimplement this as a lua class
 
 #include "LColour_inh.h"
@@ -41,6 +42,7 @@ const Luna<LColour>::FunctionType LColour::methods[] = {
     method( LColour, getHue ),
     method( LColour, fromHSV ),
     method( LColour, greyLevel ),
+    method( LColour, isOpaque ),
     method( LColour, isTransparent ),
     method( LColour, withAlpha ),
     method( LColour, getARGB ),
@@ -269,6 +271,10 @@ int LColour::toDisplayString ( lua_State* ) {
 
 int LColour::getHue ( lua_State* ) {
     return LUA::returnNumber( Colour::getHue() );
+}
+
+int LColour::isOpaque(lua_State*) {
+    return LUA::returnBoolean( Colour::isOpaque() );
 }
 
 int LColour::isTransparent ( lua_State* ) {
