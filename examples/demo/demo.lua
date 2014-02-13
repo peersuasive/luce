@@ -93,11 +93,28 @@ local lb = luce:Label("unmanaged label")
 --- create a TextEditor
 ---
 local te = luce:TextEditor("Text Editor")
+te.multiLine = true
 
 --- directly set bounds for this component
 te.bounds = { 200, 250, 200, 200 } -- x, y, w, h
 -- or
 -- te.setBounds{ 200, 250, 200, 200 }
+
+local combo = luce:ComboBox("Combo Box")
+combo:setLookAndFeel(3)
+combo:setEditableText(true)
+combo.tooltip = "click me !"
+combo:addItem( "new item 1", 1)
+combo:addSeparator()
+combo:addItem( "new item 2", 2)
+combo:addItemList({"item 3", "item 4"}, 3)
+
+combo:labelTextChanged(function(text)
+    print("new combo text:", text)
+end)
+
+combo:setSelectedId(3)
+--print("num items:", combo:getNumItems())
 
 --- add our Document Window and components to our main JUCE application
 mainWindow:initialise(function(...)
@@ -119,6 +136,8 @@ mainWindow:initialise(function(...)
     mc:addAndMakeVisible(label3)
     label3:setBounds{ 410, 270, 150, 30 }
 
+    mc:addAndMakeVisible(combo)
+    combo:setBounds{ 410, 310, 200, 25 }
     --mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds
                                      -- as this is the last component before
                                      -- DocumentWindow, it'll set the window size
