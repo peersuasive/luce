@@ -206,6 +206,27 @@ namespace {
         return luce_topoint<int>(i);
     }
 
+    const juce::StringArray luce_tostringarray(int i) {
+        int res;
+        if(!luce_typename(i))
+            res = luce_pushtable(i);
+        else
+            res = luce_pushvalue(i);
+        if(res) {
+            String array[res];
+            int ind = lua_gettop(L);
+            for ( int i = 1; i<= res; ++i ) {
+                lua_rawgeti(L, ind, i);
+                array[i-1] = luaL_checkstring(L, -1);
+                lua_pop(L,1);
+            }
+            lua_pop(L, 3); // ltype, type, table
+            return { array, res };
+        }
+        lua_pop(L, 3); // type, ltype, nil
+        return {};
+    }
+
     bool isofnumtype(const char *t, int i) {
         return luce_numtype(i) == t;
     }

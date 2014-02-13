@@ -26,6 +26,8 @@ namespace {
     const juce::Point<T> luce_topoint(int i = -1);
     const juce::Point<int> luce_topoint(int i);
 
+    const juce::StringArray luce_tostringarray(int i = -1);
+
     //#define luce_isoftype(t,i) isoftype(#t, i)
     //#define luce_isofnumtype(t,i) isofnumtype(#t, i)
 
