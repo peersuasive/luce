@@ -314,25 +314,29 @@ int LPath::addBubble ( lua_State* ) {
 }
 
 int LPath::addRoundedRectangle ( lua_State *L ) {
-    Rectangle<float> r( LUA::getRectangle<float>(2) );
-    float cornerSizeX = LUA::getNumber<float>(2);
-    if (lua_isnoneornil(L, 2)) {
-        Path::addRoundedRectangle( r, cornerSizeX );
-        return 0;
+    float x, y, w, h;
+    if(lua_isnumber(L,2)) {
+        x = LUA::getNumber<float>();
+        y = LUA::getNumber<float>();
+        w = LUA::getNumber<float>();
+        h = LUA::getNumber<float>();
+    } else {
+        Rectangle<float> r( LUA::getRectangle<float>(2) );
+        x = r.getX();
+        y = r.getY();
+        w = r.getWidth();
+        h = r.getHeight();
     }
+    float cornerSizeX     = LUA::getNumber<float>(2);
+    float cornerSizeY     = LUA::checkAndGetNumber<float>(2, cornerSizeX);
+    bool curveTopLeft     = LUA::checkAndGetBoolean(2, true);
+    bool curveTopRight    = LUA::checkAndGetBoolean(2, true);
+    bool curveBottomLeft  = LUA::checkAndGetBoolean(2, true);
+    bool curveBottomRight = LUA::checkAndGetBoolean(2, true);
 
-    float cornerSizeY = LUA::getNumber<float>(2);
-    if(lua_isnoneornil(L, 2)) {
-        Path::addRoundedRectangle( r, cornerSizeX, cornerSizeY );
-        return 0;
-    }
-
-    bool curveTopLeft = LUA::getBoolean(2);
-    bool curveTopRight = LUA::getBoolean(2);
-    bool curveBottomLeft = LUA::getBoolean(2);
-    bool curveBottomRight = LUA::getBoolean(2);
-    Path::addRoundedRectangle( r.getX(), r.getY(), r.getWidth(), r.getHeight(), 
-            cornerSizeX, cornerSizeY, curveTopLeft, curveTopRight, curveBottomLeft, curveBottomRight );
+    Path::addRoundedRectangle( x, y, w, h, 
+                               cornerSizeX, cornerSizeY, 
+                               curveTopLeft, curveTopRight, curveBottomLeft, curveBottomRight );
 
     return 0;
 }
