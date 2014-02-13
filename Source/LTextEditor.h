@@ -83,7 +83,6 @@ public:
     int areScrollbarsShown(lua_State*);
     int keyStateChanged(lua_State*);
     int getCaretRectangle(lua_State*);
-    int keyPressed(lua_State*);
     int scrollUp(lua_State*);
     int undo(lua_State*);
     int getTextInRange(lua_State*);
@@ -129,10 +128,7 @@ public:
     static const Luna<LTextEditor>::Enum enums[];
 
 private:
-
     //==============================================================================
-    // callbacks
-    //
     virtual void textEditorTextChanged (TextEditor &) override;
     virtual void textEditorReturnKeyPressed (TextEditor &) override;
     virtual void textEditorEscapeKeyPressed (TextEditor &) override;
@@ -141,6 +137,8 @@ private:
     virtual void escapePressed() override;
     virtual void returnPressed() override;
     virtual void performPopupMenuAction( int menuItemID ) override;
+
+    virtual bool keyPressed(const KeyPress&) override;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LTextEditor)

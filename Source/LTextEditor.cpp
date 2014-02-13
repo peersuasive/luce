@@ -60,7 +60,6 @@ const Luna<LTextEditor>::FunctionType LTextEditor::methods[] = {
     method( LTextEditor, setReturnKeyStartsNewLine ),
     method( LTextEditor, getCaretPosition ),
     method( LTextEditor, setCaretPosition ),
-    method( LTextEditor, keyPressed ),
     method( LTextEditor, scrollUp ),
     method( LTextEditor, undo ),
     method( LTextEditor, isCaretVisible ),
@@ -170,6 +169,13 @@ void LTextEditor::returnPressed() {
 int LTextEditor::returnPressed(lua_State*){
     set("returnPressed");
     return 0;
+}
+
+bool LTextEditor::keyPressed(const KeyPress& k) {
+    if(hasCallback("keyPressed"))
+        return LComponent::lkeyPressed(k);
+    else
+        return TextEditor::keyPressed(k);
 }
 
 void LTextEditor::performPopupMenuAction( int menuItemID ) {
