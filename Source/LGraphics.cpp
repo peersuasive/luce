@@ -483,6 +483,17 @@ int LGraphics::setTiledImageFill ( lua_State* ) {
     return 0;
 }
 
+int LGraphics::strokePath ( lua_State *L ) {
+    Path path = *LUA::from_luce<LPath>(2);
+    PathStrokeType strokeType = *LUA::from_luce<LPathStrokeType>(2);
+    AffineTransform transform = AffineTransform::identity;
+    if(!lua_isnoneornil(L,2))
+        transform = LUCE::luce_toaffinetransform(2);
+
+    Graphics::strokePath( path, strokeType, transform );
+    return 0;
+}
+
 // TODO
 // getters
 
@@ -497,16 +508,6 @@ int LGraphics::drawImageWithin ( lua_State* ) {
     bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
     //Graphics::drawImageWithin( imageToDraw, destX, destY, destWidth, destHeight, placementWithinTarget, fillAlphaChannelWithCurrentBrush );
     LUA::TODO_OBJECT( "drawImageWithin" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LGraphics::strokePath ( lua_State* ) {
-    // Path path = *LUA::from_luce<LPath>(2);
-    // PathStrokeType strokeType = *LUA::from_luce<LPathStrokeType>(2); // TODO;
-    // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    //Graphics::strokePath( path, strokeType, transform );
-    LUA::TODO_OBJECT( "strokePath,  path, strokeType, transform " );
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
 }
