@@ -316,10 +316,10 @@ int LPath::addBubble ( lua_State* ) {
 int LPath::addRoundedRectangle ( lua_State *L ) {
     float x, y, w, h;
     if(lua_isnumber(L,2)) {
-        x = LUA::getNumber<float>();
-        y = LUA::getNumber<float>();
-        w = LUA::getNumber<float>();
-        h = LUA::getNumber<float>();
+        x = LUA::getNumber<float>(2);
+        y = LUA::getNumber<float>(2);
+        w = LUA::getNumber<float>(2);
+        h = LUA::getNumber<float>(2);
     } else {
         Rectangle<float> r( LUA::getRectangle<float>(2) );
         x = r.getX();
