@@ -167,7 +167,8 @@ const Luna<LJComponent>::InheritenceF LJComponent::inheritsF[] = {
     method( LComponent, setInterceptsMouseClicks ),
     method( LComponent, setTopRightPosition ),
     method( LComponent, grabKeyboardFocus ),
-    method( LComponent, addToDesktop ),
+    //method( LComponent, addToDesktop ),
+    //method( LComponent, removeFromDesktop ),
     method( LComponent, repaint ),
     method( LComponent, setBufferedToImage ),
     method( LComponent, setBoundsToFit ),
@@ -181,7 +182,6 @@ const Luna<LJComponent>::InheritenceF LJComponent::inheritsF[] = {
     method( LComponent, removeColour ),
     method( LComponent, setBoundsRelative ),
     method( LComponent, setCentrePosition ),
-    method( LComponent, removeFromDesktop ),
     method( LComponent, getVisibleArea ),
     method( LComponent, toBehind ),
     method( LComponent, removeAllChildren ),
@@ -224,5 +224,19 @@ const Luna<LJComponent>::InheritenceF LJComponent::inheritsF[] = {
 };
 
 const Luna<LJComponent>::Enum LJComponent::enums[] = {
+    { "StyleFlags", {
+        { "windowAppearsOnTaskbar"  , ComponentPeer::windowAppearsOnTaskbar },
+        { "windowIsTemporary"       , ComponentPeer::windowIsTemporary },
+        { "windowIgnoresMouseClicks", ComponentPeer::windowIgnoresMouseClicks },
+        { "windowHasTitleBar"       , ComponentPeer::windowHasTitleBar },
+        { "windowIsResizable"       , ComponentPeer::windowIsResizable },
+        { "windowHasMinimiseButton" , ComponentPeer::windowHasMinimiseButton },
+        { "windowHasMaximiseButton" , ComponentPeer::windowHasMaximiseButton },
+        { "windowHasCloseButton"    , ComponentPeer::windowHasCloseButton },
+        { "windowHasDropShadow"     , ComponentPeer::windowHasDropShadow },
+        { "windowRepaintedExplictly", ComponentPeer::windowRepaintedExplictly },
+        { "windowIgnoresKeyPresses" , ComponentPeer::windowIgnoresKeyPresses },
+        { "windowIsSemiTransparent" , ComponentPeer::windowIsSemiTransparent },
+    }},
     {0}
 };

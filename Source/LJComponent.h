@@ -21,6 +21,9 @@ public:
     LJComponent(lua_State*);
     ~LJComponent();
 
+    int addToDesktop(lua_State*);
+    int removeFromDesktop(lua_State*);
+
     static const char className[];
     static const Luna<LJComponent>::Inheritence inherits[];
     static const Luna<LJComponent>::InheritenceF inheritsF[];
@@ -43,6 +46,8 @@ private:
     virtual void mouseDoubleClick (const MouseEvent&) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
     virtual void mouseMagnify (const MouseEvent&, float scaleFactor) override;
+
+    virtual bool keyPressed(const KeyPress&) override;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LJComponent)

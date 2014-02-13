@@ -20,6 +20,8 @@ const Luna<LJComponent>::PropertyType LJComponent::properties[] = {
 
 const Luna<LJComponent>::FunctionType LJComponent::methods[] = {
     method( LJComponent, startDragging ),
+    method( LJComponent, addToDesktop ),
+    method( LJComponent, removeFromDesktop ),
     {0,0}
 };
 
@@ -52,6 +54,19 @@ void LJComponent::resized() {
     } else {
         Component::resized();
     }
+}
+
+int LJComponent::addToDesktop(lua_State *L) {
+    LComponent::addToDesktop(L);
+    this->pureBase(true);
+    return 0;
+}
+
+int LJComponent::removeFromDesktop(lua_State *L) {
+    LComponent::removeFromDesktop(L);
+    if(pureBase())
+        delete this;
+    return 0;
 }
 
 void LJComponent::mouseMove(const MouseEvent& e) {
@@ -88,4 +103,11 @@ void LJComponent::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& 
 
 void LJComponent::mouseMagnify (const MouseEvent& e, float scaleFactor) {
     LComponent::lmouseMagnify(e, scaleFactor);
+}
+
+bool LJComponent::keyPressed(const KeyPress& k) {
+    if(hasCallback("keyPressed"))
+        return LComponent::lkeyPressed(k);
+    else
+        return Component::keyPressed(k);
 }

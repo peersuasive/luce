@@ -695,6 +695,15 @@ int LComponent::setCentrePosition ( lua_State* ) {
     return 0;
 }
 
+int LComponent::addToDesktop ( lua_State* ) {
+    if (child) {
+        int windowStyleFlags = LUA::getNumber(2);
+        void* nativeWindowToAttachTo = 0; // TODO: luce_void*
+        child->addToDesktop( windowStyleFlags, nativeWindowToAttachTo );
+    }
+    return 0;
+}
+
 int LComponent::removeFromDesktop ( lua_State* ) {
     if (child) {
         child->removeFromDesktop();
@@ -1285,17 +1294,6 @@ int LComponent::copyAllExplicitColoursTo ( lua_State* ) {
     if (child) {
         // child->copyAllExplicitColoursTo(LUA::TODO_OBJECT_Component);
         LUA::TODO_OBJECT( "copyAllExplicitColoursTo, LUA::TODO_OBJECT_Component" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
-
-int LComponent::addToDesktop ( lua_State* ) {
-    if (child) {
-        int windowStyleFlags = LUA::getNumber(2);
-        // void* nativeWindowToAttachTo = LUA::TODO_OBJECT_void;
-        // child->addToDesktop( windowStyleFlags, nativeWindowToAttachTo );
-        LUA::TODO_OBJECT( "addToDesktop,  windowStyleFlags, nativeWindowToAttachTo " );
         lua_settop(LUA::Get(), 1); // added by TODO
     }
     return 0;
