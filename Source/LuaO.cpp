@@ -844,6 +844,9 @@ namespace LUA {
                         //returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
                         returnUserdata<LMouseEvent, MouseEvent>( static_cast<const MouseEvent*>(lr->getMe()) );
 
+                    } else if ( type == "KeyPress" ) {
+                        returnUserdata<LKeyPress, KeyPress>( static_cast<const KeyPress*>(lr->getMe()) );
+
                     } else if ( type == "Graphics" ) {
                         returnUserdata<LGraphics>( (LGraphics*)lr->getMe() );
 

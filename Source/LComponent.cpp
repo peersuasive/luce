@@ -1408,13 +1408,16 @@ int LComponent::getIndexOfChildComponent ( lua_State* ) {
     } else return 0;
 }
 
+bool LComponent::lkeyPressed ( const KeyPress& k ) {
+    if (child && hasCallback("keyPressed")) {
+        callback("keyPressed", 1, { new LRefBase("KeyPress", &k ) });
+        return LUA::getBoolean();
+    }
+    return false;
+}
 int LComponent::keyPressed ( lua_State* ) {
-    if (child) {
-        // KeyPress key = LUA::TODO_OBJECT_KeyPress;
-        // return LUA::returnBoolean( child->keyPressed( key ) );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "bool keyPressed( key )" );
-    } else return 0;
+    set("keyPressed");
+    return 0;
 }
 
 int LComponent::getPeer ( lua_State* ) {

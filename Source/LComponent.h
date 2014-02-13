@@ -257,6 +257,7 @@ protected:
     void lmouseDrag( const MouseEvent& event );
     void lmouseMove( const MouseEvent& event );
     void lmouseExit( const MouseEvent& event );
+    bool lkeyPressed(const KeyPress&);
     
 private:
     //==============================================================================
