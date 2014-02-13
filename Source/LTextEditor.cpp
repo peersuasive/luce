@@ -369,6 +369,16 @@ int LTextEditor::setTabKeyUsedAsCharacter ( lua_State* ) {
     return 0;
 }
 
+int LTextEditor::getFont ( lua_State *L ) {
+    return LUA::storeAndReturnUserdata<LFont>( new LFont(L, 
+        TextEditor::getFont()
+    ));
+}
+int LTextEditor::setFont ( lua_State* ) {
+    TextEditor::setFont( *LUA::from_luce<LFont>(2) );
+    return 0;
+}
+
 /////// getters
 int LTextEditor::isEmpty ( lua_State* ) {
     return LUA::returnBoolean( TextEditor::isEmpty() );
@@ -467,6 +477,10 @@ int LTextEditor::pageDown ( lua_State* ) {
     return LUA::returnBoolean( TextEditor::pageDown( selecting ) );
 }
 
+int LTextEditor::getTextValue ( lua_State* ) {
+    return LUA::returnString( TextEditor::getTextValue().toString() );
+}
+
 /////// setters
 int LTextEditor::insertTextAtCaret ( lua_State* ) {
     TextEditor::insertTextAtCaret(LUA::getString());
@@ -560,6 +574,12 @@ int LTextEditor::setScrollToShowCursor ( lua_State* ) {
     return 0;
 }
 
+int LTextEditor::applyFontToAllText ( lua_State* ) {
+    Font f( *LUA::from_luce<LFont>(2) );
+    TextEditor::applyFontToAllText( f );
+    return 0;
+}
+
 // TODO:
 // getters
 int LTextEditor::setTemporaryUnderlining ( lua_State* ) {
@@ -569,36 +589,6 @@ int LTextEditor::setTemporaryUnderlining ( lua_State* ) {
     return 0;
 }
 
-int LTextEditor::getFont ( lua_State *L ) {
-    return LUA::storeAndReturnUserdata<LFont>( new LFont(L, 
-        TextEditor::getFont()
-    ));
-}
-int LTextEditor::setFont ( lua_State* ) {
-    TextEditor::setFont( *LUA::from_luce<LFont>(2) );
-    return 0;
-}
-
-int LTextEditor::keyPressed ( lua_State* ) {
-    // KeyPress keypress_ = LUA::TODO_OBJECT_KeyPress;
-    // return LUA::returnBoolean( TextEditor::keyPressed( keypress_ ) );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "bool keyPressed( keypress_ )" );
-}
-
-int LTextEditor::getTextValue ( lua_State* ) {
-    // return LUA::TODO_RETURN_OBJECT_Value( TextEditor::getTextValue() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "Value getTextValue()" );
-}
-
-// setters
-int LTextEditor::applyFontToAllText ( lua_State* ) {
-    // TextEditor::applyFontToAllText(LUA::TODO_OBJECT_Font);
-    LUA::TODO_OBJECT( "applyFontToAllText, LUA::TODO_OBJECT_Font" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
 
 int LTextEditor::addPopupMenuItems ( lua_State* ) {
     // PopupMenu menuToAddTo = LUA::TODO_OBJECT_PopupMenu;
@@ -617,5 +607,3 @@ int LTextEditor::setInputFilter ( lua_State* ) {
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
 }
-
-
