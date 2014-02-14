@@ -344,7 +344,7 @@ int LLabel::createEditorComponent ( lua_State *L ) {
 /////// setters
 int LLabel::setBorderSize ( lua_State* ) {
     int horizontalBorder = LUA::getNumber(2);
-    int verticalBorder = LUA::getNumber(3);
+    int verticalBorder = LUA::getNumber(2);
     Label::setBorderSize( horizontalBorder, verticalBorder );
     return 0;
 }
