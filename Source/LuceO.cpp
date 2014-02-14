@@ -270,6 +270,50 @@ namespace {
         return luce_getnumarray<int>(i);
     }
 
+    const juce::TextLayout::Glyph luce_toglyph(int i) {
+        int res;
+        if(!luce_typename(i))
+            res = luceI_pushtable(i);
+        else
+            res = luceI_pushvalue(i);
+
+        if(res) {
+            int ind = lua_gettop(L);
+            lua_getfield(L, ind, "glyphCode");
+            int glyphCode = lua_tonumber(L, -1);
+            lua_getfield(L, ind, "width");
+            float width = (float)lua_tonumber(L, -1);
+            lua_getfield(L, ind, "anchor");
+            Point<float> anchor = luce_topoint<float>(-1);
+
+            lua_pop(L, 3); // ltype + type + value
+            return { glyphCode, anchor, width };
+        } else
+            throw_error(lua_pushfstring(L, "Luce Error: expected Glyph, got %s with size %d", 
+                        lua_typename(L,lua_type(L,-1)), lua_objlen(L, -1)));
+        lua_pop(L,3); // type, ltype, nil
+        return { 0, Point<float>(), 0 };
+    }
+    int luce_pushlightglyph(const TextLayout::Glyph& glyph) {
+        lua_newtable(L);
+        int i = lua_gettop(L);
+
+        lua_pushnumber(L, glyph.glyphCode);
+        lua_setfield(L, i, "glyphCode");
+        
+        lua_pushnumber(L, glyph.width);
+        lua_setfield(L, i, "width");
+
+        luce_pushlightpoint<float>( glyph.anchor );
+        lua_setfield(L, i, "anchor");
+        
+        lua_pushliteral(L, "lightglyph");
+        lua_setfield(L, i, "__ltype");
+        return 1;
+    }
+
+    // macros and facilities
+
     bool isofnumtype(const char *t, int i) {
         return luce_numtype(i) == t;
     }

@@ -30,12 +30,12 @@ namespace {
 
     const juce::StringArray luce_tostringarray(int i = -1);
 
+    const juce::TextLayout::Glyph luce_toglyph(int i = -1);
+    int luce_pushlightglyph(const TextLayout::Glyph&);
+
     template<class T>
     const T* luce_getnumarray(int i = -1);
     const int* luce_getnumarray(int i);
-
-    //#define luce_isoftype(t,i) isoftype(#t, i)
-    //#define luce_isofnumtype(t,i) isofnumtype(#t, i)
 
 }
 }
