@@ -27,6 +27,7 @@ const Luna<LPath>::FunctionType LPath::methods[] = {
     method( LPath, intersectsLine ),
     method( LPath, isUsingNonZeroWinding ),
     method( LPath, setUsingNonZeroWinding ),
+    method( LPath, getBounds ),
     method( LPath, getBoundsTransformed ),
     method( LPath, getClippedLine ),
     method( LPath, getCurrentPosition ),
@@ -120,6 +121,10 @@ int LPath::intersectsLine ( lua_State* ) {
     Line<float> line = LUA::getLine<float>(2);
     float tolerance = LUA::checkAndGetNumber<float>(2, 1.0f);
     return LUA::returnBoolean( Path::intersectsLine( line, tolerance ) );
+}
+
+int LPath::getBounds( lua_State* ) {
+    return LUA::returnTable( Path::getBounds() );
 }
 
 int LPath::getBoundsTransformed ( lua_State* ) {

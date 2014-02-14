@@ -62,6 +62,7 @@ public:
     int getPointAlongPath(lua_State*);
     int getLength(lua_State*);
     int intersectsLine(lua_State*);
+    int getBounds(lua_State*);
     int getBoundsTransformed(lua_State*);
     int getClippedLine(lua_State*);
     int getCurrentPosition(lua_State*);
