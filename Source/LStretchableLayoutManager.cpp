@@ -85,8 +85,7 @@ int LStretchableLayoutManager::setItemPosition ( lua_State* ) {
 }
 
 int LStretchableLayoutManager::layOutComponents ( lua_State* ) {
-    int n = LUA::getNumber(2);
-    Array<Component*> lcomps = LUA::getComponentList(n, 2);
+    Array<Component*> lcomps = LUA::getComponentList(2);
     Component *comps[lcomps.size()];
     for (int i=0; i<lcomps.size(); ++i)
         comps[i] = lcomps[i];

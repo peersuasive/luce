@@ -234,6 +234,7 @@ namespace LUA {
             return res;
         }
 
+        /*
         const Array<Component*> getComponentList(int n, int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
@@ -254,24 +255,50 @@ namespace LUA {
             lua_pop(L,1);
             lua_remove(L,i);
             return res;
-            /*
-            lua_pushnil(L);
-            while( lua_next(L, -2) != 0 ) {
-                std::cout << " ** loop" << std::endl;
-                Component *comp;
-                if ( lua_type(L, -1) == LUA_TNIL ) {
-                    std::cout << "******* NIL" << std::endl;
+            
+            //lua_pushnil(L);
+            //while( lua_next(L, -2) != 0 ) {
+            //    std::cout << " ** loop" << std::endl;
+            //    Component *comp;
+            //    if ( lua_type(L, -1) == LUA_TNIL ) {
+            //        std::cout << "******* NIL" << std::endl;
+            //        comp = nullptr;
+            //        lua_pop(L,1);
+            //    }
+            //    else
+            //        comp = from_luce<Component>(lua_gettop(L));
+            //    res.add(comp);
+            //}
+            //lua_pop(L,1);
+            //lua_remove(L,i);
+            //return res;
+        }
+        */
+
+        template<class T, class U>
+        const Array<U*> getObjectList(int i) {
+            i = (i<0) ? lua_gettop(L) - (i+1) : i;
+            luaL_checktype(L, i, LUA_TTABLE);
+            int n = lua_objlen(L, i);
+            Array<U*> res;
+
+            for (int ind=1;ind<=n;++ind) {
+                U *comp;
+                lua_rawgeti(L, i, ind);
+                // to emulate nil object, use a string
+                if ( lua_type(L, -1) == LUA_TSTRING ) { // any string will do
                     comp = nullptr;
                     lua_pop(L,1);
                 }
                 else
-                    comp = from_luce<Component>(lua_gettop(L));
-                res.add(comp);
+                    comp = from_luce<T,U>();
+                res.add( comp );
             }
-            lua_pop(L,1);
             lua_remove(L,i);
             return res;
-            */
+        }
+        const Array<Component*> getComponentList(int i) {
+            return getObjectList<LComponent, Component>(i);
         }
 
         /*

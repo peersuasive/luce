@@ -30,7 +30,10 @@ namespace LUA {
         const Array<var> getList(int i=-1);
             template<class T>
         const Array<T> getList(int i=-1);
-        const Array<Component*> getComponentList(int n, int i=-1);
+
+        template<class T, class U = T>
+        const Array<U*> getObjectList(int i = -1);
+        const Array<Component*> getComponentList(int i=-1);
 
         const juce::Rectangle<int> getRectangle(int i=-1);
             template<class T>
