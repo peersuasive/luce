@@ -164,6 +164,12 @@ l_class(Image);
 l_class(Graphics);
 l_class(GlyphArrangement);
 l_class(PositionedGlyph);
+l_class(Attribute);
+l_class(AttributedString);
+l_class(Glyph);
+l_class(Run);
+l_class(Line);
+l_class(TextLayout);
 l_class(DocumentWindow);
 l_class(MainComponent);
 l_class(JComponent);
@@ -199,6 +205,12 @@ static const luaL_Reg luce_lib [] = {
     d(Graphics),
     d(GlyphArrangement),
     d(PositionedGlyph),
+    d(Attribute),
+    d(AttributedString),
+    d(Glyph),
+    d(Run),
+    d(Line),
+    d(TextLayout),
     d(DocumentWindow),
     d(MainComponent),
     { "Component", l_JComponent },
