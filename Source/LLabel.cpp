@@ -275,8 +275,17 @@ int LLabel::getFont ( lua_State *L ) {
     //myFont->setPureBase(false);
     //return LUA::storeAndReturnUserdata<LFont>( myFont.get() );
 }
-int LLabel::setFont ( lua_State* ) {
-    Label::setFont( *LUA::from_luce<LFont>(2) );
+int LLabel::setFont ( lua_State *L ) {
+    Font font;
+    if(!lua_isnumber(L,2) && lua_isstring(L,2)) {
+        String name = LUA::getString(2);
+        float size = LUA::checkAndGetNumber<float>(2, 10.0f);
+        int style = LUA::checkAndGetNumber<int>(2, Font::plain);
+        font = Font(name, size, style);
+    }
+    else
+       font = *LUA::from_luce<LFont>(2);
+    Label::setFont( font );
     return 0;
 }
 
