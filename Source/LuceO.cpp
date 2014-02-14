@@ -42,7 +42,7 @@ namespace {
         lua_pop(L,1);
         return res ? res : "int";
     }
-    int luce_pushvalue(int i = -1) {
+    int luceI_pushvalue(int i = -1) {
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
         const char *ltype = luce_typename(i);
         if(! ltype)
@@ -83,7 +83,7 @@ namespace {
         if(!luce_typename(i))
             res = luce_pushnumber(i);
         else
-            res = luce_pushvalue(i);
+            res = luceI_pushvalue(i);
         if(res) {
             int ind = lua_gettop(L);
             lua_rawgeti(L, ind, 1);
@@ -102,7 +102,7 @@ namespace {
         return luce_tonumber<int>(i);
     }
 
-    int luce_pushtable(int i = -1) {
+    int luceI_pushtable(int i = -1) {
         if(!lua_istable(L,i)) {
             //throw_error(lua_pushfstring(L, "Luce Error: expected LObject or table, got %s", 
             //            lua_typename(L,lua_type(L,-1))));
@@ -120,9 +120,9 @@ namespace {
     const juce::Rectangle<T> luce_torectangle(int i) {
         int res;
         if(!luce_typename(i))
-            res = luce_pushtable(i);
+            res = luceI_pushtable(i);
         else
-            res = luce_pushvalue(i);
+            res = luceI_pushvalue(i);
 
         if(res) {
             int ind = lua_gettop(L);
@@ -149,7 +149,7 @@ namespace {
     template<class T>
     const juce::RectangleList<T> luce_torectanglelist(int i) {
         juce::RectangleList<T> rl;
-        int res = luce_pushvalue(i);
+        int res = luceI_pushvalue(i);
         if ( res ) {
             lua_pushnil(L);
             while(lua_next(L, -2)) {
@@ -167,7 +167,7 @@ namespace {
     }
 
     const juce::AffineTransform luce_toaffinetransform(int i) {
-        int res = luce_pushvalue(i);
+        int res = luceI_pushvalue(i);
         if ( res ) {
             int top = lua_gettop(L);
             float matrices[6];
@@ -185,11 +185,12 @@ namespace {
     
     template<class T>
     const juce::Point<T> luce_topoint(int i) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
         int res;
         if(!luce_typename(i))
-            res = luce_pushtable(i);
+            res = luceI_pushtable(i);
         else
-            res = luce_pushvalue(i);
+            res = luceI_pushvalue(i);
 
         if(res) {
             int ind = lua_gettop(L);
@@ -212,9 +213,9 @@ namespace {
     const juce::StringArray luce_tostringarray(int i) {
         int res;
         if(!luce_typename(i))
-            res = luce_pushtable(i);
+            res = luceI_pushtable(i);
         else
-            res = luce_pushvalue(i);
+            res = luceI_pushvalue(i);
         if(res) {
             String array[res];
             int ind = lua_gettop(L);
@@ -232,7 +233,7 @@ namespace {
 
     template<class T>
     const T* luce_getnumarray(int i) {
-        int res = luce_pushtable(i);
+        int res = luceI_pushtable(i);
         if(res) {
             T *p;
             T arr[res];
