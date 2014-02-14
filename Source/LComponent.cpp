@@ -575,12 +575,37 @@ int LComponent::toFront ( lua_State* ) {
     return 0;
 }
 
-int LComponent::setTopLeftPosition ( lua_State* ) {
-    Point<int> r( LUA::getPoint() );
+int LComponent::setTopLeftPosition ( lua_State *L ) {
+    int x, y;
+    if(lua_isnumber(L,2)) {
+        x = LUA::getNumber<int>(2);
+        y = LUA::getNumber<int>(2);
+    } else {
+        Point<int> p( LUA::getPoint<int>(2) );
+        x = p.getX();
+        y = p.getY();
+    }
     if (child)
-        child->setTopLeftPosition( r );
+        child->setTopLeftPosition( x, y );
     return 0;
 }
+
+int LComponent::setTopRightPosition ( lua_State* ) {
+    int x, y;
+    if(lua_istable(L,2)) {
+        Array<var> r(LUA::getList());
+        x = r[0];
+        y = r[1];
+    }
+    else {
+        x = LUA::getNumber<int>(2);
+        y = LUA::getNumber<int>(2);
+    }
+    if (child)
+        child->setTopRightPosition( x, y );
+    return 0;
+}
+
 
 int LComponent::sendLookAndFeelChange ( lua_State* ) {
     if (child)
@@ -632,13 +657,6 @@ int LComponent::setInterceptsMouseClicks ( lua_State* ) {
         bool allowClicksOnChildComponents = LUA::getBoolean();
         child->setInterceptsMouseClicks( allowClicksOnThisComponent, allowClicksOnChildComponents );
     }
-    return 0;
-}
-
-int LComponent::setTopRightPosition ( lua_State* ) {
-    Array<var> r(LUA::getList());
-    if (child)
-        child->setTopRightPosition( r[0], r[1] );
     return 0;
 }
 
