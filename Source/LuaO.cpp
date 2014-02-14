@@ -437,16 +437,20 @@ namespace LUA {
             return getPoint<int>(i);
         }
 
-        const juce::Range<int> getRange(int i) {
+        template<class T>
+        const juce::Range<T> getRange(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             lua_rawgeti(L, -1, 1);
-            int x = luaL_checknumber(L, -1);
+            T x = luaL_checknumber(L, -1);
             lua_rawgeti(L, -2, 2);
-            int y = luaL_checknumber(L, -1);
+            T y = luaL_checknumber(L, -1);
             lua_pop(L, 3);
             lua_remove(L,i);
             return { x, y };
+        }
+        const juce::Range<int> getRange(int i) {
+            return getRange<int>(i);
         }
 
         const juce::SparseSet<int> getSparseSet(int i) {
@@ -733,7 +737,8 @@ namespace LUA {
             return returnTable<int>(r);
         }
 
-        int returnTable( const juce::Range<int>& r ) {
+        template<class T>
+        int returnTable( const juce::Range<T>& r ) {
             lua_newtable(L);
             int t = lua_gettop(L);
             lua_pushnumber(L, r.getStart());
@@ -741,6 +746,9 @@ namespace LUA {
             lua_pushnumber(L, r.getEnd());
             lua_rawseti(L, t, 2);
             return 1;
+        }
+        int returnTable( const juce::Range<int>& r ) {
+            return returnTable<int>( r );
         }
 
         int returnTable( const juce::SparseSet<int>& r ) {
@@ -769,6 +777,30 @@ namespace LUA {
             return returnTable<int>( l );
         }
 
+        template<class T, class U>
+        int returnTable( const OwnedArray<U>& a) {
+            lua_newtable(L);
+            int t = lua_gettop(L);
+            for(int i=0; i<a.size(); ++i) {
+                returnUserdata<T, U>( a[i] );
+                lua_rawseti(L, t, i+1);
+            }
+            return 1;
+        }
+
+        /* unused
+        template<class T, class U>
+        int returnTable( const Array<U*>& a) {
+            lua_newtable(L);
+            int t = lua_gettop(L);
+            for(int i=0; i<a.size(); ++i) {
+                returnUserdata<T, U>( a[i] );
+                lua_rawseti(L, t, i+1);
+            }
+            return 1;
+        }
+        */
+ 
         int stacktrace(lua_State *L) {
             bool full_stack = false;
             lua_Debug info;

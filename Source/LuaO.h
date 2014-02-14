@@ -48,6 +48,9 @@ namespace LUA {
         const juce::Point<T> getPoint(int i=-1);
 
         const juce::Range<int> getRange(int i=-1);
+            template<class T>
+        const juce::Range<T> getRange(int i=-1);
+
         const juce::SparseSet<int> getSparseSet(int i=-1);
         const std::list<var> getStdList(int i=-1);
 
@@ -78,10 +81,9 @@ namespace LUA {
         const int returnString(const String& val);
         int returnString(const std::string& val);
 
-        int returnTable(const std::list<var>& val);
-        int returnTable(const Array<var>& val);
+        int returnTable( const std::list<var>& val );
+        int returnTable( const Array<var>& val );
         int returnTable( const juce::StringArray& );
-        int returnTable( const juce::Range<int>& r );
         int returnTable( const juce::SparseSet<int>& r);
 
         template<class T>
@@ -95,6 +97,17 @@ namespace LUA {
         template<class T>
         int returnTable( const juce::Line<T>& r );
         int returnTable( const juce::Line<int>& r );
+
+        template<class T>
+        int returnTable( const juce::Range<T>& r );
+        int returnTable( const juce::Range<int>& r );
+
+        template<class T, class U = T>
+        int returnTable( const OwnedArray<U>& );
+
+        // unused
+        //template<class T, class U = T>
+        //int returnTable(const Array<U*>&);
 
         int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ");
 
@@ -136,7 +149,6 @@ namespace LUA {
         template<class T>
         T luaL_getnum(const char *t, int i = -1);
         const char* lua_getnumtype(int i = -1);
-
     }
 }
 
