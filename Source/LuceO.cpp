@@ -209,6 +209,19 @@ namespace {
     const juce::Point<int> luce_topoint(int i) {
         return luce_topoint<int>(i);
     }
+    template<class T>
+    int luce_pushlightpoint(const juce::Point<T>& p) {
+        lua_newtable(L);
+        int i = lua_gettop(L);
+        lua_pushnumber(L, p.getX());
+        lua_rawseti(L, i, 1);
+        lua_pushnumber(L, p.getY());
+        lua_rawseti(L, i, 2);
+        lua_pushliteral(L, "lightpoint");
+        lua_setfield(L, i, "__ltype");
+        return 1;
+    }
+    // TODO: pushpoint, meaning, having access to luce:LPoint...
 
     const juce::StringArray luce_tostringarray(int i) {
         int res;

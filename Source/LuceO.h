@@ -25,6 +25,8 @@ namespace {
     template<class T>
     const juce::Point<T> luce_topoint(int i = -1);
     const juce::Point<int> luce_topoint(int i);
+    template<class T>
+    int luce_pushlightpoint(const juce::Point<T>&);
 
     const juce::StringArray luce_tostringarray(int i = -1);
 
