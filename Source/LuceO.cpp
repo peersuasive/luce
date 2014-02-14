@@ -271,6 +271,34 @@ namespace {
     #define luce_isofnumtype(t,i) isofnumtype(#t, i)
 
     #define luce_isnumtype(t1, t2) isnumtype(#t1, t2)
+
+    template<class T>
+    bool isofclass(const char* t, int i) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
+        if(!lua_istable(L,i))
+            return false;
+
+        lua_getfield(L, i, "__self"); // may be nil
+        if(!lua_isnoneornil(L, -1)) {
+            const char* tname = std::string( std::string(t) +"_" ).c_str();
+            void *p = lua_touserdata(L, -1);
+            if (p != NULL) {
+                if (lua_getmetatable(L, -1)) {
+                    luaL_getmetatable(L, tname);
+                    if (!lua_rawequal(L, -1, -2))
+                        p = NULL;
+                    lua_pop(L, 2); // mt*2
+                    return p ? true : false;
+                }
+            }
+        }
+        lua_pop(L,1); // nil or userdata
+        return false;
+    }
+    #define ct_1(T)   isofclass<T>( #T )
+    #define ct_2(T,i) isofclass<T>( #T, i )
+    #define ct_sel(x,T,i,FUNC, ...) FUNC
+    #define luce_isofclass(...) ct_sel(,##__VA_ARGS__, ct_2(__VA_ARGS__), ct_1(__VA_ARGS__),)
 }
 }
 #endif // __LUCE_O_H
