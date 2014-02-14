@@ -762,7 +762,7 @@ int LComponent::parentHierarchyChanged(lua_State*){
 }
 
 void LComponent::lcolourChanged() {
-    if (child)
+    if (child && hasCallback("colourChanged"))
         callback("colourChanged");
 }
 int LComponent::colourChanged(lua_State*){
