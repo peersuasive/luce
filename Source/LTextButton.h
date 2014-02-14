@@ -25,8 +25,6 @@ public:
     
     //==============================================================================
     int changeWidthToFitText(lua_State*);
-    int paintButton(lua_State*);
-    int colourChanged(lua_State*);
     
     //==============================================================================
     int getFont(lua_State*);
@@ -45,11 +43,26 @@ public:
     
     static const Luna<LTextButton>::Enum enums[];
 private:    
-    
     //==============================================================================
-    // callbacks
+    virtual void paintButton(Graphics&, bool isMouseOverButton, bool isButtonDown) override;
     virtual void buttonStateChanged() override;
     virtual void buttonClicked (Button* buttonThatWasClicked) override;
+
+    virtual void colourChanged() override;
+
+
+    virtual void mouseMove (const MouseEvent&) override;
+    virtual void mouseEnter (const MouseEvent&) override;
+    virtual void mouseExit (const MouseEvent&) override;
+    virtual void mouseDown (const MouseEvent&) override;
+    virtual void mouseDrag (const MouseEvent&) override;
+    virtual void mouseUp (const MouseEvent&) override;
+    virtual void mouseDoubleClick (const MouseEvent&) override;
+    virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
+    virtual void mouseMagnify (const MouseEvent&, float scaleFactor) override;
+
+    virtual bool keyPressed(const KeyPress&) override;
+
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LTextButton)
