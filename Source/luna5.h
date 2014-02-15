@@ -12,8 +12,6 @@ all modifications are (c) 2013 Peersuasive Technologies
 ****************************************************/
 
 #include <iostream>
-#include <typeinfo>
-#include <type_traits>
 
 #define method(class, name) {#name, &class::name}
 #define smethod(class, name) {#name, &class::s_##name}

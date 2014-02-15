@@ -13,8 +13,6 @@
 
 #include "LAttribute_inh.h"
 
-#include <type_traits>
-
 const char LAttribute::className[] = "LAttribute";
 const Luna<LAttribute>::PropertyType LAttribute::properties[] = {
     {"range", &LAttribute::getRange, &LBase::readOnly},
