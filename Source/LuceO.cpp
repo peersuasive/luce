@@ -230,15 +230,15 @@ namespace {
         else
             res = luceI_pushvalue(i);
         if(res) {
-            String array[res];
+            StringArray array;
             int ind = lua_gettop(L);
             for ( int i = 1; i<= res; ++i ) {
                 lua_rawgeti(L, ind, i);
-                array[i-1] = luaL_checkstring(L, -1);
+                array.add( luaL_checkstring(L, -1) );
                 lua_pop(L,1);
             }
             lua_pop(L, 3); // ltype, type, table
-            return { array, res };
+            return array;
         }
         lua_pop(L, 3); // type, ltype, nil
         return {};
