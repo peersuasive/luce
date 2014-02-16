@@ -9,8 +9,8 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <LINUX_MAKE targetFolder="Builds/Linux" extraCompilerFlags="-std=c++11&#10;-Wno-unused-result&#10;-I/usr/include/lua5.1&#10;-U_FORTIFY_SOURCE&#10;-D_FORTIFY_SOURCE=0&#10;-fPIC"
-                externalLibraries="lua5.1" extraLinkerFlags="-std=c++11&#10;-fPIC&#10;-shared"
+    <LINUX_MAKE targetFolder="Builds/Linux" extraCompilerFlags="-std=c++11&#10;-I/usr/include/lua5.1&#10;-U_FORTIFY_SOURCE&#10;-D_FORTIFY_SOURCE=0&#10;-fPIC"
+                externalLibraries="" extraLinkerFlags="-std=c++11&#10;-fPIC&#10;-shared"
                 extraDefs="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
