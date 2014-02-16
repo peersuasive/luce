@@ -154,7 +154,6 @@ public:
                 lua_newtable(L);
                 subt = lua_gettop(L);
             }
-            int ii = 1;
             for ( auto& it : T::enums[i].values ) {
                 lua_pushstring(L, it.first.c_str());
                 lua_pushnumber(L, it.second);
@@ -293,7 +292,6 @@ public:
             lua_pushstring(L, T::enums[i].name);
             lua_newtable(L);
             int nt = lua_gettop(L);
-            int ii = 1;
             for ( auto& it : T::enums[i].values ) {
                 lua_pushstring(L, it.first.c_str());
                 lua_pushnumber(L, it.second);
@@ -405,10 +403,10 @@ public:
             int max_p = lua_tonumber(L, -1);
             lua_pop(L,1);
 
-            lua_pushstring(L, "__mn");
-            lua_rawget(L, 3);
-            int max_m = lua_tonumber(L, -1);
-            lua_pop(L,1);
+            //lua_pushstring(L, "__mn");
+            //lua_rawget(L, 3);
+            //int max_m = lua_tonumber(L, -1);
+            //lua_pop(L,1);
 
             if( _index & ( 1 << 8 ) ) // A func
                 lua_pushboolean(L, true);
@@ -449,10 +447,10 @@ public:
             int max_p = lua_tonumber(L, -1);
             lua_pop(L,1);
 
-            lua_pushstring(L, "__mn");
-            lua_rawget(L, -3);
-            int max_m = lua_tonumber(L, -1);
-            lua_pop(L,1);
+            //lua_pushstring(L, "__mn");
+            //lua_rawget(L, -3);
+            //int max_m = lua_tonumber(L, -1);
+            //lua_pop(L,1);
 
             lua_getfield(L, 1, "__self");
             T** obj = static_cast<T**>(lua_touserdata(L, -1));

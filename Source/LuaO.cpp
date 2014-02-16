@@ -36,7 +36,6 @@ namespace LUA {
                 lua_pop(L,1);
                 lua_pushlightuserdata(L, (void*)key); // check if table exists
                 lua_newtable(L);
-                int i = lua_gettop(L);
                 lua_settable(L, LUA_REGISTRYINDEX);
             }
             else
@@ -590,7 +589,6 @@ namespace LUA {
                     lua_pushstring(L, T::enums[i].name);
                     lua_newtable(L);
                     int nt = lua_gettop(L);
-                    int ii = 1;
                     for ( auto& it : T::enums[i].values ) {
                         lua_pushstring(L, it.first.c_str());
                         lua_pushnumber(L, it.second);
