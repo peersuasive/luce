@@ -13,10 +13,14 @@ static juce::JUCEApplicationBase* juce_CreateApplication() {
 }
 
 int lua_main(void) {
-    juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
-    // automatic
-    int res = juce::JUCEApplicationBase::main();
-    
+    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    int res;
+#ifdef JUCE_MAC
+    // will call initialiseNSApplication
+    res = juce::JUCEApplicationBase::main(0, 0);
+#else
+    res = juce::JUCEApplicationBase::main();
+#endif
     /*
     // manual
     if ( MessageManager::getInstanceWithoutCreating() != nullptr )
@@ -41,7 +45,7 @@ int lua_main(void) {
 }
 
 int lua_main_manual(lua_State *L, const int& cb_ref) {
-    juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     
     const ScopedPointer<JUCEApplicationBase> app (juce::JUCEApplicationBase::createInstance());
     app->initialiseApp();
@@ -89,7 +93,7 @@ int lua_shutdown(lua_State *L) {
 
 //==============================================================================
 int start( lua_State *L ) {
-    juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2);
     mainClass = mc;
@@ -106,7 +110,7 @@ int start_manual( lua_State *L ) {
 
     int cb_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, -1); // luaL_ref pop'ed the cb function
     mainClass = mc;
@@ -122,7 +126,6 @@ int start_manual( lua_State *L ) {
 void l_C_##c(lua_State *L) \
 { \
     lua_newtable(L); \
-    int n = lua_gettop(L); \
     for(auto& it : LConstants::l##c) { \
         lua_pushnumber(L, it.second); \
         lua_setfield(L, -2, it.first); \
@@ -133,7 +136,6 @@ void l_C_##c(lua_State *L) \
 void l_C_##c(lua_State *L) \
 { \
     lua_newtable(L); \
-    int n = lua_gettop(L); \
     for(auto& it : LConstants::l##c) { \
         lua_pushstring(L, it); \
         lua_setfield(L, -2, it); \
@@ -249,14 +251,15 @@ void register_enums(lua_State *L) {
     dc(FocusChangeType, L);
 }
 
+__attribute__ ((visibility ("default")))
 #ifdef DEBUG
 int luaopen_luce_core_d (lua_State *L) {
 #else
 int luaopen_luce_core (lua_State *L) {
 #endif
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
-    initialiseJuce_GUI();
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    initialiseJuce_GUI();
 
     lua_newtable(L);
     int i = lua_gettop(L);
@@ -279,13 +282,18 @@ static const luaL_Reg lucecore_lib [] = {
     {NULL, NULL}
 };
 
+__attribute__ ((visibility ("default")))
 int luaopen_core(lua_State *L) {
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
-    initialiseJuce_GUI();
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    initialiseJuce_GUI();
  
 #if LUA_VERSION_NUM > 501
+#ifdef DEBUG
+    luaL_requiref(L, "luce.core", luaopen_luce_core_d, 1);
+#else
     luaL_requiref(L, "luce.core", luaopen_luce_core, 1);
+#endif
 #else
     luaL_register(L, "luce.core", luce_lib);
     register_enums(L);
