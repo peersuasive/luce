@@ -1292,7 +1292,7 @@ int LComponent::getComponentAt ( lua_State* ) {
     
     // override
     if (child) {
-        int x = LUA::getNumber(1);
+        int x = LUA::getNumber(2);
         int y = LUA::getNumber(2);
         // return LUA::TODO_RETURN_OBJECT_Component( child->getComponentAt( x, y ) );
         lua_settop(LUA::Get(), 1); // added by TODO

@@ -526,7 +526,7 @@ int LListBox::getViewport ( lua_State* ) {
 }
 
 int LListBox::createSnapshotOfSelectedRows ( lua_State* ) {
-    int x = LUA::getNumber(1);
+    int x = LUA::getNumber(2);
     int y = LUA::getNumber(2);
     // return LUA::TODO_RETURN_OBJECT_Image( ListBox::createSnapshotOfSelectedRows( x, y ) );
     lua_settop(LUA::Get(), 1); // added by TODO
