@@ -629,16 +629,22 @@ int LTextEditor::setInputFilter ( lua_State *L ) {
     return 0;
 }
 
-// TODO:
-// getters
-int LTextEditor::setTemporaryUnderlining ( lua_State* ) {
-    //TextEditor::setTemporaryUnderlining(LUA::getList());
-    LUA::TODO_OBJECT( "TextEditor::setTemporaryUnderlining(LUA::getList())" );
-    lua_settop(LUA::Get(), 1);
+int LTextEditor::setTemporaryUnderlining ( lua_State *L ) {
+    luaL_checktype(L, 2, LUA_TTABLE);
+    Array<Range<int>> a;
+    lua_pushnil(L);
+    while(lua_next(L, -2)) {
+        lua_pushvalue(L,-1); // luce_torange will eat it
+        a.add( LUCE::luce_torange<int>() );
+        lua_pop(L,1);
+    }
+    lua_remove(L, 2);
+    TextEditor::setTemporaryUnderlining(a);
     return 0;
 }
 
-
+// TODO:
+// getters
 int LTextEditor::addPopupMenuItems ( lua_State* ) {
     // PopupMenu menuToAddTo = LUA::TODO_OBJECT_PopupMenu;
     // MouseEvent* mouseClickEvent = LUA::TODO_OBJECT_MouseEvent;
