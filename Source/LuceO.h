@@ -1,6 +1,8 @@
 namespace LUCE {
 namespace {
     typedef const char* NumType;
+    template<class T> struct ArrayType:std::vector<T>{}; //vector has no virtual destructor, don't inherit
+    
     void Set(lua_State *L_);
 
     void throw_error(const char *);
@@ -24,9 +26,9 @@ namespace {
 
     template<class T>
     const juce::Point<T> luce_topoint(int i = -1);
-    const juce::Point<int> luce_topoint(int i);
-    template<class T>
-    int luce_pushlightpoint(const juce::Point<T>&);
+
+    template<class T, class U>
+    int luce_pushtable(const U&);
 
     const juce::StringArray luce_tostringarray(int i = -1);
 
@@ -34,8 +36,6 @@ namespace {
     int luce_pushlightglyph(const TextLayout::Glyph&);
 
     template<class T>
-    const T* luce_getnumarray(int i = -1);
-    const int* luce_getnumarray(int i);
-
+    const ArrayType<T> luce_tonumberarray(int i = -1);
 }
 }
