@@ -74,21 +74,24 @@ namespace {
         return lua_objlen(L, -1);
     }
 
-    int luce_pushnumber(int i = -1) {
+    int luceI_pushnumber(int i = -1) {
         if(!lua_isnumber(L,i))
             return 0;
         lua_pushstring(L, "number");
         lua_pushstring(L, "int");
+        lua_newtable(L);
         lua_pushvalue(L, i);
+        lua_rawseti(L, -2, 1);
         lua_remove(L, i);
         return 1;
     }
+
     template<class T>
     const T luce_tonumber(int i) {
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
         int res;
         if(!luce_typename(i))
-            res = luce_pushnumber(i);
+            res = luceI_pushnumber(i);
         else
             res = luceI_pushvalue(i);
         if(res) {
