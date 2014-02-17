@@ -223,7 +223,7 @@ slm:setItemLayout( 2, {1, -0.6, 250} );
 
 mc:resized(function(...)
     local bounds = luce:Rectangle(mc:getLocalBounds()):reduced(5)
-    slm:layOutComponents(3, {"", slr, ""}, { bounds.x, bounds.y, bounds.w, bounds.h }, false, true)
+    slm:layOutComponents( {"", slr, ""}, { bounds.x, bounds.y, bounds.w, bounds.h }, false, true)
     local props = bounds:withTrimmedLeft(5)
     props.x = slr:getX() + slr:getWidth()
     props.w = bounds.w - slr:getX() - 5
