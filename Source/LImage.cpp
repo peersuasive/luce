@@ -101,7 +101,7 @@ int LImage::getWidth(lua_State*) {
 }
 
 int LImage::getBounds(lua_State*) {
-    return LUA::returnTable( Image::getBounds() );
+    return LUCE::luce_pushtable( Image::getBounds() );
 }
 
 int LImage::getProperties(lua_State*) {

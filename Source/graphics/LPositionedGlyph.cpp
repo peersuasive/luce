@@ -68,7 +68,7 @@ int LPositionedGlyph::getRight ( lua_State* ) {
 }
 
 int LPositionedGlyph::getBounds ( lua_State* ) {
-    return LUA::returnTable( PositionedGlyph::getBounds() );
+    return LUCE::luce_pushtable( PositionedGlyph::getBounds() );
 }
 
 int LPositionedGlyph::isWhitespace ( lua_State* ) {

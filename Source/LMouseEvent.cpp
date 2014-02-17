@@ -149,11 +149,11 @@ int LMouseEvent::getDistanceFromDragStartX ( lua_State* ) {
 }
 
 int LMouseEvent::getScreenPosition ( lua_State* ) {
-    return LUA::returnTable( MouseEvent::getScreenPosition() );
+    return LUCE::luce_pushtable( MouseEvent::getScreenPosition() );
 }
 
 int LMouseEvent::getPosition ( lua_State* ) {
-    return LUA::returnTable( MouseEvent::getPosition() );
+    return LUCE::luce_pushtable( MouseEvent::getPosition() );
 }
 
 int LMouseEvent::withNewPosition ( lua_State* L ) {
@@ -187,11 +187,11 @@ int LMouseEvent::getDistanceFromDragStart ( lua_State* ) {
 }
 
 int LMouseEvent::getMouseDownScreenPosition ( lua_State* ) {
-    return LUA::returnTable( MouseEvent::getMouseDownScreenPosition() );
+    return LUCE::luce_pushtable( MouseEvent::getMouseDownScreenPosition() );
 }
 
 int LMouseEvent::getOffsetFromDragStart ( lua_State* ) {
-    return LUA::returnTable( MouseEvent::getOffsetFromDragStart() );
+    return LUCE::luce_pushtable( MouseEvent::getOffsetFromDragStart() );
 }
 
 int LMouseEvent::getLengthOfMousePress ( lua_State* ) {
@@ -199,5 +199,5 @@ int LMouseEvent::getLengthOfMousePress ( lua_State* ) {
 }
 
 int LMouseEvent::getMouseDownPosition ( lua_State* ) {
-    return LUA::returnTable( MouseEvent::getMouseDownPosition() );
+    return LUCE::luce_pushtable( MouseEvent::getMouseDownPosition() );
 }

@@ -72,7 +72,7 @@ int LGlyphArrangement::getBoundingBox ( lua_State* ) {
     int startIndex = LUA::getNumber<int>(2);
     int numGlyphs = LUA::getNumber<int>(2);
     bool includeWhitespace = LUA::getBoolean(2);
-    return LUA::returnTable( GlyphArrangement::getBoundingBox( startIndex, numGlyphs, includeWhitespace ) );
+    return LUCE::luce_pushtable( GlyphArrangement::getBoundingBox( startIndex, numGlyphs, includeWhitespace ) );
 }
 
 int LGlyphArrangement::getGlyph ( lua_State *L ) {

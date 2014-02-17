@@ -172,15 +172,15 @@ int LFont::s_findFonts ( lua_State* ) {
     Font::findFonts(list);
     for(int i=0;i<list.size();++i)
         s.add( list[i].toString() );
-    return LUA::returnTable(s);
+    return LUCE::luce_pushtable(s);
 }
 
 int LFont::s_findAllTypefaceStyles ( lua_State* ) {
-    return LUA::returnTable( Font::findAllTypefaceStyles(LUA::getString(2)) );
+    return LUCE::luce_pushtable( Font::findAllTypefaceStyles(LUA::getString(2)) );
 }
 
 int LFont::s_findAllTypefaceNames ( lua_State* ) {
-    return LUA::returnTable( Font::findAllTypefaceNames() );
+    return LUCE::luce_pushtable( Font::findAllTypefaceNames() );
 }
 
 int LFont::s_getFallbackFontName ( lua_State* ) {
@@ -289,7 +289,7 @@ int LFont::withHorizontalScale ( lua_State *L ) {
 }
 
 int LFont::getAvailableStyles ( lua_State *L ) {
-    return LUA::returnTable( Font::getAvailableStyles() );
+    return LUCE::luce_pushtable( Font::getAvailableStyles() );
 }
 
 int LFont::getDescent ( lua_State* ) {

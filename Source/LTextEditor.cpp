@@ -238,7 +238,7 @@ int LTextEditor::moveCaretToEnd (lua_State* L) {
 int LTextEditor::moveCaretRight ( lua_State* ) {
     bool moveInWholeWordSteps = LUA::getBoolean(2);
     bool selecting = LUA::getBoolean(2);
-    return LUA::returnBoolean( TextEditor::moveCaretRight( LUA::getBoolean(), LUA::getBoolean() ) );
+    return LUA::returnBoolean( TextEditor::moveCaretRight( moveInWholeWordSteps, selecting ) );
 }
 
 int LTextEditor::moveCaretDown ( lua_State* ) {
@@ -277,7 +277,7 @@ int LTextEditor::moveCaretUp ( lua_State* ) {
 }
 
 int LTextEditor::getHighlightedRegion ( lua_State* ) {
-    return LUA::returnTable( TextEditor::getHighlightedRegion() );
+    return LUCE::luce_pushtable( TextEditor::getHighlightedRegion() );
 }
 int LTextEditor::setHighlightedRegion ( lua_State* ) {
     TextEditor::setHighlightedRegion( LUA::getRange() );
@@ -327,7 +327,7 @@ int LTextEditor::setCaretVisible ( lua_State* ) {
 
 int LTextEditor::getBorder ( lua_State* ) {
     BorderSize<int> b = TextEditor::getBorder();
-    return LUA::returnTable( std::list<var>{ b.getTop(), b.getLeft(), b.getBottom(), b.getRight() } );
+    return LUCE::luce_pushtable( std::list<var>{ b.getTop(), b.getLeft(), b.getBottom(), b.getRight() } );
 }
 int LTextEditor::setBorder ( lua_State* ) {
     Array<var> b = LUA::getList();
@@ -414,7 +414,7 @@ int LTextEditor::keyStateChanged ( lua_State* ) {
 }
 
 int LTextEditor::getCaretRectangle ( lua_State* ) {
-    return LUA::returnTable( TextEditor::getCaretRectangle() );
+    return LUCE::luce_pushtable( TextEditor::getCaretRectangle() );
 }
 
 int LTextEditor::scrollUp ( lua_State* ) {

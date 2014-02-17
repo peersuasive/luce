@@ -355,7 +355,7 @@ int LListBox::setOutlineThickness ( lua_State* ) {
 }
 
 int LListBox::getSelectedRows ( lua_State* ) {
-    return LUA::returnTable( ListBox::getSelectedRows() );
+    return LUCE::luce_pushtable( ListBox::getSelectedRows() );
 }
 int LListBox::setSelectedRows ( lua_State* ) {
     SparseSet<int> setOfRowsToBeSelected = LUA::getSparseSet(2);
@@ -419,7 +419,7 @@ int LListBox::getNumRowsOnScreen ( lua_State* ) {
 int LListBox::getRowPosition ( lua_State* ) {
     int rowNumber = LUA::getNumber(2);
     bool relativeToComponentTopLeft = LUA::getBoolean(2);
-    return LUA::returnTable( ListBox::getRowPosition(rowNumber, relativeToComponentTopLeft) );
+    return LUCE::luce_pushtable( ListBox::getRowPosition(rowNumber, relativeToComponentTopLeft) );
 }
 
 int LListBox::getNumSelectedRows ( lua_State* ) {

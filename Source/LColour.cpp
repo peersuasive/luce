@@ -308,7 +308,7 @@ int LColour::getBrightness ( lua_State* ) {
 int LColour::getHSB ( lua_State* ) {
     float hue, saturation, brightness;
     Colour::getHSB( hue, saturation, brightness );
-    return LUA::returnTable( std::list<var>{ hue, saturation, brightness } );
+    return LUCE::luce_pushtable( std::list<var>{ hue, saturation, brightness } );
 }
 
 // TODO

@@ -78,7 +78,7 @@ int LSourceDetails::setSourceComponent(lua_State*) {
 }
 
 int LSourceDetails::getLocalPosition(lua_State*) {
-    return LUA::returnTable( localPosition );
+    return LUCE::luce_pushtable( localPosition );
 }
 int LSourceDetails::setLocalPosition(lua_State*) {
     localPosition = LUA::getPoint(2);

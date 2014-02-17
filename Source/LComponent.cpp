@@ -77,7 +77,7 @@ int LComponent::setBounds(lua_State *L) {
 
 int LComponent::getBounds(lua_State *L) {
     if (child)
-        return LUA::returnTable( child->getBounds() );
+        return LUCE::luce_pushtable( child->getBounds() );
     else return 0;
 }
 
@@ -90,7 +90,7 @@ int LComponent::setSize(lua_State *L) {
 
 int LComponent::getSize(lua_State *L) {
     if(child) {
-        return LUA::returnTable( child->getBounds() );
+        return LUCE::luce_pushtable( child->getBounds() );
     }
     else return 0;
 }
@@ -273,7 +273,7 @@ int LComponent::getRight ( lua_State* ) {
 
 int LComponent::getScreenPosition ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->getScreenPosition() );
+        return LUCE::luce_pushtable( child->getScreenPosition() );
     else return 0;
 }
 
@@ -317,7 +317,7 @@ int LComponent::reallyContains ( lua_State* ) {
 
 int LComponent::localAreaToGlobal ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->localAreaToGlobal( LUA::getRectangle() ) );
+        return LUCE::luce_pushtable( child->localAreaToGlobal( LUA::getRectangle() ) );
     else return 0;
 }
 
@@ -378,13 +378,13 @@ int LComponent::getWidth ( lua_State* ) {
 
 int LComponent::getScreenBounds ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->getScreenBounds() );
+        return LUCE::luce_pushtable( child->getScreenBounds() );
     else return 0;
 }
 
 int LComponent::getMouseXYRelative ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->getMouseXYRelative() );
+        return LUCE::luce_pushtable( child->getMouseXYRelative() );
     else return 0;
 }
 
@@ -402,7 +402,7 @@ int LComponent::getScreenX ( lua_State* ) {
 
 int LComponent::getParentMonitorArea ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->getParentMonitorArea() );
+        return LUCE::luce_pushtable( child->getParentMonitorArea() );
     else return 0;
 }
 
@@ -438,19 +438,19 @@ int LComponent::isMouseButtonDown ( lua_State* ) {
 
 int LComponent::localPointToGlobal ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->localPointToGlobal( LUA::getPoint() ) );
+        return LUCE::luce_pushtable( child->localPointToGlobal( LUA::getPoint() ) );
     else return 0;
 }
 
 int LComponent::getPosition ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->getPosition() );
+        return LUCE::luce_pushtable( child->getPosition() );
     else return 0;
 }
 
 int LComponent::getBoundsInParent ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->getBoundsInParent() );
+        return LUCE::luce_pushtable( child->getBoundsInParent() );
     else return 0;
 }
 
@@ -487,7 +487,7 @@ int LComponent::isShowing ( lua_State* ) {
 
 int LComponent::getLocalBounds ( lua_State* ) {
     if (child)
-        return LUA::returnTable( child->getLocalBounds() );
+        return LUCE::luce_pushtable( child->getLocalBounds() );
     else return 0;
 }
 
@@ -1202,7 +1202,7 @@ int LComponent::findColour ( lua_State* ) {
         //return LUA::returnString( (child->findColour( colourId, inheritFromParent )).toString() );
         //return LUA::returnString( (child->findColour( colourId, inheritFromParent )).toDisplayString(true) );
         Colour c = child->findColour(colourId, inheritFromParent);
-        return LUA::returnTable( std::list<var>{ c.toDisplayString(true), var((int)c.getARGB()) } );
+        return LUCE::luce_pushtable( std::list<var>{ c.toDisplayString(true), var((int)c.getARGB()) } );
     } else return 0;
 }
 
@@ -1372,7 +1372,7 @@ int LComponent::getVisibleArea ( lua_State* ) {
         //bool includeSiblings = LUA::getBoolean();
         //Rectangle<int> result;
         //child->getVisibleArea( result, includeSiblings );
-        //return returnTable( result );
+        //return LUCE::push_table( result );
         LUA::TODO_OBJECT( "getVisibleArea, LUA::TODO_OBJECT_RectangleList" );
         lua_settop(LUA::Get(), 1); // added by TODO
     }

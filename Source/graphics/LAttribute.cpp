@@ -45,7 +45,7 @@ LAttribute::LAttribute(lua_State *L, const Attribute& class_)
 LAttribute::~LAttribute() {}
 
 int LAttribute::getRange(lua_State*) {
-    return LUA::returnTable( Attribute::range );
+    return LUCE::luce_pushtable( Attribute::range );
 }
 
 /////// getters

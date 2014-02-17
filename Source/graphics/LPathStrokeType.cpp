@@ -97,8 +97,13 @@ int LPathStrokeType::setEndStyle ( lua_State* ) {
 int LPathStrokeType::createDashedStroke ( lua_State *L ) {
     Path destPath = *LUA::from_luce<LPath>(2);
     Path sourcePath = *LUA::from_luce<LPath>(2);
-    const float* dashLengths = LUCE::luce_getnumarray<float>(2);
+    
+    LUCE::ArrayType<float> v = LUCE::luce_tonumberarray<float>(2);
     int numDashLengths = LUA::getNumber<int>(2);
+    float dashLengths[numDashLengths];
+    for(auto i=0;i<v.size();++i) {
+        dashLengths[i] = v[i];
+    }
     AffineTransform transform = AffineTransform::identity;
     float extraAccuracy = 1.0f;
     if(! lua_isnoneornil(L, 2) ) {
@@ -107,6 +112,7 @@ int LPathStrokeType::createDashedStroke ( lua_State *L ) {
     }
     PathStrokeType::createDashedStroke( destPath, sourcePath, 
                 dashLengths, numDashLengths, transform, extraAccuracy );
+
     return 0;
 }
 

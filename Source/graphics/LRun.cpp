@@ -89,7 +89,7 @@ int LRun::setGlyphs(lua_State *L) {
 }
 
 int LRun::getStringRange(lua_State*) {
-    return LUA::returnTable( this->stringRange );
+    return LUCE::luce_pushtable( this->stringRange );
 }
 int LRun::setStringRange(lua_State*) {
     this->stringRange = LUA::getRange<int>(2);

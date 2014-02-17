@@ -60,11 +60,11 @@ LLine::LLine(lua_State *L, const TextLayout::Line& class_)
 LLine::~LLine() {}
 
 int LLine::getLineBoundsX ( lua_State* ) {
-    return LUA::returnTable( Line::getLineBoundsX() );
+    return LUCE::luce_pushtable( Line::getLineBoundsX() );
 }
 
 int LLine::getRuns(lua_State*) {
-    return LUA::returnTable<LRun, TextLayout::Run>( TextLayout::Line::runs );
+    return LUCE::luce_pushtable<LRun, TextLayout::Run>( TextLayout::Line::runs );
 }
 int LLine::setRuns(lua_State*) {
     Array<TextLayout::Run*> lcomps = LUA::getObjectList<LRun,TextLayout::Run>(2);
@@ -75,7 +75,7 @@ int LLine::setRuns(lua_State*) {
 }
 
 int LLine::getStringRange(lua_State*) {
-    return LUA::returnTable( TextLayout::Line::stringRange );
+    return LUCE::luce_pushtable( TextLayout::Line::stringRange );
 }
 int LLine::setStringRange(lua_State*) {
     TextLayout::Line::stringRange = LUA::getRange<int>(2);
@@ -83,7 +83,7 @@ int LLine::setStringRange(lua_State*) {
 }
 
 int LLine::getLineOrigin(lua_State*) {
-    return LUA::returnTable( TextLayout::Line::lineOrigin );
+    return LUCE::luce_pushtable( TextLayout::Line::lineOrigin );
 }
 int LLine::setLineOrigin(lua_State*) {
     TextLayout::Line::lineOrigin = LUA::getPoint<float>(2);

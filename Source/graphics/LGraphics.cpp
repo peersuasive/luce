@@ -120,7 +120,7 @@ int LGraphics::getCurrentFont ( lua_State *L ) {
 }
 
 int LGraphics::getClipBounds ( lua_State* ) {
-    return LUA::returnTable(Graphics::getClipBounds() );
+    return LUCE::luce_pushtable(Graphics::getClipBounds() );
 }
 
 int LGraphics::reduceClipRegion ( lua_State* ) {

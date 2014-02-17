@@ -86,7 +86,7 @@ AffineTransform LAffineTransform::fromLuce( const Array<float>& a )
 }
 
 int LAffineTransform::dump(lua_State*) {
-    return LUA::returnTable( std::list<var>{ mat00, mat01, mat02, mat10, mat11, mat12 } );
+    return LUCE::luce_pushtable( std::list<var>{ mat00, mat01, mat02, mat10, mat11, mat12 } );
 }
 
 /////// getters

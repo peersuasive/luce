@@ -110,7 +110,7 @@ int LPath::createPathWithRoundedCorners ( lua_State* ) {
 int LPath::getPointAlongPath ( lua_State* ) {
     float distanceFromStart = LUA::getNumber<float>(2);
     AffineTransform transform = LAffineTransform::fromLuce( LUA::getList<float>(2) );
-    return LUA::returnTable( Path::getPointAlongPath( distanceFromStart, transform ) );
+    return LUCE::luce_pushtable( Path::getPointAlongPath( distanceFromStart, transform ) );
 }
 
 int LPath::getLength ( lua_State* ) {
@@ -124,21 +124,21 @@ int LPath::intersectsLine ( lua_State* ) {
 }
 
 int LPath::getBounds( lua_State* ) {
-    return LUA::returnTable( Path::getBounds() );
+    return LUCE::luce_pushtable( Path::getBounds() );
 }
 
 int LPath::getBoundsTransformed ( lua_State* ) {
-    return LUA::returnTable( Path::getBoundsTransformed( LAffineTransform::fromLuce( LUA::getList<float>(2) ) ) );
+    return LUCE::luce_pushtable( Path::getBoundsTransformed( LAffineTransform::fromLuce( LUA::getList<float>(2) ) ) );
 }
 
 int LPath::getClippedLine ( lua_State* ) {
     Line<float> line = LUA::getLine<float>(2);
     bool keepSectionOutsidePath = LUA::getBoolean(2);
-    return LUA::returnTable( Path::getClippedLine( line, keepSectionOutsidePath ) );
+    return LUCE::luce_pushtable( Path::getClippedLine( line, keepSectionOutsidePath ) );
 }
 
 int LPath::getCurrentPosition ( lua_State* ) {
-    return LUA::returnTable( Path::getCurrentPosition() );
+    return LUCE::luce_pushtable( Path::getCurrentPosition() );
 }
 
 int LPath::getTransformToScaleToFit ( lua_State *L ) {

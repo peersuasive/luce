@@ -58,7 +58,7 @@ int LGlyph::setGlyphCode(lua_State*) {
 }
 
 int LGlyph::getAnchor(lua_State*) {
-    return LUA::returnTable( this->anchor );
+    return LUCE::luce_pushtable( this->anchor );
 }
 int LGlyph::setAnchor(lua_State*) {
     this->anchor = LUA::getPoint<float>(2);
