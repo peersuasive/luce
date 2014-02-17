@@ -81,34 +81,6 @@ namespace LUA {
         const int returnString(const String& val);
         int returnString(const std::string& val);
 
-        int returnTable( const std::list<var>& val );
-        int returnTable( const Array<var>& val );
-        int returnTable( const juce::StringArray& );
-        int returnTable( const juce::SparseSet<int>& r);
-
-        template<class T>
-        int returnTable( const juce::Rectangle<T>& r );
-        int returnTable( const juce::Rectangle<int>& r );
-
-        template<class T>
-        int returnTable( const juce::Point<T>& r );
-        int returnTable( const juce::Point<int>& r );
-
-        template<class T>
-        int returnTable( const juce::Line<T>& r );
-        int returnTable( const juce::Line<int>& r );
-
-        template<class T>
-        int returnTable( const juce::Range<T>& r );
-        int returnTable( const juce::Range<int>& r );
-
-        template<class T, class U = T>
-        int returnTable( const OwnedArray<U>& );
-
-        // unused
-        //template<class T, class U = T>
-        //int returnTable(const Array<U*>&);
-
         int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ");
 
         const int call_cb( const LBase* key, const char *name, int nb_ret = 0,

@@ -233,47 +233,6 @@ namespace LUA {
             return res;
         }
 
-        /*
-        const Array<Component*> getComponentList(int n, int i) {
-            luaL_checktype(L, i, LUA_TTABLE);
-            lua_pushvalue(L, i);
-
-            Array<Component*> res;
-
-            for (int ind=1;ind<=n;++ind) {
-                Component *comp;
-                lua_rawgeti(L, i, ind);
-                if ( lua_type(L, -1) == LUA_TSTRING ) { // any string will do
-                    comp = nullptr;
-                    lua_pop(L,1);
-                }
-                else
-                    comp = from_luce<LComponent,Component>(lua_gettop(L));
-                res.add( comp );
-            }
-            lua_pop(L,1);
-            lua_remove(L,i);
-            return res;
-            
-            //lua_pushnil(L);
-            //while( lua_next(L, -2) != 0 ) {
-            //    std::cout << " ** loop" << std::endl;
-            //    Component *comp;
-            //    if ( lua_type(L, -1) == LUA_TNIL ) {
-            //        std::cout << "******* NIL" << std::endl;
-            //        comp = nullptr;
-            //        lua_pop(L,1);
-            //    }
-            //    else
-            //        comp = from_luce<Component>(lua_gettop(L));
-            //    res.add(comp);
-            //}
-            //lua_pop(L,1);
-            //lua_remove(L,i);
-            //return res;
-        }
-        */
-
         template<class T, class U>
         const Array<U*> getObjectList(int i) {
             i = (i<0) ? lua_gettop(L) - (i+1) : i;
@@ -300,43 +259,6 @@ namespace LUA {
             return getObjectList<LComponent, Component>(i);
         }
 
-        /*
-        const juce::Rectangle<int> getRectangle(int i) {
-            luaL_checktype(L, i, LUA_TTABLE);
-            i = (i<0) ? lua_gettop(L)-(i+1) : i;
-            //i = (i == -1) ? lua_gettop(L) : i; // ensure we have the real table index
-            lua_getmetatable(L, i);
-            lua_getfield(L, -1, "__self");
-            if ( ! lua_isnil(L, -1) ) { // LRectangle object
-                if ( std::string( lua_tostring(L, -1) ) == "LRectangle" ) {
-                    lua_pop(L,1); // __self
-                    lua_getfield(L, i, "dump"); // provided by LRectangle
-                    lua_pushvalue(L, i); // push self
-                    if ( lua_pcall(L, 1, 1, 0) != 0 ) // get self as argument
-                        lua_error(L);
-                } else {
-                    throwError("Wrong object given as a LRectangle");
-                }
-            } else { // a table
-                lua_pushvalue(L, i);
-            }
-            int ind = lua_gettop(L);
-            lua_rawgeti(L, ind, 1);
-            int x = luaL_checknumber(L, -1);
-            lua_rawgeti(L, ind, 2);
-            int y = luaL_checknumber(L, -1);
-            lua_rawgeti(L, ind, 3);
-            int w = luaL_checknumber(L, -1);
-            lua_rawgeti(L, ind, 4);
-            int h = luaL_checknumber(L, -1);
-
-            lua_pop(L, 5); // table + x, y, w, h
-            lua_pop(L,1); // mt or nil
-            lua_remove(L,i); // original argument
-
-            return { x, y, w, h };
-        }
-        */
         template<class T>
         const juce::Rectangle<T> getRectangle(int i) {
             luaL_checktype(L, i, LUA_TTABLE);
@@ -642,163 +564,12 @@ namespace LUA {
             return 1;
         }
 
-        // implement embedded tables
-        int returnTable(const std::list<var>& val) {
-            lua_newtable(L);
-            int t = lua_gettop(L);
-            int i = 0;
-            for ( auto &it : val ) {
-                if ( it.isInt() 
-                        || it.isInt64() 
-                        || it.isDouble()
-                        ) {
-                    lua_pushnumber(L, it);
-                }
-                else if ( it.isBool() ) {
-                    lua_pushboolean(L, (bool)it);
-                }
-                else if ( it.isString() ) {
-                    lua_pushlstring(L, it.toString().toRawUTF8(), it.toString().length() );
-                }
-                else if ( it.isArray() ) {
-                    lua_pushnil(L);
-                    std::cout << "type not yet implemented" << std::endl;
-                    // TODO: test this
-                    // returnTable( *it.getArray() );
-                }
-                else {
-                    lua_pushnil(L);
-                    std::cout << "type not yet implemented" << std::endl;
-                }
-                lua_rawseti(L, t, ++i);
-            }
-            return 1;
-        }
-        int returnTable(const Array<var>& val) {
-            std::list<var> r;
-            for (int i=0;i<val.size();++i)
-                r.push_back( val[i] );
-            return returnTable(r);
-        }
-        int returnTable(const StringArray& sa) {
-            std::list<var> r;
-            for(int i=0;i<sa.size();++i)
-                r.push_back(sa[i]);
-            return returnTable(r);
-        }
-
         int TODO_OBJECT(const String& tmpl, const String& msg) {
             lua_pushstring(L, (msg + tmpl).toRawUTF8() );
             lua_error(L);
             return 0;
         }
 
-        // we could set a table with x, y, width, height instead of an array
-        // or we could also implement the rectangle class to get all the facilities
-        // it offers ?
-        template<class T>
-        int returnTable( const juce::Rectangle<T>& r ) {
-            lua_newtable(L);
-            int t = lua_gettop(L);
-            lua_pushnumber(L, r.getX());
-            lua_rawseti(L, t, 1);
-            lua_pushnumber(L, r.getY());
-            lua_rawseti(L, t, 2);
-            lua_pushnumber(L, r.getWidth());
-            lua_rawseti(L, t, 3);
-            lua_pushnumber(L, r.getHeight());
-            lua_rawseti(L, t, 4);
-            return 1;
-        }
-        int returnTable( const juce::Rectangle<int>& r ) {
-            return returnTable<int>(r);
-        }
-
-        //int returnTable( const juce::RectangleList<int>& r ) {
-        //    // TODO
-        //    //
-        //    // for each rectangle, create a list of numbers
-        //    return 0;
-        //}
-
-        template<class T>
-        int returnTable( const juce::Point<T>& r ) {
-            lua_newtable(L);
-            int t = lua_gettop(L);
-            lua_pushnumber(L, r.getX());
-            lua_rawseti(L, t, 1);
-            lua_pushnumber(L, r.getY());
-            lua_rawseti(L, t, 2);
-            return 1;
-        }
-        int returnTable( const juce::Point<int>& r ) {
-            return returnTable<int>(r);
-        }
-
-        template<class T>
-        int returnTable( const juce::Range<T>& r ) {
-            lua_newtable(L);
-            int t = lua_gettop(L);
-            lua_pushnumber(L, r.getStart());
-            lua_rawseti(L, t, 1);
-            lua_pushnumber(L, r.getEnd());
-            lua_rawseti(L, t, 2);
-            return 1;
-        }
-        int returnTable( const juce::Range<int>& r ) {
-            return returnTable<int>( r );
-        }
-
-        int returnTable( const juce::SparseSet<int>& r ) {
-            std::list<var> l;
-            for (int i=0; i<r.size(); ++i)
-                l.push_back(r[i]);
-            return returnTable(l);
-            //return returnTable( r.getTotalRange() );
-        }
-
-        template<class T>
-        int returnTable( const juce::Line<T>& l ) {
-            lua_newtable(L);
-            int t = lua_gettop(L);
-            lua_pushnumber(L, l.getStartX());
-            lua_rawseti(L, t, 1);
-            lua_pushnumber(L, l.getStartY());
-            lua_rawseti(L, t, 2);
-            lua_pushnumber(L, l.getEndX());
-            lua_rawseti(L, t, 3);
-            lua_pushnumber(L, l.getEndY());
-            lua_rawseti(L, t, 4);
-            return 1;
-        }
-        int returnTable( const juce::Line<int>& l ) {
-            return returnTable<int>( l );
-        }
-
-        template<class T, class U>
-        int returnTable( const OwnedArray<U>& a) {
-            lua_newtable(L);
-            int t = lua_gettop(L);
-            for(int i=0; i<a.size(); ++i) {
-                returnUserdata<T, U>( a[i] );
-                lua_rawseti(L, t, i+1);
-            }
-            return 1;
-        }
-
-        /* unused
-        template<class T, class U>
-        int returnTable( const Array<U*>& a) {
-            lua_newtable(L);
-            int t = lua_gettop(L);
-            for(int i=0; i<a.size(); ++i) {
-                returnUserdata<T, U>( a[i] );
-                lua_rawseti(L, t, i+1);
-            }
-            return 1;
-        }
-        */
- 
         int stacktrace(lua_State *L) {
             bool full_stack = false;
             lua_Debug info;
