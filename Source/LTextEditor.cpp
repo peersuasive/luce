@@ -161,7 +161,7 @@ int LTextEditor::escapePressed(lua_State*){
 }
 
 void LTextEditor::returnPressed() {
-    if (hasCallback("returnTable"))
+    if (hasCallback("returnPressed"))
         callback("returnPressed");
     else
         TextEditor::returnPressed();
