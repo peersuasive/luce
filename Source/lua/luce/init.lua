@@ -45,6 +45,9 @@ local LModules = {
     "Rectangle",
     "RectangleList",
     "AffineTransform",
+    "Point",
+    "Line",
+    "RectanglePlacement",
 }
 
 local xmeta = setmetatable({ 
@@ -64,6 +67,8 @@ local xmeta = setmetatable({
             local mm = require("luce.L"..m)( luce )
             luce_m[m] = function(self,...) return mm(...) end
         end
+        -- bitwise
+        luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
 
         return luce_m
         --return(load_luce(_, luce))

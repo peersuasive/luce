@@ -171,9 +171,15 @@ local function new(me, t, __type)
 end
 
 mt.new = new
-local xmeta = setmetatable({}, {
-    __call = new,
-    new = new
+
+return setmetatable({}, {
+    __call = function(self,core,...)
+        local self = self or {}
+        luce = assert(core, "Missing luce core instance")
+        self = setmetatable({}, {
+            __call = new,
+            __tostring = function()return myType end,
+        })
+        return self
+    end
 })
---module(...)
-return xmeta
