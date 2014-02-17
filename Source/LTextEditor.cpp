@@ -11,6 +11,28 @@
 
 *************************************************************/
 
+class LInputFilter : public LBase, public TextEditor::InputFilter
+{
+public:
+    LInputFilter(lua_State *L)
+        : LBase(L, "LInputFilter", true), TextEditor::InputFilter()
+    { 
+        set("filterNewText"); 
+    }
+    virtual String filterNewText(TextEditor&, const String& s) override {
+        if(hasCallback("filterNewText")) {
+            callback("filterNewText", 1, { s });
+            return LUA::checkAndGetString(-1, String::empty);
+        }
+        return String::empty;
+    }
+    void isOwned(bool owned) { pureBase(!owned); }
+
+private:
+    //==============================================================================
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LInputFilter)
+};
+
 #include "LTextEditor_inh.h"
 
 ////// static methods
@@ -127,6 +149,7 @@ const Luna<LTextEditor>::FunctionType LTextEditor::methods[] = {
 
 /////// ctor/dtor
 const Luna<LTextEditor>::StaticType LTextEditor::statics[] = {
+    smethod( LTextEditor, inputFilter ),
     {0,0}
 };
 
@@ -139,6 +162,18 @@ LTextEditor::LTextEditor(lua_State *L)
     TextEditor::addListener(this);
 }
 LTextEditor::~LTextEditor(){}
+
+// statics
+int LTextEditor::s_inputFilter(lua_State *L) {
+    LInputFilter *filter;
+    if(lua_isfunction(L,2))
+        filter = new LInputFilter(L);
+    else
+        filter = nullptr;
+    
+    lua_pushlightuserdata(L, (void*)filter);
+    return 1;
+}
 
 /////// callbacks
 int LTextEditor::addListener(lua_State *L) {
@@ -580,6 +615,20 @@ int LTextEditor::applyFontToAllText ( lua_State* ) {
     return 0;
 }
 
+int LTextEditor::setInputFilter ( lua_State *L ) {
+    if(lua_isnoneornil(L,2)) {
+        TextEditor::setInputFilter( nullptr, false );
+        return 0;
+    }
+
+    LInputFilter *filter = (LInputFilter*)lua_touserdata(L,2);
+    bool takeOwnership = LUA::getBoolean(2);
+    filter->isOwned(takeOwnership);
+
+    TextEditor::setInputFilter( filter, takeOwnership );
+    return 0;
+}
+
 // TODO:
 // getters
 int LTextEditor::setTemporaryUnderlining ( lua_State* ) {
@@ -595,15 +644,6 @@ int LTextEditor::addPopupMenuItems ( lua_State* ) {
     // MouseEvent* mouseClickEvent = LUA::TODO_OBJECT_MouseEvent;
     // TextEditor::addPopupMenuItems( menuToAddTo, mouseClickEvent );
     LUA::TODO_OBJECT( "addPopupMenuItems,  menuToAddTo, mouseClickEvent " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LTextEditor::setInputFilter ( lua_State* ) {
-    // InputFilter* newFilter = LUA::TODO_OBJECT_InputFilter;
-    // bool takeOwnership = LUA::getBoolean(2);
-    // TextEditor::setInputFilter( newFilter, takeOwnership );
-    LUA::TODO_OBJECT( "setInputFilter,  newFilter, takeOwnership " );
     lua_settop(LUA::Get(), 1); // added by TODO
     return 0;
 }

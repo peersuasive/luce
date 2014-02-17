@@ -23,6 +23,9 @@ public:
     ~LTextEditor();
 
     //==============================================================================
+    static int s_inputFilter(lua_State *L);
+
+    //==============================================================================
     int setHighlightedRegion(lua_State*);
     int getHighlightedRegion(lua_State*);
     int setPopupMenuEnabled(lua_State*);
