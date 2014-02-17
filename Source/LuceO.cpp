@@ -281,6 +281,25 @@ namespace {
         return luce_pushlightaffinetransform(aff);
     }
 
+    // RectanglePlacement
+    const juce::RectanglePlacement luce_torectangleplacement(int i = -1) {
+        int val = luce_tonumber<int>(i);
+        return { val };
+    }
+    int luce_pushlightrectangleplacement(const juce::RectanglePlacement& r) {
+        lua_newtable(L);
+        int i = lua_gettop(L);
+        lua_pushnumber(L, r.getFlags());
+        lua_setfield(L, i, "flags");
+        lua_pushstring(L, "lightrectangleplacement");
+        lua_setfield(L, i, "__ltype");
+        return 1;
+    }
+    int luce_pushtable(const juce::RectanglePlacement& r) {
+        return luce_pushlightrectangleplacement(r);
+    }
+
+
     //
     // generic lists
     //
