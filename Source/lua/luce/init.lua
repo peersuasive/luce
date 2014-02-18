@@ -69,6 +69,8 @@ local xmeta = setmetatable({
         end
         -- bitwise
         luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
+        -- deepcopy, goes to table.deepcopy
+        require"luce.deepcopy"
 
         return luce_m
         --return(load_luce(_, luce))
