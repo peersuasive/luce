@@ -154,9 +154,9 @@ end
 
 local function new(me, t, __type)
     local self = {}
-    local t = t or {}
+    local t = ("table"==type(t)) and t or { flags = t }
     self.Flags = Flags
-    self.flags = t or t.flags or Flags.centered
+    self.flags = t.flags or Flags.centered
     self.__type = "int"
     self.__ltype = myType
     bit = bit or luce.bit
