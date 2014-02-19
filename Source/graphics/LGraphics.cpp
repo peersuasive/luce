@@ -466,6 +466,19 @@ int LGraphics::drawImage ( lua_State* ) {
     return 0;
 }
 
+int LGraphics::drawImageWithin ( lua_State* ) {
+    Image imageToDraw = *LUA::from_luce<LImage>(2);
+    int destX = LUA::getNumber<int>(2);
+    int destY = LUA::getNumber<int>(2);
+    int destWidth = LUA::getNumber<int>(2);
+    int destHeight = LUA::getNumber<int>(2);
+    RectanglePlacement placementWithinTarget = LUCE::luce_torectangleplacement(2);
+    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
+    Graphics::drawImageWithin( imageToDraw, destX, destY, destWidth, destHeight, 
+                            placementWithinTarget, fillAlphaChannelWithCurrentBrush );
+    return 0;
+}
+
 int LGraphics::drawImageTransformed ( lua_State* ) {
     Image imageToDraw = *LUA::from_luce<LImage>(2);
     AffineTransform transform = *LUA::from_luce<LAffineTransform>(2);
@@ -498,20 +511,6 @@ int LGraphics::strokePath ( lua_State *L ) {
 // getters
 
 // setters
-int LGraphics::drawImageWithin ( lua_State* ) {
-    Image imageToDraw = *LUA::from_luce<LImage>(2);
-    int destX = LUA::getNumber<int>(2);
-    int destY = LUA::getNumber<int>(2);
-    int destWidth = LUA::getNumber<int>(2);
-    int destHeight = LUA::getNumber<int>(2);
-    //RectanglePlacement placementWithinTarget = *LUA::from_luce<LRectanglePlacement>(2); // TODO;
-    bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
-    //Graphics::drawImageWithin( imageToDraw, destX, destY, destWidth, destHeight, placementWithinTarget, fillAlphaChannelWithCurrentBrush );
-    LUA::TODO_OBJECT( "drawImageWithin" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
 int LGraphics::setFillType ( lua_State* ) {
     //Graphics::setFillType(*LUA::from_luce<LFillType>(2); // TODO);
     LUA::TODO_OBJECT( "setFillType, *LUA::from_luce<LFillType>(2); // TODO" );
