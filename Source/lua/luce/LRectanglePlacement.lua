@@ -181,11 +181,10 @@ return setmetatable({}, {
         local self = self or {}
         luce = assert(core, "Missing luce core instance")
         bit = luce.bit
-        self = setmetatable({}, {
+        return setmetatable({}, {
             __call = new,
             __tostring = function()return myType end,
             __index = __index,
         })
-        return self
     end
 })
