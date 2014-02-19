@@ -217,6 +217,9 @@ public:
     static const Luna<LComponent>::StaticType statics[];
     
     static const Luna<LComponent>::Enum enums[];
+    
+    static LookAndFeel* getLookAndFeel(int n);
+
 protected:    
     //==============================================================================
     enum xFocusChangeType
@@ -267,10 +270,10 @@ private:
     lua_State *L;
     
     //==============================================================================
-    LookAndFeel_V1 lookAndFeelV1;
-    LookAndFeel_V2 lookAndFeelV2;
-    LookAndFeel_V3 lookAndFeelV3;
-    MyLookAndFeel  myLookAndFeel;
+    static LookAndFeel_V1 lookAndFeelV1;
+    static LookAndFeel_V2 lookAndFeelV2;
+    static LookAndFeel_V3 lookAndFeelV3;
+    static MyLookAndFeel  myLookAndFeel;
     int currentLookAndFeel;
 
     //==============================================================================

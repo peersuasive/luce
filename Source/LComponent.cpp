@@ -22,6 +22,11 @@ const Luna<LComponent>::FunctionType LComponent::methods[] = {
     {0,0}
 };
 
+LookAndFeel_V1 LComponent::lookAndFeelV1;
+LookAndFeel_V2 LComponent::lookAndFeelV2;
+LookAndFeel_V3 LComponent::lookAndFeelV3;
+MyLookAndFeel LComponent::myLookAndFeel;
+
 LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
     : LBase(Ls, "LComponent", false),
       child(child_),
@@ -34,7 +39,6 @@ LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
         myName(name_);
     //LBase::name( myName );
 }
-
 LComponent::~LComponent() {
     if (child) {
         //child->removeAllChildren();
@@ -1126,6 +1130,26 @@ int LComponent::focusOfChildComponentChanged(lua_State*){
 /// TODO
 
 // get/set
+LookAndFeel* LComponent::getLookAndFeel(int n) {
+    switch ( n ) {
+        case 1:
+            return &LComponent::lookAndFeelV1;
+            break;
+        case 2:
+            return &LComponent::lookAndFeelV2;
+            break;
+        case 3:
+            return &LComponent::lookAndFeelV3;
+            break;
+        case 4:
+            return &LComponent::myLookAndFeel;
+            break;
+        default:
+            LUA::throwError("Unknown LookAndFeel");
+            break;
+    }
+}
+
 int LComponent::getLookAndFeel ( lua_State* ) {
     if (child) {
         return LUA::returnNumber( currentLookAndFeel );
@@ -1133,6 +1157,8 @@ int LComponent::getLookAndFeel ( lua_State* ) {
     } else return 0;
 }
 int LComponent::setLookAndFeel ( lua_State* ) {
+    child->setLookAndFeel( getLookAndFeel( LUA::getNumber<int>(2) ) );
+    /*
     if (child) {
         int lnf = LUA::getNumber();
         switch ( lnf ) {
@@ -1153,6 +1179,7 @@ int LComponent::setLookAndFeel ( lua_State* ) {
                 break;
         }
     }
+    */
     return 0;
 }
 
