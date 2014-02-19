@@ -601,13 +601,6 @@ public:
         return 1;
     }
 
-    static int ___eq(lua_State *L) {
-        std::cout << "2 eq " << lua_gettop(L) << std::endl;
-
-        lua_pushboolean(L, true);
-        return 1;
-    }
-
     static int __eq(lua_State *L) {
         bool res = 0;
         if( lua_istable(L, -1) && lua_istable(L, -2) ) {
@@ -626,6 +619,11 @@ public:
         lua_pushboolean(L, res);
         return 1;
     }
+    static int ___eq(lua_State *L) {
+        DBG("2 eq");
+        return __eq(L);
+    }
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Luna<T>)
 };
