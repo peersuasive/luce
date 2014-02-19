@@ -55,6 +55,9 @@ private:
 
     virtual void handleAsyncUpdate() override;
 
+    virtual bool keyPressed(const KeyPress&) override;
+    virtual bool keyStateChanged(bool) override;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LDocumentWindow)
 };

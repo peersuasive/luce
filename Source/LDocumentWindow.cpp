@@ -108,6 +108,20 @@ int LDocumentWindow::closeButtonPressed(lua_State *L) {
     return 0;
 }
 
+bool LDocumentWindow::keyPressed(const KeyPress& k) {
+    if(hasCallback("keyPressed"))
+        return LComponent::lkeyPressed(k);
+    else
+        return DocumentWindow::keyPressed(k);
+}
+
+bool LDocumentWindow::keyStateChanged(bool d) {
+    if(hasCallback("keyStateChanged"))
+        return LComponent::lkeyStateChanged(d);
+    else
+        return DocumentWindow::keyStateChanged(d);
+}
+
 //==============================================================================
 
 int LDocumentWindow::clearCommands(lua_State*) {
