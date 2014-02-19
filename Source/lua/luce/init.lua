@@ -48,9 +48,10 @@ local LModules = {
     "Point",
     "Line",
     "RectanglePlacement",
+    "ImageComponent",
 }
 
-local xmeta = setmetatable({ 
+local xmeta = setmetatable({
         new = function(self, dbg)
             local luce = dbg and require"luce.core_d" or require"luce.core"
             return load_luce(_, luce)
