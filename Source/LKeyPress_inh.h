@@ -30,7 +30,6 @@ const Luna<LKeyPress>::InheritenceF LKeyPress::inheritsF[] = {
 const Luna<LKeyPress>::Enum LKeyPress::enums[] = {
     { "KeyCodes", {
         { "spaceKey", KeyPress::spaceKey },
-        { "spaceKey", KeyPress::spaceKey },
         { "escapeKey", KeyPress::escapeKey },
         { "returnKey", KeyPress::returnKey },
         { "tabKey", KeyPress::tabKey },
