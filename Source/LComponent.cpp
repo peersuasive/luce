@@ -105,9 +105,9 @@ int LComponent::setVisible(lua_State *L) {
     return 0;
 }
 
-int LComponent::isVisible(lua_State*) {
+int LComponent::isVisible(lua_State *L) {
     if(child)
-        return LUA::getBoolean(child->isVisible());
+        return LUA::returnBoolean(child->isVisible());
     return 0;
 }
 
