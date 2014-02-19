@@ -2,6 +2,7 @@ namespace LUA {
     namespace {
         std::map<int, WeakReference<LSelfKill>> objects;
         void store(int addr, WeakReference<LSelfKill> o);
+        const char *SELF = "self";
 
         void reg(const LBase* key);
         void unreg(const LBase* key);
