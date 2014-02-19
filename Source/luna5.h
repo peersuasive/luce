@@ -529,8 +529,12 @@ public:
         if(obj and *obj) {
             int ptr = (intptr_t)(*obj);
             if( LUA::objects[ptr] && LUA::objects[ptr]->pureBase() ) {
-                delete *obj;
-                LUA::objects.erase( ptr );
+                if( LUA::objects[ptr]->refCount() == 0) {
+                    delete *obj;
+                    LUA::objects.erase( ptr );
+                }
+                else
+                    LUA::objects[ptr]->decRefCount();
             }
         }
         /*

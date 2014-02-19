@@ -25,11 +25,15 @@ public:
     const String myName() const;
 
     const bool pureBase() const;
+    const int  refCount() const;
+    void decRefCount();
 protected:
     void pureBase(bool);
+    void incRefCount();
 private:
     String name;
     bool pure;
+    int ref;
 
     WeakReference<LSelfKill>::Master masterReference;
     friend class WeakReference<LSelfKill>;

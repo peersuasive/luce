@@ -13,7 +13,8 @@
 
 LSelfKill::LSelfKill(const String& n, bool p) 
     : name(n),
-      pure(p)
+      pure(p),
+      ref(0)
 {
 }
 
@@ -34,4 +35,16 @@ const bool LSelfKill::pureBase() const {
 
 void LSelfKill::pureBase(bool p) {
     pure = p;
+}
+
+const int LSelfKill::refCount() const {
+    return this->ref;
+}
+void LSelfKill::incRefCount() {
+    ++this->ref;
+}
+void LSelfKill::decRefCount() {
+    --this->ref;
+    if(this->ref<0)
+        this->ref = 0;
 }
