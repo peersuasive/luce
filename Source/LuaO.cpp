@@ -691,7 +691,17 @@ namespace LUA {
 
                     } else if ( type == "Component" ) {
                         returnUserdata<LJComponent>( (LJComponent*)lr->getMe() );
-                    } 
+
+                    } else if ( type == "PopupMenu" ) {
+                        returnUserdata<LPopupMenu>( (LPopupMenu*)lr->getMe() );
+
+                    } else if ( type == SELF ) {
+                        // UNTESTED
+                        lua_pushvalue(L, 1);
+                        luaL_getmetatable(L, LPopupMenu::className);
+                        lua_setmetatable(L, -2);
+                    }
+                    
                     else if ( type == "Properties" ) {
                         HashMap<String, var>& h = *lr->getHash();
                         lua_newtable(L);

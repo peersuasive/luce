@@ -71,6 +71,7 @@ int lua_shutdown(lua_State *L) {
                 if ( dynamic_cast<LComponent*>( (LSelfKill*)it.second ) )
                     std::cout << "WARNING: object '" << it.second->myName() << "'"
                         << " instanciated but not cleaned (probably never used) -- cleaning" << std::endl;
+
                 DBG(String("Cleaning object: ") + it.second->myName());
                 it.second->selfKill();
             }
@@ -187,6 +188,8 @@ l_class(KeyPress);
 l_class(MouseEvent);
 l_class(SourceDetails);
 l_class(Timer);
+l_class(Options);
+l_class(PopupMenu);
 l_class(StretchableLayoutManager);
 l_class(StretchableLayoutResizerBar);
 l_class(Font);
@@ -228,6 +231,8 @@ static const luaL_Reg luce_lib [] = {
     d(MouseEvent),
     d(SourceDetails),
     d(Timer),
+    d(Options),
+    d(PopupMenu),
     d(StretchableLayoutManager),
     d(StretchableLayoutResizerBar),
     d(Font),

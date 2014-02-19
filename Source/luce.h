@@ -72,6 +72,10 @@ namespace luce {
 #include "LListBox.h"
 #include "LComboBox.h"
 
+#include "LOptions.h"
+#include "LPopupMenu.h"
+
+
 }
 
 #endif // __LUCE_H
