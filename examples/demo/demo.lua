@@ -113,6 +113,37 @@ combo:labelTextChanged(function(text)
     print("new combo text:", text)
 end)
 
+-- sync menu callback
+local menu = luce:Label("popup menu")
+menu.text = "right click on me for a sync menu!"
+menu:mouseDown(function(mouseEvent)
+    if(mouseEvent.mods.isPopupMenu())then
+        local m = luce:PopupMenu()
+        m:addItem(1, "item 1")
+        m:addItem(2, "item 2")
+        m:setLookAndFeel(4)
+        local id = m:show()
+        print(string.format("sync item %s was clicked", id))
+    end
+end)
+
+-- async menu callback
+local menu_async = luce:Label("async popup menu_async")
+menu_async.text = "right click on me for an async menu!"
+menu_async:setLookAndFeel(3)
+local m = luce:PopupMenu()
+m:addItem(1, "item 1")
+m:addItem(2, "item 2")
+m:setLookAndFeel(4)
+m:menuInvocationCallback(function(id, popupMenuRef)
+    print(string.format("id %s was clicked", id))
+end)
+menu_async:mouseDown(function(mouseEvent)
+    if(mouseEvent.mods.isPopupMenu())then
+        m:showMenuAsync( luce.PopupMenu.Options() )
+    end
+end)
+
 combo:setSelectedId(3)
 --print("num items:", combo:getNumItems())
 
@@ -138,6 +169,13 @@ mainWindow:initialise(function(...)
 
     mc:addAndMakeVisible(combo)
     combo:setBounds{ 410, 310, 200, 25 }
+
+    mc:addAndMakeVisible(menu)
+    menu:setBounds{ 410, 345, 200, 25 }
+
+    mc:addAndMakeVisible(menu_async)
+    menu_async:setBounds{ 410, 375, 200, 25 }
+
     --mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds
                                      -- as this is the last component before
                                      -- DocumentWindow, it'll set the window size
