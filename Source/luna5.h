@@ -190,6 +190,10 @@ public:
         lua_pushcfunction(L, &Luna < T >::property_setter);
         lua_settable(L, metatable);
 
+        lua_pushstring(L, "__eq");
+        lua_pushcfunction(L, &Luna < T >::___eq);
+        lua_settable(L, metatable);
+
         int p_i = 0;
         for (int i = 0; T::properties[i].name; ++i, ++p_i) { // Register some properties in it
             lua_pushstring(L, T::properties[i].name);     // Having some string associated with them
@@ -234,6 +238,10 @@ public:
 
         lua_pushstring(L, "__gc");
         lua_pushcfunction(L, &Luna < T >::gc_obj_);
+        lua_settable(L, metatable);
+
+        lua_pushstring(L, "__eq");
+        lua_pushcfunction(L, &Luna < T >::__eq);
         lua_settable(L, metatable);
 
         lua_pop(L,1); // pop int. mt
@@ -299,6 +307,9 @@ public:
             }
             lua_settable(L, t);
         }
+
+        lua_pushcfunction(L, &Luna < T >::__eq);
+        lua_setfield(L, t, "LEquals");
 
         luaL_getmetatable(L, T::className);
         lua_setmetatable(L, -2);
@@ -589,5 +600,32 @@ public:
 
         return 1;
     }
+
+    static int ___eq(lua_State *L) {
+        std::cout << "2 eq " << lua_gettop(L) << std::endl;
+
+        lua_pushboolean(L, true);
+        return 1;
+    }
+
+    static int __eq(lua_State *L) {
+        bool res = 0;
+        if( lua_istable(L, -1) && lua_istable(L, -2) ) {
+            lua_getfield(L, -1, "__self");
+            int a = ! lua_isnoneornil(L, -1);
+            lua_getfield(L, -3, "__self");
+            int b = ! lua_isnoneornil(L, -1);
+            if(a && b) {
+                T** obj1 = static_cast<T**>(lua_touserdata(L, -1));
+                T** obj2 = static_cast<T**>(lua_touserdata(L, -2));
+                if( obj1 && obj2 && *obj1 == *obj2 )
+                    res = true;
+            }
+        }
+        lua_settop(L, 1);
+        lua_pushboolean(L, res);
+        return 1;
+    }
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Luna<T>)
 };

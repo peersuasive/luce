@@ -519,10 +519,14 @@ namespace LUA {
                     lua_settable(L, t);
                 }
 
+                lua_pushcfunction(L, &Luna < T >::__eq);
+                lua_setfield(L, t, "LEquals");
+
                 luaL_getmetatable(L, T::className);
                 if ( ! lua_isnil(L, -1) ) {
                     lua_setmetatable(L, -2);
                 } else lua_pop(L,1);
+
 
                 //DBG(String("size of L at the end: ") + String(lua_gettop(L)));
                 return 1;
