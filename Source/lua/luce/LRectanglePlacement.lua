@@ -145,6 +145,7 @@ end
 
 -- internal
 function mt:dump()
+    print("******* DUMPING:", self.flags, self:flags())
     return self:getFlags()
 end
 
@@ -171,6 +172,10 @@ local function new(me, t, __type)
 end
 mt.new = new
 
+local __index = {
+    Flags = Flags,
+}
+
 return setmetatable({}, {
     __call = function(self,core,...)
         local self = self or {}
@@ -179,6 +184,7 @@ return setmetatable({}, {
         self = setmetatable({}, {
             __call = new,
             __tostring = function()return myType end,
+            __index = __index,
         })
         return self
     end
