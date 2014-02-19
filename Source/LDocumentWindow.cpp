@@ -32,6 +32,7 @@ const Luna<LDocumentWindow>::StaticType LDocumentWindow::statics[] = {
     {0,0}
 };
 
+static ScopedPointer<ApplicationCommandManager> commandManager;
 LDocumentWindow::LDocumentWindow(lua_State *L)
     :  LComponent(L, this),
        DocumentWindow( "DocumentWindow", Colours::lightgrey, DocumentWindow::allButtons )
@@ -48,8 +49,16 @@ LDocumentWindow::LDocumentWindow(lua_State *L)
 }
 
 LDocumentWindow::~LDocumentWindow() {
-    commandManager = nullptr;
+    if(commandManager)
+        commandManager = nullptr;
 }
+
+ApplicationCommandManager& LDocumentWindow::getApplicationCommandManager() {
+    if (!commandManager)
+        commandManager = new ApplicationCommandManager();
+    return *commandManager;
+}
+
 
 void LDocumentWindow::handleAsyncUpdate() {
     commandManager->registerAllCommandsForTarget (JUCEApplication::getInstance());
@@ -96,5 +105,103 @@ void LDocumentWindow::closeButtonPressed() {
 
 int LDocumentWindow::closeButtonPressed(lua_State *L) {
     set("closeButtonPressed");
+    return 0;
+}
+
+//==============================================================================
+
+int LDocumentWindow::clearCommands(lua_State*) {
+    commandManager->clearCommands();
+    return 0;
+}
+
+int LDocumentWindow::registerCommand(lua_State*) {
+    //TODO
+    return 0;
+}
+
+int LDocumentWindow::registerAllCommandsForTarget(lua_State*) {
+    //TODO
+    return 0;
+}
+
+int LDocumentWindow::removeCommand(lua_State*) {
+    //TODO commandid
+    return 0;
+}
+
+int LDocumentWindow::commandStatusChanged(lua_State*) {
+    commandManager->commandStatusChanged();
+    return 0;
+}
+
+int LDocumentWindow::getNumCommands(lua_State*) {
+    return LUA::getNumber( commandManager->getNumCommands() );
+    return 0;
+}
+
+int LDocumentWindow::getCommandForIndex(lua_State*) {
+    // TODO
+    //return LUA::returnUserdata<LApplicationCommandInfo>( commandManager->getCommandForIndex() );
+    return 0;
+}
+
+int LDocumentWindow::getCommandForID(lua_State*) {
+    // TODO
+    //return LUA::returnUserdata<LApplicationCommandInfo>( 
+    //        commandManager->getCommandForIndex(LUA::getNumber<int>(2)) );
+    return 0;
+}
+
+int LDocumentWindow::getNameOfCommand(lua_State*) {
+    return LUA::returnString( commandManager->getNameOfCommand( (CommandID)LUA::getNumber<int>(2) ) );
+}
+
+int LDocumentWindow::getDescriptionOfCommand(lua_State*) {
+    return LUA::returnString( commandManager->getDescriptionOfCommand( (CommandID)LUA::getNumber<int>(2) ) );
+}
+
+int LDocumentWindow::getCommandCategories(lua_State*) {
+    return LUCE::luce_pushtable( commandManager->getCommandCategories() );
+}
+
+int LDocumentWindow::getCommandsInCategory(lua_State*) {
+    return LUCE::luce_pushtable( commandManager->getCommandsInCategory( LUA::getString(2) ) );
+}
+
+int LDocumentWindow::getKeyMappings(lua_State*) {
+    //return LUA::returnUserdata<LKeyPressMappingSet>( commandManager->getKeyMappings() );
+    return 0;
+}
+
+int LDocumentWindow::invokeDirectly(lua_State*) {
+    commandManager->invokeDirectly( (CommandID)LUA::getNumber<int>(2), LUA::getBoolean(3) );
+    return 0;
+}
+
+int LDocumentWindow::invoke(lua_State *L) {
+    // TODO
+    return 0;
+}
+
+int LDocumentWindow::getFirstCommandTarget(lua_State*) {
+    return 0;
+}
+
+int LDocumentWindow::setFirstCommandTarget(lua_State*) {
+    return 0;
+}
+
+int LDocumentWindow::getTargetForCommand(lua_State*) {
+    return 0;
+}
+
+
+// statics
+int LDocumentWindow::findDefaultComponentTarget(lua_State*) {
+    return 0;
+}
+
+int LDocumentWindow::findTargetForComponent(lua_State*) {
     return 0;
 }
