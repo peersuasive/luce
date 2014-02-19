@@ -63,18 +63,22 @@ local xmeta = setmetatable({
         if(dbg)then LDEBUG=true end
         
         local luce_m = load_luce(_, luce)
-        -- load lua modules
-        for _,m in next, LModules do
-            local mm = require("luce.L"..m)( luce )
-            --luce_m[m] = function(self,...) return mm(...) end
-            local mt = getmetatable(mm)
-            mt.__call = function(self,...) return mm(...) end
-            luce_m[m] = setmetatable(mm, mt)
-        end
+
         -- bitwise
         luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
         -- deepcopy, goes to table.deepcopy
         require"luce.deepcopy"
+
+        -- load lua modules
+        for _,m in next, LModules do
+            local mm = require("luce.L"..m)( luce_m )
+            --luce_m[m] = function(self,...) return mm(...) end
+            luce_m[m] = setmetatable({}, {
+                __index = getmetatable(mm).__index,
+                __tostring = getmetatable(mm).__tostring,
+                __call  = function(self,...) return mm(...) end
+            })
+        end
 
         return luce_m
         --return(load_luce(_, luce))
