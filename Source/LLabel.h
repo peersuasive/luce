@@ -90,7 +90,6 @@ private:
     ScopedPointer<LFont> myFont;
 
     //==============================================================================
-    // callbacks
     virtual void labelTextChanged(Label*) override;
 
     virtual void textWasChanged() override;
@@ -105,6 +104,19 @@ private:
     void textEditorTextChanged ( TextEditor& ) override;
     void textEditorFocusLost( TextEditor& te ) override;
     void valueChanged ( Value& ) override;
+
+    //==============================================================================
+    virtual void mouseMove(const MouseEvent&) override;
+    virtual void mouseEnter(const MouseEvent&) override;
+    virtual void mouseExit(const MouseEvent&) override;
+    virtual void mouseDown(const MouseEvent&) override;
+    virtual void mouseDrag(const MouseEvent&) override;
+    virtual void mouseUp(const MouseEvent&) override;
+    virtual void mouseDoubleClick(const MouseEvent&) override;
+    virtual void mouseWheelMove(const MouseEvent&, const MouseWheelDetails&) override;
+    virtual void mouseMagnify(const MouseEvent&, float) override;
+ 
+    virtual bool keyPressed(const KeyPress&) override;
 
 
     //==============================================================================

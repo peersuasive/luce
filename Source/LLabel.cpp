@@ -211,6 +211,80 @@ int LLabel::valueChanged ( lua_State* ) {
 }
 
 
+// mouse
+void LLabel::mouseMove(const MouseEvent& e) {
+    if(hasCallback("mouseMove"))
+        LComponent::lmouseMove(e);
+    else
+        Label::mouseMove(e);
+}
+
+void LLabel::mouseEnter(const MouseEvent& e) {
+    if(hasCallback("mouseEnter"))
+        LComponent::lmouseEnter(e);
+    else
+        Label::mouseEnter(e);
+}
+
+void LLabel::mouseExit(const MouseEvent& e) {
+    if(hasCallback("mouseExit"))
+        LComponent::lmouseExit(e);
+    else
+        Label::mouseExit(e);
+}
+
+void LLabel::mouseDown(const MouseEvent& e) {
+    if(hasCallback("mouseDown"))
+        if( LComponent::lmouseDown(e) )
+            Label::mouseDown(e);
+    else
+        Label::mouseDown(e);
+}
+
+void LLabel::mouseDrag(const MouseEvent& e) {
+    if(hasCallback("mouseDrag"))
+        LComponent::lmouseDrag(e);
+    else
+        Label::mouseDrag(e);
+}
+
+void LLabel::mouseUp(const MouseEvent& e) {
+    if(hasCallback("mouseUp"))
+        LComponent::lmouseUp(e);
+    else
+        Label::mouseUp(e);
+}
+
+void LLabel::mouseDoubleClick(const MouseEvent& e) {
+    if(hasCallback("mouseDoubleClick"))
+        LComponent::lmouseDoubleClick(e);
+    else
+        Label::mouseDoubleClick(e);
+}
+
+void LLabel::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wheel) {
+    if(hasCallback("mouseWheelMove"))
+        LComponent::lmouseWheelMove(e, wheel);
+    else
+        Label::mouseWheelMove(e, wheel);
+}
+
+void LLabel::mouseMagnify(const MouseEvent& e, float scaleFactor) {
+    if(hasCallback("mouseMagnify"))
+        LComponent::lmouseMagnify(e, scaleFactor);
+    else
+        Label::mouseMagnify(e, scaleFactor);
+}
+
+bool LLabel::keyPressed(const KeyPress& k) {
+    if(hasCallback("keyPressed"))
+        return LComponent::lkeyPressed(k);
+    else
+        return Label::keyPressed(k);
+}
+
+
+
 /////// getters/setters
 int LLabel::getText(lua_State*) {
     return LUA::returnString( Label::getText(LUA::checkAndGetBoolean(2, false)) );
