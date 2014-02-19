@@ -191,6 +191,42 @@ namespace {
         { "focusChangedByTabKey", Component::focusChangedByTabKey },
         { "focusChangedDirectly", Component::focusChangedDirectly },
     };
+
+    /* not yet -- maybe never
+    std::map<const char *, int> lSpecialLocationType = {
+        { "userHomeDirectory", File::userHomeDirectory },
+        { "userDocumentsDirectory", File::userDocumentsDirectory },
+        { "userDesktopDirectory", File::userDesktopDirectory },
+        { "userMusicDirectory", File::userMusicDirectory },
+        { "userMoviesDirectory", File::userMoviesDirectory },
+        { "userPicturesDirectory", File::userPicturesDirectory },
+        { "userApplicationDataDirectory", File::userApplicationDataDirectory },
+        { "commonApplicationDataDirectory", File::commonApplicationDataDirectory },
+        { "commonDocumentsDirectory", File::commonDocumentsDirectory },
+        { "tempDirectory", File::tempDirectory },
+        { "currentExecutableFile", File::currentExecutableFile },
+        { "currentApplicationFile", File::currentApplicationFile },
+        { "invokedExecutableFile", File::invokedExecutableFile },
+        { "hostApplicationPath", File::hostApplicationPath },
+        { "globalApplicationsDirectory", File::globalApplicationsDirectory }
+    };
+    */
+
+
+#define is_set(macro) is_set_(macro)
+#define macrotest_1 ,
+#define is_set_(value) is_set__(macrotest_##value)
+#define is_set__(comma) is_set___(comma 1, 0)
+#define is_set___(_, v, ...) v
+    std::map<const char*, int> lCurrentOS = {
+        { "android", is_set(JUCE_ANDROID) },
+        { "ios",     is_set(JUCE_IOS)     },
+        { "windows", is_set(JUCE_WINDOWS) },
+        { "linux",   is_set(JUCE_LINUX)   },
+        { "macosx",  is_set(JUCE_MAC)     },
+        { "ppc",     is_set(JUCE_PPC)     },
+        { "bsd",     is_set(JUCE_BSD)     },
+    };
 }
 };
 

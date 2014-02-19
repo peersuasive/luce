@@ -149,7 +149,7 @@ void l_C_##c(lua_State *L) \
     } \
     lua_setfield(L, -2, #c); \
 }
-#define dc(c,L) l_C_##c(L)
+#define dc(c) l_C_##c(L)
 
 #define l_class(c) \
 int l_##c (lua_State *L) \
@@ -163,7 +163,7 @@ l_c(NotificationType);
 l_c(JustificationType);
 l_c(FocusChangeType);
 l_cs(Colours);
-
+l_c(CurrentOS);
 
 l_class(JUCEApplication);
 l_class(Colour);
@@ -257,10 +257,11 @@ static const luaL_Reg luce_lib [] = {
 };
 
 void register_enums(lua_State *L) {
-    dc(NotificationType, L);
-    dc(JustificationType, L);
-    dc(Colours, L);
-    dc(FocusChangeType, L);
+    dc(NotificationType);
+    dc(JustificationType);
+    dc(Colours);
+    dc(FocusChangeType);
+    dc(CurrentOS);
 }
 
 __attribute__ ((visibility ("default")))
