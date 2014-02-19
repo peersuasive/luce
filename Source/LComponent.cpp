@@ -959,63 +959,97 @@ int LComponent::removeMouseListener ( lua_State* ) {
     return 0;
 }
 
-void LComponent::lmouseMove( const MouseEvent& event ) {
-    if (child && hasCallback("mouseMove"))
-        callback("mouseMove", 0, { new LRefBase("MouseEvent", &event) });
+// mouse*
+// allow user to intercept click but stil trigger the default action
+// by returning nil or false
+// it true is returned, the defaut action could be invoked, 
+// depending on LClass implementation
+
+int LComponent::lmouseMove( const MouseEvent& event ) {
+    int res = 0;
+    if (child && hasCallback("mouseMove")) {
+        callback("mouseMove", 1, { new LRefBase("MouseEvent", &event) });
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseMove(lua_State*){
     if (child) set("mouseMove");
     return 0;
 }
 
-void LComponent::lmouseEnter( const MouseEvent& event ) {
-    if (child && hasCallback("mouseEnter")) 
-        callback("mouseEnter", 0, { new LRefBase("MouseEvent", &event) });
+int LComponent::lmouseEnter( const MouseEvent& event ) {
+    int res = 0;
+    if (child && hasCallback("mouseEnter")) {
+        callback("mouseEnter", 1, { new LRefBase("MouseEvent", &event) });
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseEnter(lua_State*){
     if (child) set("mouseEnter");
     return 0;
 }
 
-void LComponent::lmouseExit( const MouseEvent& event ) {
-    if (child && hasCallback("mouseExit"))
-        callback("mouseExit", 0, { new LRefBase("MouseEvent", &event) });
+int LComponent::lmouseExit( const MouseEvent& event ) {
+    int res = 0;
+    if (child && hasCallback("mouseExit")) {
+        callback("mouseExit", 1, { new LRefBase("MouseEvent", &event) });
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseExit(lua_State*){
     if (child) set("mouseExit");
     return 0;
 }
 
-void LComponent::lmouseDown( const MouseEvent& event ) {
-    if (child && hasCallback("mouseDown")) 
-        callback("mouseDown", 0, { new LRefBase("MouseEvent", &event) });
+int LComponent::lmouseDown( const MouseEvent& event ) {
+    int res = 0;
+    if (child && hasCallback("mouseDown")) {
+        callback("mouseDown", 1, { new LRefBase("MouseEvent", &event) });
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseDown(lua_State*){
     if (child) set("mouseDown");
     return 0;
 }
 
-void LComponent::lmouseDrag( const MouseEvent& event ) {
-    if (child && hasCallback("mouseDrag"))
-        callback("mouseDrag", 0, { new LRefBase("MouseEvent", &event) });
+int LComponent::lmouseDrag( const MouseEvent& event ) {
+    int res = 0;
+    if (child && hasCallback("mouseDrag")) {
+        callback("mouseDrag", 1, { new LRefBase("MouseEvent", &event) });
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseDrag(lua_State*){
     if (child) set("mouseDrag");
     return 0;
 }
 
-void LComponent::lmouseUp( const MouseEvent& event ) {
-    if (child && hasCallback("mouseUp"))
-        callback("mouseUp", 0, { new LRefBase("MouseEvent", &event) });
+int LComponent::lmouseUp( const MouseEvent& event ) {
+    int res = 0;
+    if (child && hasCallback("mouseUp")) {
+        callback("mouseUp", 1, { new LRefBase("MouseEvent", &event) });
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseUp(lua_State*){
     if (child) set("mouseUp");
     return 0;
 }
 
-void LComponent::lmouseDoubleClick( const MouseEvent& event ) {
-    if (child && hasCallback("mouseDoubleClick") )
-        callback("mouseDoubleClick", 0, { new LRefBase("MouseEvent", &event) });
+int LComponent::lmouseDoubleClick( const MouseEvent& event ) {
+    int res = 0;
+    if (child && hasCallback("mouseDoubleClick") ) {
+        callback("mouseDoubleClick", 1, { new LRefBase("MouseEvent", &event) });
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseDoubleClick(lua_State*) {
     if (child) set("mouseDoubleClick");
@@ -1023,28 +1057,36 @@ int LComponent::mouseDoubleClick(lua_State*) {
 }
 
 // FIXME: add LUA::returnMany(2, { new LRefBase("MouseEvent", &e) }, LUA_TTABLE)
-void LComponent::lmouseWheelMove( const MouseEvent& e, const MouseWheelDetails& wheel ) {
+int LComponent::lmouseWheelMove( const MouseEvent& e, const MouseWheelDetails& wheel ) {
+    int res = 0;
     if (child && hasCallback("mouseWheelMove") ) {
         HashMap<String, var> hash(4);
         hash.set("deltaX", wheel.deltaX);
         hash.set("deltaY", wheel.deltaY);
         hash.set("isReversed", wheel.isReversed);
         hash.set("isSmooth", wheel.isSmooth);
-        callback("mouseWheelMove", 0,
+        callback("mouseWheelMove", 1,
             {
                 new LRefBase("MouseEvent", &e),
                 new LRefBase( hash )
             }
         );
+        res = LUA::checkAndGetBoolean(-1, false);
     }
+    return res;
 }
 int LComponent::mouseWheelMove(lua_State*) {
     if (child) set("mouseWheelMove");
     return 0;
 }
 
-void LComponent::lmouseMagnify( const MouseEvent& event,float scaleFactor ) {
-    if (child) callback("mouseMagnify");
+int LComponent::lmouseMagnify( const MouseEvent& event,float scaleFactor ) {
+    int res = 0;
+    if (child && hasCallback("mouseMagnify")) {
+        callback("mouseMagnify", 1);
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
 }
 int LComponent::mouseMagnify(lua_State*) {
     if (child) set("mouseMagnify");

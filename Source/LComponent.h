@@ -248,15 +248,15 @@ protected:
     void lminimisationStateChanged( bool isNowMinimised );
     void lenablementChanged();
     void lfocusOfChildComponentChanged( Component::FocusChangeType cause );
-    void lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel );
-    void lmouseDown( const MouseEvent& event );
-    void lmouseUp( const MouseEvent& event );
-    void lmouseEnter( const MouseEvent& event );
-    void lmouseMagnify( const MouseEvent& event,float scaleFactor );
-    void lmouseDoubleClick( const MouseEvent& event );
-    void lmouseDrag( const MouseEvent& event );
-    void lmouseMove( const MouseEvent& event );
-    void lmouseExit( const MouseEvent& event );
+    int lmouseWheelMove( const MouseEvent& event,const MouseWheelDetails& wheel );
+    int lmouseDown( const MouseEvent& event );
+    int lmouseUp( const MouseEvent& event );
+    int lmouseEnter( const MouseEvent& event );
+    int lmouseMagnify( const MouseEvent& event,float scaleFactor );
+    int lmouseDoubleClick( const MouseEvent& event );
+    int lmouseDrag( const MouseEvent& event );
+    int lmouseMove( const MouseEvent& event );
+    int lmouseExit( const MouseEvent& event );
     bool lkeyPressed(const KeyPress&);
     
 private:
