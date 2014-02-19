@@ -51,6 +51,14 @@ const Luna<LImage>::FunctionType LImage::methods[] = {
 /////// ctor/dtor
 const Luna<LImage>::StaticType LImage::statics[] = {
     smethod( LImage, null ),
+
+    smethod( LImage, getFromFile ),
+    smethod( LImage, getFromMemory ),
+    smethod( LImage, getFromHashCode ),
+    smethod( LImage, addImageToCache ),
+    smethod( LImage, setCacheTimeout ),
+    smethod( LImage, releaseUnusedImages ),
+
     {0,0}
 };
 
@@ -79,6 +87,43 @@ int LImage::s_null(lua_State *L) {
          Image::null
     ));
 }
+
+int LImage::s_getFromFile(lua_State *L) {
+    return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
+         ImageCache::getFromFile( File( LUA::getString(2) ) )
+    ));
+}
+
+int LImage::s_getFromMemory(lua_State *L) {
+    size_t size;
+    void* data = (void*)lua_tolstring(L, 2, &size);
+    lua_remove(L, 2);
+    return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
+         ImageCache::getFromMemory( data, (int)size )
+    ));
+}
+
+int LImage::s_getFromHashCode(lua_State *L) {
+    return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
+         ImageCache::getFromHashCode( LUA::getNumber<int64>(2) )
+    ));
+}
+
+int LImage::s_addImageToCache(lua_State*) {
+    Image& image = *LUA::from_luce<LImage>(2);
+    int64 hash   = LUA::getNumber<int64>(2);
+    ImageCache::addImageToCache( image, hash );
+}
+
+int LImage::s_setCacheTimeout(lua_State*) {
+    ImageCache::setCacheTimeout( LUA::getNumber<int>(2) );
+}
+
+int LImage::s_releaseUnusedImages(lua_State*) {
+    ImageCache::releaseUnusedImages();
+}
+
+
 
 /////// getters/setters
 int LImage::getPixelAt ( lua_State *L ) {

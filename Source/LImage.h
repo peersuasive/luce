@@ -59,9 +59,17 @@ public:
     int hasAlphaChannel(lua_State*);
     int isValid(lua_State*);
     int rescaled(lua_State*);
+    
+    //==============================================================================
+    // ImageCache
+    static int s_getFromFile(lua_State*);
+    static int s_getFromMemory(lua_State*);
+    static int s_getFromHashCode(lua_State*);
+    static int s_addImageToCache(lua_State*);
+    static int s_setCacheTimeout(lua_State*);
+    static int s_releaseUnusedImages(lua_State*);
 
     //==============================================================================
-
     static const char className[];
     static const Luna<LImage>::Inheritence inherits[];
     static const Luna<LImage>::InheritenceF inheritsF[];
