@@ -65,7 +65,10 @@ local xmeta = setmetatable({
         -- load lua modules
         for _,m in next, LModules do
             local mm = require("luce.L"..m)( luce )
-            luce_m[m] = function(self,...) return mm(...) end
+            --luce_m[m] = function(self,...) return mm(...) end
+            local mt = getmetatable(mm)
+            mt.__call = function(self,...) return mm(...) end
+            luce_m[m] = setmetatable(mm, mt)
         end
         -- bitwise
         luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
