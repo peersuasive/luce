@@ -123,6 +123,9 @@ int start_manual( lua_State *L ) {
 }
 
 //==============================================================================
+/*
+ * for constants with value
+ */
 #define l_c(c) \
 void l_C_##c(lua_State *L) \
 { \
@@ -133,6 +136,9 @@ void l_C_##c(lua_State *L) \
     } \
     lua_setfield(L, -2, #c); \
 }
+/*
+ * for string constants
+ */
 #define l_cs(c) \
 void l_C_##c(lua_State *L) \
 { \
@@ -157,6 +163,7 @@ l_c(NotificationType);
 l_c(JustificationType);
 l_c(FocusChangeType);
 l_cs(Colours);
+
 
 l_class(JUCEApplication);
 l_class(Colour);
