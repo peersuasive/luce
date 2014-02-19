@@ -90,17 +90,28 @@ int LImage::s_null(lua_State *L) {
 
 int LImage::s_getFromFile(lua_State *L) {
     return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
-         ImageCache::getFromFile( File( LUA::getString(2) ) )
+        ImageFileFormat::loadFrom(File(LUA::getString(2)))
     ));
+    return 0;
+    //return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
+    //     ImageCache::getFromFile( File( LUA::getString(2) ) )
+    //));
 }
 
 int LImage::s_getFromMemory(lua_State *L) {
     size_t size;
     void* data = (void*)lua_tolstring(L, 2, &size);
     lua_remove(L, 2);
+
+    MemoryInputStream stream(data, size, false);
+    ImageFileFormat* const format = ImageFileFormat::findImageFormatForStream (stream);
     return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
-         ImageCache::getFromMemory( data, (int)size )
+        format->decodeImage( stream )
     ));
+
+    //return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
+    //     ImageCache::getFromMemory( data, (int)size )
+    //));
 }
 
 int LImage::s_getFromHashCode(lua_State *L) {
