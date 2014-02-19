@@ -111,3 +111,8 @@ bool LJComponent::keyPressed(const KeyPress& k) {
     else
         return Component::keyPressed(k);
 }
+
+void LJComponent::visibilityChanged() {
+    if(hasCallback("visibilityChanged"))
+        LComponent::lvisibilityChanged();
+}

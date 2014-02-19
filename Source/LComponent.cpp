@@ -392,12 +392,6 @@ int LComponent::getMouseXYRelative ( lua_State* ) {
     else return 0;
 }
 
-int LComponent::keyStateChanged ( lua_State* ) {
-    if (child)
-        return LUA::returnBoolean( child->keyStateChanged( LUA::getBoolean() ) );
-    else return 0;
-}
-
 int LComponent::getScreenX ( lua_State* ) {
     if (child)
         return LUA::returnNumber( child->getScreenX() );
@@ -844,8 +838,10 @@ int LComponent::parentSizeChanged(lua_State*){
 }
 
 void LComponent::lvisibilityChanged() {
-    if (child)
-        callback("visibilityChanged");
+    if (child) {
+        callback("visibilityChanged", 1);
+        LUA::checkAndGetBoolean(-1, false);
+    }
 }
 int LComponent::visibilityChanged(lua_State*){
     if (child)
@@ -1500,10 +1496,27 @@ bool LComponent::lkeyPressed ( const KeyPress& k ) {
     }
     return false;
 }
-int LComponent::keyPressed ( lua_State* ) {
-    set("keyPressed");
+int LComponent::keyPressed ( lua_State *L ) {
+    if(lua_isfunction(L,2))
+        set("keyPressed");
+    else
+        return lkeyPressed( *LUA::from_luce<LKeyPress>(2) );
     return 0;
 }
+
+bool LComponent::lkeyStateChanged(bool d) {
+    if(child && hasCallback("keyStateChanged")) {
+        callback("keyStateChanged", 1, { d });
+        return LUA::checkAndGetBoolean(-1, false);
+    }
+    return false;
+}
+int LComponent::keyStateChanged ( lua_State* ) {
+    set("keyStateChanged");
+    return 0;
+}
+
+
 
 int LComponent::getPeer ( lua_State* ) {
     if (child) {

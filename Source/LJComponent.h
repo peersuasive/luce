@@ -49,6 +49,8 @@ private:
 
     virtual bool keyPressed(const KeyPress&) override;
 
+    virtual void visibilityChanged() override;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LJComponent)
 };

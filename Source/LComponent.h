@@ -261,6 +261,7 @@ protected:
     int lmouseMove( const MouseEvent& event );
     int lmouseExit( const MouseEvent& event );
     bool lkeyPressed(const KeyPress&);
+    bool lkeyStateChanged(bool);
     
 private:
     //==============================================================================
