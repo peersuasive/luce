@@ -33,6 +33,7 @@ public:
     int setPixelAt(lua_State*);
     int getPixelAt(lua_State*);
     int getWidth(lua_State*);
+    int getHeight(lua_State*);
     int getBounds(lua_State*);
 
     //==============================================================================

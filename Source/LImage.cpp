@@ -18,11 +18,15 @@ const char LImage::className[] = "LImage";
 const Luna<LImage>::PropertyType LImage::properties[] = {
     {"pixelAt", &LImage::getPixelAt, &LImage::setPixelAt},
     {"width", &LImage::getWidth, &LBase::readOnly},
+    {"height", &LImage::getHeight, &LBase::readOnly},
     {"bounds", &LImage::getBounds, &LBase::readOnly},
     {0,0}
 };
 const Luna<LImage>::FunctionType LImage::methods[] = {
     method( LImage, getFormat ),
+    method( LImage, getWidth ),
+    method( LImage, getHeight ),
+    method( LImage, getBounds ),
     method( LImage, isRGB ),
     method( LImage, createLowLevelContext ),
     method( LImage, convertedToFormat ),
@@ -154,6 +158,10 @@ int LImage::setPixelAt ( lua_State* ) {
 /////// getters
 int LImage::getWidth(lua_State*) {
     return LUA::returnNumber(Image::getWidth());
+}
+
+int LImage::getHeight(lua_State*) {
+    return LUA::returnNumber(Image::getHeight());
 }
 
 int LImage::getBounds(lua_State*) {
