@@ -180,7 +180,7 @@ function mt:getCentreY()
     return self.y + self.h / 2
 end
 function mt:getCentre()
-    return { self.x+w/2, self.y+h/2 }
+    return { self.x+self.w/2, self.y+self.h/2 }
 end
 
 function mt:isEmpty()
