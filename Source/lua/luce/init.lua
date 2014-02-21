@@ -63,6 +63,8 @@ local xmeta = setmetatable({
         if(dbg)then LDEBUG=true end
         
         local luce_m = load_luce(_, luce)
+        luce_m.class = require"luce.LCommon".class
+        luce_m.comp = require"luce.LCommon".comp
 
         -- bitwise
         luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
