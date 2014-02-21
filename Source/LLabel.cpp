@@ -234,11 +234,13 @@ void LLabel::mouseExit(const MouseEvent& e) {
 }
 
 void LLabel::mouseDown(const MouseEvent& e) {
-    if(hasCallback("mouseDown"))
-        if( LComponent::lmouseDown(e) )
-            Label::mouseDown(e);
-    else
+    if(hasCallback("mouseDown")) {
+        LComponent::lmouseDown(e);
+        bool b = LUA::checkAndGetBoolean(-1, false);
+        if(!b) Label::mouseDown(e);
+    } else {
         Label::mouseDown(e);
+    }
 }
 
 void LLabel::mouseDrag(const MouseEvent& e) {
