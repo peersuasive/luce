@@ -57,7 +57,6 @@ LPopupMenu::LPopupMenu(lua_State *L, const PopupMenu& class_)
 }
 
 LPopupMenu::~LPopupMenu() {
-    std::cout << "DELETING" << std::endl;
     if(cbComp)
         cbComp = nullptr;
 }
