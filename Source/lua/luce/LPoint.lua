@@ -49,7 +49,11 @@ function mt:setXY(x,y)
     return self
 end
 
-function mt:translated(x, y)
+function mt:translated(...)
+    local x, y = ...
+    if not(y)then local p = ...
+        x, y = p.x, p.y end
+    assert(x and y, "Missing value")
     return self:new{ x + self.x, y + self.y }
 end
 
@@ -121,7 +125,7 @@ function mt:toDouble()
 end
 
 function mt:dump()
-    return { self.x, self.y }, self.__type, self.__ltype
+    return { self.x, self.y , self.__type, self.__ltype }
 end
 
 function mt:type()
@@ -130,6 +134,9 @@ end
 
 local function new(me, t, __type)
     local self = {}
+    if(t and not("table"==type(t)))then
+        error("LPoint: table expected, got "..type(t), 2)
+    end
     local t = t or {}
     self.x = t[1] or t.x or 0
     self.y = t[2] or t.y or 0
