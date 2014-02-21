@@ -15,18 +15,7 @@
 ------------------------------------------------------------------------------]]
 
 local luce
-local className = "LImageComponent"
-local mt = {}
-
-local new_vars = setmetatable({}, {
-    __call = function()
-        return setmetatable({}, {
-            __newindex = function(self,k,v)
-                rawset(self, k, function(...) if(...)then v[k]=... else return v[k] end end)
-            end
-        })
-    end
-})
+local mt = { className = "LImageComponent" }
 
 function mt:setImage(newImage, placement)
     if(newImage ~= self.image)then
@@ -53,48 +42,26 @@ end
 local __index = {}
 
 local function new(_,name, placement)
-    -- init
-    local int_index = {}
-    local self = setmetatable({
-        name = name or className,
-        placement = placement or luce.RectanglePlacement.Flags.centred,
-        __unlocal = function(t,k)
-            int_index[k] = nil
-            rawset(t,k,nil)
-        end,
-    }, {
-        __newindex = function(t,k,v)
-            print("setting new entry", k, v)
-            int_index[k] = true
-            rawset(t,k,v)
-        end,
-    })
+    local name = name or mt.className
+    local comp = luce:Component(name)
+    local self, class = luce.class.self(mt, comp, name)
     self.image = nil
-    local comp = luce:Component(self.name)
-    local __vars = new_vars()
+    self.placement = placement or luce.RectanglePlacement.Flags.centred
 
-    comp:paint(function(g)
+    -- fully or partially overridable paint
+    local function paint(g)
+        isPainting = true
         g:setOpacity(1.0)
         g:drawImageWithin(self.image, 0, 0, comp:getWidth(), comp:getHeight(), self.placement, false)
-    end)
+    end
+    local paint_cb = paint
+    function self:paint(func, ow)
+        if not("function"==type(func)) then return end
+        paint_cb = ow and func or function(g)paint(g)func(g)end
+    end
+    comp:paint(function(g)paint_cb(g)end)
 
-    -- internal
-    self.__self = comp.__self
-    return setmetatable(self, {
-        __self = comp.__self,
-        __index = function(_, k)
-            if(int_index[k]) then return nil         -- self
-            elseif(mt[k]) then return mt[k]          -- upper self
-            elseif(__vars[k])then return __vars[k]() -- sub components or specifics, may override comp
-            else return comp[k] end                  -- comp
-        end,
-        __newindex = function(t,k,v)
-            if(__vars[k])then __vars[k](v)
-            elseif(comp.__exists(k))then comp[k] = v
-            else rawset(t,k,v) end
-        end,
-        __tostring = function(self)return className.."("..self.name..")"end
-    })
+    return class or self
 end
 mt.new = new
 setmetatable(mt, { __index = __index })
