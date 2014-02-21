@@ -183,6 +183,21 @@ function mt:getCentre()
     return { self.x+self.w/2, self.y+self.h/2 }
 end
 
+function mt:setCentre(...)
+    local x, y
+    if(#{...}==1)then
+        local p = ...
+        x, y = p.x or p[1], p.y or p[2]
+    else x, y = ...  end
+    self.x = x - self.w / 2
+    self.y = x - y - self.h / 2
+    return self
+end
+
+function mt:withCentre(...)
+    return self:new( self:setCentre(...) )
+end
+
 function mt:isEmpty()
     return ( (self.h == 0) and (self.w==0) )
 end
@@ -308,6 +323,7 @@ function mt:type()
 end
 
 new = function(me, t, __type)
+    if(t and t.start_manual)then error("wrong self !", 1) end
     -- TODO: Point constructor, x,y,w,h constructor, w,h constructor
     local self = {}
     if(t and not("table"==type(t)))then
