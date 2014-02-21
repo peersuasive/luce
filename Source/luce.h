@@ -71,6 +71,7 @@ namespace luce {
 #include "LStretchableLayoutResizerBar.h"
 #include "LListBox.h"
 #include "LComboBox.h"
+#include "LSlider.h"
 
 #include "LOptions.h"
 #include "LPopupMenu.h"

@@ -202,6 +202,7 @@ l_class(StretchableLayoutResizerBar);
 l_class(Font);
 l_class(ListBox);
 l_class(ComboBox);
+l_class(Slider);
 // core
 l_class(Time);
 l_class(BigInteger);
@@ -245,6 +246,7 @@ static const luaL_Reg luce_lib [] = {
     d(Font),
     d(ListBox),
     d(ComboBox),
+    d(Slider),
     // core
     d(Time),
     d(BigInteger),

@@ -113,6 +113,9 @@ combo:labelTextChanged(function(text)
     print("new combo text:", text)
 end)
 
+combo:setSelectedId(3)
+--print("num items:", combo:getNumItems())
+
 -- sync menu callback
 local menu = luce:Label("popup menu")
 menu.text = "right click on me for a sync menu!"
@@ -144,8 +147,19 @@ menu_async:mouseDown(function(mouseEvent)
     end
 end)
 
-combo:setSelectedId(3)
---print("num items:", combo:getNumItems())
+-- slider
+local slider = luce:Slider("a slider")
+slider:setRange( 1.0, 100.0, 0.5 )
+local cw, ch = slider:getTextBoxWidth(), slider:getTextBoxHeight()
+slider:setTextBoxStyle( luce.Slider.TextEntryBoxPosition.TextBoxRight, false, cw/1.5, ch )
+
+slider:valueChanged(function()
+    print(string.format("slider value: %s", slider.value ))
+end)
+
+slider:stoppedDragging(function()
+    print(string.format("slider last value: %s", slider.value))
+end)
 
 --- add our Document Window and components to our main JUCE application
 mainWindow:initialise(function(...)
@@ -175,6 +189,10 @@ mainWindow:initialise(function(...)
 
     mc:addAndMakeVisible(menu_async)
     menu_async:setBounds{ 410, 375, 200, 25 }
+
+    mc:addAndMakeVisible(slider)
+    slider:setBounds{ 410, 415, 200, 50 }
+    
 
     --mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds
                                      -- as this is the last component before
