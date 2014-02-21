@@ -128,14 +128,17 @@ int LImage::s_addImageToCache(lua_State*) {
     Image& image = *LUA::from_luce<LImage>(2);
     int64 hash   = LUA::getNumber<int64>(2);
     ImageCache::addImageToCache( image, hash );
+    return 0;
 }
 
 int LImage::s_setCacheTimeout(lua_State*) {
     ImageCache::setCacheTimeout( LUA::getNumber<int>(2) );
+    return 0;
 }
 
 int LImage::s_releaseUnusedImages(lua_State*) {
     ImageCache::releaseUnusedImages();
+    return 0;
 }
 
 
