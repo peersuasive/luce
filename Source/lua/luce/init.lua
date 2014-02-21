@@ -76,7 +76,10 @@ local xmeta = setmetatable({
             luce_m[m] = setmetatable({}, {
                 __index = getmetatable(mm).__index,
                 __tostring = getmetatable(mm).__tostring,
-                __call  = function(self,...) return mm(...) end
+                __call  = function(self,x,...)
+                    -- when using . or :
+                    if(luce_m==x)then return mm(...) else return mm(x,...) end
+                end
             })
         end
 
