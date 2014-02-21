@@ -27,8 +27,6 @@ namespace {
     template<class T>
     const juce::Point<T> luce_topoint(int i = -1);
 
-    template<class T>
-    const juce::Rectangle<T> luce_torectangle(int i = -1);
 
     template<class T>
     const juce::Range<T> luce_torange(int i = -1);
