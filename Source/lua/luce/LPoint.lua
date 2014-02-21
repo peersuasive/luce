@@ -1,8 +1,8 @@
 local myType = "LPoint"
 local mt = {}
 
-local function hypot(a,b)
-    math.sqrt(a*a + b*b)
+local function hypot(x,y)
+    return math.sqrt(a*a + b*b)
 end
 
 local function limit(l, u, v)
