@@ -1144,6 +1144,7 @@ LookAndFeel* LComponent::getLookAndFeel(int n) {
             LUA::throwError("Unknown LookAndFeel");
             break;
     }
+    return nullptr;
 }
 
 int LComponent::getLookAndFeel ( lua_State* ) {
