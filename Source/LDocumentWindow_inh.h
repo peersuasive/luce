@@ -225,5 +225,9 @@ const Luna<LDocumentWindow>::InheritenceF LDocumentWindow::inheritsF[] = {
 };
 
 const Luna<LDocumentWindow>::Enum LDocumentWindow::enums[] = {
+    { "ColourIds", {
+        { "backgroundColourId", DocumentWindow::backgroundColourId },
+    }},
+
     {0}
 };
