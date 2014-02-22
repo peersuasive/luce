@@ -94,6 +94,23 @@
         <MODULEPATH id="juce_core" path="/usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
+    <XCODE_IPHONE targetFolder="Builds/iOS" extraCompilerFlags="-I/usr/local/include&#10;-DLUA52&#10;-Wno-unused-variable&#10;-Wno-string-compare"
+                  extraLinkerFlags="-undefined dynamic_lookup">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Release" iosCompatibility="default" isDebug="0" optimisation="2"
+                       targetName="core"/>
+        <CONFIGURATION name="Debug" iosCompatibility="default" isDebug="1" optimisation="1"
+                       targetName="core"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="juce_gui_basics" path="../../juce"/>
+        <MODULEPATH id="juce_graphics" path="../../juce"/>
+        <MODULEPATH id="juce_events" path="../../juce"/>
+        <MODULEPATH id="juce_data_structures" path="../../juce"/>
+        <MODULEPATH id="juce_core" path="../../juce"/>
+      </MODULEPATHS>
+    </XCODE_IPHONE>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
