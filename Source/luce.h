@@ -7,8 +7,12 @@
 
 #include <list>
 #include <map>
+#include <iostream>
+#include <fstream>
 
 #include "JuceHeader.h"
+//#include "Luce.h" // not ready yet
+
 #ifdef LUA52
 #define LUA_COMPAT_MODULE
 #endif
