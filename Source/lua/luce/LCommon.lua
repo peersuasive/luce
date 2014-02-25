@@ -72,6 +72,9 @@ local new_comp_self = function(comp)
         if("function"==type(v) and (rawget(comp,k) or comp[k])) then
             rawset(t,k,v)
         else
+            -- FIXME: à débugger, ça peut venir d'ici, avec une confusion                                                            
+            -- dans les mt, puisque celle de comp est modifiée ou bien                                                               
+            -- de luce_m, ou de luce lui-même            
             _nind(comp,k,v)
         end
     end
