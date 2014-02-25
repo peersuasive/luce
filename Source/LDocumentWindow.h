@@ -36,6 +36,7 @@ public:
     int restoreWindowStateFromString(lua_State*);
     int getBorderThickness(lua_State*);
     int isKioskMode(lua_State*);
+    int setKioskMode(lua_State*);
 
     //==============================================================================
     int setContentNonOwned(lua_State*);

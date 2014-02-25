@@ -17,6 +17,7 @@ const char LDocumentWindow::className[] = "LDocumentWindow";
 const Luna<LDocumentWindow>::PropertyType LDocumentWindow::properties[] = {
     {"visible", &LComponent::isVisible, &LDocumentWindow::setVisible},
 
+    {"kioskMode", &LDocumentWindow::isKioskMode, &LDocumentWindow::setKioskMode},
     {"constrainer", &LDocumentWindow::getConstrainer, &LDocumentWindow::setConstrainer},
     {"fullScreen", &LDocumentWindow::isFullScreen, &LDocumentWindow::setFullScreen},
     {"resizable", &LDocumentWindow::isResizable, &LDocumentWindow::setResizable},
@@ -48,6 +49,7 @@ const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
     method( LDocumentWindow, setBackgroundColour ),
     method( LDocumentWindow, getBorderThickness ),
     method( LDocumentWindow, isKioskMode ),
+    method( LDocumentWindow, setKioskMode ),
     method( LDocumentWindow, isMinimised ),
     method( LDocumentWindow, setMinimised ),
     method( LDocumentWindow, setContentNonOwned ),
@@ -251,6 +253,17 @@ int LDocumentWindow::getBorderThickness ( lua_State *L ) {
 
 int LDocumentWindow::isKioskMode ( lua_State* ) {
     return LUA::returnBoolean( DocumentWindow::isKioskMode() );
+}
+
+int LDocumentWindow::setKioskMode( lua_State* ) {
+    bool state = LUA::getBoolean(2);
+    bool allowMenusAndBars = LUA::checkAndGetBoolean(2);
+    if(state)
+        Desktop::getInstance().setKioskModeComponent( this, allowMenusAndBars );
+    else
+        Desktop::getInstance().setKioskModeComponent( nullptr, false );
+
+    return 0;
 }
 
 /////// setters
