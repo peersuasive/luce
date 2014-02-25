@@ -35,10 +35,16 @@ const int run_cb(lua_State *L, int ref) {
 
 void MainThread::run() {
     lua_State *L = LUA::Get();
-    bool keep_running = true;
-    MessageManagerLock mml (Thread::getCurrentThread());
-    while (! threadShouldExit() && keep_running) {
-        keep_running = MessageManager::getInstance()->runDispatchLoopUntil(0);
+    while (! threadShouldExit()) {
+        MessageManagerLock mml (Thread::getCurrentThread());
+        if (!mml.lockWasGained())
+            return;
+
+        if (! MessageManager::getInstance()->runDispatchLoopUntil(0) )
+            break;
+        if ( run_cb(L, cb_ref) != 0 )
+            break;
+
         /*
         if ( cb_ref != LUA_REFNIL ) {
             MessageManagerLock mml (Thread::getCurrentThread());
@@ -52,8 +58,6 @@ void MainThread::run() {
         }
         */
         
-        if (mml.lockWasGained()) {
-            keep_running = (run_cb(L, cb_ref) == 0);
             /*
             int rc = LUA::call_cb(cb_ref, 1);
             if ( rc < 0 ) {
@@ -73,6 +77,5 @@ void MainThread::run() {
                 lua_pop(L, 1);
             }
             */
-        }
     }
 }
