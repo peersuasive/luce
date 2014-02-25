@@ -1,6 +1,7 @@
 #ifndef __LJUCE_APPLICATION_H
 #define __LJUCE_APPLICATION_H
 
+
 class LJUCEApplication : public LBase,
                          public JUCEApplication
 {
@@ -22,7 +23,7 @@ public:
 
     //==============================================================================
     int initialise (lua_State *L);
-    void initialise (const String& commandLine);
+    virtual void initialise (const String& commandLine) override;
 
     int quit(lua_State *L);
 
@@ -36,6 +37,14 @@ public:
     int anotherInstanceStarted (lua_State *L);
     void anotherInstanceStarted (const String& commandLine);
 
+    //TODO
+    int suspended(lua_State*);
+    void suspended() override;
+    int resumed(lua_State*);
+    void resumed() override;
+    int unhandledException(lua_State*);
+    void unhandledException(const std::exception*, const String&, int) override;
+
     //==============================================================================
     static const char className[];
     static const Luna<LJUCEApplication>::Inheritence inherits[];
@@ -48,6 +57,7 @@ public:
 private:
     //==============================================================================
     ScopedPointer<Component> mainWindow;
+
     //==============================================================================
     var call_cb_get_value();
 

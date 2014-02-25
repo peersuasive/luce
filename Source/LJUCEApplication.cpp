@@ -23,6 +23,9 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
     method( LJUCEApplication, getApplicationVersion ),
     method( LJUCEApplication, moreThanOneInstanceAllowed ),
     method( LJUCEApplication, initialise ),
+    method( LJUCEApplication, suspended ),
+    method( LJUCEApplication, resumed ),
+    method( LJUCEApplication, unhandledException ),
     method( LJUCEApplication, shutdown ),
     method( LJUCEApplication, systemRequestedQuit ),
     method( LJUCEApplication, anotherInstanceStarted ),
@@ -53,9 +56,13 @@ LJUCEApplication::~LJUCEApplication() {
 }
 
 void LJUCEApplication::initialise (const String& commandLine) {
-    int rc = callback("initialise", 1);
-    if (rc != 1 )
-        std::cout << "error at initialise method ("<<rc<<"): " << LUA::getError() << std::endl;
+    int rc = callback("initialise", 1, { commandLine });
+    if (rc != 1 ) {
+        String error = LUA::getError();
+        std::cout << "error at initialise method (" << rc << "): " << error << std::endl;
+        lua_pushstring(LUA::Get(), error.toRawUTF8());
+        lua_error(LUA::Get());
+    }
     else
         mainWindow = LUA::from_luce<LComponent,Component>();
 }
@@ -65,10 +72,35 @@ int LJUCEApplication::initialise( lua_State *L ) {
     return 0;
 }
 
+void LJUCEApplication::suspended() {
+    if(hasCallback("suspended"))
+        callback("suspended");
+}
+int LJUCEApplication::suspended(lua_State*) {
+    set("suspended");
+    return 0;
+}
+
+void LJUCEApplication::resumed() {
+    if(hasCallback("resumed"))
+        callback("resumed");
+}
+int LJUCEApplication::resumed(lua_State*) {
+    set("resumed");
+    return 0;
+}
 void LJUCEApplication::systemRequestedQuit() {
+    if(hasCallback("systemRequestedQuit")) { 
+        if(! callback("systemRequestedQuit") )
+            JUCEApplication::quit();
+    }
+    else
+        JUCEApplication::quit();
+    /*
     int rc = callback( "systemRequestedQuit" );
     if (rc != 1)
         JUCEApplication::quit();
+    */
 }
 int LJUCEApplication::systemRequestedQuit(lua_State *L) {
     set("systemRequestedQuit");
@@ -81,14 +113,12 @@ int LJUCEApplication::quit(lua_State *L) {
 }
 
 const String LJUCEApplication::getApplicationName() {
-    int rc = callback("getApplicationName");
-    // retrieve name...
-    if(rc) {
-        //return call_cb_get_value();
-        return ProjectInfo::projectName;
+    if(hasCallback("getApplicationName")) {
+        callback("getApplicationName");
+        return LUA::checkAndGetString(-1, myName());
     }
-    else
-        return ProjectInfo::projectName;
+    return myName();
+    //return ProjectInfo::projectName;
 }
 int LJUCEApplication::getApplicationName(lua_State *L) { 
     set("getApplicationName");
@@ -96,13 +126,11 @@ int LJUCEApplication::getApplicationName(lua_State *L) {
 }
 
 const String LJUCEApplication::getApplicationVersion() {
-    int rc = callback("getApplicationVersion");
-    if(rc) {
-        //return call_cb_get_value();
-        return ProjectInfo::versionString;
+    if(hasCallback("getApplicationVersion")) {
+        callback("getApplicationVersion");
+        return LUA::checkAndGetString(-1, ProjectInfo::versionString);
     }
-    else
-        return ProjectInfo::versionString; 
+    return ProjectInfo::versionString; 
 }
 int LJUCEApplication::getApplicationVersion(lua_State *L) {
     set("getApplicationVersion");
@@ -110,9 +138,10 @@ int LJUCEApplication::getApplicationVersion(lua_State *L) {
 }
 
 bool LJUCEApplication::moreThanOneInstanceAllowed() {
-    if ( hasCallback("moreThanOneInstanceAllowed") )
-        if( callback("moreThanOneInstanceAllowed") )
-            return LUA::getBoolean();
+    if ( hasCallback("moreThanOneInstanceAllowed") ) {
+        callback("moreThanOneInstanceAllowed");
+        return LUA::checkAndGetBoolean(-1, true);
+    }
     return true;
 }
 int LJUCEApplication::moreThanOneInstanceAllowed(lua_State *L) { 
@@ -131,10 +160,25 @@ int LJUCEApplication::shutdown(lua_State *L) {
 }
 
 void LJUCEApplication::anotherInstanceStarted (const String& commandLine) {
-    callback("anotherInstanceStarted");
+    if(hasCallback("anotherInstanceStarted"))
+        callback("anotherInstanceStarted", 0, { commandLine } );
 }
 int LJUCEApplication::anotherInstanceStarted (lua_State *L) {
     set("anotherInstanceStarted");
+    return 0;
+}
+
+void LJUCEApplication::unhandledException(const std::exception *e, const String& source, int line) {
+    if(hasCallback("unhandledException")) {
+        callback("unhandledException", 0, { e->what(), source, line });
+    }
+    else {
+        lua_pushfstring(LUA::Get(), "Unhandled exception from JUCE: %s: %s, %d\n", e->what(), source.toRawUTF8(), line);
+        lua_error(LUA::Get());
+    }
+}
+int LJUCEApplication::unhandledException(lua_State *L) {
+    set("unhandledException");
     return 0;
 }
 
