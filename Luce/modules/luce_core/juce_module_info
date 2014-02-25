@@ -1,0 +1,19 @@
+{
+  "id":             "luce_core",
+  "name":           "Luce native wrappers"
+  "version":        "3.0.3",
+  "description":    "altmain",
+  "website":        "https://peersuasive.com/luce"
+  "license":        "GPLv3/Commercial",
+
+  "dependencies":   [ { "id": "juce_events",   "version": "3.0.3" } ],
+
+  "include":        "luce_initialisation.h",
+
+  "compile":        [ { "file": "luce_core.cpp", "target": "! xcode" },
+                      { "file": "luce_core.mm",  "target": "xcode" } ],
+
+  "browse":         [],
+
+  "LinuxLibs":      "X11"
+}
