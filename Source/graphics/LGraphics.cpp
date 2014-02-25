@@ -237,12 +237,18 @@ int LGraphics::restoreState ( lua_State* ) {
 int LGraphics::drawText ( lua_State *L ) {
     String text = LUA::getString(2);
     Rectangle<int> area;
-    if(!lua_istable(L, 2))
-        area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
-                LUA::getNumber<int>(4), LUA::getNumber<int>(5) };
+    if(!lua_istable(L, 2)) {
+        int x, y, w, h;
+        x = LUA::getNumber<int>(2); y = LUA::getNumber<int>(2);
+        w = LUA::getNumber<int>(2); h = LUA::getNumber<int>(2);
+        area = { x, y, w, h };
+        // crash on osx
+        //area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
+        //        LUA::getNumber<int>(4), LUA::getNumber<int>(5) }
+    }
     else
         area = LUCE::luce_torectangle(2);
-
+    
     Justification justificationType = (Justification)LUA::getNumber<int>(2);
     bool useEllipsesIfTooBig = LUA::getBoolean(2);
     Graphics::drawText( text, area, justificationType, useEllipsesIfTooBig );
@@ -252,9 +258,15 @@ int LGraphics::drawText ( lua_State *L ) {
 int LGraphics::drawFittedText ( lua_State *L ) {
     String text = LUA::getString(2);
     Rectangle<int> area;
-    if(!lua_istable(L, 2))
-        area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
-                LUA::getNumber<int>(4), LUA::getNumber<int>(5) };
+    if(!lua_istable(L, 2)) {
+        int x, y, w, h;
+        x = LUA::getNumber<int>(2); y = LUA::getNumber<int>(2);
+        w = LUA::getNumber<int>(2); h = LUA::getNumber<int>(2);
+        area = { x, y, w, h };
+        // osx crash
+        //area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
+        //        LUA::getNumber<int>(4), LUA::getNumber<int>(5) };
+    }
     else
         area = LUCE::luce_torectangle(2);
 
@@ -267,9 +279,14 @@ int LGraphics::drawFittedText ( lua_State *L ) {
 
 int LGraphics::fillRoundedRectangle ( lua_State *L ) {
     Rectangle<float> area;
-    if(!lua_istable(L, 2))
-        area = { LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
-                LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) };
+    if(!lua_istable(L, 2)) {
+        float x, y, w, h;
+        x = LUA::getNumber<float>(2); y = LUA::getNumber<float>(2);
+        w = LUA::getNumber<float>(2); h = LUA::getNumber<float>(2);
+        area = { x, y, w, h };
+        //area = { LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
+        //        LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) };
+    }
     else
         area = LUCE::luce_torectangle<float>(2);
 
@@ -306,12 +323,21 @@ int LGraphics::fillRect ( lua_State *L ) {
     }
 
     if( LUCE::luce_isoftype(LNumber, 2) ||lua_isnumber(L, 2) ) {
-        if( LUCE::luce_isofnumtype(int, 2) )
-            Graphics::fillRect( LUCE::luce_tonumber(2), LUCE::luce_tonumber(3),
-                                    LUCE::luce_tonumber(4), LUCE::luce_tonumber(5) );
-        else
-            Graphics::fillRect( LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
-                                    LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) );
+        if( LUCE::luce_isofnumtype(int, 2) ) {
+            int x, y, w, h;
+            x = LUA::getNumber<int>(2); y = LUA::getNumber<int>(2);
+            w = LUA::getNumber<int>(2); h = LUA::getNumber<int>(2);
+            Graphics::fillRect(x,y,w,h);
+            //Graphics::fillRect( LUCE::luce_tonumber(2), LUCE::luce_tonumber(3),
+            //                        LUCE::luce_tonumber(4), LUCE::luce_tonumber(5) );
+        } else {
+            float x, y, w, h;
+            x = LUA::getNumber<float>(2); y = LUA::getNumber<float>(2);
+            w = LUA::getNumber<float>(2); h = LUA::getNumber<float>(2);
+            Graphics::fillRect(x,y,w,h);
+            //Graphics::fillRect( LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
+            //                        LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) );
+        }
         return 0;
     }
     lua_pushfstring(L, "Graphics::fillRect: wrong or missing parameters");
@@ -359,14 +385,23 @@ int LGraphics::drawRoundedRectangle ( lua_State* ) {
 }
 
 int LGraphics::drawLine ( lua_State *L ) {
-    if (lua_gettop(L) > 5)
-        Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
-                LUA::getNumber<float>(4), LUA::getNumber<float>(5), LUA::getNumber<float>(6) );
-
-    else if (lua_gettop(L) > 4)
-        Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
-                LUA::getNumber<float>(4), LUA::getNumber<float>(5) );
-
+    if (lua_gettop(L) > 5) {
+        float a,b,c,d,e;
+        a = LUA::getNumber<float>(2); b = LUA::getNumber<float>(2);
+        c = LUA::getNumber<float>(2); d = LUA::getNumber<float>(2);
+        e = LUA::getNumber<float>(2);
+        Graphics::drawLine( a, b, c, d, e );
+        //Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
+        //        LUA::getNumber<float>(4), LUA::getNumber<float>(5), LUA::getNumber<float>(6) );
+    }
+    else if (lua_gettop(L) > 4) {
+        float a,b,c,d;
+        a = LUA::getNumber<float>(2); b = LUA::getNumber<float>(2);
+        c = LUA::getNumber<float>(2); d = LUA::getNumber<float>(2);
+        Graphics::drawLine( a, b, c, d );
+        //Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
+        //        LUA::getNumber<float>(4), LUA::getNumber<float>(5) );
+    }
     else {
         Line<float> line = LUA::getLine<float>(2);
         if(lua_isnumber(L,2)) 
