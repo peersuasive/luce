@@ -45,16 +45,26 @@ int lua_main(void) {
 }
 
 int lua_main_manual(lua_State *L, const int& cb_ref) {
-    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     
+#ifdef LUCE_MAC
+    // init osx here
+    //LUCEApplicationBase::altmain();
+#endif
+
+    initialiseJuce_GUI();
     const ScopedPointer<JUCEApplicationBase> app (juce::JUCEApplicationBase::createInstance());
-    app->initialiseApp();
+
+    if (!app->initialiseApp()) {
+        lua_pushstring(L,"LUCE ERROR: Couldn't initialise app");
+        lua_error(L);
+        return 0;
+    }
 
     MainThread myThread("Main luce Thread", L, cb_ref);
     myThread.run();
 
     //MessageManager::getInstance()->runDispatchLoop();
-
     return 0;
 }
 
@@ -95,7 +105,6 @@ int lua_shutdown(lua_State *L) {
 //==============================================================================
 int start( lua_State *L ) {
     //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
-    
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2);
     mainClass = mc;
 
@@ -113,7 +122,7 @@ int start_manual( lua_State *L ) {
 
     //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     
-    LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, -1); // luaL_ref pop'ed the cb function
+    LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2); // luaL_ref pop'ed the cb function
     mainClass = mc;
 
     int rc = lua_main_manual(L, cb_ref);
