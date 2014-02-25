@@ -1,0 +1,2 @@
+static:
+	cd ./build/intermediate/Release && ar rcs libcore_lin.a *.o && ranlib libcore_lin.a
