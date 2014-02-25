@@ -11,6 +11,14 @@
 
 *************************************************************/
 
+//class LPositioner : public Component::Positioner {
+//    virtual void applyNewBounds(const Rectangle<int> &newBounds) override {
+//        if(hasCallback("applyNewBounds")) {
+//            callback("applyNewBounds")
+//        }
+//    }
+//}
+
 #include "LJComponent_inh.h"
 const char LJComponent::className[] = "LJComponent";
 
