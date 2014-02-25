@@ -310,8 +310,12 @@ __attribute__ ((visibility ("default")))
 int luaopen_core(lua_State *L) {
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+
+    // X11 requires this at this point, but OS X can't stand it this soon
+#ifndef JUCE_MAC
     initialiseJuce_GUI();
- 
+#endif
+
 #if LUA_VERSION_NUM > 501
 #ifdef DEBUG
     luaL_requiref(L, "luce.core", luaopen_luce_core_d, 1);
