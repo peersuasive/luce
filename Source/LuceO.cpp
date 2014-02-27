@@ -54,9 +54,9 @@ namespace {
         lua_pop(L,1);
         return res ? res : "int";
     }
-    int luceI_pushvalue(int i = -1) {
+    int luceI_pushvalue(int i = -1, const char* ltype_ = NULL) {
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
-        const char *ltype = luce_typename(i);
+        const char *ltype = ltype_ ? ltype_ : luce_typename(i);
         if(! ltype)
             throw_error(lua_pushfstring(L, "Expected LObject, got %s", lua_typename(L,lua_type(L,-1))));
         
@@ -95,10 +95,11 @@ namespace {
     const T luce_tonumber(int i) {
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
         int res;
-        if(!luce_typename(i))
+        const char *tn = luce_typename(i);
+        if(!tn)
             res = luceI_pushnumber(i);
         else
-            res = luceI_pushvalue(i);
+            res = luceI_pushvalue(i, tn);
         if(res) {
             int ind = lua_gettop(L);
             lua_rawgeti(L, ind, 1);
@@ -152,11 +153,12 @@ namespace {
     const ArrayType<T> luce_tonumberarray(int i) {
         ArrayType<T> v;
         int res;
-        if(!luce_typename(i)) {
+        const char* tn = luce_typename(i);
+        if(!tn) {
             res = luceI_pushtable(i);
         }
         else
-            res = luceI_pushvalue(i);
+            res = luceI_pushvalue(i, tn);
 
         if(res)
             v = luceI_tonumberarray<T>();
