@@ -15,7 +15,7 @@ static juce::JUCEApplicationBase* juce_CreateApplication() {
 int lua_main(void) {
     //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     int res;
-#ifdef JUCE_MAC
+#if defined JUCE_MAC || defined JUCE_IOS
     // will call initialiseNSApplication
     res = juce::JUCEApplicationBase::main(0, 0);
 #else
@@ -312,7 +312,7 @@ int luaopen_core(lua_State *L) {
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
 
     // X11 requires this at this point, but OS X can't stand it this soon
-#ifndef JUCE_MAC
+#if !defined JUCE_MAC && ! defined JUCE_IOS
     initialiseJuce_GUI();
 #endif
 
