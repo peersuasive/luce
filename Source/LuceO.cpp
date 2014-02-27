@@ -38,9 +38,14 @@ namespace {
     const char* luce_typename(int i) {
         if (!lua_istable(L, i)) return NULL;
         lua_getfield(L, i, "__ltype");
-        const char *res = lua_tostring(L,-1);
+        //const char *res = lua_tostring(L,-1);
+        std::string res = lua_tostring(L,-1);
         lua_pop(L,1);
-        return res;
+        if(res.compare(0, 5, "light")==0) // light objects are not ready to dump, yet
+            return NULL;
+        else
+            return res.c_str();
+        //return res;
     }
     const char* luce_numtype(int i) {
         if (!lua_istable(L, i)) return NULL;
