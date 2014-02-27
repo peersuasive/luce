@@ -1,0 +1,2 @@
+- list index must fit lua'w way: +1 when passing to lua, -1 when getting from lua
+- meusure inpact on performance if setters return self instead of nothing -- would be nice for OO programming
