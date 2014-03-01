@@ -352,8 +352,8 @@ int LSlider::getVelocityOffset ( lua_State* ) {
 
 int LSlider::snapValue ( lua_State* ) {
     double attemptedValue = LUA::getNumber<double>(2);
-    bool userIsDragging = LUA::getBoolean(2);
-    return LUA::returnNumber( Slider::snapValue( attemptedValue, userIsDragging ) );
+    Slider::DragMode dragMode = (Slider::DragMode)LUA::getNumber<int>(2);
+    return LUA::returnNumber( Slider::snapValue( attemptedValue, dragMode ) );
 }
 
 int LSlider::getMinimum ( lua_State* ) {

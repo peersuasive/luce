@@ -255,13 +255,18 @@ const Luna<LSlider>::Enum LSlider::enums[] = {
         { "incDecButtonsDraggable_Vertical", LSlider::incDecButtonsDraggable_Vertical }
     }},
 
-
     { "TextEntryBoxPosition" , {
         { "NoTextBox"    , LSlider::NoTextBox },
         { "TextBoxLeft"  , LSlider::TextBoxLeft },
         { "TextBoxRight" , LSlider::TextBoxRight },
         { "TextBoxAbove" , LSlider::TextBoxAbove },
         { "TextBoxBelow" , LSlider::TextBoxBelow }
+    }},
+
+    { "DragMode", {
+        { "notDragging" , LSlider::notDragging},
+        { "absoluteDrag", LSlider::absoluteDrag},
+        { "velocityDrag", LSlider::velocityDrag},
     }},
 
     {0}
