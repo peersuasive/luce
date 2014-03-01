@@ -192,6 +192,7 @@ l_class(TextLayout);
 l_class(DocumentWindow);
 l_class(MainComponent);
 l_class(JComponent);
+l_class(OpenGLComponent);
 l_class(TextButton);
 l_class(ToggleButton);
 l_class(HyperlinkButton);
@@ -236,6 +237,7 @@ static const luaL_Reg luce_lib [] = {
     d(DocumentWindow),
     d(MainComponent),
     { "Component", l_JComponent },
+    d(OpenGLComponent),
     d(TextButton),
     d(ToggleButton),
     d(HyperlinkButton),
