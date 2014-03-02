@@ -14,6 +14,8 @@ namespace LUA {
         void throwError(const String& err);
         lua_State *Get();
 
+        bool isEmpty(int i = -1);
+
         const var getNumber(int i= -1);
         const var checkAndGetNumber(int i=2, var def = 0);
 

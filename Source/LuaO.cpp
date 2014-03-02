@@ -128,6 +128,10 @@ namespace LUA {
             objects[addr] = o;
         }
 
+        bool isEmpty(int i) {
+            return lua_isnoneornil(L,i);
+        }
+
         // get results from stack
         const var getNumber(int i) {
             var res( luaL_checknumber(L, i) );
