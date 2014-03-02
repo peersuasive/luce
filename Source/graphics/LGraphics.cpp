@@ -567,10 +567,28 @@ int LGraphics::fillRectList ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::setGradientFill ( lua_State* ) {
-    //Graphics::setGradientFill(*LUA::from_luce<LColourGradient>(2); // TODO);
-    LUA::TODO_OBJECT( "setGradientFill, *LUA::from_luce<LColourGradient>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
+int LGraphics::setGradientFill ( lua_State *L ) {
+    Colour colour1, colour2;
+    float x1, y1, x2, y2;
+    bool isRadial;
+    if(lua_isstring(L, 2)) {
+        colour1 = Colours::findColourForName( LUA::getString(2), Colours::black );
+    } else {
+        colour1 = *LUA::from_luce<LColour>(2);
+    }
+    x1 = LUA::getNumber<float>(2);
+    y1 = LUA::getNumber<float>(2);
+    if(lua_isstring(L, 2)) {
+        colour2 = Colours::findColourForName( LUA::getString(2), Colours::black );
+    } else {
+        colour1 = *LUA::from_luce<LColour>(2);
+    }
+    x2 = LUA::getNumber<float>(2);
+    y2 = LUA::getNumber<float>(2);
+    isRadial = LUA::getBoolean(2);
+
+    ColourGradient cg(colour1, x1, y1, colour2, x2, y2, isRadial);
+    Graphics::setGradientFill( cg );
     return 0;
 }
 
