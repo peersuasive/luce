@@ -22,6 +22,15 @@ public:
     int setDoubleClickTimeout(lua_State*);
 
     //==============================================================================
+    // luce specifics
+    /*
+     * initialised is usefull to start actions after the window has shown,
+     * particularly on iOS or OSX, as events oriented architectures
+     */
+    virtual void initialised();
+    int initialised(lua_State*);
+
+    //==============================================================================
     int initialise (lua_State *L);
     virtual void initialise (const String& commandLine) override;
 

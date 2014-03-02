@@ -23,6 +23,7 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
     method( LJUCEApplication, getApplicationVersion ),
     method( LJUCEApplication, moreThanOneInstanceAllowed ),
     method( LJUCEApplication, initialise ),
+    method( LJUCEApplication, initialised ),
     method( LJUCEApplication, suspended ),
     method( LJUCEApplication, resumed ),
     method( LJUCEApplication, unhandledException ),
@@ -55,6 +56,15 @@ LJUCEApplication::~LJUCEApplication() {
     DBG("END OF LJUCEApplication");
 }
 
+void LJUCEApplication::initialised() {
+    if(hasCallback("initialised"))
+        callback("initialised");
+}
+int LJUCEApplication::initialised(lua_State*) {
+    set("initialised");
+    return 0;
+}
+
 void LJUCEApplication::initialise (const String& commandLine) {
     int rc = callback("initialise", 1, { commandLine });
     if (rc != 1 ) {
@@ -65,6 +75,7 @@ void LJUCEApplication::initialise (const String& commandLine) {
     }
     else
         mainWindow = LUA::from_luce<LComponent,Component>();
+    initialised();
 }
 
 int LJUCEApplication::initialise( lua_State *L ) {
