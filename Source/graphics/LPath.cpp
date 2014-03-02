@@ -251,7 +251,8 @@ int LPath::addLineSegment ( lua_State* ) {
 }
 
 int LPath::addStar ( lua_State* ) {
-    Point<float> centre ( LUA::getPoint<float>(2) );
+    //Point<float> centre ( LUA::getPoint<float>(2) );
+    Point<float> centre = LUCE::luce_topoint<float>(2);
     int numberOfPoints = LUA::getNumber<int>(2);
     float innerRadius = LUA::getNumber<float>(2);
     float outerRadius = LUA::getNumber<float>(2);
