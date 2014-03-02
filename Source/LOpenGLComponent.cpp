@@ -108,6 +108,7 @@ int LOpenGLComponent::clearGL(lua_State*) {
 
     //glViewport (0, 0, roundToInt (desktopScale * Component::getWidth()), 
     //        roundToInt (desktopScale * Component::getHeight()));
+    return 0;
 }
 
 
