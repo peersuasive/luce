@@ -62,6 +62,8 @@ OBJECTS := \
 
 .PHONY: clean
 
+-include Makefile.static
+
 $(OUTDIR)/$(TARGET): $(OBJECTS) $(LDDEPS) $(RESOURCES)
 	@echo Linking luce
 	-@mkdir -p $(BINDIR)
