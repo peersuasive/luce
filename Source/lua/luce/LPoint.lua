@@ -125,7 +125,7 @@ function mt:toDouble()
 end
 
 function mt:dump()
-    return { self.x, self.y , self.__type, self.__ltype }
+    return { self.x, self.y } --, self.__type, self.__ltype
 end
 
 function mt:type()
