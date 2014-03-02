@@ -49,8 +49,11 @@ public:
     int detach(lua_State*);
     int setComponentPaintingEnabled(lua_State*);
     int getTargetComponent(lua_State*);
-
     // TODO: setPixelFormat
+
+    int OpenGLShaderProgram(lua_State*);
+    int clearGL(lua_State*);
+
 
     //==============================================================================
     static const char className[];
@@ -64,6 +67,10 @@ public:
 private:
     //==============================================================================
     OpenGLContext openGLContext;
+    ScopedPointer<OpenGLGraphicsContextCustomShader> shader;
+    void renderGLSL(Graphics&);
+
+    //==============================================================================
     virtual void newOpenGLContextCreated() override;
     virtual void renderOpenGL() override;
     virtual void openGLContextClosing() override;

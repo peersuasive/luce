@@ -40,6 +40,7 @@ namespace luce {
 #include "LDocumentWindow.cpp"
 #include "LMainComponent.cpp"
 #include "LJComponent.cpp"
+#include "LOpenGLShaderProgram.cpp"
 #include "LOpenGLComponent.cpp"
 #include "LLabel.cpp"
 #include "LTextButton.cpp"

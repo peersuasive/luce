@@ -31,7 +31,6 @@ const Luna<LOpenGLComponent>::FunctionType LOpenGLComponent::methods[] = {
     method(LOpenGLComponent, setSwapInterval),
     method(LOpenGLComponent, getSwapInterval),
 
-
     method(LOpenGLComponent, setMultisamplingEnabled),
     method(LOpenGLComponent, areShadersAvailable),
 
@@ -47,6 +46,8 @@ const Luna<LOpenGLComponent>::FunctionType LOpenGLComponent::methods[] = {
     method(LOpenGLComponent, setComponentPaintingEnabled),
     method(LOpenGLComponent, getTargetComponent),
     // TODO: setPixelFormat
+    
+    method(LOpenGLComponent, clearGL),
 
     {0,0}
 };
@@ -64,11 +65,11 @@ LOpenGLComponent::LOpenGLComponent(lua_State *L)
     Component::setOpaque(true); // test perfs without
     
     openGLContext.setRenderer(this);
-    openGLContext.setComponentPaintingEnabled(false);
+    openGLContext.setComponentPaintingEnabled(true);
     openGLContext.setMultisamplingEnabled(true);
     openGLContext.setContinuousRepainting(true);
 
-    //openGLContext.attachTo(*this);
+    openGLContext.attachTo(*this);
     //openGLContext.attachTo(*Component::getTopLevelComponent());
 
     REGISTER_CLASS(LOpenGLComponent);
@@ -76,6 +77,7 @@ LOpenGLComponent::LOpenGLComponent(lua_State *L)
 
 LOpenGLComponent::~LOpenGLComponent() {
     // remove opengl stuff
+    shader = nullptr;
     openGLContext.detach();
     Component::deleteAllChildren();
 }
@@ -89,8 +91,70 @@ int LOpenGLComponent::newOpenGLContextCreated(lua_State*) {
     return 0;
 }
 
+int LOpenGLComponent::OpenGLShaderProgram(lua_State *L) {
+    return LUA::storeAndReturnUserdata<LOpenGLShaderProgram>(
+        new LOpenGLShaderProgram(L, openGLContext)
+    );
+}
+
+int LOpenGLComponent::clearGL(lua_State*) {
+    const float desktopScale = (float) openGLContext.getRenderingScale();
+    glEnable (GL_DEPTH_TEST);
+    glDepthFunc (GL_LESS);
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    openGLContext.extensions.glActiveTexture (GL_TEXTURE0);
+    glEnable (GL_TEXTURE_2D);
+
+    //glViewport (0, 0, roundToInt (desktopScale * Component::getWidth()), 
+    //        roundToInt (desktopScale * Component::getHeight()));
+}
+
+
+void LOpenGLComponent::renderGLSL(Graphics& g) {
+    shader = nullptr;
+    String code = LUA::getString(-1);
+    shader = new OpenGLGraphicsContextCustomShader(code);
+    Result result (shader->checkCompilation (g.getInternalContext()));
+    if(!result.failed())
+        shader->fillRect (g.getInternalContext(), Component::getLocalBounds());
+    else {
+        DBG(String("Shader failed: ") + result.getErrorMessage());
+        shader = nullptr;
+
+        g.resetToDefaultState();
+        g.fillAll(Colours::black);
+        g.setColour(Colours::red);
+        g.setFont(16.0f);
+        Rectangle<int> b = Component::getLocalBounds();
+        g.drawSingleLineText("Shader Failed!", b.getCentreX(), b.getCentreY(), Justification::centred);
+        g.drawSingleLineText(result.getErrorMessage(), b.getCentreX(), 
+                (b.getCentreY())+16+4, Justification::centred);
+    }
+}
+
 void LOpenGLComponent::renderOpenGL() {
-    callback("renderOpenGL");
+    if(hasCallback("renderOpenGL")) {
+        const float desktopScale = (float) openGLContext.getRenderingScale();
+        ScopedPointer<LowLevelGraphicsContext> glRenderer(
+            createOpenGLGraphicsContext ( openGLContext, 
+                                            roundToInt (desktopScale * Component::getWidth()),
+                                            roundToInt (desktopScale * Component::getHeight()) )
+        );
+        if(glRenderer != nullptr) {
+            Graphics g(*glRenderer);
+            g.addTransform (AffineTransform::scale (desktopScale));
+            LGraphics lg(LUA::Get(), g);
+            callback( "renderOpenGL", 1, { new LRefBase("Graphics", &lg) } );
+            if(! LUA::isEmpty())
+                renderGLSL(g);
+            else
+                lua_pop(LUA::Get(), 1);
+        }
+        else {
+            callback("renderOpenGL");
+        }
+    }
 }
 int LOpenGLComponent::renderOpenGL(lua_State*) {
     set("renderOpenGL");
@@ -104,6 +168,22 @@ void LOpenGLComponent::openGLContextClosing() {
 int LOpenGLComponent::openGLContextClosing(lua_State*) {
     set("openGLContextClosing");
     return 0;
+}
+
+void LOpenGLComponent::paint(Graphics& g) {
+    if ( hasCallback("paint") ) {
+        LGraphics lg( LUA::Get(), g );
+        callback( "paint", 1, { new LRefBase("Graphics", &lg) } );
+        if(! LUA::isEmpty())
+            renderGLSL(g);
+        else {
+            shader = nullptr;
+            lua_pop(LUA::Get(),1); // pop nil
+            Component::paint(g);
+        }
+    } else {
+        Component::paint(g);
+    }
 }
 
 int LOpenGLComponent::triggerRepaint(lua_State*) {
@@ -168,7 +248,7 @@ int LOpenGLComponent::attach(lua_State*) {
 int LOpenGLComponent::attachTo(lua_State*) {
     if(openGLContext.isAttached())
         openGLContext.detach();
-    openGLContext.attachTo( *LUA::from_luce<LJComponent>(2) );
+    openGLContext.attachTo( *LUA::from_luce<LOpenGLComponent>(2) );
     return 0;
 }
 
@@ -183,19 +263,10 @@ int LOpenGLComponent::setComponentPaintingEnabled(lua_State*) {
 }
 
 int LOpenGLComponent::getTargetComponent(lua_State*) {
-    return LUA::returnUserdata<LJComponent>( openGLContext.getTargetComponent() );
+    return LUA::returnUserdata<LOpenGLComponent>( openGLContext.getTargetComponent() );
 }
-
 
 // TODO: setPixelFormat
-
-void LOpenGLComponent::paint(Graphics& g) {
-    if ( hasCallback("paint") ) {
-        LComponent::lpaint(g);
-    } else {
-        Component::paint(g);
-    }
-}
 
 void LOpenGLComponent::resized() {
     if ( hasCallback("resized") ) {
