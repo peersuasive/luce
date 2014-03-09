@@ -107,7 +107,9 @@ int LDocumentWindow::setVisible(lua_State *L) {
     bool v = LUA::getBoolean(2);
     if(v) {
         DocumentWindow::setVisible (true);
+        #if ! JUCE_ANDROID
         setUsingNativeTitleBar( true );
+        #endif
     }
     else
         DocumentWindow::setVisible(false);

@@ -1,26 +1,42 @@
 #include <cstring>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// TODO: create one of this for each specific environment, and more particularly for for android
 
-//==============================================================================
-static LJUCEApplication *mainClass = nullptr;
+#define LUCE_API __attribute__ ((visibility ("default")))
 
-static juce::JUCEApplicationBase* juce_CreateApplication() {
+static luce::LJUCEApplication *mainClass = nullptr;
+LUCE_API juce::JUCEApplicationBase* juce_CreateApplication() {
     jassert( mainClass != nullptr );
     return mainClass;
 }
 
+namespace luce {
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if JUCE_ANDROID
+    #include <jni.h>
+    JNIEnv *env;
+    jobject activity;
+    extern void Java_org_peersuasive_luce_luce_resumeApp(JNIEnv *env_, jobject activity_);
+
+    LUCE_API int luaopen_luce_core_and(lua_State *L, JNIEnv *env_, jobject activity_);
+    LUCE_API int luaopen_core_and(lua_State *L, JNIEnv *env_, jobject activity_);
+#endif
+
 int lua_main(void) {
     //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     int res;
-#if defined JUCE_MAC || defined JUCE_IOS
+    #if defined JUCE_MAC || defined JUCE_IOS
     // will call initialiseNSApplication
     res = juce::JUCEApplicationBase::main(0, 0);
-#else
+    #elif JUCE_ANDROID
+    Java_org_peersuasive_luce_luce_resumeApp(env, activity);
+    #else
     res = juce::JUCEApplicationBase::main();
-#endif
+    #endif
     /*
     // manual
     if ( MessageManager::getInstanceWithoutCreating() != nullptr )
@@ -47,10 +63,10 @@ int lua_main(void) {
 int lua_main_manual(lua_State *L, const int& cb_ref) {
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     
-#ifdef LUCE_MAC
+    #ifdef LUCE_MAC
     // init osx here
     //LUCEApplicationBase::altmain();
-#endif
+    #endif
 
     initialiseJuce_GUI();
     const ScopedPointer<JUCEApplicationBase> app (juce::JUCEApplicationBase::createInstance());
@@ -69,6 +85,8 @@ int lua_main_manual(lua_State *L, const int& cb_ref) {
 }
 
 int lua_shutdown(lua_State *L) {
+    // FIXME: crashed on android when in Release mode
+    
     //mainClass->shutdown(); // can't be called from there because... No more Display ?
     //so let's lua call this for us
 
@@ -124,10 +142,9 @@ int start_manual( lua_State *L ) {
     
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2); // luaL_ref pop'ed the cb function
     mainClass = mc;
-
     int rc = lua_main_manual(L, cb_ref);
     // if ( rc ) luaL_error...
-    DBG("END of START\n");
+    DBG("END of START (manual)\n");
     return 0;
 }
 
@@ -277,11 +294,10 @@ void register_enums(lua_State *L) {
     dc(CurrentOS);
 }
 
-__attribute__ ((visibility ("default")))
 #ifdef DEBUG
-int luaopen_luce_core_d (lua_State *L) {
+LUCE_API int luaopen_luce_core_d (lua_State *L) {
 #else
-int luaopen_luce_core (lua_State *L) {
+LUCE_API int luaopen_luce_core (lua_State *L) {
 #endif
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
@@ -300,38 +316,54 @@ int luaopen_luce_core (lua_State *L) {
 }
 
 static const luaL_Reg lucecore_lib [] = {
-#ifdef DEBUG
+    #ifdef DEBUG
     {"core", luaopen_luce_core_d},
-#else
+    #else
     {"core", luaopen_luce_core},
-#endif
+    #endif
     {NULL, NULL}
 };
 
-__attribute__ ((visibility ("default")))
-int luaopen_core(lua_State *L) {
+LUCE_API int luaopen_core(lua_State *L) {
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
 
     // X11 requires this at this point, but OS X can't stand it this soon
-#if !defined JUCE_MAC && ! defined JUCE_IOS
+    #if !defined JUCE_MAC && ! defined JUCE_IOS && ! defined JUCE_ANDROID
     initialiseJuce_GUI();
-#endif
+    #endif
 
-#if LUA_VERSION_NUM > 501
-#ifdef DEBUG
+    #if LUA_VERSION_NUM > 501
+    #ifdef DEBUG
     luaL_requiref(L, "luce.core", luaopen_luce_core_d, 1);
-#else
+    #else
     luaL_requiref(L, "luce.core", luaopen_luce_core, 1);
-#endif
-#else
+    #endif
+    #else
     luaL_register(L, "luce.core", luce_lib);
     register_enums(L);
-#endif
+    #endif
 
     return 0;
 }
 
+#if JUCE_ANDROID
+    int luaopen_luce_core_and(lua_State *L, JNIEnv *env_, jobject activity_) {
+        env = env_; activity = activity_;
+        #ifdef DEBUG
+        return luaopen_luce_core_d(L);
+        #else
+        return luaopen_luce_core(L);
+        #endif
+    }
+    int luaopen_core_and(lua_State *L, JNIEnv *env_, jobject activity_) {
+        env = env_; activity = activity_;
+        return luaopen_core(L);
+    }
+#endif
+
 #ifdef __cplusplus
 }
 #endif
+
+} // end of namespace

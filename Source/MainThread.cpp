@@ -32,7 +32,9 @@ const int run_cb(lua_State *L, int ref) {
     lua_pop(L, 1);
     return status;
 }
-
+#if JUCE_ANDROID
+void MainThread::run() {}
+#else
 void MainThread::run() {
     lua_State *L = LUA::Get();
     while (! threadShouldExit()) {
@@ -79,3 +81,4 @@ void MainThread::run() {
             */
     }
 }
+#endif // LUCE_ANDROID
