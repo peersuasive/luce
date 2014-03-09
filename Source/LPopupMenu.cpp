@@ -201,8 +201,17 @@ int LPopupMenu::showMenuAsync ( lua_State* ) {
     return 0;
 }
 
-int LPopupMenu::show(lua_State*) {
+int LPopupMenu::show(lua_State *L) {
+#if JUCE_ANDROID
+    Options options;
+    ModalComponentManager::Callback* callback = 
+        ModalCallbackFunction::forComponent(
+                LPopupMenu::LCallbackComponent::menuInvocationCallback, cbComp.get() );
+    PopupMenu::showMenuAsync( options, callback );
+    return 0;
+#else
     return LUA::returnNumber<int>( PopupMenu::show() );
+#endif
 }
 
 int LPopupMenu::setLookAndFeel ( lua_State* ) {
