@@ -738,6 +738,7 @@ namespace LUA {
                 lua_pop(L,1);
                 lua_pushfstring(L, "Failed to execute callback '%s': %s", name, msg);
                 DBG(String("failed to execute callback: ") + name);
+                DBG(String("Error was: ") + msg);
                 // Get out, a failure's a failure
                 lua_error(L);
                 /*
