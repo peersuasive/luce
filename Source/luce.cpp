@@ -58,5 +58,6 @@ namespace luce {
 #include "LOptions.cpp"
 #include "LPopupMenu.cpp"
 
-#include "Main.cpp"
 }
+
+#include "Main.cpp"
