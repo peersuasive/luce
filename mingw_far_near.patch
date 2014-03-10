@@ -1,0 +1,20 @@
+diff --git a/JuceLibraryCode/modules/juce_core/native/juce_BasicNativeHeaders.h b/JuceLibraryCode/modules/juce_core/native/juce_BasicNativeHeaders.h
+index cdaa0ef..2f1e60e 100644
+--- a/JuceLibraryCode/modules/juce_core/native/juce_BasicNativeHeaders.h
++++ b/JuceLibraryCode/modules/juce_core/native/juce_BasicNativeHeaders.h
+@@ -98,6 +98,15 @@
+  #endif
+ 
+  #include <windows.h>
++ #if JUCE_MINGW
++ #ifdef near
++ #undef near
++ #endif
++ #ifdef far
++ #undef far
++ #endif
++ #endif
++
+  #include <shellapi.h>
+  #include <tchar.h>
+  #include <stddef.h>
