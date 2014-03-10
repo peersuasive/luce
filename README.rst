@@ -6,7 +6,7 @@ A GUI Toolkit for Lua based on JUCE
 -----------------------------------
 
 
-What is ``LUCE`` ?
+What is ``Luce`` ?
 ==================
 
 ``Luce`` is a `Lua <http://lua.org>`_ GUI framework, based on the excellent C++
@@ -179,7 +179,7 @@ Example:
     ---
     local dw = luce:DocumentWindow("Document Window")
     -- rename it
-    dw.name = "LUCE Example Application"
+    dw.name = "Luce Example Application"
 
     ---
     --- create a MainComponent, to be hosted by the Document Window
@@ -334,14 +334,14 @@ Example:
 
     luce:shutdown() -- in any case, call this to close cleanly
 
-Adding new classes to ``JUCE``
+Adding new classes to ``Luce``
 ==============================
 
-There are two kinds of classes in ``LUCE``: *full* classes and *wrapper* classes.
+There are two kinds of classes in ``Luce``: *full* classes and *wrapper* classes.
 
-Full classes are just ``JUCE`` classes extended to be integrated with ``LUCE``,
+Full classes are just ``JUCE`` classes extended to be integrated with ``Luce``,
 while wrapper classes are there to create some kind of inheritence between
-``LUCE`` components.
+``Luce`` components.
 
 For the 1st one, see ``LLabel``, ``LTextEditor`` or ``LTextButton``, while
 the only example for the 2nd kind is ``LComponent``.
@@ -350,13 +350,13 @@ the only example for the 2nd kind is ``LComponent``.
 ``JUCE`` component while inheriting ``LComponent``, which in turn wraps all
 ``JUCE``'s ``Component`` base class methods.
 
-This allows simulating inheritence in ``LUCE`` components, as it wouldn't be
+This allows simulating inheritence in ``Luce`` components, as it wouldn't be
 possible in a simple way otherwise. Like previously said, we're not aiming
 at a 1 to 1 binding to ``JUCE``, so more complex mechanisms would be oversized
 here (unless someone knows a simple way to achieve this, of course !).
 
 There is a helper script, ``microparser``, which greatly simplify the job
-of creating new classes for ``LUCE``. It won't generate a new "ready to use"
+of creating new classes for ``Luce``. It won't generate a new "ready to use"
 class but gives a great help by generating the class template and headers
 with all available methods and callbacks and pre-implementing them.
 The most obvious ones are fully generated.
@@ -365,7 +365,7 @@ To add pseudo-inheritence, use the script ``create_inh.sh``:
 
 .. code:: sh
 
-    ./create_inh.sh <LUCE_CLASS_BASE_NAME>
+    ./create_inh.sh <Luce_CLASS_BASE_NAME>
 
 
 which generates the ``LCLASS_inh.h`` header to be included in the class.
@@ -390,7 +390,7 @@ Once the class is created, include it in ``luce.cpp``, ``luce.h`` and reference 
 ``Luce`` Roadmap
 ================
 
-``LUCE`` is still very young just but is growing fast -- at least as fast as
+``Luce`` is still very young just but is growing fast -- at least as fast as
 our needs for it. Most of the basic widgets are aleady there and it's already
 possible to build full applications with it.
 Performances are there too, even if there isn't any optimisation done yet.
@@ -420,10 +420,19 @@ application, a small *avant goût* of the forthcoming Peersuasive's smart-data
 oriented architecture ``gadokai`` (yet to be announced).
 
 
+
+Related Projects
+================
+
+`Luce Embeddable <https://github.com/peersuasive/luce_embeddable>`_, to create standalone or bundled applications.
+
+`Luce Squishable <https://github.com/peersuasive/luce_squishable>`_, to concatenate Luce's lua classes to one, portable file.
+
+
 License.
 ========
 
-For open source projects, ``LUCE`` is licensed under the terms of the `GPLv3
+For open source projects, ``Luce`` is licensed under the terms of the `GPLv3
 <http://www.gnu.org/licenses/gpl-3.0.html>`_ with some parts being `AGPLv3
 <http://www.gnu.org/licenses/agpl-3.0.html>`_.
 
