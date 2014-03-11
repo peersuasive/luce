@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{88EA8645-C88E-D84B-E0B5-663CE3A572F6}") = "luce", "luce.vcxproj", "{1EBEBCA4-437E-5032-6BD6-567DC625666D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EBEBCA4-437E-5032-6BD6-567DC625666D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1EBEBCA4-437E-5032-6BD6-567DC625666D}.Debug|Win32.Build.0 = Debug|Win32
+		{1EBEBCA4-437E-5032-6BD6-567DC625666D}.Release|Win32.ActiveCfg = Release|Win32
+		{1EBEBCA4-437E-5032-6BD6-567DC625666D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
