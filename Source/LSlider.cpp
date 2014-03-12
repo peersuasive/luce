@@ -495,7 +495,7 @@ int LSlider::setVelocityModeParameters ( lua_State* ) {
 
 int LSlider::setPopupDisplayEnabled ( lua_State* ) {
     bool isEnabled = LUA::getBoolean(2);
-    Component *parentComponentToUse = LUA::from_luce<LJComponent>(2);
+    Component *parentComponentToUse = LUA::from_luce<LComponent, Component>(2);
     Slider::setPopupDisplayEnabled( isEnabled, parentComponentToUse );
     return 0;
 }

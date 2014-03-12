@@ -186,7 +186,7 @@ int LViewport::getViewedComponent ( lua_State *L ) {
     return LUA::returnUserdata<LJComponent, Component>(Viewport::getViewedComponent());
 }
 int LViewport::setViewedComponent ( lua_State* ) {
-    Component* newViewedComponent = LUA::from_luce<LJComponent>(2);
+    Component* newViewedComponent = LUA::from_luce<LComponent, Component>(2);
     bool deleteComponentWhenNoLongerNeeded = LUA::checkAndGetBoolean(2, true);
     Viewport::setViewedComponent( newViewedComponent, deleteComponentWhenNoLongerNeeded );
     return 0;
@@ -275,7 +275,7 @@ int LViewport::setViewPositionProportionately ( lua_State* ) {
 }
 
 int LViewport::componentMovedOrResized ( lua_State* ) {
-    Component &comp = *LUA::from_luce<LJComponent>(2);
+    Component &comp = *LUA::from_luce<LComponent, Component>(2);
     bool wasMoved = LUA::getBoolean(2);
     bool wasResized = LUA::getBoolean(2);
     Viewport::componentMovedOrResized( comp, wasMoved, wasResized );

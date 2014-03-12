@@ -40,7 +40,7 @@ LOptions::LOptions(lua_State *L)
 LOptions::~LOptions() {}
 
 int LOptions::withTargetComponent ( lua_State *L ) {
-    Options::withTargetComponent( LUA::from_luce<LJComponent>(2) );
+    Options::withTargetComponent( LUA::from_luce<LComponent, Component>(2) );
     return 1; // return self
 }
 

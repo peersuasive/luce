@@ -162,14 +162,16 @@ int LPopupMenu::clear ( lua_State* ) {
 
 int LPopupMenu::addCustomItem ( lua_State *L ) {
     int itemResultID = LUA::getNumber<int>(2);
-    Component *comp  = LUA::from_luce<LJComponent, Component>(2);
+    Component *comp  = LUA::from_luce<LComponent, Component>(2);
     int idealWidth   = LUA::getNumber<int>(2);
+    int idealHeight  = LUA::getNumber<int>(2);
     bool triggerMenuItemAutomaticallyWhenClicked = LUA::getBoolean(2);
     LPopupMenu *popupMenu = nullptr;
     if(!lua_isnoneornil(L, 2))
         popupMenu = LUA::from_luce<LPopupMenu>(2);
     
-    PopupMenu::addCustomItem( itemResultID, comp, idealWidth, triggerMenuItemAutomaticallyWhenClicked, popupMenu );
+    PopupMenu::addCustomItem( itemResultID, comp, idealWidth, idealHeight, 
+                            triggerMenuItemAutomaticallyWhenClicked, popupMenu );
     return 0;
 }
 
