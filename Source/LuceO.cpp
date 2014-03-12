@@ -405,10 +405,11 @@ namespace {
     const juce::StringArray luce_tostringarray(int i) {
         StringArray array;
         int res;
-        if(!luce_typename(i))
+        const char* tn = luce_typename(i);
+        if(!tn)
             res = luceI_pushtable(i);
         else
-            res = luceI_pushvalue(i);
+            res = luceI_pushvalue(i, tn);
         if(res) {
             int ind = lua_gettop(L);
             for ( int i = 1; i<= res; ++i ) {
@@ -431,10 +432,11 @@ namespace {
     const juce::RectangleList<T> luce_torectanglelist(int i) {
         juce::RectangleList<T> rl;
         int res;
-        if(!luce_typename(i))
+        const char* tn = luce_typename(i);
+        if(!tn)
             res = luceI_pushtable(i);
         else
-            res = luceI_pushvalue(i);
+            res = luceI_pushvalue(i, tn);
 
         if ( res ) {
             lua_pushnil(L);
@@ -470,10 +472,11 @@ namespace {
 
     const juce::TextLayout::Glyph luce_toglyph(int i) {
         int res;
-        if(!luce_typename(i))
+        const char* tn = luce_typename(i);
+        if(!tn)
             res = luceI_pushtable(i);
         else
-            res = luceI_pushvalue(i);
+            res = luceI_pushvalue(i, tn);
 
         if(res) {
             int ind = lua_gettop(L);
