@@ -59,6 +59,7 @@ namespace luce {
 #include "LTimer.h"
 
 #include "LComponent.h"
+#include "LViewport.h"
 #include "LButton.h"
 #include "LDocumentWindow.h"
 #include "LMainComponent.h"

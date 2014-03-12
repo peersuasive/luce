@@ -35,6 +35,7 @@ namespace luce {
 #include "LTimer.cpp"
 
 #include "LComponent.cpp"
+#include "LViewport.cpp"
 #include "LButton.cpp"
 #include "LJUCEApplication.cpp"
 #include "LDocumentWindow.cpp"
