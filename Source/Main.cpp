@@ -299,6 +299,7 @@ LUCE_API int luaopen_luce_core_d (lua_State *L) {
 #else
 LUCE_API int luaopen_luce_core (lua_State *L) {
 #endif
+    LUA::Set(L);
     DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     initialiseJuce_GUI();
