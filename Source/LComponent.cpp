@@ -135,6 +135,12 @@ int LComponent::removeChildComponent ( lua_State* ) {
     return 0;
 }
 
+int LComponent::getTopLevelComponent ( lua_State* ) {
+    if (child) {
+        return LUA::returnUserdata<LJComponent, Component>( child->getTopLevelComponent() );
+    } else return 0;
+}
+
 // callbacks
 int LComponent::repaint(lua_State *L) {
     if(child)
@@ -1316,14 +1322,6 @@ int LComponent::addComponentListener ( lua_State* ) {
         lua_settop(LUA::Get(), 1); // added by TODO
     }
     return 0;
-}
-
-int LComponent::getTopLevelComponent ( lua_State* ) {
-    if (child) {
-        // return LUA::TODO_RETURN_OBJECT_Component( child->getTopLevelComponent() );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "Component getTopLevelComponent()" );
-    } else return 0;
 }
 
 int LComponent::getCurrentlyModalComponent ( lua_State* ) {
