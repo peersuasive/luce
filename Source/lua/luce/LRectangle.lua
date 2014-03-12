@@ -158,10 +158,12 @@ end
 
 function mt:setWidth(w)
     self.w = w
+    return self
 end
 
 function mt:setHeight(h)
     self.h = h
+    return self
 end
 
 function mt:getRight()
