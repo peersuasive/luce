@@ -355,20 +355,20 @@ new = function(me, t, __type)
         end,
         __mul = function(self, scale)
             if("number"==type(scale))then
-            return self:new{self.x*scale, self.y*scale, self.w*scale, self.h*scale}
-                       :copyWithRounding(self)
+                local r = self:new{self.x*scale, self.y*scale, self.w*scale, self.h*scale}
+                return r:copyWithRounding(r)
             else
-            return self:new{self.x*scale.x, self.y*scale.y, self.w*scale.x, self.h*scale.y}
-                       :copyWithRounding(self)
+                local r = self:new{self.x*scale.x, self.y*scale.y, self.w*scale.x, self.h*scale.y}
+                return r:copyWithRounding(self)
             end
         end,
         __div = function(self, scale)
             if("number"==type(scale))then
-            return self:new{self.x/scale, self.y/scale, self.w/scale, self.h/scale}
-                       :copyWithRounding(self)
+                local r = self:new{self.x/scale, self.y/scale, self.w/scale, self.h/scale}
+                return r:copyWithRounding(self)
             else
-            return self:new{self.x/scale.x, self.y/scale.y, self.w/scale.x, self.h/scale.y}
-                       :copyWithRounding(self)
+                local r = self:new{self.x/scale.x, self.y/scale.y, self.w/scale.x, self.h/scale.y}
+                return r:copyWithRounding(self)
             end
 
         end,
