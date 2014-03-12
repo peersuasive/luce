@@ -116,6 +116,9 @@ end)
 combo:setSelectedId(3)
 --print("num items:", combo:getNumItems())
 
+
+local customItem = luce:TextButton("customItem")
+customItem.buttonText = "custom item"
 -- sync menu callback
 local menu = luce:Label("popup menu")
 menu.text = "right click on me for a sync menu!"
@@ -124,12 +127,12 @@ menu:mouseDown(function(mouseEvent)
         local m = luce:PopupMenu()
         m:addItem(1, "item 1")
         m:addItem(2, "item 2")
+        m:addCustomItem(3, customItem, 50, 20, true)
         m:setLookAndFeel(4)
         local id = m:show()
         print(string.format("sync item %s was clicked", id))
     end
 end)
-
 -- async menu callback
 local menu_async = luce:Label("async popup menu_async")
 menu_async.text = "right click on me for an async menu!"
