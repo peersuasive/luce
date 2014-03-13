@@ -51,7 +51,6 @@ ifeq ($(CONFIG),Debug)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/luce_3c70ee94.o \
   $(OBJDIR)/juce_core_aff681cc.o \
   $(OBJDIR)/juce_data_structures_bdd6d488.o \
   $(OBJDIR)/juce_events_79b2840.o \
@@ -59,6 +58,7 @@ OBJECTS := \
   $(OBJDIR)/juce_gui_basics_a630dd20.o \
   $(OBJDIR)/juce_gui_extra_7767d6a8.o \
   $(OBJDIR)/juce_opengl_c7e3506c.o \
+  $(OBJDIR)/luce_3c70ee94.o \
 
 .PHONY: clean
 
