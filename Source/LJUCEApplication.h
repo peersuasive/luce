@@ -29,6 +29,22 @@ public:
      */
     virtual void initialised();
     int initialised(lua_State*);
+    
+    static int s_userHomeDirectory(lua_State*);
+    static int s_userDocumentsDirectory(lua_State*);
+    static int s_userDesktopDirectory(lua_State*);
+    static int s_userMusicDirectory(lua_State*);
+    static int s_userMoviesDirectory(lua_State*);
+    static int s_userPicturesDirectory(lua_State*);
+    static int s_userApplicationDataDirectory(lua_State*);
+    static int s_commonApplicationDataDirectory(lua_State*);
+    static int s_commonDocumentsDirectory(lua_State*);
+    static int s_tempDirectory(lua_State*);
+    static int s_currentExecutableFile(lua_State*);
+    static int s_currentApplicationFile(lua_State*);
+    static int s_invokedExecutableFile(lua_State*);
+    static int s_hostApplicationPath(lua_State*);
+    static int s_globalApplicationsDirectory(lua_State*);
 
     //==============================================================================
     int initialise (lua_State *L);

@@ -39,6 +39,22 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
 };
 
 const Luna<LJUCEApplication>::StaticType LJUCEApplication::statics[] = {
+    smethod( LJUCEApplication, userHomeDirectory ),
+    smethod( LJUCEApplication, userDocumentsDirectory ),
+    smethod( LJUCEApplication, userDesktopDirectory ),
+    smethod( LJUCEApplication, userMusicDirectory ),
+    smethod( LJUCEApplication, userMoviesDirectory ),
+    smethod( LJUCEApplication, userPicturesDirectory ),
+    smethod( LJUCEApplication, userApplicationDataDirectory ),
+    smethod( LJUCEApplication, commonApplicationDataDirectory ),
+    smethod( LJUCEApplication, commonDocumentsDirectory ),
+    smethod( LJUCEApplication, tempDirectory ),
+    smethod( LJUCEApplication, currentExecutableFile ),
+    smethod( LJUCEApplication, currentApplicationFile ),
+    smethod( LJUCEApplication, invokedExecutableFile ),
+    smethod( LJUCEApplication, hostApplicationPath ),
+    smethod( LJUCEApplication, globalApplicationsDirectory ),
+
     {0,0}
 };
 
@@ -54,6 +70,68 @@ LJUCEApplication::~LJUCEApplication() {
         mainWindow = nullptr;
 
     DBG("END OF LJUCEApplication");
+}
+
+// Special paths
+
+int LJUCEApplication::s_userHomeDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::userHomeDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_userDocumentsDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::userDocumentsDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_userDesktopDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::userDesktopDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_userMusicDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::userMusicDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_userMoviesDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::userMoviesDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_userPicturesDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::userPicturesDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_userApplicationDataDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::userApplicationDataDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_commonApplicationDataDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::commonApplicationDataDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_commonDocumentsDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::commonDocumentsDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_tempDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::tempDirectory).getFullPathName() );
+}
+
+int LJUCEApplication::s_currentExecutableFile(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::currentExecutableFile).getFullPathName() );
+}
+
+int LJUCEApplication::s_currentApplicationFile(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::currentApplicationFile).getFullPathName() );
+}
+
+int LJUCEApplication::s_invokedExecutableFile(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::invokedExecutableFile).getFullPathName() );
+}
+
+int LJUCEApplication::s_hostApplicationPath(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::hostApplicationPath).getFullPathName() );
+}
+
+int LJUCEApplication::s_globalApplicationsDirectory(lua_State*) {
+    return LUA::returnString( File::getSpecialLocation(File::globalApplicationsDirectory).getFullPathName() );
 }
 
 void LJUCEApplication::initialised() {
