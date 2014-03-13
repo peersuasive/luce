@@ -53,14 +53,15 @@ local LModules = {
 
 local xmeta = setmetatable({
         new = function(self, dbg)
+            if(dbg)then _G.LDEBUG=true end
             local luce = dbg and require"luce.core_d" or require"luce.core"
             return load_luce(_, luce)
         end
     }, 
     {
     __call = function(self, dbg)
+        if(dbg)then _G.LDEBUG=true end
         local luce = dbg and require"luce.core_d" or require"luce.core"
-        if(dbg)then LDEBUG=true end
         
         local luce_m = load_luce(_, luce)
         luce_m.class = require"luce.LCommon".class
