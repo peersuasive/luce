@@ -63,6 +63,7 @@ const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
 };
 
 const Luna<LDocumentWindow>::StaticType LDocumentWindow::statics[] = {
+    smethod( LDocumentWindow, Displays ),
     {0,0}
 };
 
@@ -93,6 +94,33 @@ ApplicationCommandManager& LDocumentWindow::getApplicationCommandManager() {
     return *commandManager;
 }
 
+int LDocumentWindow::s_Displays(lua_State *L) {
+    Array<Desktop::Displays::Display> displays = Desktop::getInstance().getDisplays().displays;
+
+    lua_newtable(L);
+    int top = lua_gettop(L);
+    
+    for (int i=0;i<displays.size();++i) {
+        lua_newtable(L);
+        int ltop = lua_gettop(L);
+        Desktop::Displays::Display d = displays[i];
+
+        LUCE::luce_pushtable( d.userArea );
+        lua_setfield(L, ltop, "userArea");
+
+        LUCE::luce_pushtable( d.totalArea );
+        lua_setfield(L, ltop, "totalArea");
+
+        lua_pushnumber(L, d.scale );
+        lua_setfield(L, ltop, "dpi");
+
+        lua_pushboolean(L, d.isMain);
+        lua_setfield(L, ltop, "isMain");
+
+        lua_rawseti(L, top, i+1);
+    }
+    return 1;
+}
 
 void LDocumentWindow::handleAsyncUpdate() {
     commandManager->registerAllCommandsForTarget (JUCEApplication::getInstance());

@@ -8,6 +8,9 @@ class LDocumentWindow : public LComponent,
 public:
     LDocumentWindow(lua_State*);
     ~LDocumentWindow();
+
+    static int s_Displays(lua_State*);
+
     int closeButtonPressed(lua_State*);
     void closeButtonPressed();
     
