@@ -156,9 +156,17 @@ function mt:getHeight()
     return self.h
 end
 
+function mt:withWidth(w)
+    return self:new{ self.x, self.y, w, self.h }
+end
+
 function mt:setWidth(w)
     self.w = w
     return self
+end
+
+function mt:withHeight(h)
+    return self:new{ self.x, self.y, self.w, h }
 end
 
 function mt:setHeight(h)
