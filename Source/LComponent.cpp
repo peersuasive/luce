@@ -35,7 +35,7 @@ LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
     L = Ls;
     if ( lua_isstring(L, 2) )
         myName( LUA::getString(2) );
-    else        
+    else
         myName(name_);
     //LBase::name( myName );
 }
@@ -537,7 +537,7 @@ int LComponent::as( lua_State *L ) {
             p = child;
         else
             p = LUA::from_luce<LJComponent, Component>(2);
-        if( LUA::testtype(c, p) )
+        if( p && LUA::testtype(c, p) )
             return LUA::casttype(c, p);
         else
             return LUA::returnNil();

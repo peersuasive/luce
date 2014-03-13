@@ -694,7 +694,7 @@ namespace LUA {
                         returnUserdata<LSourceDetails>( static_cast<const LSourceDetails*>(lr->getMe()) );
 
                     } else if ( type == "Component" ) {
-                        returnUserdata<LJComponent>( (LJComponent*)lr->getMe() );
+                        returnUserdata<LJComponent, Component>( (Component*)lr->getMe() );
 
                     } else if ( type == "PopupMenu" ) {
                         returnUserdata<LPopupMenu>( (LPopupMenu*)lr->getMe() );
