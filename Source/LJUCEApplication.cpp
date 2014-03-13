@@ -228,7 +228,7 @@ int LJUCEApplication::getApplicationVersion(lua_State *L) {
 
 bool LJUCEApplication::moreThanOneInstanceAllowed() {
     if ( hasCallback("moreThanOneInstanceAllowed") ) {
-        callback("moreThanOneInstanceAllowed");
+        callback("moreThanOneInstanceAllowed", 1);
         return LUA::checkAndGetBoolean(-1, true);
     }
     return true;
