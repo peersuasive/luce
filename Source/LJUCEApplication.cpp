@@ -11,10 +11,14 @@
 
 *************************************************************/
 
+// TODO: refactor name to LUCEApplication
+
 #include "LJUCEApplication_inh.h"
 const char LJUCEApplication::className[] = "LJUCEApplication";
 
 const Luna<LJUCEApplication>::PropertyType LJUCEApplication::properties[] = {
+    {"applicationReturnValue", &LJUCEApplication::getApplicationReturnValue,
+                                        &LJUCEApplication::setApplicationReturnValue},
     {0,0}
 };
 
@@ -30,6 +34,8 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
     method( LJUCEApplication, shutdown ),
     method( LJUCEApplication, systemRequestedQuit ),
     method( LJUCEApplication, anotherInstanceStarted ),
+    method( LJUCEApplication, setApplicationReturnValue ),
+    method( LJUCEApplication, getApplicationReturnValue ),
     method( LJUCEApplication, quit ),
 
     // artificial
@@ -198,6 +204,14 @@ int LJUCEApplication::systemRequestedQuit(lua_State *L) {
 
 int LJUCEApplication::quit(lua_State *L) {
     JUCEApplication::quit();
+    return 0;
+}
+
+int LJUCEApplication::getApplicationReturnValue(lua_State*) {
+    return LUA::returnNumber( JUCEApplication::getApplicationReturnValue() );
+}
+int LJUCEApplication::setApplicationReturnValue(lua_State*) {
+    JUCEApplication::setApplicationReturnValue(LUA::checkAndGetNumber(2, 0));
     return 0;
 }
 

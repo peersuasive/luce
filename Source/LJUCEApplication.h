@@ -10,6 +10,7 @@ public:
     LJUCEApplication(lua_State *L);
     ~LJUCEApplication();
 
+    //==============================================================================
     int getApplicationName(lua_State *L);
     const String getApplicationName();
 
@@ -51,6 +52,9 @@ public:
     virtual void initialise (const String& commandLine) override;
 
     int quit(lua_State *L);
+
+    int getApplicationReturnValue(lua_State*);
+    int setApplicationReturnValue(lua_State*);
 
     int shutdown(lua_State *L);
     void shutdown();
