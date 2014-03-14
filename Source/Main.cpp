@@ -28,7 +28,7 @@ extern "C" {
 
 int lua_main(void) {
     //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
-    int res;
+    int res = 0;
     #if defined JUCE_MAC || defined JUCE_IOS
     // will call initialiseNSApplication
     res = juce::JUCEApplicationBase::main(0, 0);
