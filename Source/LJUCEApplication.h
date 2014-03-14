@@ -3,7 +3,8 @@
 
 
 class LJUCEApplication : public LBase,
-                         public JUCEApplication
+                         public JUCEApplication,
+                         private AsyncUpdater
 {
 public:
     //==============================================================================
@@ -28,9 +29,14 @@ public:
      * initialised is usefull to start actions after the window has shown,
      * particularly on iOS or OSX, as events oriented architectures
      */
+    static ApplicationCommandManager& getApplicationCommandManager();
+
     virtual void initialised(Component*);
     int initialised(lua_State*);
-    
+ 
+    static LJUCEApplication* getInstance() noexcept { return luceAppInstance; }
+    void deleteWindow(Component*);
+
     static int s_userHomeDirectory(lua_State*);
     static int s_userDocumentsDirectory(lua_State*);
     static int s_userDesktopDirectory(lua_State*);
@@ -74,6 +80,28 @@ public:
     int unhandledException(lua_State*);
     void unhandledException(const std::exception*, const String&, int) override;
 
+    //== ApplicationCommandManager =================================================
+    int clearCommands(lua_State*);
+    int registerCommand(lua_State*);
+    int registerAllCommandsForTarget(lua_State*);
+    int removeCommand(lua_State*);
+    int commandStatusChanged(lua_State*);
+    int getNumCommands(lua_State*);
+    int getCommandForIndex(lua_State*);
+    int getCommandForID(lua_State*);
+    int getNameOfCommand(lua_State*);
+    int getDescriptionOfCommand(lua_State*);
+    int getCommandCategories(lua_State*);
+    int getCommandsInCategory(lua_State*);
+    int getKeyMappings(lua_State*);
+    int invokeDirectly(lua_State*);
+    int invoke(lua_State*);
+    int getFirstCommandTarget(lua_State*);
+    int setFirstCommandTarget(lua_State*);
+    int getTargetForCommand(lua_State*);
+    int findDefaultComponentTarget(lua_State*);
+    int findTargetForComponent(lua_State*);
+
     //==============================================================================
     static const char className[];
     static const Luna<LJUCEApplication>::Inheritence inherits[];
@@ -85,7 +113,16 @@ public:
     static const Luna<LJUCEApplication>::Enum enums[];
 private:
     //==============================================================================
-    ScopedPointer<Component> mainWindow;
+    static LJUCEApplication* luceAppInstance;
+    
+    //==============================================================================
+    virtual void handleAsyncUpdate() override;
+
+    //==============================================================================
+    Array<ScopedPointer<Component>> mainWindows;
+
+    //==============================================================================
+    void initialise(lua_State*, int callbackReturnStatus);
 
     //==============================================================================
     var call_cb_get_value();

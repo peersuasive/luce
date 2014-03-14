@@ -64,22 +64,63 @@ const Luna<LJUCEApplication>::StaticType LJUCEApplication::statics[] = {
     {0,0}
 };
 
+static ScopedPointer<ApplicationCommandManager> commandManager;
+LJUCEApplication* LJUCEApplication::luceAppInstance = nullptr;
 LJUCEApplication::LJUCEApplication(lua_State *L)
     : LBase(L, "LJUCEApplication", false)
 {
     myName( LUA::checkAndGetString(2, "LJUCEApplication") );
+    luceAppInstance = this;
+
+    commandManager = new ApplicationCommandManager();
+    //LJUCEApplication::addKeyListener (commandManager->getKeyMappings());
+    triggerAsyncUpdate();
 }
 
 LJUCEApplication::~LJUCEApplication() {
     DBG("destroying MW...");
-    if ( mainWindow )
-        mainWindow = nullptr;
-
+    if(commandManager)
+        commandManager = nullptr;
+    for(int i=mainWindows.size()-1;i<=0;++i) {
+        Component *mw = mainWindows[i].release();
+        if(mw) {
+            if(mw->isOnDesktop())
+                mw->removeFromDesktop();
+            delete mw;
+            mw = nullptr;
+        }
+        mainWindows[i] = nullptr;
+        mainWindows.remove(i);
+    }
+    luceAppInstance = nullptr;
     DBG("END OF LJUCEApplication");
 }
 
-// Special paths
+void LJUCEApplication::deleteWindow(Component *comp) {
+    if (!comp) return;
+    for(int i=mainWindows.size()-1;i>=0;--i) {
+        Component *c = mainWindows[i].get();
+        if(comp == c) {
+            mainWindows[i].release();
+            mainWindows[i] = nullptr;
+            mainWindows.remove(i);
+            c = nullptr;
+            break;
+        }
+    }
+}
 
+ApplicationCommandManager& LJUCEApplication::getApplicationCommandManager() {
+    if (!commandManager)
+        commandManager = new ApplicationCommandManager();
+    return *commandManager;
+}
+
+void LJUCEApplication::handleAsyncUpdate() {
+    commandManager->registerAllCommandsForTarget(this);
+}
+
+// Special paths
 int LJUCEApplication::s_userHomeDirectory(lua_State*) {
     return LUA::returnString( File::getSpecialLocation(File::userHomeDirectory).getFullPathName() );
 }
@@ -150,21 +191,47 @@ int LJUCEApplication::initialised(lua_State*) {
     return 0;
 }
 
-void LJUCEApplication::initialise (const String& commandLine) {
-    int rc = callback("initialise", 1, { commandLine });
-    if (rc != 1 ) {
+void LJUCEApplication::initialise(lua_State *L, int state) {
+    if (state != 1 ) {
         String error = LUA::getError();
-        std::cout << "error at initialise method (" << rc << "): " << error << std::endl;
-        lua_pushstring(LUA::Get(), error.toRawUTF8());
-        lua_error(LUA::Get());
+        std::cout << "error at initialise method (" << state << "): " << error << std::endl;
+        lua_pushstring(L, error.toRawUTF8());
+        lua_error(L);
     }
-    else
-        mainWindow = LUA::from_luce<LComponent,Component>();
-    initialised();
+    else {
+        if(! lua_isnoneornil(L, -1)) {
+            Component *mainWindow = LUA::from_luce<LJComponent, Component>();
+            mainWindows.add( mainWindow );
+            initialised(mainWindow);
+        }
+    }
+}
+
+void LJUCEApplication::initialise (const String& commandLine) {
+    if(hasCallback("initialise"))
+        initialise(LUA::Get(), callback("initialise", 1, { commandLine }) );
 }
 
 int LJUCEApplication::initialise( lua_State *L ) {
     set("initialise");
+    return 0;
+}
+
+void LJUCEApplication::anotherInstanceStarted (const String& commandLine) {
+    if(hasCallback("anotherInstanceStarted"))
+        initialise(LUA::Get(), callback("anotherInstanceStarted", 1, { commandLine }) );
+}
+int LJUCEApplication::anotherInstanceStarted (lua_State *L) {
+    set("anotherInstanceStarted");
+    return 0;
+}
+
+void LJUCEApplication::resumed() {
+    if(hasCallback("resumed"))
+        initialise(LUA::Get(), callback("resumed", 1) );
+}
+int LJUCEApplication::resumed(lua_State*) {
+    set("resumed");
     return 0;
 }
 
@@ -177,14 +244,6 @@ int LJUCEApplication::suspended(lua_State*) {
     return 0;
 }
 
-void LJUCEApplication::resumed() {
-    if(hasCallback("resumed"))
-        callback("resumed");
-}
-int LJUCEApplication::resumed(lua_State*) {
-    set("resumed");
-    return 0;
-}
 void LJUCEApplication::systemRequestedQuit() {
     if(hasCallback("systemRequestedQuit")) { 
         if(! callback("systemRequestedQuit") )
@@ -192,11 +251,6 @@ void LJUCEApplication::systemRequestedQuit() {
     }
     else
         JUCEApplication::quit();
-    /*
-    int rc = callback( "systemRequestedQuit" );
-    if (rc != 1)
-        JUCEApplication::quit();
-    */
 }
 int LJUCEApplication::systemRequestedQuit(lua_State *L) {
     set("systemRequestedQuit");
@@ -204,6 +258,8 @@ int LJUCEApplication::systemRequestedQuit(lua_State *L) {
 }
 
 int LJUCEApplication::quit(lua_State *L) {
+    int status = LUA::checkAndGetNumber(2, 0);
+    JUCEApplication::setApplicationReturnValue(status);
     JUCEApplication::quit();
     return 0;
 }
@@ -263,15 +319,6 @@ int LJUCEApplication::shutdown(lua_State *L) {
     return 0;
 }
 
-void LJUCEApplication::anotherInstanceStarted (const String& commandLine) {
-    if(hasCallback("anotherInstanceStarted"))
-        callback("anotherInstanceStarted", 0, { commandLine } );
-}
-int LJUCEApplication::anotherInstanceStarted (lua_State *L) {
-    set("anotherInstanceStarted");
-    return 0;
-}
-
 void LJUCEApplication::unhandledException(const std::exception *e, const String& source, int line) {
     if(hasCallback("unhandledException")) {
         callback("unhandledException", 0, { e->what(), source, line });
@@ -288,5 +335,101 @@ int LJUCEApplication::unhandledException(lua_State *L) {
 
 int LJUCEApplication::setDoubleClickTimeout(lua_State*) {
     MouseEvent::setDoubleClickTimeout(LUA::getNumber());
+    return 0;
+}
+
+//== ApplicationCommandManager =================================================
+int LJUCEApplication::clearCommands(lua_State*) {
+    commandManager->clearCommands();
+    return 0;
+}
+
+int LJUCEApplication::registerCommand(lua_State*) {
+    //TODO
+    return 0;
+}
+
+int LJUCEApplication::registerAllCommandsForTarget(lua_State*) {
+    //TODO
+    return 0;
+}
+
+int LJUCEApplication::removeCommand(lua_State*) {
+    //TODO commandid
+    return 0;
+}
+
+int LJUCEApplication::commandStatusChanged(lua_State*) {
+    commandManager->commandStatusChanged();
+    return 0;
+}
+
+int LJUCEApplication::getNumCommands(lua_State*) {
+    return LUA::getNumber( commandManager->getNumCommands() );
+    return 0;
+}
+
+int LJUCEApplication::getCommandForIndex(lua_State*) {
+    // TODO
+    //return LUA::returnUserdata<LApplicationCommandInfo>( commandManager->getCommandForIndex() );
+    return 0;
+}
+
+int LJUCEApplication::getCommandForID(lua_State*) {
+    // TODO
+    //return LUA::returnUserdata<LApplicationCommandInfo>( 
+    //        commandManager->getCommandForIndex(LUA::getNumber<int>(2)) );
+    return 0;
+}
+
+int LJUCEApplication::getNameOfCommand(lua_State*) {
+    return LUA::returnString( commandManager->getNameOfCommand( (CommandID)LUA::getNumber<int>(2) ) );
+}
+
+int LJUCEApplication::getDescriptionOfCommand(lua_State*) {
+    return LUA::returnString( commandManager->getDescriptionOfCommand( (CommandID)LUA::getNumber<int>(2) ) );
+}
+
+int LJUCEApplication::getCommandCategories(lua_State*) {
+    return LUCE::luce_pushtable( commandManager->getCommandCategories() );
+}
+
+int LJUCEApplication::getCommandsInCategory(lua_State*) {
+    return LUCE::luce_pushtable( commandManager->getCommandsInCategory( LUA::getString(2) ) );
+}
+
+int LJUCEApplication::getKeyMappings(lua_State*) {
+    //return LUA::returnUserdata<LKeyPressMappingSet>( commandManager->getKeyMappings() );
+    return 0;
+}
+
+int LJUCEApplication::invokeDirectly(lua_State*) {
+    commandManager->invokeDirectly( (CommandID)LUA::getNumber<int>(2), LUA::getBoolean(3) );
+    return 0;
+}
+
+int LJUCEApplication::invoke(lua_State *L) {
+    // TODO
+    return 0;
+}
+
+int LJUCEApplication::getFirstCommandTarget(lua_State*) {
+    return 0;
+}
+
+int LJUCEApplication::setFirstCommandTarget(lua_State*) {
+    return 0;
+}
+
+int LJUCEApplication::getTargetForCommand(lua_State*) {
+    return 0;
+}
+
+// statics
+int LJUCEApplication::findDefaultComponentTarget(lua_State*) {
+    return 0;
+}
+
+int LJUCEApplication::findTargetForComponent(lua_State*) {
     return 0;
 }

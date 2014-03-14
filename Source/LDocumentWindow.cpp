@@ -29,6 +29,7 @@ const Luna<LDocumentWindow>::PropertyType LDocumentWindow::properties[] = {
 
 const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
     method( LDocumentWindow, closeButtonPressed ),
+    method( LDocumentWindow, closeWindow ),
     method( LDocumentWindow, setVisible ),
     method( LDocumentWindow, addChildComponent ),
     method( LDocumentWindow, addAndMakeVisible ),
@@ -67,7 +68,7 @@ const Luna<LDocumentWindow>::StaticType LDocumentWindow::statics[] = {
     {0,0}
 };
 
-static ScopedPointer<ApplicationCommandManager> commandManager;
+//static ScopedPointer<ApplicationCommandManager> commandManager;
 LDocumentWindow::LDocumentWindow(lua_State *L)
     :  LComponent(L, this),
        DocumentWindow( "DocumentWindow", Colours::lightgrey, DocumentWindow::allButtons )
@@ -75,23 +76,19 @@ LDocumentWindow::LDocumentWindow(lua_State *L)
     REGISTER_CLASS(LDocumentWindow);
 
     DocumentWindow::setName( myName() );
-    commandManager = new ApplicationCommandManager();
-
-    DocumentWindow::addKeyListener (commandManager->getKeyMappings());
-    triggerAsyncUpdate();
 
     DocumentWindow::setResizable( true, false );
 }
 
 LDocumentWindow::~LDocumentWindow() {
-    if(commandManager)
-        commandManager = nullptr;
 }
 
-ApplicationCommandManager& LDocumentWindow::getApplicationCommandManager() {
-    if (!commandManager)
-        commandManager = new ApplicationCommandManager();
-    return *commandManager;
+int LDocumentWindow::closeWindow(lua_State*) {
+    if(DocumentWindow::isOnDesktop())
+        DocumentWindow::removeFromDesktop();
+
+    LJUCEApplication::getInstance()->deleteWindow(this);
+    return 0;
 }
 
 int LDocumentWindow::s_Displays(lua_State *L) {
@@ -120,10 +117,6 @@ int LDocumentWindow::s_Displays(lua_State *L) {
         lua_rawseti(L, top, i+1);
     }
     return 1;
-}
-
-void LDocumentWindow::handleAsyncUpdate() {
-    commandManager->registerAllCommandsForTarget (JUCEApplication::getInstance());
 }
 
 int LDocumentWindow::setContentOwned(lua_State*) {
@@ -185,7 +178,6 @@ bool LDocumentWindow::keyStateChanged(bool d) {
     else
         return DocumentWindow::keyStateChanged(d);
 }
-
 
 //==============================================================================
 /////// getters/setters
@@ -332,104 +324,5 @@ int LDocumentWindow::setContentComponentSize ( lua_State* ) {
     int width = LUA::getNumber<int>(2);
     int height = LUA::getNumber<int>(2);
     DocumentWindow::setContentComponentSize( width, height );
-    return 0;
-}
-
-
-//==============================================================================
-
-int LDocumentWindow::clearCommands(lua_State*) {
-    commandManager->clearCommands();
-    return 0;
-}
-
-int LDocumentWindow::registerCommand(lua_State*) {
-    //TODO
-    return 0;
-}
-
-int LDocumentWindow::registerAllCommandsForTarget(lua_State*) {
-    //TODO
-    return 0;
-}
-
-int LDocumentWindow::removeCommand(lua_State*) {
-    //TODO commandid
-    return 0;
-}
-
-int LDocumentWindow::commandStatusChanged(lua_State*) {
-    commandManager->commandStatusChanged();
-    return 0;
-}
-
-int LDocumentWindow::getNumCommands(lua_State*) {
-    return LUA::getNumber( commandManager->getNumCommands() );
-    return 0;
-}
-
-int LDocumentWindow::getCommandForIndex(lua_State*) {
-    // TODO
-    //return LUA::returnUserdata<LApplicationCommandInfo>( commandManager->getCommandForIndex() );
-    return 0;
-}
-
-int LDocumentWindow::getCommandForID(lua_State*) {
-    // TODO
-    //return LUA::returnUserdata<LApplicationCommandInfo>( 
-    //        commandManager->getCommandForIndex(LUA::getNumber<int>(2)) );
-    return 0;
-}
-
-int LDocumentWindow::getNameOfCommand(lua_State*) {
-    return LUA::returnString( commandManager->getNameOfCommand( (CommandID)LUA::getNumber<int>(2) ) );
-}
-
-int LDocumentWindow::getDescriptionOfCommand(lua_State*) {
-    return LUA::returnString( commandManager->getDescriptionOfCommand( (CommandID)LUA::getNumber<int>(2) ) );
-}
-
-int LDocumentWindow::getCommandCategories(lua_State*) {
-    return LUCE::luce_pushtable( commandManager->getCommandCategories() );
-}
-
-int LDocumentWindow::getCommandsInCategory(lua_State*) {
-    return LUCE::luce_pushtable( commandManager->getCommandsInCategory( LUA::getString(2) ) );
-}
-
-int LDocumentWindow::getKeyMappings(lua_State*) {
-    //return LUA::returnUserdata<LKeyPressMappingSet>( commandManager->getKeyMappings() );
-    return 0;
-}
-
-int LDocumentWindow::invokeDirectly(lua_State*) {
-    commandManager->invokeDirectly( (CommandID)LUA::getNumber<int>(2), LUA::getBoolean(3) );
-    return 0;
-}
-
-int LDocumentWindow::invoke(lua_State *L) {
-    // TODO
-    return 0;
-}
-
-int LDocumentWindow::getFirstCommandTarget(lua_State*) {
-    return 0;
-}
-
-int LDocumentWindow::setFirstCommandTarget(lua_State*) {
-    return 0;
-}
-
-int LDocumentWindow::getTargetForCommand(lua_State*) {
-    return 0;
-}
-
-
-// statics
-int LDocumentWindow::findDefaultComponentTarget(lua_State*) {
-    return 0;
-}
-
-int LDocumentWindow::findTargetForComponent(lua_State*) {
     return 0;
 }

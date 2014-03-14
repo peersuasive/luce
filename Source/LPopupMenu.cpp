@@ -143,7 +143,8 @@ int LPopupMenu::addItem ( lua_State *L ) {
 }
 
 int LPopupMenu::addCommandItem ( lua_State* ) {
-    ApplicationCommandManager *commandManager = &LDocumentWindow::getApplicationCommandManager();
+    //ApplicationCommandManager *commandManager = &LDocumentWindow::getApplicationCommandManager();
+    ApplicationCommandManager *commandManager = &LJUCEApplication::getApplicationCommandManager();
     CommandID commandID = (CommandID)LUA::getNumber<int>(2);
     String displayName  = LUA::checkAndGetString(2, String::empty);
     PopupMenu::addCommandItem( commandManager, commandID, displayName );
