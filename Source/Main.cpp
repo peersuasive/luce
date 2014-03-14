@@ -57,7 +57,7 @@ int lua_main(void) {
     else
         printf("ok, gone\n");
     */
-    return 0;
+    return res;
 }
 
 int lua_main_manual(lua_State *L, const int& cb_ref) {
@@ -121,6 +121,7 @@ int lua_shutdown(lua_State *L) {
 }
 
 //==============================================================================
+
 int start( lua_State *L ) {
     //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2);
@@ -129,7 +130,8 @@ int start( lua_State *L ) {
     int rc = lua_main();
     // if ( rc ) luaL_error...
     DBG("END of START\n");
-    return 0;
+    lua_pushnumber(L, rc);
+    return 1;
 }
 int start_manual( lua_State *L ) {
     LUA::Set(L);
@@ -145,7 +147,8 @@ int start_manual( lua_State *L ) {
     int rc = lua_main_manual(L, cb_ref);
     // if ( rc ) luaL_error...
     DBG("END of START (manual)\n");
-    return 0;
+    lua_pushnumber(L, rc);
+    return 1;
 }
 
 //==============================================================================
