@@ -140,9 +140,10 @@ int LJUCEApplication::s_globalApplicationsDirectory(lua_State*) {
     return LUA::returnString( File::getSpecialLocation(File::globalApplicationsDirectory).getFullPathName() );
 }
 
-void LJUCEApplication::initialised() {
-    if(hasCallback("initialised"))
-        callback("initialised");
+void LJUCEApplication::initialised(Component *comp) {
+    if(hasCallback("initialised")) {
+        callback("initialised", 0, { new LRefBase("Component", comp) });
+    }
 }
 int LJUCEApplication::initialised(lua_State*) {
     set("initialised");

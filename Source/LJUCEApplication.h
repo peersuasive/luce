@@ -28,7 +28,7 @@ public:
      * initialised is usefull to start actions after the window has shown,
      * particularly on iOS or OSX, as events oriented architectures
      */
-    virtual void initialised();
+    virtual void initialised(Component*);
     int initialised(lua_State*);
     
     static int s_userHomeDirectory(lua_State*);
