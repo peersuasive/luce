@@ -5,6 +5,10 @@ luce
 A GUI Toolkit for Lua based on JUCE
 -----------------------------------
 
+``Luce`` 0.3 *it's fork time!* `released ! <https://github.com/peersuasive/luce/releases/tag/v0.3>`_
+
+`Downloads`_ for Linux, Windows, OS X, iOS and Android are available.
+
 
 What is ``Luce`` ?
 ==================
@@ -35,62 +39,55 @@ Requirements and dependencies
 
 * ``JUCE`` 3.0.X (optional, to add new features)
 
+
 Downloads
 =========
 
-v0.2 (alpha)
-------------
+v0.3 (alpha)
+-------------
 
-* `linux (64b, lua5.1) <https://github.com/peersuasive/luce/releases/download/v0.2/luce.0.2.Linux_Windows.zip>`_
+linux
+~~~~~
 
-* `win32 (32b, lua5.2) <https://github.com/peersuasive/luce/releases/download/v0.2/luce.0.2.Linux_Windows.zip>`_
+* `Linux/64/2.13 (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64.zip>`_
+* `Linux/64/2.13 (shared/debug) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_dbg.zip>`_
+* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_static.zip>`_
+
+windows
+~~~~~~~~
+
+* `Windows/32 (dll) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32.zip>`_
+* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32_static.zip>`_
+
+os x
+~~~~
+
+* `Mac OS X/64/10.8 (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64.zip>`_
+* `Mac OS X/64/10.8 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64_static.zip>`_
+
+
+ios
+~~~
+
+* `iOS/5.1 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.iOS6.1_static.zip>`_
+
+android
+~~~~~~~
+
+* `Android/4.X (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Android.zip>`_
 
 
 What's implemented so far ?
 ===========================
 
-some of the most common widgets and components are already there
+Basically, most of the core components are implemented and OpenGL is available too.
 
-* Colour
-* Component
-* Font
-* GlyphArrangement
-* Graphics
-* HyperlinkButton
-* Image
-* JUCEApplication
-* Label
-* ListBox
-* Path
-* PositionedGlyph
-* SourceDetails
-* StretchableLayoutManager
-* StretchableLayoutResizerBar
-* TextButton
-* TextEditor
-* Timer
-* ToggleButton
-* TreeView / TreeViewItem
-* and growing...
+Most of the Graphics painting operations are also implemented, as well as the
+most usefull math/geometry classes.
 
-some of the special classes are also there
-
-* MouseListener
-* TooltipWindow
-* Look And Feel (only C++ at the moment)
-* KeyPress
-* MouseEvent
-* ModifierKeys
-* and so on...
-
-and some components are implemented in pure lua
-
-* Rectangle
-* RectangleList
-* Line
-* Point
-* AffineTransform
-
+Some components you might find usefull may be missing, so don't hesitate to ask
+for adding (or fork the repo and follow the guide `Adding new
+classes to Luce`_ then send a *pull request*).
 
 Luce design
 ===========
@@ -334,8 +331,8 @@ Example:
 
     luce:shutdown() -- in any case, call this to close cleanly
 
-Adding new classes to ``Luce``
-==============================
+Adding new classes to Luce
+==========================
 
 There are two kinds of classes in ``Luce``: *full* classes and *wrapper* classes.
 
