@@ -387,7 +387,7 @@ Once the class is created, include it in ``luce.cpp``, ``luce.h`` and reference 
 ``Luce`` Roadmap
 ================
 
-``Luce`` is still very young just but is growing fast -- at least as fast as
+``Luce`` is still very young but growing fast -- at least as fast as
 our needs for it. Most of the basic widgets are aleady there and it's already
 possible to build full applications with it.
 Performances are there too, even if there isn't any optimisation done yet.
