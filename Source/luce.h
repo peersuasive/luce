@@ -10,8 +10,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "JuceHeader.h"
-//#include "Luce.h" // not ready yet
+//#include "JuceHeader.h"
+#include "Luce.h"
 
 #ifdef LUA52
 #define LUA_COMPAT_MODULE

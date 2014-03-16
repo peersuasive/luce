@@ -37,6 +37,9 @@ int lua_main(void) {
     #else
     res = juce::JUCEApplicationBase::main();
     #endif
+    
+    return res;
+
     /*
     // manual
     if ( MessageManager::getInstanceWithoutCreating() != nullptr )
@@ -57,17 +60,22 @@ int lua_main(void) {
     else
         printf("ok, gone\n");
     */
-    return res;
+    //return res;
 }
 
 int lua_main_manual(lua_State *L, const int& cb_ref) {
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
-    
-    #ifdef LUCE_MAC
-    // init osx here
-    //LUCEApplicationBase::altmain();
-    #endif
 
+    MainThread myThread("Main luce Thread", L, cb_ref);
+
+    if (!LUCEApplicationBase::run(myThread)) {
+        lua_pushstring(L,"LUCE ERROR: Couldn't initialise app");
+        lua_error(L);
+        return 0;
+    }
+    return 0;
+
+    /*
     initialiseJuce_GUI();
     const ScopedPointer<JUCEApplicationBase> app (juce::JUCEApplicationBase::createInstance());
 
@@ -76,12 +84,13 @@ int lua_main_manual(lua_State *L, const int& cb_ref) {
         lua_error(L);
         return 0;
     }
-
+    
     MainThread myThread("Main luce Thread", L, cb_ref);
     myThread.run();
 
     //MessageManager::getInstance()->runDispatchLoop();
     return 0;
+    */
 }
 
 int lua_shutdown(lua_State *L) {

@@ -6,6 +6,7 @@
 #endif
 
 #include "../../../JuceLibraryCode/modules/juce_core/juce_core.h"
+#include "../../../JuceLibraryCode/modules/juce_events/juce_events.h"
 
 namespace juce
 {

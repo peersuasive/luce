@@ -8,10 +8,8 @@ protected:
     LUCEApplicationBase();
 
 public:
-    /** Destructor. */
     virtual ~LUCEApplicationBase();
-    static int altmain();
-    static void initialiseApp();
+    static int run(juce::Thread &t);
 };
 
 #endif // __LUCE_INITIALISATION
