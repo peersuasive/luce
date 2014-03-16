@@ -19,7 +19,7 @@ ifeq ($(CONFIG),Release)
   endif
 
   CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
-  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -O3 -std=c++11 -I/usr/include/lua5.1 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -fPIC
+  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -O3 -std=c++11 -I/usr/include/lua5.1 -I../../Luce -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -fPIC
   CXXFLAGS += $(CFLAGS)
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt -std=c++11 -fPIC -shared
   LDDEPS :=
@@ -40,7 +40,7 @@ ifeq ($(CONFIG),Debug)
   endif
 
   CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
-  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -O0 -std=c++11 -I/usr/include/lua5.1 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -fPIC
+  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -O0 -std=c++11 -I/usr/include/lua5.1 -I../../Luce -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -fPIC
   CXXFLAGS += $(CFLAGS)
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt -std=c++11 -fPIC -shared
   LDDEPS :=
@@ -51,6 +51,7 @@ ifeq ($(CONFIG),Debug)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/luce_core_4af9a860.o \
   $(OBJDIR)/juce_core_aff681cc.o \
   $(OBJDIR)/juce_data_structures_bdd6d488.o \
   $(OBJDIR)/juce_events_79b2840.o \
@@ -78,6 +79,11 @@ clean:
 strip:
 	@echo Stripping luce
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/luce_core_4af9a860.o: ../../Luce/modules/luce_core/luce_core.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling luce_core.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/luce_3c70ee94.o: ../../Source/luce.cpp
 	-@mkdir -p $(OBJDIR)
