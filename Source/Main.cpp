@@ -68,7 +68,7 @@ int lua_main_manual(lua_State *L, const int& cb_ref) {
 
     MainThread myThread("Main luce Thread", L, cb_ref);
 
-    if (!LUCEApplicationBase::run(myThread)) {
+    if (LUCEApplicationBase::run(myThread)) {
         lua_pushstring(L,"LUCE ERROR: Couldn't initialise app");
         lua_error(L);
         return 0;
