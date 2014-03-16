@@ -211,6 +211,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Luce\modules\luce_core\luce_core.cpp">
+      <Filter>luce\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\luce.cpp">
       <Filter>luce\Source</Filter>
     </ClCompile>

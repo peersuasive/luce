@@ -13,6 +13,7 @@
 		BD4895AD857D2E100149BF04 = {isa = PBXBuildFile; fileRef = AB8AFF54FB2F3E88C4FC79A6; };
 		FC3E61E446DB9CA59E520EB8 = {isa = PBXBuildFile; fileRef = 33B19E73149405B97315D71D; };
 		19095ADEF5F7F1A863A3605B = {isa = PBXBuildFile; fileRef = BD7075FC5177AA0782B6FF03; };
+		6947F7FD2BB7CDE7B9A07B22 = {isa = PBXBuildFile; fileRef = EE57F0C14A57024D576E844F; };
 		5C8B4708F5C421F6CBDAFA97 = {isa = PBXBuildFile; fileRef = E0E05E02BBBF50950D09DD04; };
 		4BA643E95932FEE2AA232D52 = {isa = PBXBuildFile; fileRef = 61A2462E6EEF9BE33742032F; };
 		3366B9BA364DB2BF4BAD381B = {isa = PBXBuildFile; fileRef = A5EE5F506614D061C28622BD; };
@@ -654,6 +655,7 @@
 		EC464DAE9ADCEDF35D4F884A = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_OutputStream.cpp"; path = "../../JuceLibraryCode/modules/juce_core/streams/juce_OutputStream.cpp"; sourceTree = "SOURCE_ROOT"; };
 		ECE2039507DB82F11AC304BF = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_MACAddress.cpp"; path = "../../JuceLibraryCode/modules/juce_core/network/juce_MACAddress.cpp"; sourceTree = "SOURCE_ROOT"; };
 		EE1506328BFC73040302636B = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ComboBox.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/widgets/juce_ComboBox.h"; sourceTree = "SOURCE_ROOT"; };
+		EE57F0C14A57024D576E844F = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "luce_core.cpp"; path = "../../Luce/modules/luce_core/luce_core.cpp"; sourceTree = "SOURCE_ROOT"; };
 		EF234675128DD34D1A101958 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_StringPairArray.h"; path = "../../JuceLibraryCode/modules/juce_core/text/juce_StringPairArray.h"; sourceTree = "SOURCE_ROOT"; };
 		EFED9F12D16C7AE94BDF3059 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MessageManager.h"; path = "../../JuceLibraryCode/modules/juce_events/messages/juce_MessageManager.h"; sourceTree = "SOURCE_ROOT"; };
 		F1A56FF6B726555F5279658D = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_TextButton.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/buttons/juce_TextButton.h"; sourceTree = "SOURCE_ROOT"; };
@@ -696,6 +698,7 @@
 		FF1166938CEA940B1E2D1AA6 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_Typeface.h"; path = "../../JuceLibraryCode/modules/juce_graphics/fonts/juce_Typeface.h"; sourceTree = "SOURCE_ROOT"; };
 		FF1D93EEC57EC9DD0C9E4A9F = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ScrollBar.h"; path = "../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_ScrollBar.h"; sourceTree = "SOURCE_ROOT"; };
 		69EBF5317D36AC9914F97BFF = {isa = PBXGroup; children = (
+					EE57F0C14A57024D576E844F,
 					E0E05E02BBBF50950D09DD04,
 					DCBC66FC2A3281450CC4F94F, ); name = Source; sourceTree = "<group>"; };
 		E657405573295862DEC4288C = {isa = PBXGroup; children = (
@@ -1533,7 +1536,7 @@
 				HEADER_SEARCH_PATHS = ("../../JuceLibraryCode", "../../JuceLibraryCode/modules", "$(inherited)");
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -DLUA52 -Wno-unused-variable -Wno-string-compare";
+				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -I../../Luce -DLUA52 -Wno-unused-variable -Wno-string-compare";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";
 				SDKROOT_ppc = macosx10.5; }; name = Release; };
 		C4D55B1D7739A48CE6B36787 = {isa = XCBuildConfiguration; buildSettings = {
@@ -1555,7 +1558,7 @@
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -DLUA52 -Wno-unused-variable -Wno-string-compare";
+				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -I../../Luce -DLUA52 -Wno-unused-variable -Wno-string-compare";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";
 				SDKROOT_ppc = macosx10.5; }; name = Debug; };
 		83071BB6AFB301655A63A894 = {isa = XCBuildConfiguration; buildSettings = {
@@ -1597,6 +1600,7 @@
 		95FF2C0D7EAEDCCC3EBE70A3 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
 					19095ADEF5F7F1A863A3605B, ); runOnlyForDeploymentPostprocessing = 0; };
 		49A9B763316C24C0FED2FC76 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
+					6947F7FD2BB7CDE7B9A07B22,
 					5C8B4708F5C421F6CBDAFA97,
 					4BA643E95932FEE2AA232D52,
 					3366B9BA364DB2BF4BAD381B,

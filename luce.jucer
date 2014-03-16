@@ -4,12 +4,13 @@
               includeBinaryInAppConfig="1" jucerVersion="3.1.0">
   <MAINGROUP id="dqAalt" name="luce">
     <GROUP id="{2FE4F1A2-0FC8-4734-52AA-2C4364E3272C}" name="Source">
+      <FILE id="w7NYw6" name="luce_core.cpp" compile="1" resource="0" file="Luce/modules/luce_core/luce_core.cpp"/>
       <FILE id="XNbO0r" name="luce.cpp" compile="1" resource="0" file="Source/luce.cpp"/>
       <FILE id="rmasH2" name="luce.h" compile="0" resource="0" file="Source/luce.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <LINUX_MAKE targetFolder="Builds/Linux" extraCompilerFlags="-std=c++11&#10;-I/usr/include/lua5.1&#10;-U_FORTIFY_SOURCE&#10;-D_FORTIFY_SOURCE=0&#10;-fPIC"
+    <LINUX_MAKE targetFolder="Builds/Linux" extraCompilerFlags="-std=c++11&#10;-I/usr/include/lua5.1&#10;-I../../Luce&#10;-U_FORTIFY_SOURCE&#10;-D_FORTIFY_SOURCE=0&#10;-fPIC"
                 externalLibraries="" extraLinkerFlags="-std=c++11&#10;-fPIC&#10;-shared"
                 extraDefs="">
       <CONFIGURATIONS>
@@ -28,7 +29,7 @@
         <MODULEPATH id="juce_opengl" path="../../../../usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <LINUX_MAKE targetFolder="Builds/MingW" extraCompilerFlags="-std=gnu++11&#10;-Wno-unused-result"
+    <LINUX_MAKE targetFolder="Builds/MingW" extraCompilerFlags="-std=gnu++11&#10;-Wno-unused-result&#10;-I../../Luce"
                 extraLinkerFlags="-std=gnu++11&#10;-shared">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" libraryPath="" isDebug="0" optimisation="2" targetName="luce"
@@ -46,7 +47,7 @@
         <MODULEPATH id="juce_opengl" path="../../../../usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <LINUX_MAKE targetFolder="Builds/Linux-lua5.2" extraCompilerFlags="-std=c++11&#10;-Wno-unused-result&#10;-I/usr/include/lua5.2&#10;-fPIC&#10;-DLUA52"
+    <LINUX_MAKE targetFolder="Builds/Linux-lua5.2" extraCompilerFlags="-std=c++11&#10;-Wno-unused-result&#10;-I/usr/include/lua5.2&#10;-I../../Luce&#10;-fPIC&#10;-DLUA52"
                 extraLinkerFlags="-std=c++11&#10;-fPIC&#10;-shared">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
@@ -64,7 +65,7 @@
         <MODULEPATH id="juce_opengl" path="../../../../usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <XCODE_MAC targetFolder="Builds/MacOSX" extraCompilerFlags="-I/usr/local/include&#10;-DLUA52&#10;-Wno-unused-variable&#10;-Wno-string-compare"
+    <XCODE_MAC targetFolder="Builds/MacOSX" extraCompilerFlags="-I/usr/local/include&#10;-I../../Luce&#10;-DLUA52&#10;-Wno-unused-variable&#10;-Wno-string-compare"
                extraLinkerFlags="-undefined dynamic_lookup">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
@@ -82,7 +83,7 @@
         <MODULEPATH id="juce_opengl" path="../../../../usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
-    <LINUX_MAKE targetFolder="Builds/MacOSX-cross" extraCompilerFlags="-I/opt/zmq-osx/include&#10;-U__STRICT_ANSI__">
+    <LINUX_MAKE targetFolder="Builds/MacOSX-cross" extraCompilerFlags="-I/opt/zmq-osx/include&#10;-I../../Luce&#10;-U__STRICT_ANSI__">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
                        targetName="luce"/>
@@ -99,7 +100,7 @@
         <MODULEPATH id="juce_opengl" path="../../../../usr/local/src/vcs/toolkits/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <XCODE_IPHONE targetFolder="Builds/iOS" extraCompilerFlags="-I/usr/local/include&#10;-DLUA52&#10;-Wno-unused-variable&#10;-Wno-string-compare"
+    <XCODE_IPHONE targetFolder="Builds/iOS" extraCompilerFlags="-I/usr/local/include&#10;-I../../Luce&#10;-DLUA52&#10;-Wno-unused-variable&#10;-Wno-string-compare"
                   extraLinkerFlags="-undefined dynamic_lookup">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" iosCompatibility="default" isDebug="0" optimisation="2"
@@ -121,7 +122,7 @@
              androidSDKPath="${user.home}/SDKs/android-sdk" androidNDKPath="${user.home}/SDKs/android-ndk"
              androidMinimumSDK="8" androidInternetNeeded="1" androidKeyStore="${user.home}/.android/debug.keystore"
              androidKeyStorePass="android" androidKeyAlias="androiddebugkey"
-             androidKeyAliasPass="android" extraCompilerFlags="-std=c++11&#10;-I/opt/zmq-android/include/lua5.1&#10;-Wno-unused-result"
+             androidKeyAliasPass="android" extraCompilerFlags="-std=c++11&#10;-I/opt/zmq-android/include/lua5.1&#10;-I../../Luce&#10;-Wno-unused-result"
              extraLinkerFlags="-std=c++11">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" androidArchitectures="armeabi armeabi-v7a" isDebug="0"
@@ -139,7 +140,7 @@
         <MODULEPATH id="juce_core" path="../../juce"/>
       </MODULEPATHS>
     </ANDROID>
-    <VS2010 targetFolder="Builds/VisualStudio2010">
+    <VS2010 targetFolder="Builds/VisualStudio2010" extraCompilerFlags="-I../../Luce">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
                        isDebug="1" optimisation="1" targetName="luce"/>
