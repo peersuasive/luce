@@ -70,6 +70,8 @@ LJUCEApplication::LJUCEApplication(lua_State *L)
     : LBase(L, "LJUCEApplication", false)
 {
     myName( LUA::checkAndGetString(2, "LJUCEApplication") );
+
+    //TODO: think about moving this to initialise()
     luceAppInstance = this;
 
     commandManager = new ApplicationCommandManager();
