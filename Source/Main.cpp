@@ -1,7 +1,5 @@
 #include <cstring>
 
-// TODO: create one of this for each specific environment, and more particularly for for android
-
 #define LUCE_API __attribute__ ((visibility ("default")))
 
 static luce::LJUCEApplication *mainClass = nullptr;
@@ -15,6 +13,11 @@ namespace luce {
 #ifdef __cplusplus
 extern "C" {
 #endif
+int lua_shutdown(lua_State*);
+int lua_main(void);
+int lua_main_manual(lua_State*, const int&);
+int start(lua_State*);
+int start_manual(lua_State*);
 
 #if JUCE_ANDROID
     #include <jni.h>
@@ -27,10 +30,8 @@ extern "C" {
 #endif
 
 int lua_main(void) {
-    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     int res = 0;
-    #if defined JUCE_MAC || defined JUCE_IOS
-    // will call initialiseNSApplication
+    #if JUCE_MAC || JUCE_IOS
     res = juce::JUCEApplicationBase::main(0, 0);
     #elif JUCE_ANDROID
     Java_org_peersuasive_luce_luce_resumeApp(env, activity);
@@ -39,28 +40,6 @@ int lua_main(void) {
     #endif
     
     return res;
-
-    /*
-    // manual
-    if ( MessageManager::getInstanceWithoutCreating() != nullptr )
-        printf("ok, it's there too\n");
-    else
-        printf("well... not here ?\n");
-
-    const ScopedPointer<JUCEApplicationBase> app (juce::JUCEApplicationBase::createInstance());
-    app->initialiseApp();
-    MessageManager::getInstance()->runDispatchLoop();
-    mainClass->shutdown();
-
-    DeletedAtShutdown::deleteAll();
-    MessageManager::deleteInstance();
-    
-    if ( MessageManager::getInstanceWithoutCreating() != nullptr )
-        printf("definitively is there\n");
-    else
-        printf("ok, gone\n");
-    */
-    //return res;
 }
 
 int lua_main_manual(lua_State *L, const int& cb_ref) {
@@ -74,41 +53,20 @@ int lua_main_manual(lua_State *L, const int& cb_ref) {
         return 0;
     }
     return 0;
-
-    /*
-    initialiseJuce_GUI();
-    const ScopedPointer<JUCEApplicationBase> app (juce::JUCEApplicationBase::createInstance());
-
-    if (!app->initialiseApp()) {
-        lua_pushstring(L,"LUCE ERROR: Couldn't initialise app");
-        lua_error(L);
-        return 0;
-    }
-    
-    MainThread myThread("Main luce Thread", L, cb_ref);
-    myThread.run();
-
-    //MessageManager::getInstance()->runDispatchLoop();
-    return 0;
-    */
 }
 
 int lua_shutdown(lua_State *L) {
-    // FIXME: crashed on android when in Release mode
-    
-    //mainClass->shutdown(); // can't be called from there because... No more Display ?
-    //so let's lua call this for us
-
     DBG("START CLEANING");
     lua_gc(L, LUA_GCCOLLECT, 0 );
-    // clean instanciated but never used objects
+    // clean instanciated but never used or orphan objects
     if (LUA::objects.size()) {
         for (auto& it : LUA::objects) {
             if ( it.second ) {
                 if ( dynamic_cast<LComponent*>( (LSelfKill*)it.second ) )
+                    #if DEBUG
                     std::cout << "WARNING: object '" << it.second->myName() << "'"
                         << " instanciated but not cleaned (probably never used) -- cleaning" << std::endl;
-
+                    #endif
                 DBG(String("Cleaning object: ") + it.second->myName());
                 it.second->selfKill();
             }
@@ -116,15 +74,21 @@ int lua_shutdown(lua_State *L) {
     }
     lua_gc(L, LUA_GCCOLLECT, 0 );
 
+    // for Android, quitApp calls appWillTerminateByForce,
+    // which already calls these
+    // after having called shutdown()
+    #if ! JUCE_ANDROID
     DeletedAtShutdown::deleteAll();
-    MessageManager::deleteInstance();
-    
-
+    if ( MessageManager::getInstanceWithoutCreating() != nullptr )
+        MessageManager::deleteInstance();
     shutdownJuce_GUI();
+    #endif
+
+    #if DEBUG
     if ( MessageManager::getInstanceWithoutCreating() != nullptr ) {
         DBG("WARNING: an instance of MessageManager still exists !");
     }
-
+    #endif
     DBG("ENDED CLEANING");
     return 0;
 }
@@ -132,12 +96,16 @@ int lua_shutdown(lua_State *L) {
 //==============================================================================
 
 int start( lua_State *L ) {
-    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    LUA::Set(L);
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2);
     mainClass = mc;
 
     int rc = lua_main();
-    // if ( rc ) luaL_error...
+    
+    #if ! JUCE_ANDROID
+    lua_shutdown(L);
+    #endif
+
     DBG("END of START\n");
     lua_pushnumber(L, rc);
     return 1;
@@ -149,12 +117,12 @@ int start_manual( lua_State *L ) {
 
     int cb_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    //juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
-    
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2); // luaL_ref pop'ed the cb function
     mainClass = mc;
     int rc = lua_main_manual(L, cb_ref);
-    // if ( rc ) luaL_error...
+    
+    lua_shutdown(L);
+    
     DBG("END of START (manual)\n");
     lua_pushnumber(L, rc);
     return 1;
@@ -345,7 +313,7 @@ LUCE_API int luaopen_core(lua_State *L) {
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
 
     // X11 requires this at this point, but OS X can't stand it this soon
-    #if !defined JUCE_MAC && ! defined JUCE_IOS && ! defined JUCE_ANDROID
+    #if ! JUCE_MAC && ! JUCE_IOS && ! JUCE_ANDROID
     initialiseJuce_GUI();
     #endif
 
