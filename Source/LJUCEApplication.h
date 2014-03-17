@@ -119,7 +119,7 @@ private:
     virtual void handleAsyncUpdate() override;
 
     //==============================================================================
-    Array<ScopedPointer<Component>> mainWindows;
+    OwnedArray<Component> mainWindows;
 
     //==============================================================================
     void initialise(lua_State*, int callbackReturnStatus);

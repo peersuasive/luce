@@ -78,36 +78,21 @@ LJUCEApplication::LJUCEApplication(lua_State *L)
 }
 
 LJUCEApplication::~LJUCEApplication() {
+    // TODO: think about moving this to shutdown()
     DBG("destroying MW...");
     if(commandManager)
         commandManager = nullptr;
-    for(int i=mainWindows.size()-1;i<=0;++i) {
-        Component *mw = mainWindows[i].release();
-        if(mw) {
-            if(mw->isOnDesktop())
-                mw->removeFromDesktop();
-            delete mw;
-            mw = nullptr;
-        }
-        mainWindows[i] = nullptr;
-        mainWindows.remove(i);
-    }
+    mainWindows.clear(true);
     luceAppInstance = nullptr;
     DBG("END OF LJUCEApplication");
 }
 
 void LJUCEApplication::deleteWindow(Component *comp, bool quitIfLastWindowClosed) {
     if (!comp) return;
-    for(int i=mainWindows.size()-1;i>=0;--i) {
-        Component *c = mainWindows[i].get();
-        if(comp == c) {
-            mainWindows[i].release();
-            mainWindows[i] = nullptr;
-            mainWindows.remove(i);
-            c = nullptr;
-            break;
-        }
-    }
+    if ( mainWindows.contains(comp) )
+        mainWindows.removeObject(comp, true);
+    if(quitIfLastWindowClosed && mainWindows.size() == 0)
+        JUCEApplication::quit();
 }
 
 ApplicationCommandManager& LJUCEApplication::getApplicationCommandManager() {
@@ -311,10 +296,9 @@ int LJUCEApplication::moreThanOneInstanceAllowed(lua_State *L) {
 
 /// not a cb !
 void LJUCEApplication::shutdown() {
-    //callback("shutdown");
+    //
 }
 int LJUCEApplication::shutdown(lua_State *L) {
-    // set("shutdown");
     this->shutdown();
     return 0;
 }
