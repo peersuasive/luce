@@ -214,6 +214,9 @@ int LJUCEApplication::anotherInstanceStarted (lua_State *L) {
 }
 
 void LJUCEApplication::resumed() {
+    // TODO: set hasInitialised or get an extra argument from callback
+    //       to select first initialisation or real resume state
+    //       and @see sendCommandLineToPreexistingInstance
     if(hasCallback("resumed"))
         initialise(LUA::Get(), callback("resumed", 1) );
 }
