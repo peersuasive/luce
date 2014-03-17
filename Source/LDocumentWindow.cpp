@@ -81,13 +81,15 @@ LDocumentWindow::LDocumentWindow(lua_State *L)
 }
 
 LDocumentWindow::~LDocumentWindow() {
+    if(DocumentWindow::isOnDesktop())
+        DocumentWindow::removeFromDesktop();
 }
 
 int LDocumentWindow::closeWindow(lua_State*) {
+    bool quitIfLastWindowClosed = LUA::checkAndGetBoolean(2, false);
     if(DocumentWindow::isOnDesktop())
         DocumentWindow::removeFromDesktop();
-
-    LJUCEApplication::getInstance()->deleteWindow(this);
+    LJUCEApplication::getInstance()->deleteWindow(this, quitIfLastWindowClosed);
     return 0;
 }
 

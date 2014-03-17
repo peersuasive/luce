@@ -35,7 +35,7 @@ public:
     int initialised(lua_State*);
  
     static LJUCEApplication* getInstance() noexcept { return luceAppInstance; }
-    void deleteWindow(Component*);
+    void deleteWindow(Component*, bool quitIfLastWindowClosed = false);
 
     static int s_userHomeDirectory(lua_State*);
     static int s_userDocumentsDirectory(lua_State*);

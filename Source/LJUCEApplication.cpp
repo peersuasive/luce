@@ -96,7 +96,7 @@ LJUCEApplication::~LJUCEApplication() {
     DBG("END OF LJUCEApplication");
 }
 
-void LJUCEApplication::deleteWindow(Component *comp) {
+void LJUCEApplication::deleteWindow(Component *comp, bool quitIfLastWindowClosed) {
     if (!comp) return;
     for(int i=mainWindows.size()-1;i>=0;--i) {
         Component *c = mainWindows[i].get();
