@@ -185,7 +185,7 @@ void LJUCEApplication::initialise(lua_State *L, int state) {
     }
     else {
         if(! lua_isnoneornil(L, -1)) {
-            Component *mainWindow = LUA::from_luce<LJComponent, Component>();
+            Component *mainWindow = LUA::from_luce<LComponent, Component>();
             mainWindows.add( mainWindow );
             initialised(mainWindow);
         }
