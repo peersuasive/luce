@@ -20,5 +20,8 @@ int LUCEApplicationBase::run(juce::Thread &t) {
     
     t.run();
 
+    // FIXME: JUCEApplicationBase::shutdownApp is private,
+    //        need to find a way to handle multiple instances and shut them down
+    app->shutdown();
     return 0;
 }
