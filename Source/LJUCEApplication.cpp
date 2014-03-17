@@ -301,10 +301,13 @@ int LJUCEApplication::moreThanOneInstanceAllowed(lua_State *L) {
 
 /// not a cb !
 void LJUCEApplication::shutdown() {
+    // do the internal cooking first
     //
+    if(hasCallback("shutdown"))
+        callback("shutdown");
 }
 int LJUCEApplication::shutdown(lua_State *L) {
-    this->shutdown();
+    set("shutdown");
     return 0;
 }
 
