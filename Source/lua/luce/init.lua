@@ -42,6 +42,7 @@ local function load_luce(self, core)
 end
 
 local LModules = {
+    "Document",
     "Rectangle",
     "RectangleList",
     "AffineTransform",
