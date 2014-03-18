@@ -9,7 +9,6 @@ LUCE_API juce::JUCEApplicationBase* juce_CreateApplication() {
 }
 
 namespace luce {
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,11 +46,16 @@ int lua_main_manual(lua_State *L, const int& cb_ref) {
 
     MainThread myThread("Main luce Thread", L, cb_ref);
 
+    #if JUCE_IOS
+    // not ready yet
+    // luce_iOSMain(0, 0, &myThread);
+    #else
     if (LUCEApplicationBase::run(myThread)) {
         lua_pushstring(L,"LUCE ERROR: Couldn't initialise app");
         lua_error(L);
         return 0;
     }
+    #endif
     return 0;
 }
 
