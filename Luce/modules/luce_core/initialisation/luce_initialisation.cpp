@@ -69,17 +69,9 @@ int LUCEApplicationBase::run(juce::Thread& t) {
     initialiseJuce_GUI();
     const ScopedPointer<JUCEApplicationBase> app (juce::JUCEApplicationBase::createInstance());
 
-    std::ofstream logx("/tmp/out5.log");
-    logx << "gonna run initApp" << std::endl;
-    logx.flush();
-
     if (!app->initialiseApp())
         return 1;
     
-    logx << "run" << std::endl;
-    logx.flush();
-    logx.close();
-
     #if LUCE_MAC || JUCE_MAC
     [NSApp finishLaunching];
     [NSApp activateIgnoringOtherApps:YES];
