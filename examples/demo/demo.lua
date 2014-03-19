@@ -15,14 +15,26 @@ local mainWindow = luce:JUCEApplication("JUCEApplication")
 --- create a DocumentWindow with name "Document Window"
 ---
 local dw = luce:DocumentWindow("Document Window")
--- rename it
-dw.name = "LUCE Example Application"
+
+-- add some key mappings
+local K = string.byte
+local kc = setmetatable( luce.KeyPress.KeyCodes, { __index = function()return 0 end })
+dw:keyPressed(function(k)
+    local k, m = k:getKeyCode(), k:getModifiers()
+    if (k==K"Q" or k==K"q") and m:isCommandDown() then
+        mainWindow:quit()
+        return true -- consume key
+    end
+    return false -- don't consume key
+                 -- not returning anything 
+                 -- has the same effect
+end)
 
 ---
 --- create a MainComponent, to be hosted by the Document Window
 ---
 local mc = luce:MainComponent("Main Component")
-mc:setSize{1,1}
+
 ---
 --- create a button named "TheButton" with text "a button"
 ---
@@ -166,7 +178,7 @@ end)
 
 --- add our Document Window and components to our main JUCE application
 mainWindow:initialise(function(...)
-
+    mc:setSize{800,600}
     mc:addAndMakeVisible( button ) -- add the button to the main component
     button:setBounds{ 200, 20, 200, 200 } -- give the button some dimensions
     mc:addAndMakeVisible( label ) -- add the label          
@@ -195,7 +207,6 @@ mainWindow:initialise(function(...)
 
     mc:addAndMakeVisible(slider)
     slider:setBounds{ 410, 415, 200, 50 }
-    
 
     --mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds
                                      -- as this is the last component before
@@ -227,7 +238,6 @@ local stop_now = false
 mainWindow:systemRequestedQuit(function(...)
     print("** MainWindow system requested quit")
     stop_now = true
-    mainWindow:shutdown()
     mainWindow:quit()
 end)
 
@@ -239,15 +249,13 @@ end)
 --- so actions can be taken during the process execution
 
 -- luce:start( mainWindow ) -- the simplest one, everything's under 
-                            -- JUCE control
+                            -- Luce control
 
 --- and the non automatic one
 --- the function's executed in a loop within a thread,
 --- so there's no need to loop here
---- it is set with the same rate than the JUCE's loop (1ms by default)
+--- it is set with a a rate of 1ms by default
+--- note: not yet supported by iOS and Android
 luce:start_manual( mainWindow, function(...)
     return stop_now
-end )
-
-
-luce:shutdown() -- in any case, call this to close cleanly
+end)
