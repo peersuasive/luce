@@ -256,7 +256,6 @@ end)
 local stop_now = false
 mainWindow:systemRequestedQuit(function(...)
     stop_now = true
-    mainWindow:shutdown()
     mainWindow:quit()
 end)
 
@@ -267,5 +266,3 @@ luce:start_manual( mainWindow, function(...)
     return stop_now
 end )
 --]]
-
-luce:shutdown() -- in any case, call this to close cleanly

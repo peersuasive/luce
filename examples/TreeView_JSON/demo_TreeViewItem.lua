@@ -83,7 +83,6 @@ end)
 local keep_going = true
 mainWindow:systemRequestedQuit(function(...)
     keep_going = false
-    mainWindow:shutdown()
     mainWindow:quit()
 end)
 
@@ -106,6 +105,3 @@ luce:start_manual( mainWindow, function(...)
    return keep_going
 end )
 --]]
-
-
-luce:shutdown() -- in any case, call this to close cleanly

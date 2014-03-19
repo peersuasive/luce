@@ -86,8 +86,6 @@ mainWindow:initialise(function(...)
 end)
 
 mainWindow:systemRequestedQuit(function(...)
-    mainWindow:shutdown()
     mainWindow:quit()
 end)
 luce:start(mainWindow)
-luce:shutdown()
