@@ -2,5 +2,5 @@ all: $(OUTDIR)/$(TARGET) static
 
 static: $(OBJECTS)
 	@echo "Creating static lib ($(CONFIG))..."
-	@cd ./build/intermediate/$(CONFIG) && ar rcs libcore_lin.a *.o && ranlib libcore_lin.a
+	@cd ./build/intermediate/$(CONFIG) && ar rcs libluce_lin.a *.o && ranlib libluce_lin.a
 	@echo OK
