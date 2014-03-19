@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Luce by peersuasive</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Luce</h1>
+          <h2>Luce - a GUI module for Lua based on JUCE</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/peersuasive/luce/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/peersuasive/luce/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/peersuasive/luce" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <p><img src="http://peersuasive.github.io/images/lua-inside.png" alt="image"></p>
+
+<p><code>Luce</code> 0.3.1 <em>overall impression</em> <a href="https://github.com/peersuasive/luce/releases/tag/v0.3.1">released !</a></p>
+
+<p><a href="#Downloads">Downloads</a> for Linux, Windows, OS X, iOS and Android are available.</p>
+
+<h1>
+<a name="what-is-luce-" class="anchor" href="#what-is-luce-"><span class="octicon octicon-link"></span></a>What is <code>Luce</code> ?</h1>
+
+<p><code>Luce</code> is a <a href="http://lua.org">Lua</a> module for GUI programming based on
+the portable, embeddable, remarkable C++ library <a href="http://www.juce.com">JUCE</a>.</p>
+
+<p>It can be used as an ordinary module for pure lua 5.1/lua 5.2/luajit 2.X
+scripts or as a library for C++/Lua projects.</p>
+
+<p>Although based on JUCE, Luce isn't aiming at becoming a binding for
+JUCE, though the low level API free of Luce features could be used as
+such.</p>
+
+<p>Luce has Lua in mind and will be developped for lua developpers.</p>
+
+<p>Lua essence is to be
+"<code>a powerfull, fast, lightweight embeddable scripting language.</code>" And so
+would Luce be too.</p>
+
+<p>Luce is light, fast and <a href="https://github.com/peersuasive/luce_embeddable">easily portable</a>, thanks to Lua
+and JUCE itself.</p>
+
+<p>As of now, it's supported on Linux, Windows and Mac OS X, with partial
+support for iOS and Android.</p>
+
+<h1>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h1>
+
+<ol>
+<li> <a href="#downloads">download</a> the lua module for your environment</li>
+<li><p>put it somewhere in your lua modules path (ex:
+<code>/usr/local/share/lua/5.1</code>)</p></li>
+</ol><ul>
+<li>  if you're on Linux, you can also use the provided
+<a href="https://github.com/peersuasive/luce/raw/master/luce-scm-0.rockspec">luarock</a>
+</li>
+<li>
+<p>if you don't know JUCE, you should consider having a look at its
+<a href="https://www.juce.com/api/annotated.html">documentation</a> as Luce low
+level API matches for the most part JUCE's own API.</p>
+
+<p>For more explanations, see <a href="#Differences%20with%20JUCE">Differences with JUCE</a> and <a href="#Luce%20design">Luce design</a>.</p>
+</li>
+</ul><h2>
+<a name="a-first-app-say-hello" class="anchor" href="#a-first-app-say-hello"><span class="octicon octicon-link"></span></a>A first app: say hello</h2>
+
+<div class="highlight highlight-lua"><pre><span class="kd">local</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">"</span><span class="s">Hello World!"</span>
+
+<span class="kd">local</span> <span class="n">app</span><span class="p">,</span> <span class="n">luce</span> <span class="o">=</span> <span class="nb">require</span><span class="s2">"</span><span class="s">luce.LApplication"</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="c1">-- create a basic Application</span>
+                                                         <span class="c1">-- with command line parameters</span>
+
+<span class="kd">local</span> <span class="n">timer</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">Timer</span><span class="p">()</span> <span class="c1">-- a timer for the animation</span>
+
+<span class="kd">local</span> <span class="k">function</span> <span class="nf">MainWindow</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1">-- our main component class</span>
+                                 <span class="c1">-- will receive command line arguments or starting events</span>
+
+    <span class="kd">local</span> <span class="n">app</span><span class="p">,</span> <span class="n">luce</span> <span class="o">=</span> <span class="n">app</span><span class="p">,</span> <span class="n">luce</span>    <span class="c1">-- just to put these in the local environment</span>
+    <span class="kd">local</span> <span class="n">Colours</span>   <span class="o">=</span> <span class="n">luce</span><span class="p">.</span><span class="n">Colours</span> <span class="c1">-- id.</span>
+    <span class="kd">local</span> <span class="n">wsize</span>     <span class="o">=</span> <span class="p">{</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">}</span>    <span class="c1">-- the size of our window</span>
+    <span class="kd">local</span> <span class="n">isPaused</span>  <span class="o">=</span> <span class="kc">false</span>        <span class="c1">-- holds the animation state</span>
+
+    <span class="kd">local</span> <span class="n">mc</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">MainComponent</span><span class="p">(</span><span class="s2">"</span><span class="s">MainComponent"</span><span class="p">)</span> <span class="c1">-- our main component</span>
+    <span class="kd">local</span> <span class="n">documentWindow</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">Document</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>    <span class="c1">-- create a document window to hold the main component</span>
+
+    <span class="kd">local</span> <span class="n">button</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">TextButton</span><span class="p">(</span><span class="s2">"</span><span class="s">quit"</span><span class="p">)</span>  <span class="c1">-- a button to close the app</span>
+    <span class="n">button</span><span class="p">.</span><span class="n">buttonText</span> <span class="o">=</span> <span class="s2">"</span><span class="s">Quit"</span>              <span class="c1">-- visible text of the button</span>
+    <span class="n">button</span><span class="p">:</span><span class="n">setLookAndFeel</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>                <span class="c1">-- change look-and-feel</span>
+    <span class="n">button</span><span class="p">.</span><span class="n">bounds</span>     <span class="o">=</span> <span class="p">{</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span> <span class="p">}</span> <span class="c1">-- and position it (x,y,w,h)</span>
+
+    <span class="c1">---</span>
+    <span class="c1">-- set some action on button click</span>
+    <span class="c1">---</span>
+    <span class="n">button</span><span class="p">:</span><span class="n">buttonClicked</span><span class="p">(</span><span class="k">function</span><span class="p">()</span>
+        <span class="n">app</span><span class="p">:</span><span class="n">quit</span><span class="p">()</span>
+    <span class="k">end</span><span class="p">)</span>
+
+    <span class="c1">---</span>
+    <span class="c1">-- say hello to the world with a simple animation</span>
+    <span class="c1">---</span>
+
+    <span class="c1">-- just a dumb function to increase font size and pick a predefined colour</span>
+    <span class="kd">local</span> <span class="n">currentSize</span><span class="p">,</span> <span class="n">baseSize</span><span class="p">,</span> <span class="n">maxSize</span> <span class="o">=</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">32.0</span>
+    <span class="kd">local</span> <span class="n">colours</span>    <span class="o">=</span> <span class="p">{</span> <span class="n">Colours</span><span class="p">.</span><span class="n">black</span><span class="p">,</span> <span class="n">Colours</span><span class="p">.</span><span class="n">red</span><span class="p">,</span> <span class="n">Colours</span><span class="p">.</span><span class="n">yellow</span><span class="p">,</span> <span class="n">Colours</span><span class="p">.</span><span class="n">green</span><span class="p">,</span> <span class="n">Colours</span><span class="p">.</span><span class="n">blue</span> <span class="p">}</span>
+    <span class="kd">local</span> <span class="n">currentCol</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="kd">local</span> <span class="k">function</span> <span class="nf">changeSize</span><span class="p">()</span>
+        <span class="n">currentSize</span> <span class="o">=</span> <span class="p">(</span><span class="n">currentSize</span><span class="o">&lt;</span><span class="n">maxSize</span><span class="p">)</span> <span class="ow">and</span> <span class="n">currentSize</span><span class="o">+</span><span class="mf">0.5</span> <span class="ow">or</span> <span class="n">baseSize</span>
+        <span class="n">currentCol</span>  <span class="o">=</span> <span class="p">(</span><span class="n">currentCol</span><span class="o">&gt;#</span><span class="n">colours</span><span class="p">)</span> <span class="ow">and</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">currentCol</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">currentSize</span><span class="p">,</span> <span class="n">colours</span><span class="p">[</span><span class="n">currentCol</span><span class="p">]</span>
+    <span class="k">end</span>
+
+    <span class="c1">-- draw the message</span>
+    <span class="n">mc</span><span class="p">:</span><span class="n">paint</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="c1">-- draw a background</span>
+        <span class="n">g</span><span class="p">:</span><span class="n">fillCheckerBoard</span><span class="p">(</span> <span class="n">luce</span><span class="p">:</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">mc</span><span class="p">:</span><span class="n">getBounds</span><span class="p">()),</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="n">Colours</span><span class="p">.</span><span class="n">lightgrey</span><span class="p">,</span> <span class="n">Colours</span><span class="p">.</span><span class="n">white</span><span class="p">)</span> 
+        <span class="c1">-- get new font size and colour</span>
+        <span class="kd">local</span> <span class="n">size</span><span class="p">,</span> <span class="n">colour</span> <span class="o">=</span> <span class="n">changeSize</span><span class="p">()</span>
+        <span class="c1">-- draw text</span>
+        <span class="n">g</span><span class="p">:</span><span class="n">setFont</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">g</span><span class="p">:</span><span class="n">setColour</span><span class="p">(</span><span class="n">luce</span><span class="p">:</span><span class="n">Colour</span><span class="p">(</span><span class="n">colour</span><span class="p">))</span>
+        <span class="n">g</span><span class="p">:</span><span class="n">drawText</span><span class="p">(</span><span class="s2">"</span><span class="s">Hello World!"</span><span class="p">,</span> <span class="n">mc</span><span class="p">:</span><span class="n">getLocalBounds</span><span class="p">(),</span> <span class="n">luce</span><span class="p">.</span><span class="n">JustificationType</span><span class="p">.</span><span class="n">centred</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="k">end</span><span class="p">)</span>
+
+    <span class="c1">-- animate it a bit via the timer callback</span>
+    <span class="n">timer</span><span class="p">:</span><span class="n">timerCallback</span><span class="p">(</span><span class="k">function</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mc</span><span class="p">:</span><span class="n">isShowing</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span><span class="p">(</span><span class="n">isPaused</span><span class="p">))</span><span class="k">then</span>
+            <span class="n">mc</span><span class="p">:</span><span class="n">repaint</span><span class="p">()</span>
+        <span class="k">end</span>
+    <span class="k">end</span><span class="p">)</span>
+    <span class="n">timer</span><span class="p">:</span><span class="n">startTimer</span> <span class="p">(</span><span class="mi">1000</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span>
+
+    <span class="c1">---</span>
+    <span class="c1">-- add some key shortcuts</span>
+    <span class="c1">---</span>
+    <span class="kd">local</span> <span class="n">K</span>  <span class="o">=</span> <span class="nb">string.byte</span> 
+    <span class="kd">local</span> <span class="n">kc</span> <span class="o">=</span> <span class="nb">setmetatable</span><span class="p">(</span> 
+        <span class="n">luce</span><span class="p">.</span><span class="n">KeyPress</span><span class="p">.</span><span class="n">KeyCodes</span><span class="p">,</span> <span class="p">{</span> <span class="n">__index</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span><span class="k">return</span> <span class="mi">0</span> <span class="k">end</span> <span class="p">}</span> <span class="p">)</span> <span class="c1">-- just a little trick to always get a valid keycode</span>
+                                                                       <span class="c1">-- see https://www.juce.com/api/classKeyPress.html for</span>
+                                                                       <span class="c1">-- available key-codes</span>
+    <span class="n">documentWindow</span><span class="p">:</span><span class="n">keyPressed</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="kd">local</span> <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">k</span><span class="p">:</span><span class="n">getKeyCode</span><span class="p">(),</span> <span class="n">k</span><span class="p">:</span><span class="n">getModifiers</span><span class="p">()</span> <span class="c1">-- get current key-code and modifiers status</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">==</span><span class="n">K</span><span class="s2">"</span><span class="s">Q"</span> <span class="ow">or</span> <span class="n">k</span><span class="o">==</span><span class="n">K</span><span class="s2">"</span><span class="s">q"</span><span class="p">)</span> 
+                <span class="ow">and</span> <span class="p">(</span><span class="n">m</span><span class="p">:</span><span class="n">isCommandDown</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="n">os</span><span class="p">.</span><span class="n">osx</span><span class="p">))</span> <span class="k">then</span> <span class="c1">-- if Q is pressed or, on OS X, cmd+Q</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>     <span class="c1">-- close the application with an normal exit state (0 by default)</span>
+
+        <span class="k">elseif</span> <span class="p">(</span><span class="n">k</span><span class="o">==</span><span class="n">K</span><span class="s2">"</span><span class="s">w"</span> <span class="ow">or</span> <span class="n">k</span><span class="o">==</span><span class="n">K</span><span class="s2">"</span><span class="s">W"</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">m</span><span class="p">:</span><span class="n">isCommandDown</span><span class="p">()</span> <span class="p">)</span> <span class="k">then</span> <span class="c1">-- if cmd/ctrl + W is pressed</span>
+            <span class="n">documentWindow</span><span class="p">:</span><span class="n">closeWindow</span><span class="p">()</span> <span class="c1">-- close the window</span>
+                                         <span class="c1">-- on Linux and Windows, this has the effect of closing the application too,</span>
+                                         <span class="c1">-- but on OS X, only the active window is closed by default</span>
+                                         <span class="c1">-- however, if true is passed to closeWindow()</span>
+                                         <span class="c1">-- and this is the last remaining Document</span>
+                                         <span class="c1">-- the app will close the window and quit the application</span>
+        <span class="k">elseif</span> <span class="p">(</span><span class="n">k</span><span class="o">==</span><span class="n">kc</span><span class="p">.</span><span class="n">spaceKey</span><span class="p">)</span> <span class="k">then</span>
+            <span class="c1">-- toggle rendering pause</span>
+            <span class="n">isPaused</span> <span class="o">=</span> <span class="ow">not</span><span class="p">(</span><span class="n">isPaused</span><span class="p">)</span>
+        <span class="k">else</span>
+            <span class="k">return</span> <span class="kc">false</span> <span class="c1">-- don't consume key</span>
+                         <span class="c1">-- returning false, nil or not returning anything</span>
+                         <span class="c1">-- has the same effect</span>
+        <span class="k">end</span>
+        <span class="k">return</span> <span class="kc">true</span>     <span class="c1">-- tell the OS we have consumed this key</span>
+    <span class="k">end</span><span class="p">)</span>
+
+    <span class="c1">---</span>
+    <span class="c1">-- add all components and display</span>
+    <span class="c1">---</span>
+
+    <span class="n">mc</span><span class="p">:</span><span class="n">setSize</span><span class="p">(</span><span class="n">wsize</span><span class="p">)</span>
+    <span class="n">mc</span><span class="p">:</span><span class="n">addAndMakeVisible</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>                <span class="c1">-- add the component to our main component</span>
+    <span class="n">documentWindow</span><span class="p">:</span><span class="n">setContentOwned</span><span class="p">(</span> <span class="n">mc</span><span class="p">,</span> <span class="kc">true</span> <span class="p">)</span>  <span class="c1">-- add the main component to the document window</span>
+
+    <span class="c1">---</span>
+    <span class="n">documentWindow</span><span class="p">:</span><span class="n">closeButtonPressed</span><span class="p">(</span><span class="k">function</span><span class="p">()</span> <span class="c1">-- the user asked to close the current window...</span>
+        <span class="n">documentWindow</span><span class="p">:</span><span class="n">closeWindow</span><span class="p">()</span>             <span class="c1">-- so let's close it our way</span>
+                                                 <span class="c1">-- if this action's not taken, it'll close the app by default</span>
+    <span class="k">end</span><span class="p">)</span>
+    <span class="n">documentWindow</span><span class="p">:</span><span class="n">setSize</span><span class="p">(</span><span class="n">wsize</span><span class="p">)</span>   <span class="c1">-- set dimensions for the window</span>
+                                    <span class="c1">-- on iOS and Android, it'll just set a fullscreen</span>
+    <span class="n">documentWindow</span><span class="p">:</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="c1">-- display the document</span>
+    <span class="k">return</span> <span class="n">documentWindow</span>           <span class="c1">-- return it for the application to actually display it</span>
+<span class="k">end</span>
+
+<span class="kd">local</span> <span class="n">manual</span>      <span class="o">=</span> <span class="kc">false</span>       <span class="c1">-- set true if you want to add your own process running along with the main loop</span>
+<span class="kd">local</span> <span class="n">osx_delayed</span> <span class="o">=</span> <span class="kc">false</span>       <span class="c1">-- set true if you don't want your app to display a window immediatly on OS X</span>
+                                <span class="c1">-- but wait for user input before, like providing a file,...</span>
+<span class="kd">local</span> <span class="n">poller</span>      <span class="o">=</span> <span class="k">function</span><span class="p">()</span>  <span class="c1">-- the callback you want to run in manual mode</span>
+    <span class="nb">print</span> <span class="s2">"</span><span class="s">I'm in a loop!"</span>
+<span class="k">end</span>
+<span class="k">return</span> <span class="n">app</span><span class="p">:</span><span class="n">start</span><span class="p">(</span> <span class="n">MainWindow</span><span class="p">,</span> <span class="n">osx_delayed</span><span class="p">,</span> <span class="n">manual</span><span class="p">,</span> <span class="n">manual</span> <span class="ow">and</span> <span class="n">poller</span> <span class="p">)</span> <span class="c1">-- returns the exit state</span>
+</pre></div>
+
+<h2>
+<a name="a-more-complete-example-using-only-the-low-level-api" class="anchor" href="#a-more-complete-example-using-only-the-low-level-api"><span class="octicon octicon-link"></span></a>A more complete example using only the low level API</h2>
+
+<div class="highlight highlight-lua"><pre><span class="kd">local</span> <span class="n">luce</span> <span class="o">=</span> <span class="nb">require</span><span class="s2">"</span><span class="s">luce"</span><span class="p">()</span>
+
+<span class="c1">---</span>
+<span class="c1">--- create a default JUCEApplication</span>
+<span class="c1">---</span>
+<span class="kd">local</span> <span class="n">mainWindow</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">JUCEApplication</span><span class="p">(</span><span class="s2">"</span><span class="s">My App"</span><span class="p">)</span>
+
+<span class="c1">---</span>
+<span class="c1">--- create a DocumentWindow with name "Document Window"</span>
+<span class="c1">---</span>
+<span class="kd">local</span> <span class="n">dw</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">DocumentWindow</span><span class="p">(</span><span class="s2">"</span><span class="s">Document Window"</span><span class="p">)</span>
+<span class="c1">-- rename it</span>
+<span class="n">dw</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"</span><span class="s">Luce Example Application"</span>
+
+<span class="c1">---</span>
+<span class="c1">--- create a MainComponent, to be hosted by the Document Window</span>
+<span class="c1">---</span>
+<span class="kd">local</span> <span class="n">mc</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">MainComponent</span><span class="p">(</span><span class="s2">"</span><span class="s">The Main Component"</span><span class="p">)</span>
+
+<span class="c1">---</span>
+<span class="c1">--- create a button named "TheButton" with text "a button"</span>
+<span class="c1">---</span>
+<span class="kd">local</span> <span class="n">button</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">TextButton</span><span class="p">(</span><span class="s2">"</span><span class="s">TheButton"</span><span class="p">)</span>
+<span class="n">button</span><span class="p">:</span><span class="n">setButtonText</span><span class="p">(</span> <span class="s2">"</span><span class="s">a button"</span> <span class="p">)</span> <span class="c1">-- or button.buttonText = "a button", like button2 below</span>
+
+<span class="c1">--- add a callback for when button is clicked</span>
+<span class="n">button</span><span class="p">:</span><span class="n">buttonClicked</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="s">button clicked !!"</span><span class="p">)</span>
+<span class="k">end</span><span class="p">)</span>
+
+<span class="c1">--- change component look and feel</span>
+<span class="kd">local</span> <span class="n">button2</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">TextButton</span><span class="p">(</span><span class="s2">"</span><span class="s">TheButton2"</span><span class="p">)</span>
+<span class="n">button2</span><span class="p">.</span><span class="n">buttonText</span> <span class="o">=</span> <span class="s2">"</span><span class="s">button with a different look and feel"</span>
+
+<span class="c1">--- add a callback for when button is clicked</span>
+<span class="n">button2</span><span class="p">:</span><span class="n">buttonClicked</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="s">button 2 clicked !!"</span><span class="p">)</span>
+<span class="k">end</span><span class="p">)</span>
+
+<span class="c1">--- set a different look and feel for button2</span>
+<span class="n">button2</span><span class="p">:</span><span class="n">setLookAndFeel</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1">---</span>
+<span class="c1">--- create a Label</span>
+<span class="c1">---</span>
+<span class="kd">local</span> <span class="n">label</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">Label</span><span class="p">(</span><span class="s2">"</span><span class="s">A Label"</span><span class="p">)</span>
+
+<span class="c1">--- Label's setText has an optional parameter to send a notification when its content's changed</span>
+<span class="c1">--- by default, it sends nothing:</span>
+<span class="n">label</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="s">a bit of content"</span> <span class="c1">-- default to dontSendNotification</span>
+
+<span class="c1">--- set a callback for label text changes</span>
+<span class="n">label</span><span class="p">:</span><span class="n">labelTextChanged</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="s">Label text has changed: "</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span><span class="n">getText</span><span class="p">())</span> <span class="c1">-- or label.text</span>
+<span class="k">end</span><span class="p">)</span>
+<span class="c1">--- but we could use one of the three notification methods accepted:</span>
+<span class="c1">--- sendNotification, sendNotificationSync or sendNotificationAsync</span>
+<span class="c1">--- by using the setText method:</span>
+<span class="kd">local</span> <span class="n">notif</span> <span class="o">=</span> <span class="n">luce</span><span class="p">.</span><span class="n">NotificationType</span><span class="p">.</span><span class="n">sendNotification</span>
+<span class="n">label</span><span class="p">:</span><span class="n">setText</span><span class="p">(</span> <span class="s2">"</span><span class="s">another content"</span><span class="p">,</span> <span class="n">notif</span> <span class="p">)</span>
+
+<span class="c1">--- set label editable</span>
+<span class="n">label</span><span class="p">:</span><span class="n">setEditable</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="c1">-- edit on single click, edit on double click, </span>
+                                     <span class="c1">-- cancel changes when losing focus</span>
+<span class="c1">--- we can attach the label to the button too                                     </span>
+<span class="n">label</span><span class="p">:</span><span class="n">attachToComponent</span><span class="p">(</span> <span class="n">button</span><span class="p">,</span> <span class="kc">true</span> <span class="p">)</span> <span class="c1">-- component, true: onLeft/false: above (default)</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s2">"</span><span class="s">is attached on left ?"</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span><span class="n">isAttachedOnLeft</span><span class="p">())</span>
+
+
+<span class="c1">--- set a colour for background and align text to the right</span>
+<span class="kd">local</span> <span class="n">label2</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">Label</span><span class="p">(</span><span class="s2">"</span><span class="s">Another Label"</span><span class="p">)</span>
+<span class="n">label2</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="s">(left aligned)"</span>
+<span class="n">label2</span><span class="p">:</span><span class="n">setColour</span><span class="p">(</span> <span class="n">label2</span><span class="p">.</span><span class="n">ColourIds</span><span class="p">.</span><span class="n">backgroundColourId</span><span class="p">,</span> <span class="n">luce</span><span class="p">.</span><span class="n">Colours</span><span class="p">.</span><span class="n">yellow</span> <span class="p">)</span>
+<span class="n">label2</span><span class="p">:</span><span class="n">setJustificationType</span><span class="p">(</span> <span class="n">luce</span><span class="p">.</span><span class="n">JustificationType</span><span class="p">.</span><span class="n">right</span> <span class="p">)</span>
+
+<span class="c1">--- centre text</span>
+<span class="kd">local</span> <span class="n">label3</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">Label</span><span class="p">(</span><span class="s2">"</span><span class="s">(left aligned text)"</span><span class="p">)</span>
+<span class="n">label3</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="s">(centered)"</span>
+<span class="n">label3</span><span class="p">:</span><span class="n">setColour</span><span class="p">(</span> <span class="n">label3</span><span class="p">.</span><span class="n">ColourIds</span><span class="p">.</span><span class="n">backgroundColourId</span><span class="p">,</span> <span class="n">luce</span><span class="p">.</span><span class="n">Colours</span><span class="p">.</span><span class="n">red</span> <span class="p">)</span>
+<span class="n">label3</span><span class="p">:</span><span class="n">setJustificationType</span><span class="p">(</span> <span class="n">luce</span><span class="p">.</span><span class="n">JustificationType</span><span class="p">.</span><span class="n">centred</span> <span class="p">)</span>
+
+<span class="c1">---</span>
+<span class="c1">--- create a TextEditor</span>
+<span class="c1">---</span>
+<span class="kd">local</span> <span class="n">te</span> <span class="o">=</span> <span class="n">luce</span><span class="p">:</span><span class="n">TextEditor</span><span class="p">(</span><span class="s2">"</span><span class="s">Text Editor"</span><span class="p">)</span>
+
+<span class="c1">--- directly set bounds for this component</span>
+<span class="n">te</span><span class="p">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span> <span class="p">}</span> <span class="c1">-- x, y, w, h</span>
+<span class="c1">-- or</span>
+<span class="c1">-- te.setBounds{ 200, 250, 200, 200 }</span>
+
+<span class="c1">--- add our Document Window and components to our main JUCE application</span>
+<span class="n">mainWindow</span><span class="p">:</span><span class="n">initialise</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">mc</span><span class="p">:</span><span class="n">setSize</span><span class="p">{</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">}</span>
+    <span class="n">mc</span><span class="p">:</span><span class="n">addAndMakeVisible</span><span class="p">(</span> <span class="n">button</span> <span class="p">)</span> <span class="c1">-- add the button to the main component</span>
+    <span class="n">button</span><span class="p">:</span><span class="n">setBounds</span><span class="p">{</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span> <span class="p">}</span> <span class="c1">-- give the button some dimensions</span>
+    <span class="n">mc</span><span class="p">:</span><span class="n">addAndMakeVisible</span><span class="p">(</span> <span class="n">label</span> <span class="p">)</span> <span class="c1">-- add the label          </span>
+    <span class="c1">--label:setBounds{ 20, 250, 100, 100 } -- don't set bounds to the label</span>
+                                           <span class="c1">-- if you want it attached to button</span>
+
+    <span class="n">mc</span><span class="p">:</span><span class="n">addAndMakeVisible</span><span class="p">(</span><span class="n">te</span><span class="p">)</span> <span class="c1">-- add the Text Editor</span>
+
+    <span class="n">mc</span><span class="p">:</span><span class="n">addAndMakeVisible</span><span class="p">(</span> <span class="n">button2</span> <span class="p">)</span> <span class="c1">-- add the second button with the different lnf</span>
+    <span class="n">button2</span><span class="p">:</span><span class="n">setBounds</span><span class="p">{</span> <span class="mi">410</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span> <span class="p">}</span>
+
+    <span class="n">mc</span><span class="p">:</span><span class="n">addAndMakeVisible</span><span class="p">(</span><span class="n">label2</span><span class="p">)</span>
+    <span class="n">label2</span><span class="p">:</span><span class="n">setBounds</span><span class="p">{</span> <span class="mi">410</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">30</span> <span class="p">}</span>
+
+    <span class="n">mc</span><span class="p">:</span><span class="n">addAndMakeVisible</span><span class="p">(</span><span class="n">label3</span><span class="p">)</span>
+    <span class="n">label3</span><span class="p">:</span><span class="n">setBounds</span><span class="p">{</span> <span class="mi">410</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">30</span> <span class="p">}</span>
+
+    <span class="c1">--mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds</span>
+                                     <span class="c1">-- as this is the last component before</span>
+                                     <span class="c1">-- DocumentWindow, it'll set the window size</span>
+                                     <span class="c1">-- too, unless dw sets one</span>
+    <span class="n">dw</span><span class="p">:</span><span class="n">setContentOwned</span><span class="p">(</span> <span class="n">mc</span><span class="p">,</span> <span class="kc">true</span> <span class="p">)</span>
+
+    <span class="n">dw</span><span class="p">:</span><span class="n">centreWithSize</span><span class="p">{</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">}</span> <span class="c1">-- centre window on screen with size 800x600</span>
+    <span class="c1">--dw:setCentrePosition{ 0, 0 } -- move it to the top left corner</span>
+
+    <span class="c1">--dw:setBounds{ 100, 100, 800,600 } -- sets the window bounds</span>
+                                        <span class="c1">-- as dw is a TopWindow and, as such, the very 1st component,</span>
+                                        <span class="c1">-- it'll be positionned</span>
+                                        <span class="c1">-- on screen directly, so that's another way of</span>
+                                        <span class="c1">-- doing centreWithSize/setCentrePosition</span>
+    <span class="c1">--dw:setSize{ 800,600 } -- just show the window, top left corner</span>
+    <span class="n">dw</span><span class="p">:</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dw</span> <span class="c1">-- return the Document Window so the JUCE Application can take it</span>
+<span class="k">end</span><span class="p">)</span>
+
+<span class="c1">--- callback on DocumentWindow :closeButtonPressed</span>
+<span class="n">dw</span><span class="p">:</span><span class="n">closeButtonPressed</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="s">*** DocumentWindow close button pressed"</span><span class="p">)</span>
+<span class="k">end</span><span class="p">)</span>
+
+<span class="c1">--- callback used when quit is asked</span>
+<span class="kd">local</span> <span class="n">stop_now</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="n">mainWindow</span><span class="p">:</span><span class="n">systemRequestedQuit</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="s">** MainWindow system requested quit"</span><span class="p">)</span>
+    <span class="n">stop_now</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="n">mainWindow</span><span class="p">:</span><span class="n">shutdown</span><span class="p">()</span>
+    <span class="n">mainWindow</span><span class="p">:</span><span class="n">quit</span><span class="p">()</span>
+<span class="k">end</span><span class="p">)</span>
+
+<span class="c1">--- main loop</span>
+
+<span class="c1">--- there are two implementations of the main loop</span>
+<span class="c1">--- one is the JUCE's native wrapped one</span>
+<span class="c1">--- and the other one gives control over the loop</span>
+<span class="c1">--- so actions can be taken during the process execution</span>
+
+<span class="c1">-- luce:start( mainWindow ) -- the simplest one, everything's under </span>
+                            <span class="c1">-- JUCE control</span>
+
+<span class="c1">--- and the non automatic one</span>
+<span class="c1">--- the function's executed in a loop within a thread,</span>
+<span class="c1">--- so there's no need to loop here</span>
+<span class="c1">--- it is set with the same rate than the JUCE's loop (1ms by default)</span>
+<span class="n">luce</span><span class="p">:</span><span class="n">start_manual</span><span class="p">(</span> <span class="n">mainWindow</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="c1">-- do some stuff, like zmq:poll(), for instance</span>
+    <span class="k">return</span> <span class="n">stop_now</span>
+<span class="k">end</span> <span class="p">)</span>
+</pre></div>
+
+<h2>
+<a name="more-examples" class="anchor" href="#more-examples"><span class="octicon octicon-link"></span></a>More examples</h2>
+
+<p>For more examples, see the <a href="https://github.com/peersuasive/luce/tree/master/examples">examples</a> 
+folder of the repository.</p>
+
+<h1>
+<a name="requirements-and-dependencies" class="anchor" href="#requirements-and-dependencies"><span class="octicon octicon-link"></span></a>Requirements and dependencies</h1>
+
+<p>To simply use Luce as a module,</p>
+
+<ul>
+<li>  lua 5.1 / lua 5.2 / luajit 2.X</li>
+</ul><h2>
+<a name="to-compile-the-module-and-for-c-projects" class="anchor" href="#to-compile-the-module-and-for-c-projects"><span class="octicon octicon-link"></span></a>to compile the module and for C++ projects</h2>
+
+<ul>
+<li>  C++11</li>
+<li>  GCC 4.6+ / CLANG 3.3+</li>
+</ul><h2>
+<a name="to-extend-with-new-juce-classes" class="anchor" href="#to-extend-with-new-juce-classes"><span class="octicon octicon-link"></span></a>to extend with new JUCE classes</h2>
+
+<ul>
+<li>  <code>JUCE</code> 3.0.4+</li>
+</ul><h1>
+<a name="downloads" class="anchor" href="#downloads"><span class="octicon octicon-link"></span></a>Downloads</h1>
+
+<p>As of v0.3.1, modules are available for both lua5.1/luajit2.X and
+lua5.2.</p>
+
+<p>To use with lua scripts as a module, pick the module download.</p>
+
+<p>If you want to contribute and help debugging, get the debug version of
+the module also.</p>
+
+<p>And if you want to use
+<a href="https://github.com/peersuasive/luce_embeddable">Luce/Embedded</a> or
+develop with C++, get the static library (or use the module as a shared
+library, if you prefer to).</p>
+
+<p>For iOS, only the static library is available as Apple policies wouldn't
+allow a shared version but if you'd like to deploy on jailbroken
+devices, just ask, I'll provide it with the next release.</p>
+
+<p>For Android, at the opposite, only the shared library/module is
+available, as a static library wouldn't really make sense, but feel free
+to ask also.</p>
+
+<h2>
+<a name="v031-alpha" class="anchor" href="#v031-alpha"><span class="octicon octicon-link"></span></a>v0.3.1 (alpha)</h2>
+
+<h3>
+<a name="linux64-51" class="anchor" href="#linux64-51"><span class="octicon octicon-link"></span></a>Linux64 5.1</h3>
+
+<ul>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.1.zip">Linux/64/2.13 (lua 5.1
+module)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.1_dbg.zip">Linux/64/2.13 (lua 5.1
+module/debug)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.Linux64-5.1_static.zip">Linux/64/2.13
+(static)</a>
+</li>
+</ul><h3>
+<a name="linux64-52" class="anchor" href="#linux64-52"><span class="octicon octicon-link"></span></a>Linux64 5.2</h3>
+
+<ul>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.2.zip">Linux/64/2.13 (lua 5.2
+module)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.2_dbg.zip">Linux/64/2.13 (lua 5.2
+module/debug)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.Linux64-5.2_static.zip">Linux/64/2.13
+(static)</a>
+</li>
+</ul><h3>
+<a name="win32-51" class="anchor" href="#win32-51"><span class="octicon octicon-link"></span></a>Win32 5.1</h3>
+
+<ul>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.1.zip">Windows/32 (lua 5.1
+module)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.1_dbg.zip">Windows/32 (lua 5.1
+module/debug)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.1_static.zip">Windows/32
+(static)</a>
+</li>
+</ul><h3>
+<a name="win32-52" class="anchor" href="#win32-52"><span class="octicon octicon-link"></span></a>Win32 5.2</h3>
+
+<ul>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.2.zip">Windows/32 (lua 5.2
+module)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.2_dbg.zip">Windows/32 (lua 5.2
+module/debug)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.2_static.zip">Windows/32
+(static)</a>
+</li>
+</ul><h3>
+<a name="os-x-51" class="anchor" href="#os-x-51"><span class="octicon octicon-link"></span></a>OS X 5.1</h3>
+
+<ul>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.osx64-5.1.zip">Mac OS X/64/10.8 (lua 5.1
+module)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.osx64-5.1_dbg.zip">Mac OS X/64/10.8 (lua 5.1
+module/debug)</a>
+</li>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.osx64-5.1_static.zip">Mac OS X/64/10.8
+(static)</a>
+</li>
+</ul><h3>
+<a name="ios-61-51" class="anchor" href="#ios-61-51"><span class="octicon octicon-link"></span></a>iOS 6.1 5.1</h3>
+
+<ul>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.ios61-5.1.zip">iOS/5.1 (lua 5.1
+static)</a>
+</li>
+</ul><h3>
+<a name="android-44-51" class="anchor" href="#android-44-51"><span class="octicon octicon-link"></span></a>Android 4.4 5.1</h3>
+
+<ul>
+<li>  <a href="https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.android44-5.1.zip">Android/4.X (lua 5.1
+shared)</a>
+</li>
+</ul><h1>
+<a name="whats-implemented-so-far-" class="anchor" href="#whats-implemented-so-far-"><span class="octicon octicon-link"></span></a>What's implemented so far ?</h1>
+
+<p>Basically, most of the core components are implemented, as well as
+OpenGL.</p>
+
+<p>Most of the Graphics painting operations are also implemented, as well
+as the most usefull math/geometry classes.</p>
+
+<p>Some components you might find usefull may be missing, so don't hesitate
+to ask for adding (or fork the repo and follow the guide <a href="#Adding%20new%20classes%20to%20Luce">Adding new
+classes to Luce</a> then send a <em>pull request</em>).</p>
+
+<h1>
+<a name="luce-design" class="anchor" href="#luce-design"><span class="octicon octicon-link"></span></a>Luce design</h1>
+
+<p>All Luce classes start with a <code>L</code>.</p>
+
+<p>Luce design is close to JUCE's, but often simplfied when it doesn't make
+sense in lua to keep some if its behaviour or features.</p>
+
+<p>For the general GUI design, see JUCE.</p>
+
+<p>All widgets are derived from Juce's Component class and Luce's
+LComponent class. All non-widgets classes are derived from LBase.
+LComponent itself is derived from LBase. LBase offers the required link
+to Lua while LComponent offers the required links to Juce.</p>
+
+<p>Most of the callbacks existing in Juce also exist in Luce; in the same
+manner they need to be overriden in Juce to take effect, they also need
+to be overriden in Luce, that is, as for Luce, that a lua function needs
+to be provided for the callback to be effective. If no callback is
+provided, the default Juce action is called, if any.</p>
+
+<p>All L* classes map their Juce equivalent or are specific to Luce (like
+LBase).</p>
+
+<p>All L* classes are overridable within lua code, like any pure lua
+modules, and most of them are partly implemented in Lua. This is
+particularly useful for callback declarations or to add actions to
+native methods or simply to specialise a component with new
+functionnalities. This is the mechanism we use to implement C++ classes
+directly in Lua.</p>
+
+<p>There's a limitation, though, unless it's a callback, as it's not
+possible to reimplement a native method in lua -- hence the use of a lua
+class wrapping the native one.</p>
+
+<h1>
+<a name="differences-with-juce" class="anchor" href="#differences-with-juce"><span class="octicon octicon-link"></span></a>Differences with <code>JUCE</code>
+</h1>
+
+<p>For simplicity and reference, <code>Luce</code> usually uses the same method names
+than <code>JUCE</code>. However, where <code>JUCE</code> uses getters/setters, Luce offers a
+direct value attribution, whenever possible and obvious, that is. For
+instance, <code>setName("...")</code> and <code>getName()</code> would be replaced with
+<code>name [= "..."]</code>, though set/get methods are still accessible.</p>
+
+<p>So JUCE documentation is applicable for most of the Luce's low level
+components.</p>
+
+<p><code>Luce</code> doesn't provide any listener class directly (and probably won't)
+but instead wraps the listeners, where relevant, on the C++ side; as
+such, there's no point in having <code>addListener</code> and <code>removeListener</code>
+functions taking a listener class as argument; but one would be able to
+enable or disable such listeners so these methods still exist in <code>Luce</code>
+though they just activate/deactivate the wrapped Listener.</p>
+
+<p>Some future use cases may reveal the need for such an availability but
+at the moment, we haven't found any.</p>
+
+<p>Another difference is with Rectangle and Point objects, for which we
+didn't find any use to provide natively. These classes are provided as
+pure lua indexed tables and recreated wherever needed. So where a <code>JUCE</code>
+method needs a <code>Rectangle</code> or <code>Point</code> object, a table containing the
+values must be provided instead. Order is always x, y [, w, h ]. In
+general speaking, it respects the order declared in the class
+constructor. Later on, there'll probably be a lua implementation of
+these classes, to offer some of their most useful methods, like
+<code>:reduce()</code>.</p>
+
+<h1>
+<a name="adding-new-classes-to-luce" class="anchor" href="#adding-new-classes-to-luce"><span class="octicon octicon-link"></span></a>Adding new classes to Luce</h1>
+
+<p>There are two kinds of sses in <code>Luce</code>: <em>full</em> classes and <em>wrapper</em>
+classes.</p>
+
+<p>Full classes are just <code>JUCE</code> classes extended to be integrated with
+<code>Luce</code>, while wrapper classes are there to create some kind of
+inheritence between <code>Luce</code> components.</p>
+
+<p>For the 1st one, see <code>LLabel</code>, <code>LTextEditor</code> or <code>LTextButton</code>, while the
+only example for the 2nd kind is <code>LComponent</code>.</p>
+
+<p><code>LLabel</code>, <code>LTextEditor</code> and <code>LTextButton</code> extend their respective <code>JUCE</code>
+component while inheriting <code>LComponent</code>, which in turn wraps all
+<code>JUCE</code>'s <code>Component</code> base class methods.</p>
+
+<p>This allows simulating inheritence in <code>Luce</code> components, as it wouldn't
+be possible in a simple way otherwise. Like previously said, we're not
+aiming at a 1 to 1 binding to <code>JUCE</code>, so more complex mechanisms would
+be oversized here (unless someone knows a simple way to achieve this, of
+course !).</p>
+
+<p>There is a helper script, <code>microparser</code>, which greatly simplify the job
+of creating new classes for <code>Luce</code>. It won't generate a new "ready to
+use" class but gives a great help by generating the class template and
+headers with all available methods and callbacks and pre-implementing
+them. The most obvious ones are fully generated.</p>
+
+<p>To add pseudo-inheritence, use the script <code>create_inh.sh</code>:</p>
+
+<div class="highlight highlight-bash"><pre>./create_inh.sh &lt;Luce_CLASS_BASE_NAME&gt;
+</pre></div>
+
+<p>which generates the <code>LCLASS_inh.h</code> header to be included in the class.</p>
+
+<p>Once the class is created, include it in <code>luce.cpp</code>, <code>luce.h</code> and
+reference it in <code>Main.cpp</code>:</p>
+
+<div class="highlight highlight-c++"><pre><span class="kt">int</span> <span class="nf">l_NewClass</span><span class="p">(</span><span class="n">lua_State</span> <span class="o">*</span><span class="n">L</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Luna</span><span class="o">&lt;</span><span class="n">LNewClass</span><span class="o">&gt;::</span><span class="n">Register</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="k">const</span> <span class="n">luaL_reg</span> <span class="n">luce_lib</span> <span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">{</span> <span class="s">"NewClass"</span><span class="p">,</span> <span class="n">l_NewClass</span> <span class="p">},</span>
+    <span class="p">[...]</span>
+    <span class="p">{</span><span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+<h1>
+<a name="roadmap" class="anchor" href="#roadmap"><span class="octicon octicon-link"></span></a>Roadmap</h1>
+
+<p><code>Luce</code> is still very young but growing fast -- at least as fast as our
+needs for it. Most of the basic widgets are aleady there and it's
+already possible to build full applications with it. Performances are
+there too, even if there isn't any optimisation done yet.</p>
+
+<p>Next big steps are:</p>
+
+<ul>
+<li>  implementating a high level API (porcelaine) to simplify the process
+of creating new applications and reduce the number of required calls
+and methods to the native (JUCE) API</li>
+<li>  more low level binding, like box2d, to be able to create our own
+fancy widgets</li>
+<li>  an equivalent to JUCE's message broadcasting, between C++/Lua but
+also between any components (gadokai? pure ømq?)</li>
+<li>  a var/Value equivalent usable within lua, even out of any JUCE
+context (gadokai? ømq?)</li>
+<li>  some minor tasks like overriding LookAndFeel lua side</li>
+<li>  optimisation, if required (there's a looooot of room for
+optimisation, no worry at all on this side)</li>
+</ul><p>API documentation will come later as Juce's one is still fully relevant.</p>
+
+<p>You may also want to have a look at
+<a href="https://github.com/peersuasive/luz">luz</a>, a simple demonstrator on
+remotely and dynamically creating a <code>Luce</code> application, a small <em>avant
+goût</em> of the forthcoming Peersuasive's smart-data oriented architecture
+<code>gadokai</code> (yet to be announced).</p>
+
+<h1>
+<a name="related-projects" class="anchor" href="#related-projects"><span class="octicon octicon-link"></span></a>Related Projects</h1>
+
+<p><a href="https://github.com/peersuasive/luce_embeddable">Luce Embeddable</a>, to
+create standalone or bundled applications.</p>
+
+<p><a href="https://github.com/peersuasive/luce_squishable">Luce Squishable</a>, to
+concatenate Luce's lua classes to one, portable file.</p>
+
+<h1>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License.</h1>
+
+<p>For open source projects, <code>Luce</code> is licensed under the terms of the
+<a href="http://www.gnu.org/licenses/gpl-3.0.html">GPLv3</a> with some parts being
+<a href="http://www.gnu.org/licenses/agpl-3.0.html">AGPLv3</a>.</p>
+
+<p>For commercial projects and professional support, please contact us at <a href="mailto:contact@peersuasive.com">contact@peersuasive.com</a>.</p>
+        </section>
+
+        <footer>
+          Luce is maintained by <a href="https://github.com/peersuasive">peersuasive</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
