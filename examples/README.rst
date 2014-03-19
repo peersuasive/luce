@@ -7,6 +7,11 @@ demo
 
 Simple demo showing some basic widgets and the way to use Luce.
 
+demoHL
+======
+
+Another simple demo showing an animated Hello World! using the high level API.
+
 TreeView_JSON
 =============
 
