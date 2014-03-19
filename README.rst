@@ -1,166 +1,190 @@
 ====
-luce
+Luce
 ====
------------------------------------
-A GUI Toolkit for Lua based on JUCE
------------------------------------
+------------------------------------
+A GUI Module for Lua (based on JUCE)
+------------------------------------
 
-``Luce`` 0.3 *it's fork time!* `released ! <https://github.com/peersuasive/luce/releases/tag/v0.3>`_
+.. image:: http://peersuasive.github.io/images/lua-inside.png
+
+
+
+``Luce`` 0.3.1 *overall impression* `released ! <https://github.com/peersuasive/luce/releases/tag/v0.3.1>`__
+
+``Luce`` 0.3 *it's fork time!* `released ! <https://github.com/peersuasive/luce/releases/tag/v0.3>`__
 
 `Downloads`_ for Linux, Windows, OS X, iOS and Android are available.
-
 
 What is ``Luce`` ?
 ==================
 
-``Luce`` is a `Lua <http://lua.org>`_ GUI framework, based on the excellent C++
-portable, embeddable libray `JUCE <http://www.juce.com>`_.
+``Luce`` is a `Lua <http://lua.org>`_ module for GUI programming based
+on the portable, embeddable, remarkable C++ library `JUCE <http://www.juce.com>`_.
 
-Though based on Juce, Luce must be considered a different project than
-Juce as there are some differences between them and the gap will keep growing
-as Luce is developping.
+It can be used as an ordinary module for pure lua 5.1/lua 5.2/luajit 2.X
+scripts or as a library for C++/Lua projects.
+
+Although based on JUCE, Luce isn't aiming at becoming a binding for JUCE,
+though the low level API free of Luce features could be used as such.
 
 Luce has Lua in mind and will be developped for lua developpers.
 
 Lua essence is to be "``a powerfull, fast, lightweight embeddable scripting
 language.``" And so would Luce be too.
 
-Luce is light, fast and easily portable, thanks to Lua and Juce itself.
+Luce is light, fast and `easily portable
+<https://github.com/peersuasive/luce_embeddable>`_, thanks to Lua and JUCE
+itself.
 
-    
-Requirements and dependencies
-=============================
+As of now, it's supported on Linux, Windows and Mac OS X, with partial support
+for iOS and Android.
 
-* lua 5.1/lua 5.2/luajit
+Getting started
+===============
 
-* C++11, GCC > 4.6 (CLANG supported)
+- `download`_ the lua module for your environment
 
-* tested under Linux, Windows and Mac OS X
+- if you're on Linux, you can also use the provided `luarock
+  <https://github.com/peersuasive/luce/raw/master/luce-scm-0.rockspec>`_
 
-* ``JUCE`` 3.0.X (optional, to add new features)
-
-
-Downloads
-=========
-
-v0.3 (alpha)
--------------
-
-linux
-~~~~~
-
-* `Linux/64/2.13 (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64.zip>`_
-* `Linux/64/2.13 (shared/debug) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_dbg.zip>`_
-* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_static.zip>`_
-
-windows
-~~~~~~~~
-
-* `Windows/32 (dll) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32.zip>`_
-* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32_static.zip>`_
-
-os x
-~~~~
-
-* `Mac OS X/64/10.8 (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64.zip>`_
-* `Mac OS X/64/10.8 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64_static.zip>`_
+- if you don't know JUCE, you should consider having a look at its
+  `documentation <https://www.juce.com/api/annotated.html>`__ as Luce low level
+  API matches for the most part JUCE's own API.
+  
+  For more explanations, see `Differences with JUCE`_ and `Luce design`_
 
 
-ios
-~~~
+A first app: say hello
+----------------------
 
-* `iOS/5.1 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.iOS6.1_static.zip>`_
+.. code:: lua
 
-android
-~~~~~~~
+    local title = "Hello World!"
 
-* `Android/4.X (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Android.zip>`_
+    local app, luce = require"luce.LApplication"(title, ...) -- create a basic Application
+                                                             -- with command line parameters
+
+    local timer = luce:Timer() -- a timer for the animation
+
+    local function MainWindow(args)  -- our main component class
+                                     -- will receive command line arguments or starting events
+
+        local app, luce = app, luce    -- just to put these in the local environment
+        local Colours   = luce.Colours -- id.
+        local wsize     = {800,600}    -- the size of our window
+        local isPaused  = false        -- holds the animation state
+
+        local mc = luce:MainComponent("MainComponent") -- our main component
+        local documentWindow = luce:Document(title)    -- create a document window to hold the main component
+
+        local button = luce:TextButton("quit")  -- a button to close the app
+        button.buttonText = "Quit"              -- visible text of the button
+        button:setLookAndFeel(4)                -- change look-and-feel
+        button.bounds     = { 10, 10, 100, 20 } -- and position it (x,y,w,h)
+
+        ---
+        -- set some action on button click
+        ---
+        button:buttonClicked(function()
+            app:quit()
+        end)
+
+        ---
+        -- say hello to the world with a simple animation
+        ---
+
+        -- just a dumb function to increase font size and pick a predefined colour
+        local currentSize, baseSize, maxSize = 12.0, 12.0, 32.0
+        local colours    = { Colours.black, Colours.red, Colours.yellow, Colours.green, Colours.blue }
+        local currentCol = 1
+        local function changeSize()
+            currentSize = (currentSize<maxSize) and currentSize+0.5 or baseSize
+            currentCol  = (currentCol>#colours) and 1 or currentCol+1
+            return currentSize, colours[currentCol]
+        end
+
+        -- draw the message
+        mc:paint(function(g)
+            -- draw a background
+            g:fillCheckerBoard( luce:Rectangle(mc:getBounds()), 48, 48, Colours.lightgrey, Colours.white) 
+            -- get new font size and colour
+            local size, colour = changeSize()
+            -- draw text
+            g:setFont(size)
+            g:setColour(luce:Colour(colour))
+            g:drawText("Hello World!", mc:getLocalBounds(), luce.JustificationType.centred, true);
+        end)
+
+        -- animate it a bit via the timer callback
+        timer:timerCallback(function()
+            if(mc:isShowing() and not(isPaused))then
+                mc:repaint()
+            end
+        end)
+        timer:startTimer (1000/60)
+
+        ---
+        -- add some key shortcuts
+        ---
+        local K  = string.byte 
+        local kc = setmetatable( 
+            luce.KeyPress.KeyCodes, { __index = function()return 0 end } ) -- just a little trick to always get a valid keycode
+                                                                           -- see https://www.juce.com/api/classKeyPress.html for
+                                                                           -- available key-codes
+        documentWindow:keyPressed(function(k)
+            local k, m = k:getKeyCode(), k:getModifiers() -- get current key-code and modifiers status
+            if (k==K"Q" or k==K"q") 
+                    and (m:isCommandDown() or not(app.os.osx)) then -- if Q is pressed or, on OS X, cmd+Q
+                app:exit(0)     -- close the application with an normal exit state (0 by default)
+
+            elseif (k==K"w" or k==K"W") and (m:isCommandDown() ) then -- if cmd/ctrl + W is pressed
+                documentWindow:closeWindow() -- close the window
+                                             -- on Linux and Windows, this has the effect of closing the application too,
+                                             -- but on OS X, only the active window is closed by default
+                                             -- however, if true is passed to closeWindow()
+                                             -- and this is the last remaining Document
+                                             -- the app will close the window and quit the application
+            elseif (k==kc.spaceKey) then
+                -- toggle rendering pause
+                isPaused = not(isPaused)
+            else
+                return false -- don't consume key
+                             -- returning false, nil or not returning anything
+                             -- has the same effect
+            end
+            return true     -- tell the OS we have consumed this key
+        end)
+
+        ---
+        -- add all components and display
+        ---
+
+        mc:setSize(wsize)
+        mc:addAndMakeVisible(button)                -- add the component to our main component
+        documentWindow:setContentOwned( mc, true )  -- add the main component to the document window
+ 
+        ---
+        documentWindow:closeButtonPressed(function() -- the user asked to close the current window...
+            documentWindow:closeWindow()             -- so let's close it our way
+                                                     -- if this action's not taken, it'll close the app by default
+        end)
+        documentWindow:setSize(wsize)   -- set dimensions for the window
+                                        -- on iOS and Android, it'll just set a fullscreen
+        documentWindow:setVisible(true) -- display the document
+        return documentWindow           -- return it for the application to actually display it
+    end
+
+    local manual      = false       -- set true if you want to add your own process running along with the main loop
+    local osx_delayed = false       -- set true if you don't want your app to display a window immediatly on OS X
+                                    -- but wait for user input before, like providing a file,...
+    local poller      = function()  -- the callback you want to run in manual mode
+        print "I'm in a loop!"
+    end
+    return app:start( MainWindow, osx_delayed, manual, manual and poller ) -- returns the exit state
 
 
-What's implemented so far ?
-===========================
-
-Basically, most of the core components are implemented and OpenGL is available too.
-
-Most of the Graphics painting operations are also implemented, as well as the
-most usefull math/geometry classes.
-
-Some components you might find usefull may be missing, so don't hesitate to ask
-for adding (or fork the repo and follow the guide `Adding new
-classes to Luce`_ then send a *pull request*).
-
-Luce design
-===========
-
-All Luce classes start with a ``L``.
-
-Luce design is close to Juce's, but has less options as most of them are not
-required with Lua.
-
-For the general GUI design, see Juce.
-
-All widgets are derived from Juce's Component class and Luce's LComponent
-class. All non-widgets classes are derived from LBase. LComponent itself is
-derived from LBase. LBase offers the required link to Lua while LComponent
-offers the required links to Juce.
-
-Most of the callbacks existing in Juce also exist in Luce; in the same manner
-they need to be overriden in Juce to take effect, they also need to be
-overriden in Luce, that is, as for Luce, that a lua function needs to be
-provided for the callback to be effective. If no callback is provided, the
-default Juce action is called, if any.
-
-All L* classes map their Juce equivalent or are specific to Luce (like LBase).
-
-All L* classes are overridable within lua code, like any pure lua modules, and
-most of them are partly implemented in Lua. This is particularly useful for
-callback declarations or to add actions to native methods or simply to
-specialise a component with new functionnalities.  This is the mechanism we use
-to implement C++ classes directly in Lua.
-
-There's a limitation, though, unless it's a callback, as it's not possible to
-reimplement a native method in lua -- hence the use of a lua class wrapping the
-native one.
-
-Differences with ``JUCE``
-=========================
-
-For the most part, ``Luce`` uses the same methods than ``JUCE``, but they can
-sometimes have different calling arguments or small behavior differences.
-
-For instance, ``Luce`` doesn't provide any listener class directly (and
-probably won't) but instead wraps the listeners, where relevant, on the C++
-side; as such, there's no point in having ``addListener`` and
-``removeListener`` functions taking a listener class as argument; but one would
-be able to enable or disable such listeners so these methods still exist in
-``Luce`` though they just activate/deactivate the wrapped Listener. 
-
-Some future use cases may reveal the need for such an availability but at the
-moment, we haven't found any.
-
-Another difference is with Rectangle and Point objects, for which we didn't
-find any use to provide natively. These classes are provided as pure lua
-indexed tables and recreated wherever needed. So where a ``JUCE`` method needs
-a ``Rectangle`` or ``Point`` object, a table containing the values must be
-provided instead. Order is always x, y [, w, h ]. In general speaking, it
-respects the order declared in the class constructor. Later on, there'll probably
-be a lua implementation of these classes, to offer some of their most useful
-methods, like ``:reduce()``.
-
-
-How to use ?
-============
-
-For simplicity and reference, ``luce`` usually uses the same method names than 
-``JUCE``. However, where ``JUCE`` uses getters/setters, Luce offers a direct
-value attribution, whenever possible and obvious, that is. For instance,
-``setName("...")`` and ``getName()`` would be replaced with ``name [=
-"..."]``, though set/get methods are still accessible.
-
-So Juce documentation is applicable for most of the Luce components.
-
-Example:
---------
+A more complete example using only the low level API
+----------------------------------------------------
 
 .. code:: lua
    
@@ -257,7 +281,7 @@ Example:
 
     --- add our Document Window and components to our main JUCE application
     mainWindow:initialise(function(...)
-
+        mc:setSize{800,600}
         mc:addAndMakeVisible( button ) -- add the button to the main component
         button:setBounds{ 200, 20, 200, 200 } -- give the button some dimensions
         mc:addAndMakeVisible( label ) -- add the label          
@@ -329,7 +353,217 @@ Example:
     end )
 
 
-    luce:shutdown() -- in any case, call this to close cleanly
+More examples
+-------------
+
+For more examples, see the `examples
+<https://github.com/peersuasive/luce/tree/master/examples>`__ folder of the
+repository.
+
+
+
+Requirements and dependencies
+=============================
+
+To simply use Luce as a module,
+
+* lua 5.1 / lua 5.2 / luajit 2.X
+
+to compile the module and for C++ projects
+------------------------------------------
+
+* C++11
+  
+* GCC 4.6+ / CLANG 3.3+
+
+To extend with new JUCE classes 
+-------------------------------
+
+* ``JUCE`` 3.0.4+
+
+
+.. _download:
+
+Downloads
+=========
+
+As of v0.3.1, modules are available for both lua5.1/luajit2.X and lua5.2.
+
+To use with lua scripts as a module, pick the module download.
+
+If you want to contribute and help debugging, get the debug version of the
+module also.
+
+And if you want to use `Luce/Embedded
+<https://github.com/peersuasive/luce_embeddable>`_ or develop with C++, get the
+static library (or use the module as a shared library, if you prefer to).
+
+For iOS, only the static library is available as Apple policies wouldn't allow
+a shared version but if you'd like to deploy on jailbroken devices, just ask,
+I'll provide it with the next release.
+
+For Android, at the opposite, only the shared library/module is available, as a
+static library wouldn't really make sense, but feel free to ask also.
+
+
+v0.3.1 (alpha)
+--------------
+
+Linux64 5.1
+~~~~~~~~~~~
+
+* `Linux/64/2.13 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.linux64-5.1.zip>`__
+* `Linux/64/2.13 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.linux64-5.1_dbg.zip>`__
+* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.Linux64-5.1_static.zip>`__
+
+Linux64 5.2
+~~~~~~~~~~~
+
+* `Linux/64/2.13 (lua 5.2 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.linux64-5.2.zip>`__
+* `Linux/64/2.13 (lua 5.2 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.linux64-5.2_dbg.zip>`__
+* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.Linux64-5.2_static.zip>`__
+
+Win32 5.1
+~~~~~~~~~
+
+* `Windows/32 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.win32-5.1.zip>`__
+* `Windows/32 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.win32-5.1_dbg.zip>`__
+* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.win32-5.1_static.zip>`__
+
+Win32 5.2
+~~~~~~~~~
+
+* `Windows/32 (lua 5.2 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.win32-5.2.zip>`__
+* `Windows/32 (lua 5.2 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.win32-5.2_dbg.zip>`__
+* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.win32-5.2_static.zip>`__
+
+OS X 5.1
+~~~~~~~~
+
+* `Mac OS X/64/10.8 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.osx64-5.1.zip>`__
+* `Mac OS X/64/10.8 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.osx64-5.1_dbg.zip>`__
+* `Mac OS X/64/10.8 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.osx64-5.1_static.zip>`__
+
+iOS 6.1 5.1
+~~~~~~~~~~~
+
+* `iOS/5.1 (lua 5.1 static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.ios61-5.1.zip>`__
+
+Android 4.4 5.1
+~~~~~~~~~~~~~~~
+
+* `Android/4.X (lua 5.1 shared) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.0.3.1.android44-5.1.zip>`__
+
+
+v0.3 (alpha)
+------------
+
+linux
+~~~~~
+
+* `Linux/64/2.13 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64.zip>`__
+* `Linux/64/2.13 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_dbg.zip>`__
+* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_static.zip>`__
+
+windows
+~~~~~~~~
+
+* `Windows/32 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32.zip>`__
+* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32_static.zip>`__
+
+os x
+~~~~
+
+* `Mac OS X/64/10.8 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64.zip>`__
+* `Mac OS X/64/10.8 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64_static.zip>`__
+
+
+ios
+~~~
+
+* `iOS/5.1 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.iOS6.1_static.zip>`__
+
+android
+~~~~~~~
+
+* `Android/4.X (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Android.zip>`__
+
+
+
+What's implemented so far ?
+===========================
+
+Basically, most of the core components are implemented, as well as OpenGL.
+
+Most of the Graphics painting operations are also implemented, as well as the
+most usefull math/geometry classes.
+
+Some components you might find usefull may be missing, so don't hesitate to ask
+for adding (or fork the repo and follow the guide `Adding new
+classes to Luce`_ then send a *pull request*).
+
+Luce design
+===========
+
+All Luce classes start with a ``L``.
+
+Luce design is close to JUCE's, but often simplfied when it doesn't make sense
+in lua to keep some if its behaviour or features.
+
+For the general GUI design, see JUCE.
+
+All widgets are derived from Juce's Component class and Luce's LComponent
+class. All non-widgets classes are derived from LBase. LComponent itself is
+derived from LBase. LBase offers the required link to Lua while LComponent
+offers the required links to Juce.
+
+Most of the callbacks existing in Juce also exist in Luce; in the same manner
+they need to be overriden in Juce to take effect, they also need to be
+overriden in Luce, that is, as for Luce, that a lua function needs to be
+provided for the callback to be effective. If no callback is provided, the
+default Juce action is called, if any.
+
+All L* classes map their Juce equivalent or are specific to Luce (like LBase).
+
+All L* classes are overridable within lua code, like any pure lua modules, and
+most of them are partly implemented in Lua. This is particularly useful for
+callback declarations or to add actions to native methods or simply to
+specialise a component with new functionnalities.  This is the mechanism we use
+to implement C++ classes directly in Lua.
+
+There's a limitation, though, unless it's a callback, as it's not possible to
+reimplement a native method in lua -- hence the use of a lua class wrapping the
+native one.
+
+Differences with ``JUCE``
+=========================
+
+For simplicity and reference, ``Luce`` usually uses the same method names than
+``JUCE``. However, where ``JUCE`` uses getters/setters, Luce offers a direct
+value attribution, whenever possible and obvious, that is. For instance,
+``setName("...")`` and ``getName()`` would be replaced with ``name [= "..."]``,
+though set/get methods are still accessible.
+
+So JUCE documentation is applicable for most of the Luce's low level components.
+
+``Luce`` doesn't provide any listener class directly (and probably won't) but
+instead wraps the listeners, where relevant, on the C++ side; as such, there's
+no point in having ``addListener`` and ``removeListener`` functions taking a
+listener class as argument; but one would be able to enable or disable such
+listeners so these methods still exist in ``Luce`` though they just
+activate/deactivate the wrapped Listener. 
+
+Some future use cases may reveal the need for such an availability but at the
+moment, we haven't found any.
+
+Another difference is with Rectangle and Point objects, for which we didn't
+find any use to provide natively. These classes are provided as pure lua
+indexed tables and recreated wherever needed. So where a ``JUCE`` method needs
+a ``Rectangle`` or ``Point`` object, a table containing the values must be
+provided instead. Order is always x, y [, w, h ]. In general speaking, it
+respects the order declared in the class constructor. Later on, there'll probably
+be a lua implementation of these classes, to offer some of their most useful
+methods, like ``:reduce()``.
 
 Adding new classes to Luce
 ==========================
