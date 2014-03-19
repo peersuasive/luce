@@ -53,13 +53,23 @@ local function new(name, ...)
         setBounds     = nil,
         closeWindow   = nil,
     }
+    -- where we'll store overriden variables
+    -- it's checked in self's metatable
+    local override = { size = nil, bounds = nil }
 
     ---
     -- LDocument Class initialisation
+    --
+    -- we'll override some methods to have a correct behaviour
+    -- on every platforms
+    --
+    -- for instance, there's no need to set bounds of the Document
+    -- on mobile devices as we'll want it to be fullscreen anyway
     ---
     local this   = luce:DocumentWindow(name)
     local bounds = {0,0,800,600}
     local size   = {800, 600}
+
     -- TODO: set bounds instead of size, getting current bounds if a Point
     --       is provided
     local function set_size(size)
@@ -85,11 +95,19 @@ local function new(name, ...)
     function self:setSize(size)
         set_size(size)
     end
+    override.size = function(v)
+        if(v)then set_size(v)
+        else return this.size end
+    end
  
     function self:setBounds(b)
         bounds = b
         size = { b.w, b.h }
         set_size(size)
+    end
+    override.bounds = function(v)
+        if(v)then set_size{v.w, v.h}
+        else return this.bounds end
     end
 
     function self:closeWindow(quit_if_last)
@@ -103,8 +121,14 @@ local function new(name, ...)
     self.__self = this.__self
     return setmetatable(self, {
         __self  = this.__self,
-        __index = this,
-        __newindex = this,
+        __index = function(_,k)
+            if(override[k])then return override[k]() -- look for overriden variables first
+            else return this[k] end
+        end,
+        __newindex = function(_,k,v)
+            if(override[k])then override[k](v)       -- id.
+            else this[k]=v end
+        end,
         __tostring = function() return className.."("..name..")" end
     })
 end
