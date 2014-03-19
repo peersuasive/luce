@@ -34,11 +34,13 @@ A more complete example of a TreeView implementation with XML, StretchableLayout
 Some very basic 2D effects demo, grabbed from JUCE's demo
 
 run with
+
 ::
     
     lua Demo.lua
 
 or
+
 ::
     
     lua Demo.lua LinesDemo
