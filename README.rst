@@ -42,7 +42,9 @@ for iOS and Android.
 Getting started
 ===============
 
-- `download`_ the lua module for your environment
+1. `download`_ the lua module for your environment
+
+2. put it somewhere in your lua modules path (ex: ``/usr/local/share/lua/5.1``)
 
 - if you're on Linux, you can also use the provided `luarock
   <https://github.com/peersuasive/luce/raw/master/luce-scm-0.rockspec>`_
