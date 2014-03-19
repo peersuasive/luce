@@ -23,5 +23,24 @@ requirements
 * luajson (from luarocks or https://github.com/harningt/luajson)
 
 TreeView_XML
+============
 
 A more complete example of a TreeView implementation with XML, StretchableLayouts and content filtering
+
+
+2DGraphics
+==========
+
+Some very basic 2D effects demo, grabbed from JUCE's demo
+
+run with
+::
+    
+    lua Demo.lua
+
+or
+::
+    
+    lua Demo.lua LinesDemo
+
+
