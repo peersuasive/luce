@@ -58,6 +58,7 @@ end
 local LModules = {
     "Document",
     "Rectangle",
+    "Range",
     "RectangleList",
     "AffineTransform",
     "Point",
