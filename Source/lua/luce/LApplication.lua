@@ -94,20 +94,12 @@ local function new(name, ...)
     -- some default path when semi-embedded
     -- look in $HOME/.luce for classes and modules first
     -- NOTE: should add ./ too
-    --[[
-    local luce_lib = HOME..sep..".luce"..sep.."lib"..sep.."?.".. so ..";" -- ~/.luce/lib/?.so
-    luce_lib       = luce_lib..HOME..sep..".luce"..sep.."lib"..sep.."?"..sep.."?.".. so..";" -- ~/.luce/lib/?/?.so
-    local luce_lua = HOME..sep..".luce"..sep.."lua"..sep.."?.lua;" -- ~/.luce/?.lua
-    luce_lua       = luce_lua..HOME..sep..".luce"..sep.."lua"..sep.."?"..sep.."?.lua;" -- ~/.luce/?/?.lua
-    luce_lua       = luce_lua.."."..sep.."luce"..sep.."?.lua;" -- ./luce/?.lua
-    luce_lua       = luce_lua.."."..sep.."luce"..sep.."?"..sep.."?.lua" -- ./luce/?/?.lua
-    package.path   = luce_lua..package.path
-    package.cpath  = luce_lib..package.cpath
-    --]]
     if not(OS.win)then
     local luce_lib = HOME.."/.luce/lib/?.so;"..HOME.."/.luce/lib/?/?.so;" -- "~/.luce/lib/?.so;~/.luce/lib/?/?.so"
     luce_lib       = luce_lib..HOME.."/.luce/lib/?.dylib;"..HOME.."/.luce/lib/?/?.dylib;"
+    luce_lib       = luce_lib.."./lib/?.so;./lib/?.dylib;./lib/?/?.so;./lib/?/?.dylib;"
     local luce_lua = HOME.."/.luce/lua/?.lua;"..HOME.."/.luce/lua/?/?.lua;"
+    luce_lua       = luce_lua.."./classes/?.lua;./classes/?/?.lua;./classes/init.lua;./classes/?/init.lua;"
     package.path   = luce_lua..package.path
     package.cpath  = luce_lib..package.cpath
     else -- windows... is p* us off
@@ -305,7 +297,6 @@ mt.__call = function(_, name, ...)
     local args = {...}
     lDEBUG  = args[1] and args[1]:match("^[Dd]$") and table.remove(args,1) and true
     luce    = require"luce"(lDEBUG)
-    _G.Luce = luce
     _G.App  = new(name, unpack(args))
     return _G.App, luce
 end

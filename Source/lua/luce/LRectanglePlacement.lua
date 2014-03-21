@@ -1,5 +1,22 @@
-local luce, bit
-local myType = "LRectanglePlacement"
+--[[----------------------------------------------------------------------------
+
+  LRectanglePlacement.lua
+
+  Luce implementation of RectanglePlacement
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
+local luce = _G.Luce
+local bit  = luce.bit
+local className = "LRectanglePlacement"
 local mt = {}
 
 local function hypot(a,b)
@@ -159,12 +176,12 @@ local function new(me, t, __type)
     self.Flags = Flags
     self.flags = t.flags or Flags.centered
     self.__type = "int"
-    self.__ltype = myType
+    self.__ltype = className
     bit = bit or luce.bit
     return setmetatable(self, {
         __index = mt,
         __call = new,
-        __self = myType,
+        __self = className,
         __tostring = function(self)
             return self:getFlags()
         end,
@@ -177,14 +194,7 @@ local __index = {
 }
 
 return setmetatable({}, {
-    __call = function(self,core,...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        bit = luce.bit
-        return setmetatable({}, {
-            __call = new,
-            __tostring = function()return myType end,
-            __index = __index,
-        })
-    end
+    __tostring = function()return className end,
+    __call = new,
+    __index = __index,
 })

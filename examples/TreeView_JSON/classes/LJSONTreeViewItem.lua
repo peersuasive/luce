@@ -5,8 +5,9 @@ LUCE TreeViewItem for JSON
 --]]
 
 -- pre-declarations
-local luce, LItem
-local new        
+local luce = _G.Luce
+local LItem = require"LItem"
+local new
 
 -- a default value for unnamed items, that is the root item
 local ROOT = "ROOT"
@@ -189,20 +190,7 @@ new = function(self, name, json, parent)
     })
 end
 
--- takes luce instanciation as a required argument, but we could just simply
--- load it from there
--- this is just to avoid having to select between debug or release
-local xmeta = setmetatable( {}, {
-    __call = function(self,core, ...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        LItem = require"LItem"(core)
-        self = setmetatable({}, {
-            __call = new,
-            __tostring = function()return"LJSONTreeViewItem"end,
-        })
-        return self
-    end,
+return setmetatable({}, {
+    __tostring = function()return className end,
+    __call = new,
 })
-
-return xmeta

@@ -17,7 +17,7 @@ base component
 ------------------------------------------------------------------------------]]
 
 --[[ REQUIREMENTS ]]------------------------------------------------------------
-local luce = require"luce"()
+local luce = _G.Luce
 local className = "LGlyphDemo"
 
 local function new(self)

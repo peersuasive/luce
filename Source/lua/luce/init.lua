@@ -1,8 +1,22 @@
---[[
-LUCE Loader
+--[[----------------------------------------------------------------------------
+
+  Luce - init.lua
+
+  Luce Internal
+
+  Luce module loader entry point
+
+  Loads all lua classes and put Luce in _G environment
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
 
 (c) 2014, Peersuasive Technologies
---]]
+
+------------------------------------------------------------------------------]]
 
 local function load_luce(self, core)
     local LClass = require"luce.LClass"
@@ -52,7 +66,7 @@ local LModules = {
     "ImageComponent",
 }
 
-local xmeta = setmetatable({
+return setmetatable({
         new = function(self, dbg)
             if(dbg)then _G.LDEBUG=true end
             local luce = dbg and require"luce.core_d" or require"luce.core"
@@ -63,7 +77,6 @@ local xmeta = setmetatable({
     __call = function(self, dbg)
         if(dbg)then _G.LDEBUG=true end
         local luce = dbg and require"luce.core_d" or require"luce.core"
-        
         local luce_m = load_luce(_, luce)
         luce_m.class = require"luce.LCommon".class
         luce_m.comp = require"luce.LCommon".comp
@@ -72,10 +85,11 @@ local xmeta = setmetatable({
         luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
         -- deepcopy, goes to table.deepcopy
         require"luce.deepcopy"
+        _G.Luce = luce_m
 
         -- load lua modules
         for _,m in next, LModules do
-            local mm = require("luce.L"..m)( luce_m )
+            local mm = require("luce.L"..m)
             --luce_m[m] = function(self,...) return mm(...) end
             luce_m[m] = setmetatable({}, {
                 __index = getmetatable(mm).__index,
@@ -92,6 +106,3 @@ local xmeta = setmetatable({
 
     end,
 })
-
---module(...)
-return xmeta

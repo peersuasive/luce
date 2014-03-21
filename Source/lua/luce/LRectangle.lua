@@ -1,5 +1,21 @@
-local luce, new = nil, nil
-local myType = "LRectangle"
+--[[----------------------------------------------------------------------------
+
+  LRectangle.lua
+
+  Luce implementation of Rectangle
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
+local luce, new = _G.Luce, nil
+local className = "LRectangle"
 local mt = {}
 
 local function hypot(a,b)
@@ -345,11 +361,11 @@ new = function(me, t, __type)
     self.w = t[3] or t.w or 0
     self.h = t[4] or t.h or 0
     self.__type = __type or t.__type or me.__type or "int"
-    self.__ltype = myType
+    self.__ltype = className
     return setmetatable(self, {
         __index = mt,
         __call = new,
-        __self = myType,
+        __self = className,
         __tostring = function(self)
             return string.format("%s %s %s %s", self.x, self.y, self.w, self.h)
         end,
@@ -386,22 +402,7 @@ mt.new = new
 -- TODO: check if it works as expected !!!
 setmetatable(mt, {__index=__index})
 
-local xmeta = setmetatable({}, {
-    __call = function(self,core,...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        self = setmetatable({}, {
-            __call = new,
-            __tostring = function()return myType end,
-        })
-        return self
-    end
-})
---[[
-local xmeta = setmetatable({}, {
+return setmetatable({}, {
     __call = new,
-    __index = __index,
+    __tostring = function()return className end,
 })
---]]
---module(...)
-return xmeta

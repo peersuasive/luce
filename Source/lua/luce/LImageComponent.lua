@@ -14,7 +14,7 @@
 
 ------------------------------------------------------------------------------]]
 
-local luce
+local luce = _G.Luce
 local mt = { className = "LImageComponent" }
 
 function mt:setImage(newImage, placement)
@@ -68,12 +68,5 @@ setmetatable(mt, { __index = __index })
 
 return setmetatable({}, {
     __tostring = function()return className end,
-    __call = function(self,core,...)
-        luce = assert(core, "Missing luce core instance")
-        return setmetatable({}, {
-            __call = new,
-            __tostring = function()return className end,
-            __index = __index,
-        })
-    end
+    __call = new,
 })

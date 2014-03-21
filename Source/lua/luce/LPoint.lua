@@ -1,4 +1,21 @@
-local myType = "LPoint"
+--[[----------------------------------------------------------------------------
+
+  LPoint.lua
+
+  Luce implementation of Point
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
+local luce = _G.Luce
+local className = "LPoint"
 local mt = {}
 
 local function hypot(x,y)
@@ -141,11 +158,11 @@ local function new(me, t, __type)
     self.x = t[1] or t.x or 0
     self.y = t[2] or t.y or 0
     self.__type = __type or t.__type or me.__type or "int"
-    self.__ltype = myType
+    self.__ltype = className
     return setmetatable(self, {
         __index = mt,
         __call = new,
-        __self = myType,
+        __self = className,
         __tostring = function(self)
             return self.x..", "..self.y
         end,
@@ -176,17 +193,9 @@ local function new(me, t, __type)
 
     })
 end
-
 mt.new = new
 
 return setmetatable({}, {
-    __call = function(self,core,...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        self = setmetatable({}, {
-            __call = new,
-            __tostring = function()return myType end,
-        })
-        return self
-    end
+    __call = new,
+    __tostring = function()return className end,
 })

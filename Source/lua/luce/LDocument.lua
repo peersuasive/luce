@@ -1,5 +1,3 @@
--- must go to luce once finalised
-
 --[[----------------------------------------------------------------------------
 
 LDocument.lua
@@ -133,13 +131,7 @@ local function new(name, ...)
     })
 end
 
-mt.__call = function(...)
-    return setmetatable({}, {
-        __tostring = function() return className end,
-        __call = function(_, name, ...)
-            return new(name,...)
-        end
-    })
-end
-
-return setmetatable(mt, mt)
+return setmetatable(mt, {
+    __call = new,
+    __tostring = function()return className end,
+})

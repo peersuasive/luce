@@ -1,4 +1,21 @@
-local myType = "LLine"
+--[[----------------------------------------------------------------------------
+
+  LLine.lua
+
+  Luce implementation of Line
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
+local luce = _G.Luce
+local className = "LLine"
 local mt = {}
 
 function mt:getStartX()
@@ -234,27 +251,20 @@ local function new(me, pstart, pend, __type)
     self.lend   = luce:Point( pend )
 
     self.__type = __type or t.__type or me.__type or "int"
-    self.__ltype = myType
+    self.__ltype = className
     return setmetatable(self, {
         __index = mt,
         __call = new,
-        __self = myType,
+        __self = className,
         __tostring = function(self)
-            return myType.." {x1 = "..self.lstart.x..", y1 = "..self.lstart.y
+            return className.." {x1 = "..self.lstart.x..", y1 = "..self.lstart.y
                                 ..", x2 = "..self.lend.x..", y2 = "..self.lend.y .. "}"
         end
     })
 end
-
 mt.new = new
+
 return setmetatable({}, {
-    __call = function(self,core,...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        self = setmetatable({}, {
-            __call = new,
-            __tostring = function()return myType end,
-        })
-        return self
-    end
+    __call = new,
+    __tostring = function()return className end,
 })

@@ -1,5 +1,21 @@
-local luce, new = nil, nil
-local myType = "LAffineTransform"
+--[[----------------------------------------------------------------------------
+
+  LAffineTransform.lua
+
+  Luce implementation of AffineTransform
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
+local luce, new = _G.Luce, nil
+local className = "LAffineTransform"
 local mt = {}
 
 local function hypot(a,b)
@@ -241,11 +257,11 @@ new = function(me, t, __type)
     self.mat11 = t[5] or t.mat11 or 1.0
     self.mat12 = t[6] or t.mat12 or 0
     self.__type = __type or t.__type or me.__type or "float"
-    self.__ltype = myType
+    self.__ltype = className
     return setmetatable(self, {
         __index = mt,
         __call = new,
-        __self = myType,
+        __self = className,
         __tostring = function(self)
             return self.x..", "..self.y
         end,
@@ -267,18 +283,8 @@ local __index = {
 -- TODO: check if it works as expected !!!
 setmetatable(mt, {__index=__index})
 
-local xmeta = setmetatable({}, {
-    __call = function(self,core,...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        self = setmetatable({}, {
-            __call = new,
-            __index = __index,
-            __tostring = function()return myType end,
-        })
-        return self
-    end
+return setmetatable({}, {
+    __call = new,
+    __index = __index,
+    __tostring = function()return className end,
 })
-
---module(...)
-return xmeta

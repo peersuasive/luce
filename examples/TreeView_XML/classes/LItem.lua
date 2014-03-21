@@ -4,7 +4,8 @@ LUCE TreeViewItem item object
 (c) 2014, Peersuasive Technologies
 --]]
 
-local luce
+local luce = _G.Luce
+local className = "LItem"
 
 local function new(self, id, val, istop, dblClick, changeOpenness)
     local comp  = luce:MainComponent("container")
@@ -32,17 +33,7 @@ local function new(self, id, val, istop, dblClick, changeOpenness)
     return comp
 end
 
-local mt = {}
-mt.__index = mt
-local xmeta = setmetatable( {}, {
-    __call = function(self,core,...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        return setmetatable({}, {
-            __call = new,
-            __tostring = function()return"LItem"end
-        })
-    end,
+return setmetatable({}, {
+    __call = new,
+    __tostring = function()return className end
 })
-
-return xmeta

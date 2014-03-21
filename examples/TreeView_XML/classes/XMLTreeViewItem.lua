@@ -4,7 +4,11 @@ LUCE TreeViewItem for JSON
 (c) 2014, Peersuasive Technologies
 --]]
 
-local luce, LItem, new
+local luce = _G.Luce
+local LItem = require"LItem"
+local new
+local className = "XMLTreeViewItem"
+
 local memo = memoize
 local ROOT = "ROOT"
 
@@ -223,17 +227,7 @@ new = function(_, name, value, parent, filter, level)
     })
 end
 
-local xmeta = setmetatable( {}, {
-    __call = function(self,core, ...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        LItem = require"LItem"(core)
-        self = setmetatable({}, {
-            __call = new,
-            __tostring = function()return"XMLTreeViewItem"end,
-        })
-        return self
-    end,
+return setmetatable({}, {
+    __call = new,
+    __tostring = function()return className end,
 })
-
-return xmeta

@@ -18,7 +18,7 @@ components holder
 
 --[[ REQUIREMENTS ]]------------------------------------------------------------
 
-local luce = require"luce"()
+local luce = _G.Luce
 local className = "DemoHolder"
 
 local new_vars = setmetatable({}, {

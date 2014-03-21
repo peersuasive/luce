@@ -1,3 +1,19 @@
+--[[----------------------------------------------------------------------------
+
+  LCommon.lua
+
+  Luce Internal
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
 -- TODO: move these methods to a common class
 
 -- only the main component (comp) is exposed by default

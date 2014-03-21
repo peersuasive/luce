@@ -1,5 +1,21 @@
-local luce, new = nil, nil
-local myType = "LRectangleList"
+--[[----------------------------------------------------------------------------
+
+  LRectangleList.lua
+
+  Luce implementation of RectangleList
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
+local luce, new = _G.Luce, nil
+local className = "LRectangleList"
 local mt = {}
 
 local function hypot(a,b)
@@ -399,7 +415,7 @@ new = function(me, t, __type)
     local self = {}
     local t = t or {}
     self.__type = __type or t.__type or (me and me.__type) or "int"
-    self.__ltype = myType
+    self.__ltype = className
     self.rects = {}
     if ("LRectangle"==t.__ltype) then
         self.rects[1] = t
@@ -412,27 +428,15 @@ new = function(me, t, __type)
     return setmetatable(self, {
         __index = mt,
         __call = new,
-        __self = myType,
+        __self = className,
         __tostring = function(self)
-            return myType.." {x = "..self.x..", y = "..self.y..", w = "..self.w..", h = "..self.h .. "}"
+            return className.." {x = "..self.x..", y = "..self.y..", w = "..self.w..", h = "..self.h .. "}"
         end,
     })
 end
 mt.new = new
 
-
-local xmeta = setmetatable({}, {
-    __call = function(self,core,...)
-        local self = self or {}
-        luce = assert(core, "Missing luce core instance")
-        self = setmetatable({}, {
-            --__call = function(self, luce, ...) return new(self, ...) end,
-            __call = new,
-            __tostring = function()return myType end,
-        })
-        return self
-    end
+return setmetatable({}, {
+    __tostring = function()return className end,
+    __call = new,
 })
-
---module(...)
-return xmeta

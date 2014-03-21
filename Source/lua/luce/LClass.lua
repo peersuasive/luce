@@ -1,3 +1,19 @@
+--[[----------------------------------------------------------------------------
+
+  LClass.lua
+
+  Luce Internal
+
+    @alias meta
+
+    @author Christophe Berbizier (cberbizier@peersuasive.com)
+    @license GPLv3
+    @copyright 
+
+(c) 2014, Peersuasive Technologies
+
+------------------------------------------------------------------------------]]
+
 local new = function(self, ...)
     local self = self or {}
     --local me = self.class.new(class, ...)
@@ -60,7 +76,7 @@ local new = function(self, ...)
     })
 end
 
-local mt = setmetatable({}, {
+return setmetatable({}, {
     __call = function(self, c, ...)
         assert(c, "Missing base class")
         return setmetatable({}, {
@@ -68,5 +84,3 @@ local mt = setmetatable({}, {
         })
     end
 })
---module(...)
-return mt
