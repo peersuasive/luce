@@ -65,6 +65,7 @@ local LModules = {
     "Line",
     "RectanglePlacement",
     "ImageComponent",
+    "AnimatedPosition",
 }
 
 return setmetatable({
