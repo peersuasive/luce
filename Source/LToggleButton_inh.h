@@ -268,7 +268,15 @@ const Luna<LToggleButton>::InheritenceF LToggleButton::inheritsF[] = {
     method( LButton, buttonStateChanged ),
     method( LButton, buttonClicked ),
     method( LButton, internalClickCallback ),
-    
+       
+    // ComponentAnimator
+    method( LButton, animateComponent ),
+    method( LButton, fadeOut ),
+    method( LButton, fadeIn ),
+    method( LButton, cancelAnimation ),
+    method( LButton, getComponentDestination ),
+    method( LButton, isAnimating ),
+ 
     {0,0}
 };
 

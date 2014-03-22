@@ -216,6 +216,15 @@ const Luna<LSlider>::InheritenceF LSlider::inheritsF[] = {
     method( LComponent, handleCommandMessage ),
     method( LComponent, inputAttemptWhenModal ),
     method( LComponent, colourChanged ),
+    
+    // ComponentAnimator
+    method( LComponent, animateComponent ),
+    method( LComponent, fadeOut ),
+    method( LComponent, fadeIn ),
+    method( LComponent, cancelAnimation ),
+    method( LComponent, getComponentDestination ),
+    method( LComponent, isAnimating ),
+
     {0,0}
 };
 

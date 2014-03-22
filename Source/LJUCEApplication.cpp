@@ -41,6 +41,15 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
     // artificial
     method( LJUCEApplication, setDoubleClickTimeout ),
 
+    // ComponentAnimator
+    method( LJUCEApplication, animateComponent ),
+    method( LJUCEApplication, fadeOut ),
+    method( LJUCEApplication, fadeIn ),
+    method( LJUCEApplication, cancelAnimation ),
+    method( LJUCEApplication, cancelAllAnimations ),
+    method( LJUCEApplication, getComponentDestination ),
+    method( LJUCEApplication, isAnimating ),
+
     {0,0}
 };
 
@@ -67,7 +76,8 @@ const Luna<LJUCEApplication>::StaticType LJUCEApplication::statics[] = {
 static ScopedPointer<ApplicationCommandManager> commandManager;
 LJUCEApplication* LJUCEApplication::luceAppInstance = nullptr;
 LJUCEApplication::LJUCEApplication(lua_State *L)
-    : LBase(L, "LJUCEApplication", false)
+    : LBase(L, "LJUCEApplication", false),
+      animator(Desktop::getInstance().getAnimator())
 {
     myName( LUA::checkAndGetString(2, "LJUCEApplication") );
 
@@ -178,6 +188,7 @@ int LJUCEApplication::initialised(lua_State*) {
     return 0;
 }
 
+// FIXME: don't call initialised from there, send an async message !
 void LJUCEApplication::initialise(lua_State *L, int state) {
     if (state != 1 ) {
         String error = LUA::getError();
@@ -424,4 +435,59 @@ int LJUCEApplication::findDefaultComponentTarget(lua_State*) {
 
 int LJUCEApplication::findTargetForComponent(lua_State*) {
     return 0;
+}
+
+
+
+//== ComponentAnimator =========================================================
+int LJUCEApplication::animateComponent(lua_State*) {
+    return 0;
+}
+
+int LJUCEApplication::fadeOut(lua_State*) {
+    Component *child = LUA::from_luce<LComponent, Component>(2);
+    if(child) {
+        int millisecondsToTake = LUA::getNumber<int>(2);
+        animator.fadeOut(child, millisecondsToTake);
+    }
+    return 0;
+}
+
+int LJUCEApplication::fadeIn(lua_State*) {
+    Component *child = LUA::from_luce<LComponent, Component>(2);
+    if(child) {
+        int millisecondsToTake = LUA::getNumber<int>(2);
+        animator.fadeIn(child, millisecondsToTake);
+    }
+    return 0;
+}
+
+int LJUCEApplication::cancelAnimation(lua_State*) {
+    Component *child = LUA::from_luce<LComponent, Component>(2);
+    if(child){
+        bool moveComponentToItsFinalDestination = LUA::checkAndGetBoolean(2, false);
+        animator.cancelAnimation(child, moveComponentToItsFinalDestination);
+    }
+    return 0;
+}
+
+int LJUCEApplication::cancelAllAnimations(lua_State*) {
+    bool moveComponentsToTheirFinalDestination = LUA::checkAndGetBoolean(2, false);
+    animator.cancelAllAnimations(moveComponentsToTheirFinalDestination);
+    return 0;
+}
+
+int LJUCEApplication::getComponentDestination(lua_State*) {
+    Component *child = LUA::from_luce<LComponent, Component>(2);
+    if(child)
+        return LUCE::luce_pushtable<int>( animator.getComponentDestination(child) );
+    return 0;
+}
+
+int LJUCEApplication::isAnimating(lua_State*) {
+    Component *child = LUA::from_luce<LComponent, Component>(2);
+    if(child)
+        return LUA::returnBoolean(animator.isAnimating(child));
+    else
+        return LUA::returnBoolean(animator.isAnimating());
 }

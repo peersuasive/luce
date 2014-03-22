@@ -30,7 +30,8 @@ MyLookAndFeel LComponent::myLookAndFeel;
 LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
     : LBase(Ls, "LComponent", false),
       child(child_),
-      currentLookAndFeel(0)
+      currentLookAndFeel(0),
+      animator(Desktop::getInstance().getAnimator())
 {
     L = Ls;
     if ( lua_isstring(L, 2) )
@@ -38,6 +39,7 @@ LComponent::LComponent(lua_State *Ls, Component* child_, const String& name_)
     else
         myName(name_);
     //LBase::name( myName );
+
 }
 LComponent::~LComponent() {
     if (child) {
@@ -1574,3 +1576,54 @@ int LComponent::removeComponentListener ( lua_State* ) {
 }
 
 
+//== ComponentAnimator =========================================================
+int LComponent::animateComponent(lua_State*) {
+    if(child) {
+        Rectangle<int> finalBounds = LUCE::luce_torectangle<int>(2);
+        float finalAlpha           = LUA::getNumber<float>(2);
+        int animationDurationMilliseconds = LUA::getNumber<int>(2);
+        bool userProxyComponent    = LUA::getBoolean(2);
+        double startSpeed          = LUA::getNumber<double>(2);
+        double endSpeed            = LUA::getNumber<double>(2);
+
+        animator.animateComponent(child, finalBounds, finalAlpha, animationDurationMilliseconds, 
+                userProxyComponent, startSpeed, endSpeed);
+    }
+    return 0;
+}
+
+int LComponent::fadeOut(lua_State*) {
+    if(child) {
+        int millisecondsToTake = LUA::getNumber<int>(2);
+        animator.fadeOut(child, millisecondsToTake);
+    }
+    return 0;
+}
+
+int LComponent::fadeIn(lua_State*) {
+    if(child) {
+        int millisecondsToTake = LUA::getNumber<int>(2);
+        animator.fadeIn(child, millisecondsToTake);
+    }
+    return 0;
+}
+
+int LComponent::cancelAnimation(lua_State*) {
+    if(child){
+        bool moveComponentToItsFinalDestination = LUA::checkAndGetBoolean(2, false);
+        animator.cancelAnimation(child, moveComponentToItsFinalDestination);
+    }
+    return 0;
+}
+
+int LComponent::getComponentDestination(lua_State*) {
+    if(child)
+        return LUCE::luce_pushtable<int>( animator.getComponentDestination(child) );
+    return 0;
+}
+
+int LComponent::isAnimating(lua_State*) {
+    if(child)
+        return LUA::returnBoolean(animator.isAnimating(child));
+    return 0;
+}

@@ -220,7 +220,16 @@ const Luna<LListBox>::InheritenceF LListBox::inheritsF[] = {
     method( LComponent, handleCommandMessage ),
     method( LComponent, inputAttemptWhenModal ),
     method( LComponent, colourChanged ),
-    {0,0}
+     
+    // ComponentAnimator
+    method( LComponent, animateComponent ),
+    method( LComponent, fadeOut ),
+    method( LComponent, fadeIn ),
+    method( LComponent, cancelAnimation ),
+    method( LComponent, getComponentDestination ),
+    method( LComponent, isAnimating ),
+
+   {0,0}
 };
 
 const Luna<LListBox>::Enum LListBox::enums[] = {

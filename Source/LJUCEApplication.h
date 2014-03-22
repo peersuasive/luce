@@ -102,6 +102,15 @@ public:
     int findDefaultComponentTarget(lua_State*);
     int findTargetForComponent(lua_State*);
 
+    //== ComponentAnimator =========================================================
+    int animateComponent(lua_State*);
+    int fadeOut(lua_State*);
+    int fadeIn(lua_State*);
+    int cancelAnimation(lua_State*);
+    int cancelAllAnimations(lua_State*);
+    int getComponentDestination(lua_State*);
+    int isAnimating(lua_State*);
+
     //==============================================================================
     static const char className[];
     static const Luna<LJUCEApplication>::Inheritence inherits[];
@@ -126,6 +135,9 @@ private:
 
     //==============================================================================
     var call_cb_get_value();
+    
+    //==============================================================================
+    ComponentAnimator& animator;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LJUCEApplication)
