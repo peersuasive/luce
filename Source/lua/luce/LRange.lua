@@ -96,7 +96,11 @@ function mt:getIntersectionWith(r)
 end
 
 function mt:getUnionWith(r)
-    return self:new( math.min(self.lstart, r.start), math.max(self.lend, r.lend) )
+    if("number"==type(r))then
+        return self:new( math.min(r, self.lstart), math.max(r, self.lend) )
+    else
+        return self:new( math.min(self.lstart, r.lstart), math.max(self.lend, r.lend) )
+    end
 end
 
 function mt:constrainRange(r)
@@ -149,12 +153,29 @@ local function new(_, ...)
 end
 mt.new = new
 
-function mt.between(pos1, pos2)
+function mt:between(pos1, pos2)
     return (pos1<pos2) and new(pos1,pos2) or new{pos2,pos1}
 end
 
-function mt.emptyRange(start)
+function mt:emptyRange(self,start)
     return new(start, start)
+end
+
+function mt:findMinAndMax(self,values)
+    if (numValues <= 0) then
+        return new()
+    end
+
+    local first = values[1]
+    local r = luce:Range(first, first)
+
+    for i=2, #values do
+        local v = values[i]
+        if (r.lend < v) then r.lend = v end
+        if (v < r.lstart) then  r.lstart = v end
+    end
+
+    return r
 end
 
 local mt_static = {
