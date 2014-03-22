@@ -57,6 +57,7 @@ namespace luce {
 #include "LFont.h"
 #include "LSourceDetails.h"
 #include "LTimer.h"
+#include "LHighResolutionTimer.h"
 
 #include "LComponent.h"
 #include "LViewport.h"

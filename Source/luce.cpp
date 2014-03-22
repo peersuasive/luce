@@ -33,6 +33,7 @@ namespace luce {
 #include "LFont.cpp"
 #include "LSourceDetails.cpp"
 #include "LTimer.cpp"
+#include "LHighResolutionTimer.cpp"
 
 #include "LComponent.cpp"
 #include "LViewport.cpp"

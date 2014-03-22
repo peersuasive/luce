@@ -207,6 +207,7 @@ l_class(KeyPress);
 l_class(MouseEvent);
 l_class(SourceDetails);
 l_class(Timer);
+l_class(HighResolutionTimer);
 l_class(Options);
 l_class(PopupMenu);
 l_class(StretchableLayoutManager);
@@ -253,6 +254,7 @@ static const luaL_Reg luce_lib [] = {
     d(MouseEvent),
     d(SourceDetails),
     d(Timer),
+    d(HighResolutionTimer),
     d(Options),
     d(PopupMenu),
     d(StretchableLayoutManager),
