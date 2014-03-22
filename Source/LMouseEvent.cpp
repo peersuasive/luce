@@ -158,7 +158,7 @@ int LMouseEvent::getPosition ( lua_State* ) {
 
 int LMouseEvent::withNewPosition ( lua_State* L ) {
     LMouseEvent *lme =
-        new LMouseEvent( L, MouseEvent::withNewPosition( LUA::getPoint() ) );
+        new LMouseEvent( L, MouseEvent::withNewPosition( LUCE::luce_topoint<int>() ) );
     return LUA::storeAndReturnUserdata<LMouseEvent>( lme );
 }
 
