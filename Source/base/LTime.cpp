@@ -23,6 +23,7 @@ const Luna<LTime>::FunctionType LTime::methods[] = {
     method( LTime, getTimeZone ),
     method( LTime, getHours ),
     method( LTime, getSeconds ),
+    method( LTime, inSeconds ),
     method( LTime, getDayOfMonth ),
     method( LTime, getMilliseconds ),
     method( LTime, getDayOfYear ),
@@ -148,6 +149,10 @@ int LTime::getHours ( lua_State* ) {
 
 int LTime::getSeconds ( lua_State* ) {
     return LUA::returnNumber( Time::getSeconds() );
+}
+
+int LTime::inSeconds ( lua_State* ) {
+    return LUA::returnNumber( RelativeTime::milliseconds(Time::toMilliseconds()-0).inSeconds() );
 }
 
 int LTime::getDayOfMonth ( lua_State* ) {

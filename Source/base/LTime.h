@@ -43,6 +43,7 @@ public:
     int getTimeZone(lua_State*);
     int getHours(lua_State*);
     int getSeconds(lua_State*);
+    int inSeconds(lua_State*);
     int getDayOfMonth(lua_State*);
     int getMilliseconds(lua_State*);
     int getDayOfYear(lua_State*);
