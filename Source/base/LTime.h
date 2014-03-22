@@ -20,7 +20,11 @@ class LTime
 {
 public:
     LTime(lua_State*);
+    LTime(lua_State*, int64 ms);
+    LTime(lua_State*, int year, int month, int day, int hours, int minutes, int seconds, int ms, bool useLocalTime);
     LTime(lua_State*, const Time&);
+
+    static int lnew(lua_State*);
     ~LTime();
 
     //==============================================================================

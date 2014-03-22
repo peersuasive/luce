@@ -59,7 +59,20 @@ const Luna<LTime>::StaticType LTime::statics[] = {
 
 LTime::LTime(lua_State *L)
     : LBase(L, "LTime", true),
-      Time( /* TODO: add args */ )
+      Time()
+{
+}
+
+LTime::LTime(lua_State *L, int64 ms)
+    : LBase(L, "LTime", true),
+      Time( ms )
+{
+}
+
+LTime::LTime(lua_State *L, int year, int month, int day, int hours, int minutes, 
+                                        int seconds, int ms, bool useLocalTime)
+    : LBase(L, "LTime", true),
+      Time(year, month, day, hours, minutes, seconds, ms, useLocalTime)
 {
 }
 
@@ -70,6 +83,32 @@ LTime::LTime(lua_State *L, const Time& class_)
 }
 
 LTime::~LTime() {}
+
+int LTime::lnew(lua_State *L) {
+    if(lua_isnoneornil(L, 2))
+        return LUA::storeAndReturnUserdata<LTime>( new LTime(L, Time()) );
+    else if(lua_gettop(L) > 5) {
+        int year, month, day, hours, minutes;
+        year = LUA::getNumber<int>(2); month = LUA::getNumber<int>(2);
+        day = LUA::getNumber<int>(2); hours = LUA::getNumber<int>(2);
+        minutes = LUA::getNumber<int>(2);
+        int seconds = 0;
+        int ms = 0;
+        bool useLocalTime = true;
+        if( !lua_isnoneornil(L,2) )
+            seconds = LUA::getNumber<int>(2);
+        if( !lua_isnoneornil(L,2) )
+            ms = LUA::getNumber<int>(2);
+        if( !lua_isnoneornil(L,2) )
+            useLocalTime = LUA::getBoolean(2);
+
+        return LUA::storeAndReturnUserdata<LTime>( 
+            new LTime(L, year, month, day, hours, minutes, seconds, ms, useLocalTime)
+        );
+    }
+    else
+        return LUA::storeAndReturnUserdata<LTime>( new LTime(L, LUA::getNumber<int64>(2)) );
+}
 
 /////// statics
 int LTime::s_getMillisecondCounterHiRes ( lua_State* ) {
