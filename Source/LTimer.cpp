@@ -49,7 +49,8 @@ LTimer::~LTimer() {}
 
 /////// callbacks
 void LTimer::timerCallback() {
-    callback("timerCallback");
+    if(hasCallback("timerCallback"))
+        callback("timerCallback");
 }
 int LTimer::timerCallback(lua_State*){
     set("timerCallback");
