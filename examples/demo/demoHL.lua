@@ -3,8 +3,8 @@ local title = "Hello World!"
 local app, luce = require"luce.LApplication"(title, ...) -- create a basic Application
                                                          -- with command line parameters
 
-local timer = luce:Timer() -- a time for the animation
 
+local timer = luce:Timer() -- a time for the animation
 local function MainWindow(...)  -- our main component class
     local app, luce = app, luce -- just to put these in the local environment
     local Colours   = luce.Colours
@@ -36,7 +36,7 @@ local function MainWindow(...)  -- our main component class
     local currentCol = 1
     local function changeSize()
         currentSize = (currentSize>maxSize) and baseSize or currentSize+0.5
-        currentCol  = (currentCol>#colours) and 1 or currentCol+1
+        currentCol  = (currentCol<#colours) and currentCol+1 or 1
         return currentSize, colours[currentCol]
     end
 
@@ -48,7 +48,7 @@ local function MainWindow(...)  -- our main component class
         local size, colour = changeSize()
         -- draw text
         g:setFont(size)
-        g:setColour(luce:Colour(colour))
+        g:setColour(colour)
         g:drawText("Hello World!", mc:getLocalBounds(), luce.JustificationType.centred, true);
     end)
 
