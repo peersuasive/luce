@@ -155,4 +155,4 @@ local osx_delayed = false       -- set true if you don't want your app to displa
 local poller      = function()  -- the callback you want to run in manual mode
     print "I'm in a loop!"
 end
-return app:start( MainWindow, osx_delayed, manual, manual and poller ) -- returns the exit state
+return app:start( MainWindow, manual and poller, osx_delayed ) -- returns the exit state

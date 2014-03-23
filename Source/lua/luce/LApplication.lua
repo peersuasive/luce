@@ -248,11 +248,15 @@ local function new(name, ...)
     end)
     
     -- start the main loop
-    function self:start(mainClass, wants_osx_delayed, wants_control, poller_cb)
+    function self:start(mainClass, wants_control, wants_osx_delayed)
+        if(wants_control) and not("function"==type(wants_control))then
+            return nil, 
+                string.format("Control callback: expected function, got '%s'", type(wants_control))
+        end
         delayed = wants_osx_delayed
         MainClass = mainClass
         if(wants_control) and not(OS.android or OS.ios)then
-            return luce:start_manual( lapp, poller_cb or function()end )
+            return luce:start_manual( lapp, wants_control)
         else
             return luce:start( lapp )
         end
