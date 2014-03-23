@@ -10,6 +10,7 @@ namespace luce {
 #include "base/LBigInteger.cpp"
 #include "base/LRandom.cpp"
 
+#include "LLookAndFeel.cpp"
 #include "MyLookAndFeel.cpp"
 #include "LBase.cpp"
 #include "LModifierKeys.cpp"

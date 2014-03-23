@@ -33,6 +33,7 @@ namespace luce {
 #include "base/LBigInteger.h"
 #include "base/LRandom.h"
 
+#include "LLookAndFeel.h"
 #include "MyLookAndFeel.h"
 //#include "LBase.h"
 #include "LModifierKeys.h"

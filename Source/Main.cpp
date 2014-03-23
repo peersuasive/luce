@@ -176,6 +176,7 @@ l_cs(Colours);
 l_c(CurrentOS);
 
 l_class(JUCEApplication);
+l_class(LookAndFeel);
 l_class(Colour);
 l_class(AffineTransform);
 l_class(Path);
@@ -223,6 +224,7 @@ l_class(Random);
 
 static const luaL_Reg luce_lib [] = {
     d(JUCEApplication),
+    d(LookAndFeel),
     d(Colour),
     d(AffineTransform),
     d(Path),
