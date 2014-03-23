@@ -116,6 +116,15 @@ local function new(name, ...)
         end
     end
 
+    this:closeButtonPressed(function()
+        self:closeWindow(false)
+    end)
+    function self:closeButtonPressed(func)
+        if("function"==type(func))then
+            this:closeButtonPressed(func)
+        end
+    end
+
     self.__self = this.__self
     return setmetatable(self, {
         __self  = this.__self,
