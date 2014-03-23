@@ -699,6 +699,9 @@ namespace LUA {
                     } else if ( type == "PopupMenu" ) {
                         returnUserdata<LPopupMenu>( (LPopupMenu*)lr->getMe() );
 
+                    } else if ( type == "Colour" ) {
+                        returnUserdata<LColour, Colour>( static_cast<const LColour*>(lr->getMe()) );
+
                     } else if ( type == SELF ) {
                         // UNTESTED
                         lua_pushvalue(L, 1);
