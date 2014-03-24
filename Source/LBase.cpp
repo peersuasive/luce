@@ -48,7 +48,7 @@ bool LBase::hasCallback( const String& k ) const {
 }
 
 int LBase::readOnly(lua_State*) {
-    LUA::throwError("Attempted to set a read-only variable");
+    LUCE::luce_error("Attempted to set a read-only variable");
     return 0;
 }
 

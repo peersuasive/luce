@@ -567,7 +567,7 @@ int LComponent::setBoundsInset ( lua_State* ) {
         } else if ( r.size() == 4 ) {
             child->setBoundsInset( BorderSize<int>(r[0], r[1], r[2], r[3] ) );
         } else {
-            LUA::throwError("Wrong number of arguments");
+            LUCE::luce_error("Wrong number of arguments");
         }
     }
     return 0;
@@ -1153,7 +1153,7 @@ LookAndFeel* LComponent::getLookAndFeel(int n) {
             return &LComponent::myLookAndFeel;
             break;
         default:
-            LUA::throwError("Unknown LookAndFeel");
+            LUCE::luce_error("Unknown LookAndFeel");
             break;
     }
     return nullptr;
@@ -1167,28 +1167,6 @@ int LComponent::getLookAndFeel ( lua_State* ) {
 }
 int LComponent::setLookAndFeel ( lua_State* ) {
     child->setLookAndFeel( getLookAndFeel( LUA::getNumber<int>(2) ) );
-    /*
-    if (child) {
-        int lnf = LUA::getNumber();
-        switch ( lnf ) {
-            case 1:
-                child->setLookAndFeel(&lookAndFeelV1);
-                break;
-            case 2:
-                child->setLookAndFeel(&lookAndFeelV2);
-                break;
-            case 3:
-                child->setLookAndFeel(&lookAndFeelV3);
-                break;
-            case 4:
-                child->setLookAndFeel(&myLookAndFeel);
-                break;
-            default:
-                LUA::throwError("Unknown LookAndFeel");
-                break;
-        }
-    }
-    */
     return 0;
 }
 
@@ -1411,7 +1389,7 @@ int LComponent::setColour ( lua_State* ) {
             String name = LUA::getString();
             child->setColour( id, Colours::findColourForName( name, Colours::transparentWhite ) );
         } else {
-            LUA::throwError( "Missing colour value (name or ARGB)" );
+            LUCE::luce_error( "Missing colour value (name or ARGB)" );
         }
     }
     return 0;

@@ -354,8 +354,7 @@ int LGraphics::fillRect ( lua_State *L ) {
         }
         return 0;
     }
-    lua_pushfstring(L, "Graphics::fillRect: wrong or missing parameters");
-    lua_error(L);
+    LUCE::luce_error(lua_pushfstring(L, "Graphics::fillRect: wrong or missing parameters"));
     return 0;
 }
 

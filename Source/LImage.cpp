@@ -121,14 +121,13 @@ int LImage::lnew(lua_State *L) {
             return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type) );
         } 
         else {
-            lua_pushfstring(L, "Unknown type: %s", imageType.toRawUTF8());
-            LUA::throwError();
+            LUCE::luce_error(lua_pushfstring(L, "Unknown type: %s", imageType.toRawUTF8()));
         }
     }
 
     else {
         // TODO
-        LUA::throwError("No yet implemented: Image(..., ImageType)");
+        LUCE::luce_error("No yet implemented: Image(..., ImageType)");
     }
 
     return 0;

@@ -194,7 +194,7 @@ int LTreeViewItem::itemClicked(lua_State* L) {
         else
             this->itemClicked( *LUA::toUserdata<LMouseEvent>(2) );
     } else {
-        LUA::throwError("Missing arguments for itemClicked");
+        LUCE::luce_error("Missing arguments for itemClicked");
     }
     return 0;
 }

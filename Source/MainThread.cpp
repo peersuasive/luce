@@ -27,7 +27,7 @@ const int run_cb(lua_State *L, int ref) {
     int status = 0;
     lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
     if ( lua_pcall(L, 0, 1, 0) )
-        LUA::throwError( "Error while running start function");
+        LUCE::luce_error(lua_pushfstring(L, "Error while running start function: %s", lua_tostring(L,-1)) );
     status = lua_toboolean(L,-1);
     lua_pop(L, 1);
     return status;
@@ -64,7 +64,7 @@ void MainThread::run() {
             int rc = LUA::call_cb(cb_ref, 1);
             if ( rc < 0 ) {
                 const char *err = lua_tostring(L, -1);
-                LUA::throwError(String("Error while executing the main loop: ") + err);
+                LUCE::luce_error(lua_pushfstring(L,"Error while executing the main loop: %s", err));
                 std::cout << "error while executing the callback: " << err << std::endl;
                 lua_pop(L, 1);
             }
