@@ -70,14 +70,18 @@ local function new(name, ...)
 
     -- TODO: set bounds instead of size, getting current bounds if a Point
     --       is provided
-    local function set_size(size)
+    local function set_size(size, bounds)
         if not(this) then return end
         if app.os.ios or app.os.android then
             if not(this:isFullScreen()) then
                 this:setFullScreen(true) -- or kiosk ?
             end
         else
-            this:centreWithSize(size)
+            if(bounds)then
+                this:setBounds(bounds)
+            else
+                this:centreWithSize(size)
+            end
         end
     end
     function self:setFullScreen(state)
@@ -101,7 +105,7 @@ local function new(name, ...)
     function self:setBounds(b)
         bounds = b
         size = { b.w, b.h }
-        set_size(size)
+        set_size(size, bounds)
     end
     override.bounds = function(v)
         if(v)then set_size{v.w, v.h}
