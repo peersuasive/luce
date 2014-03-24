@@ -11,7 +11,7 @@ namespace LUA {
         bool hasCallback(const LBase* key, const char* name);
 
         void Set(lua_State *L_);
-        void throwError(const String& err);
+        void throwError(const char *msg);
         lua_State *Get();
 
         bool isEmpty(int i = -1);

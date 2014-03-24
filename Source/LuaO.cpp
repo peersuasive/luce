@@ -30,9 +30,14 @@ namespace LUA {
             return LUCE_LIVE_CODING;
         }
 
-        void throwError(const String& err) {
-            lua_pushstring(L, err.toRawUTF8());
-            lua_error(L);
+        void throwError(const char *msg) {
+            if(liveCoding())
+                std::cout << "ERROR: " << msg << std::endl;
+            else {
+                if(!lua_isstring(L,-1))
+                    lua_pushstring(L, msg);
+                lua_error(L);
+            }
         }
 
         void reg(const LBase* key) {
@@ -59,12 +64,9 @@ namespace LUA {
         bool set(const LBase* key, const char* name, int n_) {
             bool res = false;
             if ( ! lua_isfunction(L, n_) )
-                throwError(
-                    String("LUCE ERROR: from ") 
-                    + String(key->getBaseName()) 
-                    + String(": callback ") 
-                    + String(name) 
-                    + String(" is not a valid function."));
+                throwError(lua_pushfstring(L,
+                            "LUCE ERROR: from %s: callback: %s is not a valid function.",
+                                key->getBaseName().toRawUTF8(), name));
         
             int n = (n_<0) ? (lua_gettop(L)-(n_+1)) : n_;
             lua_pushlightuserdata(L, (void*)key);
@@ -283,10 +285,13 @@ namespace LUA {
                         lua_pop(L,1); // __self
                         lua_getfield(L, i, "dump"); // provided by LRectangle
                         lua_pushvalue(L, i); // push self
-                        if ( lua_pcall(L, 1, 1, 0) != 0 ) // get self as argument
-                            lua_error(L);
+                        if ( lua_pcall(L, 1, 1, 0) != 0 ) {// get self as argument
+                            throwError(lua_pushfstring(L, "LRectangle parsing error: %s", lua_tostring(L,-1)) );
+                            return {};
+                        }
                     } else {
                         throwError("Wrong object given as a LRectangle");
+                        return {};
                     }
                 }
             }
@@ -326,10 +331,13 @@ namespace LUA {
                     lua_pop(L,1); // __self
                     lua_getfield(L, i, "dump"); // provided by LRectangle
                     lua_pushvalue(L, i); // push self
-                    if ( lua_pcall(L, 1, 1, 0) != 0 ) // get self as argument
-                        lua_error(L);
+                    if ( lua_pcall(L, 1, 1, 0) != 0 ) {// get self as argument
+                        throwError(lua_pushfstring(L, "LLine parsing error: %s", lua_tostring(L,-1)));
+                        return {};
+                    }
                 } else {
                     throwError("Wrong object given as a LLine");
+                    return {};
                 }
             } else { // a table
                 lua_pushvalue(L, i);
@@ -472,8 +480,10 @@ namespace LUA {
             */
             luaL_checktype(L, i, LUA_TTABLE);
             lua_getfield(L, i, "__self");
-            if ( lua_isnil(L, -1) )
+            if ( lua_isnil(L, -1) ) {
                 throwError("given object is not a valid Luce object");
+                return nullptr;
+            }
             T **obj = static_cast<T**>(lua_touserdata(L, -1));
 
             lua_remove(L, i); // object
@@ -501,8 +511,11 @@ namespace LUA {
                 } else {
                     lua_pop(L,1); // pop nil
                     Luna<T>::Register(L);
-                    if ( lua_isnil(L, -1) )
-                        throwError("Internal Error: Can't register class -- please, send a bug report");
+                    if ( lua_isnil(L, -1) ) {
+                        lua_pushstring(L, "Internal Error: Can't register class -- please, send a bug report");
+                        lua_error(L);
+                    }
+                    
                     lua_pop(L,1); // pop new()
                     luaL_getmetatable(L, cn.c_str());
                     lua_setmetatable(L, -2); // index of udata
@@ -540,8 +553,6 @@ namespace LUA {
                     lua_setmetatable(L, -2);
                 } else lua_pop(L,1);
 
-
-                //DBG(String("size of L at the end: ") + String(lua_gettop(L)));
                 return 1;
 
             } else {
@@ -582,8 +593,7 @@ namespace LUA {
         }
 
         int TODO_OBJECT(const String& tmpl, const String& msg) {
-            lua_pushstring(L, (msg + tmpl).toRawUTF8() );
-            lua_error(L);
+            throwError((msg + tmpl).toRawUTF8());
             return 0;
         }
 
@@ -747,20 +757,13 @@ namespace LUA {
 
             if ( ! (status = ! lua_pcall(L, nb_args, nb_ret, 0)) ) {
                 const char *msg = lua_tostring(L,-1);
-                lua_pop(L,1);
-                lua_pushfstring(L, "Failed to execute callback '%s': %s", name, msg);
                 DBG(String("failed to execute callback: ") + name);
                 DBG(String("Error was: ") + msg);
+                lua_pop(L,1);
+                lua_pushfstring(L, "Failed to execute callback '%s': %s", name, msg);
                 // Get out, a failure's a failure
-                lua_error(L);
-                /*
-                status = -1;
-                if ( lua_isstring(L, -1) ) {
-                    const char *err = lua_tostring(L, -1);
-                    lua_pop(L,1);
-                    std::cout << "ERROR:" << err << std::endl;
-                }
-                */
+                throwError(lua_pushfstring(L, "failed to execute callback: %s", lua_tostring(L,-1)));
+                return 0;
             }
             //lua_remove(L, errfunc);
             lua_remove(L, func_index);
@@ -791,8 +794,7 @@ namespace LUA {
                 lua_rawgeti(L, i, 1);
             else lua_pushvalue(L,i);
             if(!lua_isnumber(L, -1)) {
-                lua_pushfstring(L, "Expected LNumber, got %s", lua_typename(L,lua_type(L,-1)));
-                lua_error(L);
+                throwError(lua_pushfstring(L, "Expected LNumber, got %s", lua_typename(L,lua_type(L,-1))));
             }
             T n = lua_tonumber(L,-1);
             lua_pop(L,1);
