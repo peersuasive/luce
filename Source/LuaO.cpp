@@ -21,6 +21,15 @@ namespace LUA {
         lua_State *Get() {
             return L;
         }
+
+        bool LUCE_LIVE_CODING = false;
+        void liveCoding(bool b) {
+            LUCE_LIVE_CODING = b;
+        }
+        bool liveCoding() {
+            return LUCE_LIVE_CODING;
+        }
+
         void throwError(const String& err) {
             lua_pushstring(L, err.toRawUTF8());
             lua_error(L);
