@@ -5,7 +5,7 @@ namespace {
     
     void Set(lua_State *L_);
 
-    void throw_error(const char *);
+    void luce_error(const char *);
 
     const char* luce_typename(int i = -1);
     const char* luce_numtype(int i = -1);

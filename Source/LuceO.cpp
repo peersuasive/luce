@@ -27,9 +27,14 @@ namespace {
         if ( !L || L == nullptr ) L = L_;
     }
 
-    void throw_error(const char *msg) {
-        //lua_pushstring(L, msg);
-        lua_error(L);
+    void luce_error(const char *msg) {
+        if(LUA::liveCoding())
+            std::cout << "ERROR: " << msg << std::endl;
+        else {
+            if(!lua_isstring(L,-1))
+                lua_pushstring(L, msg);
+            lua_error(L);
+        }
     }
 
     //
@@ -59,7 +64,7 @@ namespace {
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
         const char *ltype = ltype_ ? ltype_ : luce_typename(i);
         if(! ltype)
-            throw_error(lua_pushfstring(L, "Expected LObject, got %s", lua_typename(L,lua_type(L,-1))));
+            luce_error(lua_pushfstring(L, "Expected LObject, got %s", lua_typename(L,lua_type(L,-1))));
         
         const char *numtype = luce_numtype(i);
         lua_pushvalue(L,i);
@@ -69,7 +74,7 @@ namespace {
         if ( lua_pcall(L, 1, 1, 0) != 0 ) // push self as the only argument, expects one result
             lua_error(L);
         if(lua_isnoneornil(L,-1))
-            throw_error(lua_pushfstring(L, "Dumped result error: expected something, got nil"));
+            luce_error(lua_pushfstring(L, "Dumped result error: expected something, got nil"));
         
         lua_pushstring(L, numtype);
         lua_pushstring(L, ltype);
@@ -109,7 +114,7 @@ namespace {
             return n;
         }
         else
-            throw_error(lua_pushfstring(L, "Luce Error: expected Number, got %s with size %d", 
+            luce_error(lua_pushfstring(L, "Luce Error: expected Number, got %s with size %d", 
                         lua_typename(L,lua_type(L,-1)), lua_objlen(L, -1)));
     
         lua_pop(L,3);
@@ -125,7 +130,7 @@ namespace {
 
     int luceI_pushtable(int i = -1) {
         if(!lua_istable(L,i)) {
-            //throw_error(lua_pushfstring(L, "Luce Error: expected LObject or table, got %s", 
+            //luce_error(lua_pushfstring(L, "Luce Error: expected LObject or table, got %s", 
             //            lua_typename(L,lua_type(L,-1))));
             return 0;
         }
@@ -490,7 +495,7 @@ namespace {
             lua_pop(L, 3); // ltype + type + value
             return { glyphCode, anchor, width };
         } else
-            throw_error(lua_pushfstring(L, "Luce Error: expected Glyph, got %s with size %d", 
+            luce_error(lua_pushfstring(L, "Luce Error: expected Glyph, got %s with size %d", 
                         lua_typename(L,lua_type(L,-1)), lua_objlen(L, -1)));
         lua_pop(L,3); // type, ltype, nil
         return { 0, Point<float>(), 0 };
