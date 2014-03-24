@@ -17,6 +17,7 @@ int lua_main(void);
 int lua_main_manual(lua_State*, const int&);
 int start(lua_State*);
 int start_manual(lua_State*);
+int reload(lua_State*);
 
 #if JUCE_ANDROID
     #include <jni.h>
@@ -98,6 +99,52 @@ int lua_shutdown(lua_State *L) {
 }
 
 //==============================================================================
+
+/**
+ * expect a MainWindow class
+ * and some optional parameters
+ *
+ * dans l'idéal, on récupère des chunks, ou plutôt des objets, qui sont
+ * des componsants
+ * si le composant existe, on le vire et on le remplace par le code
+ * s'il n'existe pas ?...
+ *
+ **/
+int reload(lua_State *L) {
+    LUA::liveCoding(true);
+    // check what we have
+    if(!lua_isfunction(L,2)) {
+        lua_pushnil(L);
+        lua_pushfstring(L,"luceLiveReload: expected function, got '%s'", lua_typename(L, lua_type(L,1)));
+        return 2;
+    }
+    // TODO: get and remove params
+    // call function
+    // push result to luceLiveReload
+    //
+    // meanwhile:
+    //lua_pop(L, lua_gettop(L)-2);
+
+    lua_pushstring(L, "LUCE_LIVE_CODING");
+    lua_pushnumber(L, 1);
+    // if LUA == 501...
+    // else lua_pushglobalstable...
+    lua_settable(L, LUA_GLOBALSINDEX);
+
+    int nb_args = 0;
+    if ( lua_pcall(L, nb_args, 1, 0) != 0 ) {
+        lua_pushnil(L);
+        lua_pushvalue(L, -2);
+        return 2;
+    }
+    if(lua_isnoneornil(L,-1)) {
+        lua_pushnil(L);
+        lua_pushfstring(L, "Wrong or malformed MainWindow: expected Component, got nil");
+        return 2;
+    }
+    int res = mainClass->luceLiveReload(L);
+    return res;
+}
 
 int start( lua_State *L ) {
     LUA::Set(L);
@@ -272,6 +319,7 @@ static const luaL_Reg luce_lib [] = {
 
     { "start", start },
     { "start_manual", start_manual },
+    { "reload", reload },
     { "shutdown", lua_shutdown },
     {NULL, NULL}
 };

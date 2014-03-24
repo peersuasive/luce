@@ -249,6 +249,9 @@ local function new(name, ...)
     
     -- start the main loop
     function self:start(mainClass, wants_control, wants_osx_delayed)
+        if(LUCE_LIVE_CODING)then
+            return mainClass
+        end
         if(wants_control) and not("function"==type(wants_control))then
             return nil, 
                 string.format("Control callback: expected function, got '%s'", type(wants_control))

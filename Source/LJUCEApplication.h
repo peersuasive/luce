@@ -12,6 +12,9 @@ public:
     ~LJUCEApplication();
 
     //==============================================================================
+    int luceLiveReload(lua_State*);
+
+    //==============================================================================
     int getApplicationName(lua_State *L);
     const String getApplicationName();
 

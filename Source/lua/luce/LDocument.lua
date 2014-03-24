@@ -129,6 +129,14 @@ local function new(name, ...)
         end
     end
 
+    function self:setContentOwned(comp, resizeToFit)
+        if(LUCE_LIVE_CODING)then
+            this:setContentNonOwned(comp, resizeToFit)
+        else
+            this:setContentOwned(comp, resizeToFit)
+        end
+    end
+
     self.__self = this.__self
     return setmetatable(self, {
         __self  = this.__self,

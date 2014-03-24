@@ -107,6 +107,27 @@ void LJUCEApplication::deleteWindow(Component *comp, bool quitIfLastWindowClosed
         JUCEApplication::quit();
 }
 
+int LJUCEApplication::luceLiveReload(lua_State *L) {
+    if(lua_isnoneornil(L, 2)) {
+        lua_pushnil(L);
+        lua_pushfstring(L, "Missing MainWindow class");
+        return 2;
+    }
+    DocumentWindow *liveWindow = LUA::from_luce<LComponent, DocumentWindow>(2);
+    Rectangle<int> bounds = liveWindow->getBounds();
+    int w = bounds.getWidth(); int h = bounds.getHeight();
+
+    DocumentWindow *dw = (DocumentWindow*)mainWindows[0];
+    dw->clearContentComponent();
+    dw->setContentOwned(liveWindow->getContentComponent(), true);
+    delete liveWindow;
+    
+    initialised(dw);
+
+    lua_pushboolean(L,true);
+    return 1;
+}
+
 ApplicationCommandManager& LJUCEApplication::getApplicationCommandManager() {
     if (!commandManager)
         commandManager = new ApplicationCommandManager();
