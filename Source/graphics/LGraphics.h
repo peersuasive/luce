@@ -21,6 +21,8 @@ class LGraphics
 public:
     LGraphics(lua_State*);
     LGraphics(lua_State*, juce::Graphics&);
+    LGraphics(lua_State*, juce::Image&);
+    static int lnew(lua_State*);
     ~LGraphics();
 
     Graphics* getGraphics();

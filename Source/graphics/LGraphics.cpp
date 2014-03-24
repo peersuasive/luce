@@ -89,7 +89,21 @@ LGraphics::LGraphics(lua_State *L, juce::Graphics& class_)
 {
 }
 
+LGraphics::LGraphics(lua_State *L, juce::Image& img)
+    : LBase(L, "LGraphics", true),
+      Graphics(img)
+{
+}
+
 LGraphics::~LGraphics() {
+}
+
+int LGraphics::lnew(lua_State *L) {
+    if(lua_isnoneornil(L,2))
+        return LUA::storeAndReturnUserdata<LGraphics>( new LGraphics(L) );
+    else if( LUCE::luce_isofclass(LImage, 2) )
+        return LUA::storeAndReturnUserdata<LGraphics>( new LGraphics(L, *LUA::from_luce<LImage>(2)) );
+    return 0;
 }
 
 Graphics* LGraphics::getGraphics() {
