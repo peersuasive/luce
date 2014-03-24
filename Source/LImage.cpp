@@ -78,11 +78,62 @@ LImage::LImage(lua_State *L, const Image& class_)
     : LBase(L, "LImage", true),
       Image( class_ )
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
 }
 
+LImage::LImage(lua_State *L, juce::Image::PixelFormat fmt, int w, int h, bool clear)
+    : LBase(L, "LImage", true),
+      Image(fmt, w, h, clear)
+{
+}
+
+LImage::LImage(lua_State *L, juce::Image::PixelFormat fmt, int w, int h, bool clear, juce::ImageType& type) 
+    : LBase(L, "LImage", true),
+      Image(fmt, w, h, clear, type)
+{
+}
+
+
 LImage::~LImage() {}
+
+int LImage::lnew(lua_State *L) {
+    if(lua_isnoneornil(L,2))
+        return LUA::storeAndReturnUserdata<LImage>( new LImage(L) );
+    juce::Image::PixelFormat fmt = (juce::Image::PixelFormat)LUA::getNumber<int>(2);
+    int w = LUA::getNumber<int>(2);
+    int h = LUA::getNumber<int>(2);
+    bool clear = LUA::getBoolean(2);
+    if(lua_isnoneornil(L,2))
+        return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear) );
+
+    else if(lua_isstring(L,2)) {
+        // fake static implementation
+        String imageType = LUA::getString(2);
+        if(imageType == "NativeImageType") {
+            NativeImageType type;
+            return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type) );
+        } 
+        else if(imageType == "OpenGLImageType") {
+            OpenGLImageType type;
+            return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type) );
+        } 
+        else if(imageType == "SoftwateImageType") {
+            SoftwareImageType type;
+            return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type) );
+        } 
+        else {
+            lua_pushfstring(L, "Unknown type: %s", imageType.toRawUTF8());
+            LUA::throwError();
+        }
+    }
+
+    else {
+        // TODO
+        LUA::throwError("No yet implemented: Image(..., ImageType)");
+    }
+
+    return 0;
+}
+
 
 /////// statics
 
@@ -295,11 +346,12 @@ int LImage::multiplyAlphaAt ( lua_State* ) {
 }
 
 int LImage::clear ( lua_State *L ) {
-    Rectangle<int> area ( LUA::getRectangle(2) );
-
+    Rectangle<int> area = LUCE::luce_torectangle<int>(2);
     Colour colourToClearTo;
     if(lua_isnoneornil(L,2))
         colourToClearTo = Colour (0x00000000);
+    else if(lua_isstring(L,2))
+        colourToClearTo = Colours::findColourForName(LUA::getString(2), Colours::black);
     else
         colourToClearTo = *LUA::from_luce<LColour>(2);
     Image::clear( area, colourToClearTo );

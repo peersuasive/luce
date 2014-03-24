@@ -21,6 +21,9 @@ class LImage
 public:
     LImage(lua_State*);
     LImage(lua_State*, const Image&);
+    LImage(lua_State*, juce::Image::PixelFormat, int w, int h, bool clear);
+    LImage(lua_State*, juce::Image::PixelFormat, int w, int h, bool clear, juce::ImageType&);
+    static int lnew(lua_State*);
     ~LImage();
 
     //==============================================================================
