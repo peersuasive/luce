@@ -68,43 +68,35 @@ local LModules = {
     "AnimatedPosition",
 }
 
-return setmetatable({
-        new = function(self, dbg)
-            if(dbg)then _G.LDEBUG=true end
-            local luce = dbg and require"luce.core_d" or require"luce.core"
-            return load_luce(_, luce)
-        end
-    }, 
-    {
-    __call = function(self, dbg)
-        if(dbg)then _G.LDEBUG=true end
-        local luce = dbg and require"luce.core_d" or require"luce.core"
-        local luce_m = load_luce(_, luce)
-        luce_m.class = require"luce.LCommon".class
-        luce_m.comp = require"luce.LCommon".comp
+local function init(self,dbg)
+    if(dbg)then _G.LDEBUG=true end
+    local luce = dbg and require"luce.core_d" or require"luce.core"
+    local luce_m = load_luce(_, luce)
+    luce_m.class = require"luce.LCommon".class
+    luce_m.comp = require"luce.LCommon".comp
 
-        -- bitwise
-        luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
-        -- deepcopy, goes to table.deepcopy
-        require"luce.deepcopy"
-        _G.Luce = luce_m
+    -- bitwise
+    luce_m.bit = bit or bit32 or require"luce.bit.numberlua"
+    -- deepcopy, goes to table.deepcopy
+    require"luce.deepcopy"
+    _G.Luce = luce_m
 
-        -- load lua modules
-        for _,m in next, LModules do
-            local mm = require("luce.L"..m)
-            --luce_m[m] = function(self,...) return mm(...) end
-            luce_m[m] = setmetatable({}, {
-                __index = getmetatable(mm).__index,
-                __tostring = getmetatable(mm).__tostring,
-                __call  = function(self,x,...)
-                    -- when using . or :
-                    if(luce_m==x)then return mm(...) else return mm(x,...) end
-                end
-            })
-        end
+    -- load lua modules
+    for _,m in next, LModules do
+        local mm = require("luce.L"..m)
+        --luce_m[m] = function(self,...) return mm(...) end
+        luce_m[m] = setmetatable({}, {
+            __index = getmetatable(mm).__index,
+            __tostring = getmetatable(mm).__tostring,
+            __call  = function(self,x,...)
+                -- when using . or :
+                if(luce_m==x)then return mm(...) else return mm(x,...) end
+            end
+        })
+    end
+    return luce_m
+end
 
-        return luce_m
-        --return(load_luce(_, luce))
-
-    end,
+return setmetatable({ new = init, }, {
+    __call = init
 })
