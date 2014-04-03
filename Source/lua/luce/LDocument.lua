@@ -137,6 +137,20 @@ local function new(name, ...)
         end
     end
 
+    -- default shorcuts
+    local K = string.byte
+    this:keyPressed(function(k)
+        local k, m = k:getKeyCode(), k:getModifiers()
+        if not(app.os.osx) and (k==K"Q" or k==K"q") then
+            app:exit()
+        elseif (k==K"w" or k==K"W") and (m:isCommandDown() ) then
+            self:closeWindow()
+        else
+            return false
+        end
+        return true
+    end)
+
     self.__self = this.__self
     return setmetatable(self, {
         __self  = this.__self,
