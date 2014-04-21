@@ -73,16 +73,12 @@ LPath::LPath(lua_State *L)
     : LBase(L, "LPath", true),
       Path()
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
 }
 
 LPath::LPath(lua_State *L, const Path& class_)
     : LBase(L, "LPath", true),
       Path( class_ )
 {
-    if ( lua_isstring(L, 2) )
-        myName( lua_tostring(L, 2) );
 }
 
 LPath::~LPath() {}
