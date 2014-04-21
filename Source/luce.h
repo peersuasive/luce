@@ -54,6 +54,7 @@ namespace luce {
 #include "graphics/LRun.h"
 #include "graphics/LLine.h"
 #include "graphics/LTextLayout.h"
+#include "graphics/LColourGradient.h"
 #include "LStretchableLayoutManager.h"
 #include "LFont.h"
 #include "LSourceDetails.h"

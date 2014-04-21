@@ -30,6 +30,7 @@ namespace luce {
 #include "graphics/LRun.cpp"
 #include "graphics/LLine.cpp"
 #include "graphics/LTextLayout.cpp"
+#include "graphics/LColourGradient.cpp"
 #include "LStretchableLayoutManager.cpp"
 #include "LFont.cpp"
 #include "LSourceDetails.cpp"
