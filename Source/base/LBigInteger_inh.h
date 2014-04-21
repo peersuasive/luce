@@ -20,6 +20,8 @@ const Luna<LBigInteger>::Inheritence LBigInteger::inherits[] = {
 };
 
 const Luna<LBigInteger>::InheritenceF LBigInteger::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

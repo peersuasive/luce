@@ -24,6 +24,8 @@ const Luna<LGlyphArrangement>::Inheritence LGlyphArrangement::inherits[] = {
 };
 
 const Luna<LGlyphArrangement>::InheritenceF LGlyphArrangement::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

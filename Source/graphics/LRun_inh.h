@@ -20,6 +20,8 @@ const Luna<LRun>::Inheritence LRun::inherits[] = {
 };
 
 const Luna<LRun>::InheritenceF LRun::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

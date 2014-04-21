@@ -20,6 +20,8 @@ const Luna<LPathStrokeType>::Inheritence LPathStrokeType::inherits[] = {
 };
 
 const Luna<LPathStrokeType>::InheritenceF LPathStrokeType::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

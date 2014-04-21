@@ -20,6 +20,8 @@ const Luna<LGlyph>::Inheritence LGlyph::inherits[] = {
 };
 
 const Luna<LGlyph>::InheritenceF LGlyph::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

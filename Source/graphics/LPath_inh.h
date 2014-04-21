@@ -24,6 +24,8 @@ const Luna<LPath>::Inheritence LPath::inherits[] = {
 };
 
 const Luna<LPath>::InheritenceF LPath::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

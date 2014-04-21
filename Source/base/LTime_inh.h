@@ -23,6 +23,8 @@ const Luna<LTime>::Inheritence LTime::inherits[] = {
 };
 
 const Luna<LTime>::InheritenceF LTime::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

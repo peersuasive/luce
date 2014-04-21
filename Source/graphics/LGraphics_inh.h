@@ -24,6 +24,8 @@ const Luna<LGraphics>::Inheritence LGraphics::inherits[] = {
 };
 
 const Luna<LGraphics>::InheritenceF LGraphics::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

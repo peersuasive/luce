@@ -20,6 +20,8 @@ const Luna<LRandom>::Inheritence LRandom::inherits[] = {
 };
 
 const Luna<LRandom>::InheritenceF LRandom::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

@@ -20,6 +20,8 @@ const Luna<LAttribute>::Inheritence LAttribute::inherits[] = {
 };
 
 const Luna<LAttribute>::InheritenceF LAttribute::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

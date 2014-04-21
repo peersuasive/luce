@@ -20,6 +20,8 @@ const Luna<LLine>::Inheritence LLine::inherits[] = {
 };
 
 const Luna<LLine>::InheritenceF LLine::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

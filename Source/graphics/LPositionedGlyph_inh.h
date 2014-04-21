@@ -24,6 +24,8 @@ const Luna<LPositionedGlyph>::Inheritence LPositionedGlyph::inherits[] = {
 };
 
 const Luna<LPositionedGlyph>::InheritenceF LPositionedGlyph::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

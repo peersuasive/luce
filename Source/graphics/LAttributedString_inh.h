@@ -20,6 +20,8 @@ const Luna<LAttributedString>::Inheritence LAttributedString::inherits[] = {
 };
 
 const Luna<LAttributedString>::InheritenceF LAttributedString::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 
