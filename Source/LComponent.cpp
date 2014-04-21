@@ -738,8 +738,20 @@ int LComponent::beginDragAutoRepeat ( lua_State* ) {
 }
 
 int LComponent::deleteAllChildren ( lua_State* ) {
-    if (child)
+    if (child) {
         child->deleteAllChildren();
+        //lua_gc(L, LUA_GCCOLLECT, 0 );
+    }
+    return 0;
+}
+
+int LComponent::removeAllChildren ( lua_State* ) {
+    if (child) {
+        //TODO: for each removed child, unset isManaged
+        // or call getNumChildComponents/getChildComponent + isManaged(false)
+        // or deleteAllChildren instead...
+        child->removeAllChildren();
+    }
     return 0;
 }
 
@@ -775,16 +787,6 @@ int LComponent::addToDesktop ( lua_State* ) {
 int LComponent::removeFromDesktop ( lua_State* ) {
     if (child) {
         child->removeFromDesktop();
-    }
-    return 0;
-}
-
-int LComponent::removeAllChildren ( lua_State* ) {
-    if (child) {
-        //TODO: for each removed child, unset isManaged
-        // or call getNumChildComponents/getChildComponent + isManaged(false)
-        // or deleteAllChildren instead...
-        child->removeAllChildren();
     }
     return 0;
 }
