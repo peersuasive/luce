@@ -82,19 +82,44 @@ LColour::LColour(lua_State *L, const Colour& class_)
 LColour::~LColour() {}
 
 int LColour::lnew(lua_State *L) {
-    if(! lua_isnumber(L, 2) && lua_isstring(L, 2) )
+    if(! lua_isnumber(L, 2) && lua_isstring(L, 2) && lua_gettop(L)<3)
         return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
             Colours::findColourForName( LUA::getString(2), Colours::black) 
         ));
 
-    if( lua_isnumber(L,2) ) // uint32 argb
-        return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Colour( LUA::getNumber<uint32>(2) ) ) );
+    if(lua_isnumber(L,2) && lua_gettop(L)<3) {
+        if( lua_isnumber(L,2) ) // uint32 argb
+            return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Colour( LUA::getNumber<uint32>(2) ) ) );
+    }
 
     if( lua_istable(L,2) ) // copy constructor
         return LUA::storeAndReturnUserdata<LColour>( new LColour(L, *LUA::from_luce<LColour>(2)) );
 
+    if(!lua_isnumber(L,2) && lua_isstring(L,2)) {
+        String type = LUA::getString(2);
+        if (type == "HSBA") {
+            uint8 hue = LUA::getNumber<float>(2);
+            uint8 sat = LUA::getNumber<float>(2);
+            uint8 bri = LUA::getNumber<float>(2);
+            uint8 alpha = LUA::getNumber<uint8>(2);
+            return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
+                Colour(hue, sat, bri, alpha)
+            ));
+        }
+        // else RGBA, below 
+    }
+    if(lua_isnumber(L,2)) {
+        uint8 red = LUA::getNumber<uint8>(2);
+        uint8 green = LUA::getNumber<uint8>(2);
+        uint8 blue = LUA::getNumber<uint8>(2);
+        uint8 alpha = LUA::checkAndGetNumber<uint8>(2, 0xff);
+        return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
+            Colour(red, green, blue, alpha ) 
+        ));
+    }
+    else
+        return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Colour()) );
 
-    return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Colour()) );
     // TODO: argb, RGB, ARGB, HSBA
     //       will have to implement a workaround to distinguish float from uint8 !!
 }
