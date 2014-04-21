@@ -1195,7 +1195,7 @@ int LComponent::setMouseCursor ( lua_State *L ) {
             child->setMouseCursor(
                 MouseCursor((MouseCursor::StandardCursorType)(LUA::getNumber<int>(2)))
             );
-        else if(LUCE::luce_isoftype(LImage,2)) {
+        else if(LUCE::luce_isofclass(LImage,2)) {
             Image img(*LUA::from_luce<LImage>(2));
             int hotSpotX = LUA::getNumber<int>(2);
             int hotSpotY = LUA::getNumber<int>(2);
