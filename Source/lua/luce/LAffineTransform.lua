@@ -263,7 +263,13 @@ new = function(me, t, __type)
         __call = new,
         __self = className,
         __tostring = function(self)
-            return self.x..", "..self.y
+            return string.format("%s, %s, %s, %s, %s, %s",
+                self.mat00,
+                self.mat01,
+                self.mat02,
+                self.mat10,
+                self.mat11,
+                self.mat12)
         end,
         __eq = eq,
     })
