@@ -351,10 +351,16 @@ int LComponent::getY ( lua_State* ) {
     else return 0;
 }
 
-int LComponent::getHeight ( lua_State* ) {
+int LComponent::getWidth( lua_State* ) {
+    if (child)
+        return LUA::returnNumber( child->getWidth() );
+    return 0;
+}
+
+int LComponent::getHeight( lua_State* ) {
     if (child)
         return LUA::returnNumber( child->getHeight() );
-    else return 0;
+    return 0;
 }
 
 int LComponent::isMouseOver ( lua_State* ) {
@@ -423,12 +429,6 @@ int LComponent::isMouseOverOrDragging ( lua_State* ) {
 int LComponent::isTransformed ( lua_State* ) {
     if (child)
         return LUA::returnBoolean( child->isTransformed() );
-    else return 0;
-}
-
-int LComponent::getWidth ( lua_State* ) {
-    if (child)
-        return LUA::returnNumber( child->getWidth() );
     else return 0;
 }
 
