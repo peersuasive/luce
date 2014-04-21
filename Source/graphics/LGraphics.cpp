@@ -137,23 +137,44 @@ int LGraphics::getClipBounds ( lua_State* ) {
     return LUCE::luce_pushtable(Graphics::getClipBounds() );
 }
 
-int LGraphics::reduceClipRegion ( lua_State* ) {
-    Rectangle<int> area ( LUA::getRectangle(2) );
-    return LUA::returnBoolean(Graphics::reduceClipRegion( area ) );
-
-    // override
-    // RectangleList<int> clipRegion = *LUA::from_luce<LRectangleList>(2); // TODO;
-    // return LUA::returnBoolean(Graphics::reduceClipRegion( clipRegion ) );
-
-    // override
-    // Path path = *LUA::from_luce<LPath>(2); // TODO;
-    // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    // return LUA::returnBoolean(Graphics::reduceClipRegion( path, transform ) );
-
-    // override
-    // Image image = *LUA::from_luce<LImage>(2); // TODO;
-    // AffineTransform transform = *LUA::from_luce<LAffineTransform>(2); // TODO;
-    // return LUA::returnBoolean(Graphics::reduceClipRegion( image, transform ) );
+int LGraphics::reduceClipRegion ( lua_State* L ) {
+    if(lua_isnumber(L, 2)) {
+        int x = LUA::getNumber<int>(2);
+        int y = LUA::getNumber<int>(2);
+        int w = LUA::getNumber<int>(2);
+        int h = LUA::getNumber<int>(2);
+        return LUA::returnBoolean(Graphics::reduceClipRegion(x,y,w,h));
+    }
+    else if(LUCE::luce_isoftype(LRectangle, 2)) {
+        return LUA::returnBoolean(Graphics::reduceClipRegion( LUCE::luce_torectangle<int>(2) ) );
+    }
+    else if(LUCE::luce_isoftype(LRectangleList, 2)) {
+        return LUA::returnBoolean(Graphics::reduceClipRegion( LUCE::luce_torectanglelist<int>(2) ) );
+    }
+    else if(LUCE::luce_isofclass(LPath, 2)) {
+        Path path = *LUA::from_luce<LPath>(2);
+        AffineTransform aff = AffineTransform::identity;
+        if(LUCE::luce_isofclass(LAffineTransform,2))
+            aff = LUCE::luce_toaffinetransform(2);
+        return LUA::returnBoolean(Graphics::reduceClipRegion( path, aff ));
+    }
+    else if(LUCE::luce_isofclass(LImage, 2)) {
+        Image img = *LUA::from_luce<LImage>(2);
+        AffineTransform aff = AffineTransform::identity;
+        if(LUCE::luce_isofclass(LAffineTransform,2))
+            aff = LUCE::luce_toaffinetransform(2);
+        return LUA::returnBoolean(Graphics::reduceClipRegion( img, aff ));
+    }
+    else if(lua_istable(L,2)) {
+        return LUA::returnBoolean(Graphics::reduceClipRegion( LUCE::luce_torectangle<int>(2) ) );
+    }
+    // error
+    LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: reduceClipRegion: wrong arguments.\nExpected:\n %s,\n %s,\n %s,\n %s",
+            "(LRectangle)",
+            "(LRectangleList)",
+            "(LPath, [LAffineTransform])",
+            "(LImage, [LAffineTransform])"));
 }
 
 int LGraphics::clipRegionIntersects ( lua_State* ) {
@@ -185,8 +206,24 @@ int LGraphics::fillEllipse ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::drawEllipse ( lua_State* ) {
-    Rectangle<float> area ( LUA::getRectangle<float>(2) );
+int LGraphics::drawEllipse ( lua_State* L ) {
+    Rectangle<float> area;
+    if(lua_isnumber(L,2)) {
+        float x = LUA::getNumber<float>(2);
+        float y = LUA::getNumber<float>(2);
+        float w = LUA::getNumber<float>(2);
+        float h = LUA::getNumber<float>(2);
+        area = {x,y,w,h};
+    //} else if(LUCE::luce_isoftype(LRectangle,2)) {
+    } else if(lua_istable(L,2)) { // LRectangle
+        area = LUCE::luce_torectangle<float>(2);
+    } else {
+        // error
+        LUCE::luce_error(lua_pushfstring(L,
+                "LGraphics: drawEllipse: wrong arguments.\nExpected:\n %s,\n %s",
+                "(x,y,w,h)",
+                "(LRectangle)"));
+    }
     float lineThickness = LUA::getNumber<float>(2);
     Graphics::drawEllipse( area, lineThickness );
     return 0;
@@ -198,7 +235,7 @@ int LGraphics::saveState ( lua_State* ) {
 }
 
 int LGraphics::excludeClipRegion ( lua_State* ) {
-    Graphics::excludeClipRegion(LUA::getRectangle(2));
+    Graphics::excludeClipRegion(LUCE::luce_torectangle<int>(2));
     return 0;
 }
 
@@ -208,7 +245,7 @@ int LGraphics::endTransparencyLayer ( lua_State* ) {
 }
 
 int LGraphics::fillCheckerBoard ( lua_State *L ) {
-    Rectangle<int> area ( LUA::getRectangle<int>(2) );
+    Rectangle<int> area = LUCE::luce_torectangle<int>(2);
     int checkWidth = LUA::getNumber<int>(2);
     int checkHeight = LUA::getNumber<int>(2);
     Colour colour1, colour2;
@@ -251,18 +288,24 @@ int LGraphics::restoreState ( lua_State* ) {
 int LGraphics::drawText ( lua_State *L ) {
     String text = LUA::getString(2);
     Rectangle<int> area;
-    if(!lua_istable(L, 2)) {
-        int x, y, w, h;
-        x = LUA::getNumber<int>(2); y = LUA::getNumber<int>(2);
-        w = LUA::getNumber<int>(2); h = LUA::getNumber<int>(2);
+    if(lua_isnumber(L,2)) {
+        int x = LUA::getNumber<int>(2); 
+        int y = LUA::getNumber<int>(2);
+        int w = LUA::getNumber<int>(2); 
+        int h = LUA::getNumber<int>(2);
         area = { x, y, w, h };
-        // crash on osx
-        //area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
-        //        LUA::getNumber<int>(4), LUA::getNumber<int>(5) }
     }
-    else
+    //else if(LUCE::luce_isoftype(LRectangle,2)) {
+    else if(lua_istable(L,2)) {
         area = LUCE::luce_torectangle(2);
-    
+    }
+    else {
+        // error
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: drawEllipse: wrong arguments.\nExpected:\n %s,\n %s",
+            "(x,y,w,h)",
+            "(LRectangle)"));
+    }
     Justification justificationType = (Justification)LUA::getNumber<int>(2);
     bool useEllipsesIfTooBig = LUA::getBoolean(2);
     Graphics::drawText( text, area, justificationType, useEllipsesIfTooBig );
@@ -272,18 +315,24 @@ int LGraphics::drawText ( lua_State *L ) {
 int LGraphics::drawFittedText ( lua_State *L ) {
     String text = LUA::getString(2);
     Rectangle<int> area;
-    if(!lua_istable(L, 2)) {
-        int x, y, w, h;
-        x = LUA::getNumber<int>(2); y = LUA::getNumber<int>(2);
-        w = LUA::getNumber<int>(2); h = LUA::getNumber<int>(2);
+    if(!lua_isnumber(L, 2)) {
+        int x = LUA::getNumber<int>(2); 
+        int y = LUA::getNumber<int>(2);
+        int w = LUA::getNumber<int>(2); 
+        int h = LUA::getNumber<int>(2);
         area = { x, y, w, h };
-        // osx crash
-        //area = { LUA::getNumber<int>(2), LUA::getNumber<int>(3),
-        //        LUA::getNumber<int>(4), LUA::getNumber<int>(5) };
     }
-    else
-        area = LUCE::luce_torectangle(2);
-
+    //else if(LUCE::luce_isoftype(LRectangle,2)) {
+    else if(lua_istable(L,2)) {
+        area = LUCE::luce_torectangle<int>(2);
+    }
+    else {
+        // error
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: drawEllipse: wrong arguments.\nExpected:\n %s,\n %s",
+            "(x,y,w,h)",
+            "(LRectangle)"));
+    }
     Justification justificationFlags = LUA::getNumber<int>(2);
     int maximumNumberOfLines = LUA::getNumber<int>(2);
     float minimumHorizontalScale = LUA::checkAndGetNumber<float>(2, 0.7f);
@@ -293,17 +342,24 @@ int LGraphics::drawFittedText ( lua_State *L ) {
 
 int LGraphics::fillRoundedRectangle ( lua_State *L ) {
     Rectangle<float> area;
-    if(!lua_istable(L, 2)) {
-        float x, y, w, h;
-        x = LUA::getNumber<float>(2); y = LUA::getNumber<float>(2);
-        w = LUA::getNumber<float>(2); h = LUA::getNumber<float>(2);
+    if(!lua_isnumber(L, 2)) {
+        float x = LUA::getNumber<float>(2); 
+        float y = LUA::getNumber<float>(2);
+        float w = LUA::getNumber<float>(2); 
+        float h = LUA::getNumber<float>(2);
         area = { x, y, w, h };
-        //area = { LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
-        //        LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) };
     }
-    else
+    //else if(LUCE::luce_isoftype(LRectangle,2)) {
+    else if(lua_istable(L,2)) {
         area = LUCE::luce_torectangle<float>(2);
-
+    }
+    else {
+        // error
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: drawEllipse: wrong arguments.\nExpected:\n %s,\n %s",
+            "(x,y,w,h)",
+            "(LRectangle)"));
+    }
     float cornerSize = LUCE::luce_tonumber<float>(2);
     Graphics::fillRoundedRectangle( area, cornerSize );
     return 0;
@@ -324,41 +380,33 @@ int LGraphics::setFont ( lua_State *L ) {
     else if(LUCE::luce_isofclass(LFont, 2))
         Graphics::setFont( *LUA::from_luce<LFont>(2) );
     else
-        LUCE::luce_error(lua_pushfstring(L, 
-                    "LGraphics: setFont: expected number of LFont class, received: %s", 
-                        lua_typename(L, lua_type(L, 2))));
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: setFont: wrong arguments.\nExpected:\n %s, %s\n got %s",
+            "(font size)",
+            "(LFong)",
+            lua_typename(L, lua_type(L, 2))));
     return 0;
 }
 
 int LGraphics::fillRect ( lua_State *L ) {
-    if( LUCE::luce_isoftype(LRectangle, 2) || lua_istable(L, 2) ) {
-        if( LUCE::luce_isofnumtype(int, 2) )
-            Graphics::fillRect( LUCE::luce_torectangle(2) );
-        else
-            Graphics::fillRect( LUCE::luce_torectangle<float>(2) );
-
-        return 0;
+    Rectangle<float> r;
+    if(lua_isnumber(L,2) && lua_isnumber(L,3) && lua_isnumber(L,4) && lua_isnumber(L,5)) {
+        float x = LUA::getNumber<float>(2);
+        float y = LUA::getNumber<float>(2);
+        float w = LUA::getNumber<float>(2);
+        float h = LUA::getNumber<float>(2);
+        r = {x,y,w,h};
     }
-
-    if( LUCE::luce_isoftype(LNumber, 2) ||lua_isnumber(L, 2) ) {
-        if( LUCE::luce_isofnumtype(int, 2) ) {
-            int x, y, w, h;
-            x = LUA::getNumber<int>(2); y = LUA::getNumber<int>(2);
-            w = LUA::getNumber<int>(2); h = LUA::getNumber<int>(2);
-            Graphics::fillRect(x,y,w,h);
-            //Graphics::fillRect( LUCE::luce_tonumber(2), LUCE::luce_tonumber(3),
-            //                        LUCE::luce_tonumber(4), LUCE::luce_tonumber(5) );
-        } else {
-            float x, y, w, h;
-            x = LUA::getNumber<float>(2); y = LUA::getNumber<float>(2);
-            w = LUA::getNumber<float>(2); h = LUA::getNumber<float>(2);
-            Graphics::fillRect(x,y,w,h);
-            //Graphics::fillRect( LUCE::luce_tonumber<float>(2), LUCE::luce_tonumber<float>(3),
-            //                        LUCE::luce_tonumber<float>(4), LUCE::luce_tonumber<float>(5) );
-        }
-        return 0;
+    else if( LUCE::luce_isoftype(LRectangle, 2) || lua_istable(L, 2) ) {
+        r = LUCE::luce_torectangle<float>(2);
     }
-    LUCE::luce_error(lua_pushfstring(L, "Graphics::fillRect: wrong or missing parameters"));
+    else {
+        LUCE::luce_error(lua_pushfstring(L, 
+            "LGraphics: fillRect: wrong arguments.\nExpected:\n %s, %s",
+            "(x,y,w,h)",
+            "(LRectangle)"));
+    }
+    Graphics::fillRect( r );
     return 0;
 }
 
@@ -386,47 +434,76 @@ int LGraphics::drawVerticalLine ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::drawRect ( lua_State* ) {
-    Rectangle<float> rectangle ( LUA::getRectangle<float>(2) );
-    int lineThickness = LUA::checkAndGetNumber<int>(2, 1);
-    Graphics::drawRect( rectangle, lineThickness );
-    return 0;
-}
-
-int LGraphics::drawRoundedRectangle ( lua_State* ) {
-    Rectangle<float> rectangle ( LUA::getRectangle<float>(2) );
-    float cornerSize = LUA::getNumber<float>(2);
-    float lineThickness = LUA::getNumber<float>(2);
-    Graphics::drawRoundedRectangle( rectangle, cornerSize, lineThickness );
-    return 0;
-}
-
-int LGraphics::drawLine ( lua_State *L ) {
-    if (lua_gettop(L) > 5) {
-        float a,b,c,d,e;
-        a = LUA::getNumber<float>(2); b = LUA::getNumber<float>(2);
-        c = LUA::getNumber<float>(2); d = LUA::getNumber<float>(2);
-        e = LUA::getNumber<float>(2);
-        Graphics::drawLine( a, b, c, d, e );
-        //Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
-        //        LUA::getNumber<float>(4), LUA::getNumber<float>(5), LUA::getNumber<float>(6) );
-    }
-    else if (lua_gettop(L) > 4) {
-        float a,b,c,d;
-        a = LUA::getNumber<float>(2); b = LUA::getNumber<float>(2);
-        c = LUA::getNumber<float>(2); d = LUA::getNumber<float>(2);
-        Graphics::drawLine( a, b, c, d );
-        //Graphics::drawLine( LUA::getNumber<float>(2), LUA::getNumber<float>(3), 
-        //        LUA::getNumber<float>(4), LUA::getNumber<float>(5) );
+int LGraphics::drawRect( lua_State* L) {
+    Rectangle<float> r;
+    if(lua_isnumber(L,2)) {
+        float x = LUA::getNumber<float>(2);
+        float y = LUA::getNumber<float>(2);
+        float w = LUA::getNumber<float>(2);
+        float h = LUA::getNumber<float>(2);
+        r = {x,y,w,h};
+    } else if(lua_istable(L,2)) {
+        r = LUCE::luce_torectangle<float>(2);
     }
     else {
-        Line<float> line = LUA::getLine<float>(2);
-        if(lua_isnumber(L,2)) 
-            Graphics::drawLine( line, LUA::getNumber<float>(2) );
-        else
-            Graphics::drawLine( line );
+        LUCE::luce_error(lua_pushfstring(L, 
+            "LGraphics: drawRect: wrong arguments.\nExpected:\n %s, %s",
+            "(x,y,w,h,[thickness])",
+            "(LRectangle,[thickness])"));
     }
+    int lineThickness = LUA::checkAndGetNumber<int>(2, 1);
+    Graphics::drawRect( r, lineThickness );
+    return 0;
+}
 
+int LGraphics::drawRoundedRectangle( lua_State* L ) {
+    Rectangle<float> r;
+    if(lua_isnumber(L,2)) {
+        float x = LUA::getNumber<float>(2);
+        float y = LUA::getNumber<float>(2);
+        float w = LUA::getNumber<float>(2);
+        float h = LUA::getNumber<float>(2);
+        r = {x,y,w,h};
+    } 
+    else if(lua_istable(L,2)) {
+        r = LUCE::luce_torectangle<float>(2);
+    }
+    else {
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: drawRect: wrong arguments.\nExpected:\n %s, %s",
+            "(x,y,w,h,cornerSize,thickness)",
+            "(LRectangle,cornerSize,thickness)"));
+    }
+    if(!lua_isnumber(L,2) || !lua_isnumber(L,3))
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: drawRect: wrong arguments.\nExpected:\n %s, %s",
+            "(x,y,w,h,cornerSize,thickness)",
+            "(LRectangle,cornerSize,thickness)"));
+
+    float cornerSize = LUA::getNumber<float>(2);
+    float lineThickness = LUA::getNumber<float>(2);
+    Graphics::drawRoundedRectangle( r, cornerSize, lineThickness );
+    return 0;
+}
+
+int LGraphics::drawLine( lua_State *L ) {
+    Line<float> line;
+    if(lua_istable(L,2))
+        line = LUCE::luce_toline<float>(2);
+    else if(lua_gettop(L)>4) {
+        float x1,y1,x2,y2;
+        x1 = LUA::getNumber<float>(2); y1 = LUA::getNumber<float>(2);
+        x2 = LUA::getNumber<float>(2); y2 = LUA::getNumber<float>(2);
+        line = Line<float>(x1,y1,x2,y2);
+    }
+    else
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: drawLine: wrong arguments.\nExpected:\n %s,\n %s",
+                "(LLine,[thickness])",
+                "(x1,y1,x2,y2,[thickness])"));
+
+    float thickness = LUA::checkAndGetNumber<float>(2, 1.0f);
+    Graphics::drawLine(line, thickness);
     return 0;
 }
 
@@ -444,7 +521,7 @@ int LGraphics::setColour ( lua_State *L ) {
 }
 
 int LGraphics::drawArrow ( lua_State* ) {
-    Line<float> line = LUA::getLine<float>(2);
+    Line<float> line = LUCE::luce_toline<float>(2);
     float lineThickness = LUA::getNumber<float>(2);
     float arrowheadWidth = LUA::getNumber<float>(2);
     float arrowheadLength = LUA::getNumber<float>(2);
@@ -452,40 +529,45 @@ int LGraphics::drawArrow ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::drawDashedLine ( lua_State* ) {
-    Line<float> line = LUA::getLine<float>(2);
-    // TODO: 
-    // a series of lengths to specify the on/off lengths 
-    // - e.g. { 4, 5, 6, 7 } will draw a line of 4 pixels, skip 5 pixels, 
-    // draw 6 pixels, skip 7 pixels, and then repeat
-    //float* dashLengths = LUA::getNumber<float>(2);
-    Array<float> dashes = LUA::getList<float>(2);
+int LGraphics::drawDashedLine(lua_State* L) {
+    if(!lua_gettop(L)>3 
+            || (!LUCE::luce_isoftype(LLine,2) &&!lua_istable(L,2)) 
+            || !lua_istable(L,2))
+    {
+        LUCE::luce_error(lua_pushfstring(L,
+            "LGraphics: drawDashedLine: wrong arguments.\nExpected:\n %s",
+            "(LLine, {even list of numbers}, [thickness], [startIndex])"));
+    }
+    Line<float> line = LUCE::luce_toline<float>(2);
+    size_t n = lua_objlen(L,2);
+    if((n%2)!=0)
+        LUCE::luce_error("LGraphics: drawDashedLine: list of numbers isn't even.");
+    float dashLengths[n];
+    for(int i=0; i<n; ++i) {
+        lua_pushnumber(L,i+1);
+        lua_gettable(L,2);
+        dashLengths[i] = lua_tonumber(L,-1);
+    }
+    lua_pop(L,n);
+    lua_remove(L,2);
 
-    float dashLengths[ dashes.size() ];
-    for(int i=0; i<dashes.size(); ++i)
-        dashLengths[i] = dashes[i];
-
-    int numDashLengths = LUA::getNumber<int>(2);
     float lineThickness = LUA::checkAndGetNumber<float>(2, 1.0f);
     int dashIndexToStartFrom = LUA::checkAndGetNumber<int>(2, 0);
-    Graphics::drawDashedLine( line, dashLengths, numDashLengths, lineThickness, dashIndexToStartFrom );
-
-    //LUA::TODO_OBJECT( "drawDashedLine,  line, dashLengths, numDashLengths, lineThickness, dashIndexToStartFrom " );
-    //lua_settop(LUA::Get(), 1); // added by TODO
+    Graphics::drawDashedLine( line, dashLengths, n, lineThickness, dashIndexToStartFrom );
     return 0;
 }
 
-int LGraphics::fillPath ( lua_State *L ) {
+int LGraphics::fillPath(lua_State* L) {
     Path path = *LUA::from_luce<LPath>(2);
     AffineTransform transform = AffineTransform::identity;
-    if(! lua_isnoneornil(L,2))
-        transform = LAffineTransform::fromLuce( LUA::getList<float>(2) );
+    if(LUCE::luce_isoftype(LAffineTransform,2) || lua_istable(L,2))
+        transform = LUCE::luce_toaffinetransform(2);
     Graphics::fillPath( path, transform );
     return 0;
 }
 
-int LGraphics::addTransform ( lua_State* ) {
-    Graphics::addTransform( LAffineTransform::fromLuce( LUA::getList<float>(2) ) );
+int LGraphics::addTransform(lua_State*) {
+    Graphics::addTransform( LUCE::luce_toaffinetransform(2) );
     return 0;
 }
 
@@ -518,7 +600,7 @@ int LGraphics::drawImage ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::drawImageWithin ( lua_State* ) {
+int LGraphics::drawImageWithin(lua_State*) {
     Image imageToDraw = *LUA::from_luce<LImage>(2);
     int destX = LUA::getNumber<int>(2);
     int destY = LUA::getNumber<int>(2);
@@ -531,15 +613,15 @@ int LGraphics::drawImageWithin ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::drawImageTransformed ( lua_State* ) {
+int LGraphics::drawImageTransformed(lua_State*) {
     Image imageToDraw = *LUA::from_luce<LImage>(2);
-    AffineTransform transform = *LUA::from_luce<LAffineTransform>(2);
+    AffineTransform transform = LUCE::luce_toaffinetransform(2);
     bool fillAlphaChannelWithCurrentBrush = LUA::checkAndGetBoolean(2, false);
     Graphics::drawImageTransformed( imageToDraw, transform, fillAlphaChannelWithCurrentBrush );
     return 0;
 }
 
-int LGraphics::setTiledImageFill ( lua_State* ) {
+int LGraphics::setTiledImageFill(lua_State*) {
     Image imageToUse = *LUA::from_luce<LImage>(2);
     int anchorX = LUA::getNumber<int>(2);
     int anchorY = LUA::getNumber<int>(2);
@@ -548,7 +630,7 @@ int LGraphics::setTiledImageFill ( lua_State* ) {
     return 0;
 }
 
-int LGraphics::strokePath ( lua_State *L ) {
+int LGraphics::strokePath(lua_State* L) {
     Path path = *LUA::from_luce<LPath>(2);
     PathStrokeType strokeType = *LUA::from_luce<LPathStrokeType>(2);
     AffineTransform transform = AffineTransform::identity;
@@ -559,18 +641,24 @@ int LGraphics::strokePath ( lua_State *L ) {
     return 0;
 }
 
-// TODO
-// getters
-
 // setters
-int LGraphics::setFillType ( lua_State* ) {
-    //Graphics::setFillType(*LUA::from_luce<LFillType>(2); // TODO);
-    LUA::TODO_OBJECT( "setFillType, *LUA::from_luce<LFillType>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
+int LGraphics::setFillType(lua_State* L) {
+    Graphics::setFillType(*LUA::from_luce<LFillType>(2));
     return 0;
 }
 
-int LGraphics::fillRectList ( lua_State* ) {
+int LGraphics::fillRectList(lua_State* L) {
+    if(LUCE::luce_isoftype(LRectangleList,2)) {
+        Graphics::fillRectList( LUCE::luce_torectanglelist<float>(2) );
+    }
+    else {
+        LUCE::luce_error(lua_pushfstring(L, 
+            "LGraphics: fillRectList: wrong arguments.\nExpected:\n %s\n got %s",
+            "(LRectangleList)",
+            lua_typename(L,lua_type(L,2)) ));
+    }
+    return 0;
+    /*
     LUCE::NumType t = LUCE::luce_numtype(2);
     if( LUCE::luce_isnumtype(int, t) ) {
         RectangleList<int> rl = LUCE::luce_torectanglelist(2);
@@ -582,9 +670,10 @@ int LGraphics::fillRectList ( lua_State* ) {
         std::cout << "ERROR: unknown type for rl: " << t << std::endl;
     }
     return 0;
+    */
 }
 
-int LGraphics::setGradientFill ( lua_State *L ) {
+int LGraphics::setGradientFill(lua_State* L) {
     Colour colour1, colour2;
     float x1, y1, x2, y2;
     bool isRadial;
@@ -608,7 +697,6 @@ int LGraphics::setGradientFill ( lua_State *L ) {
     Graphics::setGradientFill( cg );
     return 0;
 }
-
 
 // probably won't do
 int LGraphics::getInternalContext ( lua_State* ) {
