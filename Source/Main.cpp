@@ -240,6 +240,7 @@ l_class(Run);
 l_class(Line);
 l_class(TextLayout);
 l_class(ColourGradient);
+l_class(FillType);
 l_class(DocumentWindow);
 l_class(MainComponent);
 l_class(JComponent);
@@ -290,6 +291,7 @@ static const luaL_Reg luce_lib [] = {
     d(Line),
     d(TextLayout),
     d(ColourGradient),
+    d(FillType),
     d(DocumentWindow),
     d(MainComponent),
     { "Component", l_JComponent },
