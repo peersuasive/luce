@@ -313,13 +313,10 @@ int LComponent::getName ( lua_State* ) {
     else return 0;
 }
 int LComponent::setName ( lua_State* ) {
-    // FIXME:
-    // don't change name here, that'd mean changing callbacks also
-    // should set a quick uuid or something
-    //myName( LUA::getString() ); 
-    String newName = LUA::getString();
+    String newName = LUA::getString(2);
+    myName( newName ); 
     if (child)
-        child->setName(myName());
+        child->setName(newName);
     return 0;
 }
 
