@@ -141,7 +141,8 @@ void LViewport::mouseDoubleClick(const MouseEvent& e) {
 
 void LViewport::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wheel) {
     if(hasCallback("mouseWheelMove"))
-        LComponent::lmouseWheelMove(e, wheel);
+        if(LComponent::lmouseWheelMove(e, wheel))
+            Viewport::mouseWheelMove(e,wheel);
     else
         Viewport::mouseWheelMove(e, wheel);
 }
@@ -215,15 +216,11 @@ int LViewport::getViewArea ( lua_State* ) {
 }
 
 int LViewport::getVerticalScrollBar ( lua_State *L ) {
-    //return LUA::returnUserdata<LScrollBar>( Viewport::getVerticalScrollBar() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "ScrollBar getVerticalScrollBar()" );
+    return LUA::returnUserdata<LScrollBar>( Viewport::getVerticalScrollBar() );
 }
 
 int LViewport::getHorizontalScrollBar ( lua_State *L ) {
-    //return LUA::returnUserdata<LScrollBar>( Viewport::getHorizontalScrollBar() );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "ScrollBar getHorizontalScrollBar()" );
+    return LUA::returnUserdata<LScrollBar>( Viewport::getHorizontalScrollBar() );
 }
 
 int LViewport::getViewWidth ( lua_State* ) {

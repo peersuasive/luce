@@ -16,7 +16,7 @@
 
 class LViewport
     : public LComponent,
-      public Viewport//, private Viewport::Listener
+      public Viewport
 {
 public:
     LViewport(lua_State*);
