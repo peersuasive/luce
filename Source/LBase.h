@@ -24,6 +24,10 @@ public:
     virtual void selfKill() override;
 
     //==============================================================================
+    int light(lua_State*);
+    int unlight(lua_State*);
+
+    //==============================================================================
     int readOnly(lua_State*);
     int writeOnly(lua_State*);
     
