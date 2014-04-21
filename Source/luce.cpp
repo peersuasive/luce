@@ -57,6 +57,7 @@ namespace luce {
 #include "LListBox.cpp"
 #include "LComboBox.cpp"
 #include "LSlider.cpp"
+#include "LScrollBar.cpp"
 
 #include "LOptions.cpp"
 #include "LPopupMenu.cpp"
