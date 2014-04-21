@@ -36,7 +36,7 @@ local className = "LDocument"
 local mt = {}
 mt.__index = mt
 
-local function new(name, ...)
+local function new(_, name, ...)
     local LDEBUG = _G.LDEBUG
     local luce   = _G.Luce
     local app    = _G.App
