@@ -48,8 +48,8 @@ namespace {
         if(!res_c)
             return NULL;
         std::string res(res_c);
-        if(res.compare(0, 5, "light")==0) // light objects are not ready to dump, yet
-            return NULL;
+        if(res.compare(0, 5, "light")==0)
+            return res.substr(5).c_str();
         else
             return res.c_str();
     }
@@ -202,8 +202,19 @@ namespace {
     //       meaning having access to the lua scope 
     //       to call the call the class constructor...
     //
+    int dump_lightclass(lua_State* L) {
+        int n = lua_tointeger(L, lua_upvalueindex(1));
+        lua_newtable(L);
+        for(int i=1;i<=n;++i) {
+            lua_pushnumber(L,i);
+            lua_pushnumber(L,i);
+            lua_gettable(L,1);
+            lua_settable(L,2);
+        }
+        return 1;
+    }
     template<class T>
-    int luceI_pushlightclass(std::vector<T> a, const char *name) {
+    int luceI_pushlightclass(std::vector<T> a, const char *name, lua_CFunction dump = &dump_lightclass) {
         lua_newtable(L);
         int i = lua_gettop(L);
         for(int j=0;j<a.size();++j) {
@@ -212,6 +223,11 @@ namespace {
         }
         lua_pushstring(L, name);
         lua_setfield(L, i, "__ltype");
+        if(dump) {
+            lua_pushnumber(L, a.size());
+            lua_pushcclosure(L, dump, 1);
+            lua_setfield(L, i, "dump");
+        }
         return 1;
     }
 
@@ -226,7 +242,7 @@ namespace {
     }
     template<class T>
     int luce_pushlightpoint(const juce::Point<T>& p) {
-        return luceI_pushlightclass<T>({p.getX(), p.getY()}, "lightpoint");
+        return luceI_pushlightclass<T>({p.getX(), p.getY()}, "lightLPoint");
     }
     template<class T>
     int luce_pushtable(const juce::Point<T>& p) {
@@ -240,7 +256,7 @@ namespace {
     }
     template<class T>
     int luce_pushlightrange(const juce::Range<T>& r) {
-        return luceI_pushlightclass<T>({r.getStart(), r.getEnd()}, "lightrange");
+        return luceI_pushlightclass<T>({r.getStart(), r.getEnd()}, "lightLRange");
     }
     template<class T>
     int luce_pushtable(const juce::Range<T>& r) {
@@ -257,7 +273,8 @@ namespace {
     }
     template<class T>
     int luce_pushlightrectangle(const juce::Rectangle<T>& r) {
-        return luceI_pushlightclass<T>({r.getX(), r.getY(), r.getWidth(), r.getHeight()}, "lightrectangle");
+        return luceI_pushlightclass<T>({r.getX(), r.getY(), r.getWidth(), r.getHeight()}, 
+                "lightLRectangle");
     }
     template<class T>
     int luce_pushtable(const juce::Rectangle<T>& r) {
@@ -275,7 +292,7 @@ namespace {
     template<class T>
     int luce_pushlightline(const juce::Line<T>& r) {
         return luceI_pushlightclass<T>({r.getStartX(), r.getStartY(), 
-                    r.getEndX(), r.getEndY()}, "lightline");
+                    r.getEndX(), r.getEndY()}, "lightLLine");
     }
     template<class T>
     int luce_pushtable(const juce::Line<T>& r) {
@@ -288,7 +305,7 @@ namespace {
     }
     int luce_pushlightaffinetransform(const juce::AffineTransform& aff) {
         return luceI_pushlightclass<float>({ aff.mat00, aff.mat01, aff.mat02,
-                                    aff.mat10, aff.mat11, aff.mat12, }, "lightaffinetransform");
+                                    aff.mat10, aff.mat11, aff.mat12, }, "lightLAffineTransform");
     }
     int luce_pushtable(const juce::AffineTransform& aff) {
         return luce_pushlightaffinetransform(aff);
@@ -304,7 +321,7 @@ namespace {
         int i = lua_gettop(L);
         lua_pushnumber(L, r.getFlags());
         lua_setfield(L, i, "flags");
-        lua_pushstring(L, "lightrectangleplacement");
+        lua_pushstring(L, "lightLRectanglePlacement");
         lua_setfield(L, i, "__ltype");
         return 1;
     }
@@ -432,7 +449,7 @@ namespace {
             r.push_back(sa[i]);
         return luce_pushtable(r);
     }
-    
+
     template<class T>
     const juce::RectangleList<T> luce_torectanglelist(int i) {
         juce::RectangleList<T> rl;
@@ -513,7 +530,7 @@ namespace {
         luce_pushlightpoint<float>( glyph.anchor );
         lua_setfield(L, i, "anchor");
         
-        lua_pushliteral(L, "lightglyph");
+        lua_pushliteral(L, "lightLGlyph");
         lua_setfield(L, i, "__ltype");
         return 1;
     }
@@ -556,6 +573,12 @@ namespace {
                 }
             }
         }
+        else {
+            lua_pop(L,1); // nil or userdata
+            return luce_isoftype(t, i) 
+                   || luce_isoftype((std::string("light")+std::string(t)).c_str(), i);
+        }
+
         lua_pop(L,1); // nil or userdata
         return false;
     }
