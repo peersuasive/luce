@@ -188,8 +188,11 @@ namespace LUA {
         const String getString(int i) {
             size_t len;
             const char *s = luaL_checklstring(L, i, &len);
+            CharPointer_UTF8 cp(s);
+            String str(cp, len);
             lua_remove(L,i);
-            return String(s, len);
+            return str;
+            //return String(s, len);
         }
         const String checkAndGetString(int i, String def) {
             if (lua_type(L, i) == LUA_TSTRING)
@@ -584,7 +587,9 @@ namespace LUA {
         }
 
         const int returnString(const String& val) {
-            lua_pushlstring(L, val.toRawUTF8(), val.length());
+            std::string str = val.toStdString();
+            lua_pushlstring(L, str.c_str(), str.length());
+            //lua_pushlstring(L, val.toRawUTF8(), val.length());
             return 1;
         }
         int returnString(const std::string& val) {
