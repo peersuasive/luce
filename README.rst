@@ -545,6 +545,14 @@ value attribution, whenever possible and obvious, that is. For instance,
 ``setName("...")`` and ``getName()`` would be replaced with ``name [= "..."]``,
 though set/get methods are still accessible.
 
+Another different is for JUCE's overloaded methods for both; wherever a more
+compact form exists that can be substituted with tables, Luce will always
+implement this compact form, leaving the detailed one.
+
+For instance, if a method can accept both a Rectangle and four number x,y,w,h,
+Luce will accept either a LRectangle or the table {x,y,w,h} but not the four
+numbers.
+
 So JUCE documentation is applicable for most of the Luce's low level components.
 
 ``Luce`` doesn't provide any listener class directly (and probably won't) but
