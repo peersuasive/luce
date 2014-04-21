@@ -211,6 +211,13 @@ int LLabel::valueChanged ( lua_State* ) {
 }
 
 
+void LLabel::resized() {
+    Label::resized();
+    if ( hasCallback("resized") )
+        LComponent::lresized();
+}
+
+
 // mouse
 void LLabel::mouseMove(const MouseEvent& e) {
     if(hasCallback("mouseMove"))

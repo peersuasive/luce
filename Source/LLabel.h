@@ -106,6 +106,9 @@ private:
     void valueChanged ( Value& ) override;
 
     //==============================================================================
+    //virtual void paint (Graphics& g) override;
+    virtual void resized () override;
+
     virtual void mouseMove(const MouseEvent&) override;
     virtual void mouseEnter(const MouseEvent&) override;
     virtual void mouseExit(const MouseEvent&) override;
