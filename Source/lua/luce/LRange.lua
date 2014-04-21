@@ -129,9 +129,14 @@ local function new(_, ...)
         __type = t
     elseif n == 1 then
         local r = ...
-        lstart = r:getStart()
-        lend   = r:getEnd()
-        __type = r.__type
+        if("LRange"==r.__type)then
+            lstart = r:getStart()
+            lend   = r:getEnd()
+            __type = r.__type
+        else
+            lstart = r[1]
+            lend   = r[2]
+        end
     end
     
     local self = {
