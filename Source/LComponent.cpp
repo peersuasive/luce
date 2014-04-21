@@ -1135,6 +1135,40 @@ int LComponent::focusOfChildComponentChanged(lua_State*){
     return 0;
 }
 
+int LComponent::getMouseCursor ( lua_State* ) {
+    if (child) {
+        // return LUA::TODO_RETURN_OBJECT_MouseCursor( child->getMouseCursor() );
+        lua_settop(LUA::Get(), 1); // added by TODO
+        return LUA::TODO_OBJECT( "MouseCursor getMouseCursor()" );
+    } else return 0;
+}
+int LComponent::setMouseCursor ( lua_State *L ) {
+    if (child) {
+        if(lua_isnumber(L,2))
+            child->setMouseCursor(
+                MouseCursor((MouseCursor::StandardCursorType)(LUA::getNumber<int>(2)))
+            );
+        else if(LUCE::luce_isoftype(LImage,2)) {
+            Image img(*LUA::from_luce<LImage>(2));
+            int hotSpotX = LUA::getNumber<int>(2);
+            int hotSpotY = LUA::getNumber<int>(2);
+            float scaleFactor = LUA::checkAndGetNumber<float>(2, 1.0f);
+            child->setMouseCursor(
+                MouseCursor(img, hotSpotX, hotSpotY, scaleFactor)
+            );
+        } 
+        // TODO: static methods for show/hideWaitCursor
+        else if(lua_isstring(L,2)) {
+            String wait = LUA::getString(2);
+            if(wait=="wait")
+                MouseCursor::showWaitCursor();
+            else
+                MouseCursor::hideWaitCursor();
+        }
+    }
+    return 0;
+}
+
 /// TODO
 
 // get/set
@@ -1213,22 +1247,6 @@ int LComponent::setTransform ( lua_State* ) {
     if (child) {
         // child->setTransform(LUA::TODO_OBJECT_AffineTransform);
         LUA::TODO_OBJECT( "setTransform, LUA::TODO_OBJECT_AffineTransform" );
-        lua_settop(LUA::Get(), 1); // added by TODO
-    }
-    return 0;
-}
-
-int LComponent::getMouseCursor ( lua_State* ) {
-    if (child) {
-        // return LUA::TODO_RETURN_OBJECT_MouseCursor( child->getMouseCursor() );
-        lua_settop(LUA::Get(), 1); // added by TODO
-        return LUA::TODO_OBJECT( "MouseCursor getMouseCursor()" );
-    } else return 0;
-}
-int LComponent::setMouseCursor ( lua_State* ) {
-    if (child) {
-        // child->setMouseCursor(LUA::TODO_OBJECT_MouseCursor);
-        LUA::TODO_OBJECT( "setMouseCursor, LUA::TODO_OBJECT_MouseCursor" );
         lua_settop(LUA::Get(), 1); // added by TODO
     }
     return 0;

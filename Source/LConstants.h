@@ -192,6 +192,30 @@ namespace {
         { "focusChangedDirectly", Component::focusChangedDirectly },
     };
 
+    std::map<const char*, int> lStandardCursorType = {
+        { "ParentCursor", MouseCursor::StandardCursorType::ParentCursor },
+        { "NoCursor", MouseCursor::StandardCursorType::NoCursor },
+        { "NormalCursor", MouseCursor::StandardCursorType::NormalCursor },
+        { "WaitCursor", MouseCursor::StandardCursorType::WaitCursor },
+        { "IBeamCursor", MouseCursor::StandardCursorType::IBeamCursor },
+        { "CrosshairCursor", MouseCursor::StandardCursorType::CrosshairCursor },
+        { "CopyingCursor", MouseCursor::StandardCursorType::CopyingCursor },
+        { "PointingHandCursor", MouseCursor::StandardCursorType::PointingHandCursor },
+        { "DraggingHandCursor", MouseCursor::StandardCursorType::DraggingHandCursor },
+        { "LeftRightResizeCursor", MouseCursor::StandardCursorType::LeftRightResizeCursor },
+        { "UpDownResizeCursor", MouseCursor::StandardCursorType::UpDownResizeCursor },
+        { "UpDownLeftRightResizeCursor", MouseCursor::StandardCursorType::UpDownLeftRightResizeCursor },
+        { "TopEdgeResizeCursor", MouseCursor::StandardCursorType::TopEdgeResizeCursor },
+        { "BottomEdgeResizeCursor", MouseCursor::StandardCursorType::BottomEdgeResizeCursor },
+        { "LeftEdgeResizeCursor", MouseCursor::StandardCursorType::LeftEdgeResizeCursor },
+        { "RightEdgeResizeCursor", MouseCursor::StandardCursorType::RightEdgeResizeCursor },
+        { "TopLeftCornerResizeCursor", MouseCursor::StandardCursorType::TopLeftCornerResizeCursor },
+        { "TopRightCornerResizeCursor", MouseCursor::StandardCursorType::TopRightCornerResizeCursor },
+        { "BottomLeftCornerResizeCursor", MouseCursor::StandardCursorType::BottomLeftCornerResizeCursor },
+        { "BottomRightCornerResizeCursor", MouseCursor::StandardCursorType::BottomRightCornerResizeCursor },
+        { "NumStandardCursorTypes", MouseCursor::StandardCursorType::NumStandardCursorTypes },
+    };
+
     /* not yet -- maybe never
     std::map<const char *, int> lSpecialLocationType = {
         { "userHomeDirectory", File::userHomeDirectory },
