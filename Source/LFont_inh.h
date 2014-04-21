@@ -24,6 +24,8 @@ const Luna<LFont>::Inheritence LFont::inherits[] = {
 };
 
 const Luna<LFont>::InheritenceF LFont::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

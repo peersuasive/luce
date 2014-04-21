@@ -24,6 +24,8 @@ const Luna<LTreeViewItem>::Inheritence LTreeViewItem::inherits[] = {
 };
 
 const Luna<LTreeViewItem>::InheritenceF LTreeViewItem::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

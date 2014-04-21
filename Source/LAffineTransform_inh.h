@@ -24,6 +24,8 @@ const Luna<LAffineTransform>::Inheritence LAffineTransform::inherits[] = {
 };
 
 const Luna<LAffineTransform>::InheritenceF LAffineTransform::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

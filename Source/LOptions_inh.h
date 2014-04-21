@@ -20,6 +20,8 @@ const Luna<LOptions>::Inheritence LOptions::inherits[] = {
 };
 
 const Luna<LOptions>::InheritenceF LOptions::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

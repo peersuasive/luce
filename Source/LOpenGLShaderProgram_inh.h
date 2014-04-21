@@ -20,6 +20,8 @@ const Luna<LOpenGLShaderProgram>::Inheritence LOpenGLShaderProgram::inherits[] =
 };
 
 const Luna<LOpenGLShaderProgram>::InheritenceF LOpenGLShaderProgram::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

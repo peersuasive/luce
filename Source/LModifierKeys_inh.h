@@ -24,6 +24,8 @@ const Luna<LModifierKeys>::Inheritence LModifierKeys::inherits[] = {
 };
 
 const Luna<LModifierKeys>::InheritenceF LModifierKeys::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

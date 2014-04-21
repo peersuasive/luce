@@ -24,6 +24,8 @@ const Luna<LMouseEvent>::Inheritence LMouseEvent::inherits[] = {
 };
 
 const Luna<LMouseEvent>::InheritenceF LMouseEvent::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

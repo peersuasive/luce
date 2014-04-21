@@ -20,6 +20,8 @@ const Luna<LHighResolutionTimer>::Inheritence LHighResolutionTimer::inherits[] =
 };
 
 const Luna<LHighResolutionTimer>::InheritenceF LHighResolutionTimer::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

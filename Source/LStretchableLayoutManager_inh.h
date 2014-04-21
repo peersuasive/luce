@@ -24,6 +24,8 @@ const Luna<LStretchableLayoutManager>::Inheritence LStretchableLayoutManager::in
 };
 
 const Luna<LStretchableLayoutManager>::InheritenceF LStretchableLayoutManager::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

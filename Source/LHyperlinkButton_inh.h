@@ -54,6 +54,8 @@ const Luna<LHyperlinkButton>::Inheritence LHyperlinkButton::inherits[] = {
 };
 
 const Luna<LHyperlinkButton>::InheritenceF LHyperlinkButton::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     // LComponent
     method( LComponent, as ),
     method( LComponent, startDragging ),

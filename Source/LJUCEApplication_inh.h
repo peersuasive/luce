@@ -24,6 +24,8 @@ const Luna<LJUCEApplication>::Inheritence LJUCEApplication::inherits[] = {
 };
 
 const Luna<LJUCEApplication>::InheritenceF LJUCEApplication::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

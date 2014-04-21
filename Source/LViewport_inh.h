@@ -41,6 +41,8 @@ const Luna<LViewport>::Inheritence LViewport::inherits[] = {
 };
 
 const Luna<LViewport>::InheritenceF LViewport::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     method( LComponent, as ),
     method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
@@ -183,6 +185,7 @@ const Luna<LViewport>::InheritenceF LViewport::inheritsF[] = {
     method( LComponent, removeAllChildren ),
     method( LComponent, postCommandMessage ),
     method( LComponent, setCentreRelative ),
+    method( LComponent, getSize ),
     method( LComponent, setSize ),
     method( LComponent, toBack ),
     method( LComponent, addComponentListener ),

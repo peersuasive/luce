@@ -24,6 +24,8 @@ const Luna<LImage>::Inheritence LImage::inherits[] = {
 };
 
 const Luna<LImage>::InheritenceF LImage::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

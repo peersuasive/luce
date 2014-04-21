@@ -20,6 +20,8 @@ const Luna<LTextLayout>::Inheritence LTextLayout::inherits[] = {
 };
 
 const Luna<LTextLayout>::InheritenceF LTextLayout::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

@@ -24,6 +24,8 @@ const Luna<LInputFilter>::Inheritence LInputFilter::inherits[] = {
 };
 
 const Luna<LInputFilter>::InheritenceF LInputFilter::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

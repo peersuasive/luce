@@ -20,6 +20,8 @@ const Luna<LPopupMenu>::Inheritence LPopupMenu::inherits[] = {
 };
 
 const Luna<LPopupMenu>::InheritenceF LPopupMenu::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

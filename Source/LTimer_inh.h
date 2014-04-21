@@ -20,6 +20,8 @@ const Luna<LTimer>::Inheritence LTimer::inherits[] = {
 };
 
 const Luna<LTimer>::InheritenceF LTimer::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

@@ -24,6 +24,8 @@ const Luna<LKeyPress>::Inheritence LKeyPress::inherits[] = {
 };
 
 const Luna<LKeyPress>::InheritenceF LKeyPress::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

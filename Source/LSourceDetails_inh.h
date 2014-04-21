@@ -24,6 +24,8 @@ const Luna<LSourceDetails>::Inheritence LSourceDetails::inherits[] = {
 };
 
 const Luna<LSourceDetails>::InheritenceF LSourceDetails::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 

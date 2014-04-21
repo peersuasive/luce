@@ -24,6 +24,8 @@ const Luna<LColour>::Inheritence LColour::inherits[] = {
 };
 
 const Luna<LColour>::InheritenceF LColour::inheritsF[] = {
+    method( LBase, light),
+    method( LBase, unlight),
     {0,0}
 };
 
