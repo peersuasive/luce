@@ -83,6 +83,7 @@ local function new(name, ...)
     OS.is_desktop = not(OS.is_mobile)
     local sep     = (OS.unix or OS.android) and "/" or "\\"
     local so      = OS.unix and "so" or "dll"
+    OS.sep        = sep
     self.os       = OS
 
     local HOME    = luce.JUCEApplication.userHomeDirectory()
