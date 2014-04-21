@@ -573,11 +573,6 @@ namespace {
                 }
             }
         }
-        else {
-            lua_pop(L,1); // nil or userdata
-            return luce_isoftype(t, i) 
-                   || luce_isoftype((std::string("light")+std::string(t)).c_str(), i);
-        }
 
         lua_pop(L,1); // nil or userdata
         return false;
