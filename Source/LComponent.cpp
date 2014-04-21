@@ -165,9 +165,32 @@ int LComponent::getTopLevelComponent ( lua_State* ) {
 
 // callbacks
 int LComponent::repaint(lua_State *L) {
-    if(child)
-        child->repaint();
-    lua_pop(L,1);
+    if(child) {
+        int top = lua_gettop(L);
+        if(lua_isnoneornil(L, 2))
+            child->repaint();
+        else if(lua_istable(L,2)) 
+            child->repaint( LUCE::luce_torectangle<int>(2) );
+        else if( top > 4 ) {
+            int x = LUA::getNumber<int>(2); int y = LUA::getNumber<int>(2);
+            int w = LUA::getNumber<int>(2); int h = LUA::getNumber<int>(2);
+            child->repaint(x, y, w, h);
+        }
+    }
+    return 0;
+}
+
+void LComponent::lresized() {
+    if (child && hasCallback("resized"))
+        callback("resized");
+}
+int LComponent::resized(lua_State *L) {
+    if (child) {
+        if(lua_isfunction(L,2))
+            set("resized");
+        else
+            lresized();
+    }
     return 0;
 }
 
@@ -914,20 +937,6 @@ void LComponent::lhandleCommandMessage( int commandId ) {
 int LComponent::handleCommandMessage(lua_State*){
     if (child)
         set("handleCommandMessage");
-    return 0;
-}
-
-void LComponent::lresized() {
-    if (child)
-        callback("resized");
-}
-int LComponent::resized(lua_State *L) {
-    if (child) {
-        if(lua_isfunction(L,2))
-            set("resized");
-        else
-            child->resized();
-    }
     return 0;
 }
 
