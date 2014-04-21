@@ -100,12 +100,14 @@ LFont::LFont(lua_State *L)
     : LBase(L, "LFont", true),
       Font()
 {
+    REGISTER_LIGHT_CLASS(Font);
 }
 
 LFont::LFont(lua_State*L, const Font& f)
     : LBase(L, "LFont (dynamic)", true),
       Font(f)
 {
+    REGISTER_LIGHT_CLASS(Font);
 }
 
 int LFont::lnew(lua_State *L) {
@@ -143,7 +145,6 @@ int LFont::lnew(lua_State *L) {
 }
 
 LFont::~LFont() {}
-
 
 ///// statics
 int LFont::s_getDefaultSansSerifFontName ( lua_State* ) {

@@ -69,12 +69,14 @@ LColour::LColour(lua_State *L)
     : LBase(L, "LColour", true),
       Colour()
 {
+    REGISTER_LIGHT_CLASS(Colour);
 }
 
 LColour::LColour(lua_State *L, const Colour& class_)
     : LBase(L, "LColour", true),
       Colour( class_ )
 {
+    REGISTER_LIGHT_CLASS(Colour);
 }
 
 LColour::~LColour() {}

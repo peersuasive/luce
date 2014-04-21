@@ -321,8 +321,12 @@ int LGraphics::drawMultiLineText ( lua_State* ) {
 int LGraphics::setFont ( lua_State *L ) {
     if(lua_isnumber(L,2))
         Graphics::setFont(LUA::getNumber<float>(2));
-    else
+    else if(LUCE::luce_isofclass(LFont, 2))
         Graphics::setFont( *LUA::from_luce<LFont>(2) );
+    else
+        LUCE::luce_error(lua_pushfstring(L, 
+                    "LGraphics: setFont: expected number of LFont class, received: %s", 
+                        lua_typename(L, lua_type(L, 2))));
     return 0;
 }
 
