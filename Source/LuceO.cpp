@@ -42,11 +42,12 @@ namespace {
     //
     const char* luce_typename(int i) {
         if (!lua_istable(L, i)) return NULL;
-        lua_getfield(L, i, "__ltype");
+        lua_pushstring(L, "__ltype");
+        lua_rawget(L, i);
         const char *res_c = lua_tostring(L, -1);
         lua_pop(L,1);
         if(!res_c)
-            return NULL;
+            return "__NIL__";
         std::string res(res_c);
         if(res.compare(0, 5, "light")==0)
             return res.substr(5).c_str();
@@ -539,10 +540,10 @@ namespace {
     // macros and facilities
     //
     bool isofnumtype(const char *t, int i) {
-        return luce_numtype(i) == t;
+        return strcmp(luce_numtype(i), t) == 0;
     }
     bool isoftype(const char *t, int i) {
-        return luce_typename(i) == t;
+        return strcmp(luce_typename(i), t) == 0;
     }
 
     bool isnumtype(const char* t1, const char *t2) {
