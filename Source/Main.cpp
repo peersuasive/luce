@@ -221,6 +221,7 @@ l_c(JustificationType);
 l_c(FocusChangeType);
 l_cs(Colours);
 l_c(CurrentOS);
+l_c(StandardCursorType);
 
 l_class(JUCEApplication);
 l_class(LookAndFeel);
@@ -330,6 +331,7 @@ void register_enums(lua_State *L) {
     dc(Colours);
     dc(FocusChangeType);
     dc(CurrentOS);
+    dc(StandardCursorType);
 }
 
 #ifdef DEBUG
