@@ -161,8 +161,8 @@ int LPath::getNearestPoint ( lua_State* ) {
 }
 
 /////// setters
-int LPath::startNewSubPath(lua_State*) {
-    Path::startNewSubPath(LUCE::luce_topoint<float>(2));
+int LPath::startNewSubPath(lua_State* L) {
+    Path::startNewSubPath( LUCE::luce_topoint<float>(2) );
     return 0;
 }
 
@@ -219,8 +219,8 @@ int LPath::addPieSegment ( lua_State* ) {
     return 0;
 }
 
-int LPath::lineTo ( lua_State* ) {
-    Path::lineTo(LUA::getPoint<float>(2));
+int LPath::lineTo(lua_State* L) {
+    Path::lineTo(LUCE::luce_topoint<float>(2));
     return 0;
 }
 

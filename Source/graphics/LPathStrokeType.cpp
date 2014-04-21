@@ -59,7 +59,7 @@ int LPathStrokeType::lnew(lua_State *L) {
     float thickness = LUA::getNumber<float>(2);
     JointStyle style = PathStrokeType::mitered;
     EndCapStyle endStyle = PathStrokeType::butt;
-    if(lua_gettop(L)==2) {
+    if(!lua_isnoneornil(L,2)) {
         style = (JointStyle)LUA::getNumber<int>(2);
         endStyle = (EndCapStyle)LUA::checkAndGetNumber(2, (int)PathStrokeType::butt);
     }
