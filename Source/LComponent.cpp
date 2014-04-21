@@ -88,17 +88,37 @@ int LComponent::getBounds(lua_State *L) {
 }
 
 int LComponent::setSize(lua_State *L) {
-    Array<var> b(LUA::getList());
+    int w, h;
+    if(lua_isnumber(L,2)) {
+        w = LUA::getNumber(2);
+        h = LUA::getNumber(2);
+    }
+    else {
+        lua_pushnumber(L,1);
+        lua_gettable(L, 2);
+        w = LUA::getNumber();
+        lua_pushnumber(L,2);
+        lua_gettable(L, 2);
+        h = LUA::getNumber();
+        lua_remove(L,2);
+    }
     if(child)
-        child->setSize( b[0], b[1] );
+        child->setSize( w, h );
     return 0;
 }
 
 int LComponent::getSize(lua_State *L) {
     if(child) {
-        return LUCE::luce_pushtable( child->getBounds() );
+        lua_newtable(L);
+        lua_pushnumber(L, 1);
+        lua_pushnumber(L, child->getWidth());
+        lua_settable(L,-3);
+        lua_pushnumber(L, 2);
+        lua_pushnumber(L, child->getHeight());
+        lua_settable(L,-3);
+        return 1;
     }
-    else return 0;
+    return 0;
 }
 
 int LComponent::setVisible(lua_State *L) {
