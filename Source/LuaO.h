@@ -91,6 +91,7 @@ namespace LUA {
 
         const String getError();
 
+        // as for Component
         typedef int(*constructor_t)(Component* udata);
         typedef std::map<String, constructor_t> types_t;
         types_t types, testtypes;
@@ -124,7 +125,29 @@ namespace LUA {
         template<class T>
         T luaL_getnum(const char *t, int i = -1);
         const char* lua_getnumtype(int i = -1);
+
+        // from LBase light user data
+        typedef int(*constructor_unlight_t)(void* udata);
+        typedef std::map<String, constructor_unlight_t> types_unlight_t;
+        types_unlight_t types_unlight;
+
+        template<class T, class U = T>
+        int luacast_unlight(void* udata) {
+            return returnUserdata<T,U>(static_cast<U*>(udata));
+        }
+
+        template<class T, class U = T>
+        void register_class_unlight(String const& n) {
+            types_unlight.insert( std::make_pair("L"+n, &luacast_unlight<T,U>) );
+        }
+        
+        int casttype_unlight(String const& n, void* udata) {
+            types_unlight_t::iterator i = types_unlight.find(n);
+            if( i==types_unlight.end() ) return 0;
+            return i->second(udata);
+        }
     }
 }
 
 #define REGISTER_CLASS(T) LUA::register_class<T>(#T)
+#define REGISTER_LIGHT_CLASS(T) LUA::register_class_unlight<L##T, T>(#T)
