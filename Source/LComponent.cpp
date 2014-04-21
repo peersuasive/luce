@@ -1115,8 +1115,27 @@ int LComponent::lmouseWheelMove( const MouseEvent& e, const MouseWheelDetails& w
     }
     return res;
 }
-int LComponent::mouseWheelMove(lua_State*) {
-    if (child) set("mouseWheelMove");
+int LComponent::mouseWheelMove(lua_State *L) {
+    if (child) {
+        if(lua_isfunction(L,2))
+            set("mouseWheelMove");
+        else {
+            MouseEvent *me = LUA::from_luce<LMouseEvent>(2);
+            MouseWheelDetails mw;
+            lua_pushvalue(L, 2);
+            lua_getfield(L, 2, "deltaX");
+            mw.deltaX = LUA::getNumber<float>();
+            lua_getfield(L, 2, "deltaX");
+            mw.deltaY = LUA::getNumber<float>();
+            lua_getfield(L, 2, "isReversed");
+            mw.isReversed = LUA::getBoolean();
+            lua_getfield(L, 2, "isSmooth");
+            mw.isSmooth = LUA::getBoolean();
+            lua_pop(L,1);
+            lua_remove(L,2);
+            child->mouseWheelMove(*me, mw);
+        }
+    }
     return 0;
 }
 
