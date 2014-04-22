@@ -276,7 +276,7 @@ int LFont::getAscent ( lua_State* ) {
 }
 
 int LFont::getStringWidth ( lua_State* ) {
-    return LUA::returnNumber( Font::getStringWidth( LUA::getString(2) ) );
+    return LUA::returnNumber( Font::getStringWidthFloat( LUA::getString(2) ) );
 }
 
 int LFont::boldened ( lua_State *L ) {
