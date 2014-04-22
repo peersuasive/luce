@@ -287,17 +287,17 @@ int LGraphics::restoreState ( lua_State* ) {
 
 int LGraphics::drawText ( lua_State *L ) {
     String text = LUA::getString(2);
-    Rectangle<int> area;
+    Rectangle<float> area;
     if(lua_isnumber(L,2)) {
-        int x = LUA::getNumber<int>(2); 
-        int y = LUA::getNumber<int>(2);
-        int w = LUA::getNumber<int>(2); 
-        int h = LUA::getNumber<int>(2);
+        float x = LUA::getNumber<float>(2); 
+        float y = LUA::getNumber<float>(2);
+        float w = LUA::getNumber<float>(2); 
+        float h = LUA::getNumber<float>(2);
         area = { x, y, w, h };
     }
     //else if(LUCE::luce_isoftype(LRectangle,2)) {
     else if(lua_istable(L,2)) {
-        area = LUCE::luce_torectangle(2);
+        area = LUCE::luce_torectangle<float>(2);
     }
     else {
         // error
