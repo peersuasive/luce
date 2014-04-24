@@ -544,7 +544,7 @@ namespace {
         return res && strcmp(res, t) == 0;
     }
     bool isoftype(const char *t, int i) {
-        const char *res = luce_numtype(i);
+        const char *res = luce_typename(i);
         return res && strcmp(res, t) == 0;
     }
 
