@@ -41,6 +41,7 @@ namespace {
     // some lua/luce classes to C++ facilities
     //
     const char* luce_typename(int i) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
         if (!lua_istable(L, i)) return NULL;
         lua_pushstring(L, "__ltype");
         lua_rawget(L, i);
@@ -55,6 +56,7 @@ namespace {
             return res.c_str();
     }
     const char* luce_numtype(int i) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
         if (!lua_istable(L, i)) return NULL;
         lua_getfield(L, i, "__type");
         const char *res = lua_tostring(L,-1);
@@ -87,6 +89,7 @@ namespace {
     }
 
     int luceI_pushnumber(int i = -1) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
         if(!lua_isnumber(L,i))
             return 0;
         lua_pushstring(L, "number");
@@ -130,6 +133,7 @@ namespace {
     //
 
     int luceI_pushtable(int i = -1) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
         if(!lua_istable(L,i)) {
             //luce_error(lua_pushfstring(L, "Luce Error: expected LObject or table, got %s", 
             //            lua_typename(L,lua_type(L,-1))));
