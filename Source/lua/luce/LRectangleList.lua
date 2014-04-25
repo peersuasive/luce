@@ -117,14 +117,16 @@ function mt:addWithoutMerging(r)
     return self
 end
 
-function mt:substract(rect)
-    local rect = rect
+function mt:substract(x,y,w,h)
+    local rect = x
     if("LRectangleList"==rect.__ltype) then
         for _, n in next, rect.rects do
             self:substract(n)
         end
     elseif not ("LRectangle"==rect.__ltype) then
         error("Unknown type to substract: ".. (rect.__ltype or type(rect)))
+        -- assume Rectangle
+        --rect = luce:Rectangle({x, y, w, h}, self.__type)
     end
 
     local originalNumRects = #self.rects
