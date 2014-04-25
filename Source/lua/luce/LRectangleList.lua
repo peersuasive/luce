@@ -64,6 +64,12 @@ function mt:add(x, y, w, h)
         return self
     elseif not("LRectangle"==r.__ltype) then
         error("Unknown type to add: ".. (r.__ltype or type(r)))
+        -- assume Rectangle
+        --r = luce:Rectangle({x, y, w, h}, self.__type)
+    end
+    if(#self.rects==0)then
+        self.rects[1] = r
+        return self
     end
     if not(r:isEmpty())then
         if (#self.rects == 0) then
