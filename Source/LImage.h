@@ -26,6 +26,11 @@ public:
     static int lnew(lua_State*);
     ~LImage();
 
+    enum LImageType {
+        LNativeImageType,
+        LSoftwareImageType,
+        LOpenGLImageType,
+    };
     //==============================================================================
     static int s_null(lua_State*);
 

@@ -98,6 +98,7 @@ LImage::~LImage() {}
 int LImage::lnew(lua_State *L) {
     if(lua_isnoneornil(L,2))
         return LUA::storeAndReturnUserdata<LImage>( new LImage(L) );
+
     juce::Image::PixelFormat fmt = (juce::Image::PixelFormat)LUA::getNumber<int>(2);
     int w = LUA::getNumber<int>(2);
     int h = LUA::getNumber<int>(2);
@@ -105,26 +106,30 @@ int LImage::lnew(lua_State *L) {
     if(lua_isnoneornil(L,2))
         return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear) );
 
-    else if(lua_isstring(L,2)) {
-        // fake static implementation
-        String imageType = LUA::getString(2);
-        if(imageType == "NativeImageType") {
-            NativeImageType type;
-            return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type) );
-        } 
-        else if(imageType == "OpenGLImageType") {
-            OpenGLImageType type;
-            return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type) );
-        } 
-        else if(imageType == "SoftwateImageType") {
-            SoftwareImageType type;
-            return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type) );
-        } 
-        else {
-            LUCE::luce_error(lua_pushfstring(L, "Unknown type: %s", imageType.toRawUTF8()));
+    else if(lua_isnumber(L,2)) {
+        switch((LImageType)LUA::getNumber<int>(2)) {
+            case LNativeImageType: {
+                NativeImageType type;
+                return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type ) );
+            }
+            case LSoftwareImageType: {
+                OpenGLImageType type;
+                return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type ) );
+            }
+            case LOpenGLImageType: {
+                SoftwareImageType type;
+                return LUA::storeAndReturnUserdata<LImage>( new LImage(L, fmt, w, h, clear, type ) );
+            }
+            default:
+                LUCE::luce_error(lua_pushfstring(L, 
+                        "LImage: new: unknown image type.\nExpected: %s, %s, %s",
+                            "NativeImageType",
+                            "SoftwareImageType",
+                            "OpenGLImageType" 
+                ));
+                break;
         }
     }
-
     else {
         // TODO
         LUCE::luce_error("No yet implemented: Image(..., ImageType)");

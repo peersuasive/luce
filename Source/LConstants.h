@@ -216,6 +216,11 @@ namespace {
         { "NumStandardCursorTypes", MouseCursor::StandardCursorType::NumStandardCursorTypes },
     };
 
+    std::map<const char*, int> lImageType = {
+        { "NativeImageType"  , LImage::LImageType::LNativeImageType },
+        { "SoftwareImageType", LImage::LImageType::LSoftwareImageType },
+        { "OpenGLImageType"  , LImage::LImageType::LOpenGLImageType },
+    };
     /* not yet -- maybe never
     std::map<const char *, int> lSpecialLocationType = {
         { "userHomeDirectory", File::userHomeDirectory },

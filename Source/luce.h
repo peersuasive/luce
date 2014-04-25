@@ -40,7 +40,6 @@ namespace luce {
 #include "LKeyPress.h"
 #include "LMouseEvent.h"
 #include "LColour.h"
-#include "LConstants.h"
 #include "LAffineTransform.h"
 #include "LImage.h"
 #include "graphics/LPath.h"
@@ -88,6 +87,7 @@ namespace luce {
 #include "LOptions.h"
 #include "LPopupMenu.h"
 
+#include "LConstants.h"
 
 }
 
