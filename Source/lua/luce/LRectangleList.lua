@@ -56,7 +56,7 @@ end
 function mt:add(x, y, w, h)
     local r = x
     if (y) then
-        r = luce:Rectangle({t, y, w, h}, self.__type)
+        r = luce:Rectangle({x, y, w, h}, self.__type)
     elseif("LRectangleList"==r.__ltype)then
         for _, rc in next, r.rects do
             self:add( rc )
