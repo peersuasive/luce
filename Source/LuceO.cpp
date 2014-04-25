@@ -469,7 +469,7 @@ namespace {
             lua_pushnil(L);
             while(lua_next(L, -2)) {
                 lua_pushvalue(L,-1); // luce_torectangle will eat it
-                rl.add( luce_torectangle<T>() );
+                rl.addWithoutMerging( luce_torectangle<T>() );
                 lua_pop(L,1);
             }
         }
