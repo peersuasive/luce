@@ -79,7 +79,7 @@ function mt:add(x, y, w, h)
             for j=#self.rects,1,-1 do
                 local ourRect = self.rects[j]
                 if (r:intersects(ourRect))then
-                    if (rect:contains(ourRect)) then
+                    if (r:contains(ourRect)) then
                         table.remove(self.rects, j)
                     elseif not( ourRect:reduceIfPartlyContainedIn(r) ) then
                         anyOverlaps = true;
@@ -93,13 +93,13 @@ function mt:add(x, y, w, h)
                 for i=#self.rects, 1, -1 do
                     ourRect = self.rects[i]
                     if (r:intersects(ourRect) ) then
-                        rl:subtract(ourRect)
-                        if (#rl.list == 0) then
+                        rl:substract(ourRect)
+                        if (#rl.rects == 0) then
                             return self
                         end
                     end
                 end
-                for _,n in next, rl.list do
+                for _,n in next, rl.rects do
                     self.rects[#self.rects+1] = n
                 end
             else
