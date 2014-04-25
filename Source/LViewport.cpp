@@ -216,11 +216,11 @@ int LViewport::getViewArea ( lua_State* ) {
 }
 
 int LViewport::getVerticalScrollBar ( lua_State *L ) {
-    return LUA::returnUserdata<LScrollBar>( Viewport::getVerticalScrollBar() );
+    return LUA::returnUserdata<LScrollBar>( new LComponent(L, Viewport::getVerticalScrollBar(), "LScrollBar") );
 }
 
 int LViewport::getHorizontalScrollBar ( lua_State *L ) {
-    return LUA::returnUserdata<LScrollBar>( Viewport::getHorizontalScrollBar() );
+    return LUA::returnUserdata<LScrollBar>( new LComponent(L, Viewport::getHorizontalScrollBar(), "LScrollBar") );
 }
 
 int LViewport::getViewWidth ( lua_State* ) {
