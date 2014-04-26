@@ -352,7 +352,7 @@ function mt:intersects(other)
             and self.y + self.h > other.y
             and self.x < other.x + other.w
             and self.y < other.y + other.h
-            and self.w > 0 and h > 0
+            and self.w > 0 and self.h > 0
             and other.w > 0 and other.h > 0
 
     elseif("LLine"==t)then
@@ -441,7 +441,7 @@ end
 
 function mt:reduceIfPartlyContainedIn(other)
     local inside = 0
-    local otherR  = other.getRight()
+    local otherR  = other:getRight()
     if(self.x >= other.x) and (self.x < otherR) then inside = 1 end
     local otherB = other:getBottom()
     if(self.y >= other.y) and (pos.y < otherB) then inside = luce.bit.bor(inside, 2) end
@@ -568,7 +568,7 @@ function mt:copy()
 end
 
 function mt:dump()
-    return { self.x, self.y, self.w, self.h, __type = self.__type }
+    return { self.x, self.y, self.w, self.h} --, __type = self.__type }
 end
 
 function mt:toString()
