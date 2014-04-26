@@ -27,12 +27,40 @@ namespace {
         if ( !L || L == nullptr ) L = L_;
     }
 
+    std::string what;
     void luce_error(const char *msg) {
         if(LUA::liveCoding())
             std::cout << "ERROR: " << msg << std::endl;
         else {
             if(!lua_isstring(L,-1))
                 lua_pushstring(L, msg);
+            else if(msg) {
+                const char* err = lua_tostring(L,-1);
+                lua_pushfstring(L, "%s: %s\n", msg, err);
+            }
+            if(!what.empty())
+                lua_pushfstring(L, "%s: %s", what.c_str(), lua_tostring(L,-1));
+        
+            int top = lua_gettop(L);
+
+            lua_getfield(L, LUA_GLOBALSINDEX, "debug");
+            if(lua_istable(L,-1)) {
+                lua_getfield(L,-1,"traceback");
+                if(lua_isfunction(L,-1)) {
+                    lua_pushvalue(L,top);
+                    lua_pushinteger(L, 2);
+                    lua_call(L, 2, 1);
+                    lua_error(L);
+                }
+                else {
+                    lua_pop(L,2);
+                }
+                    
+            }
+            else {
+                lua_pop(L,1);
+            }
+
             lua_error(L);
         }
     }
@@ -173,6 +201,9 @@ namespace {
 
         if(res)
             v = luceI_tonumberarray<T>();
+        else
+            luce_error("type not matching");
+
         lua_pop(L,3); // type, ltype, nil or table
         return v;
     }
@@ -243,6 +274,7 @@ namespace {
     // Point
     template<class T>
     const juce::Point<T> luce_topoint(int i) {
+        what = "Point";
         return luceI_to2SClass<Point<T>, T>(i);
     }
     template<class T>
@@ -257,6 +289,7 @@ namespace {
     // Range
     template<class T>
     const juce::Range<T> luce_torange(int i) {
+        what = "Range";
         return luceI_to2SClass<Range<T>, T>(i);
     }
     template<class T>
@@ -271,6 +304,7 @@ namespace {
     // Rectangle
     template<class T>
     const juce::Rectangle<T> luce_torectangle(int i) {
+        what = "Rectangle";
         return luceI_to4SClass<Rectangle<T>, T>(i);
     }
     const juce::Rectangle<int> luce_torectangle(int i) {
@@ -289,6 +323,7 @@ namespace {
     // Line
     template<class T>
     const juce::Line<T> luce_toline(int i) {
+        what = "Line";
         return luceI_to4SClass<Line<T>, T>(i);
     }
     const juce::Line<int> luce_toline(int i) {
@@ -306,6 +341,7 @@ namespace {
  
     // AffineTransform
     const juce::AffineTransform luce_toaffinetransform(int i) {
+        what = "AffineTransform";
         return luceI_to6SClass<juce::AffineTransform, float>(i);
     }
     int luce_pushlightaffinetransform(const juce::AffineTransform& aff) {
@@ -318,6 +354,7 @@ namespace {
 
     // RectanglePlacement
     const juce::RectanglePlacement luce_torectangleplacement(int i = -1) {
+        what = "RectanglePlacement";
         int val = luce_tonumber<int>(i);
         return { val };
     }
@@ -445,6 +482,9 @@ namespace {
                 lua_pop(L,1);
             }
         }
+        else
+            luce_error( lua_pushfstring(L, "Luce Error: expected StringArray, got %s", lua_typename(L,lua_type(L,-1))) );
+
         lua_pop(L, 3); // type, ltype, nil or table
         return array;
     }
@@ -472,7 +512,9 @@ namespace {
                 rl.addWithoutMerging( luce_torectangle<T>() );
                 lua_pop(L,1);
             }
-        }
+        } else
+            luce_error( lua_pushfstring(L, "Luce Error: expected RectangleList, got %s", lua_typename(L,lua_type(L,-1))) );
+
         lua_pop(L, 3); // type, ltype, nil or table
         return rl;
     }
