@@ -309,7 +309,7 @@ int LSlider::getValue ( lua_State* ) {
 }
 int LSlider::setValue ( lua_State* ) {
     double newValue = LUA::getNumber<double>(2);
-    NotificationType notification = (NotificationType)LUA::getNumber<int>(2);
+    NotificationType notification = (NotificationType)LUA::checkAndGetNumber<int>(2, NotificationType::sendNotificationAsync);
     Slider::setValue( newValue, notification );
     return 0;
 }
