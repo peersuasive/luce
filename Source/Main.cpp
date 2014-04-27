@@ -245,6 +245,7 @@ l_class(FillType);
 l_class(DocumentWindow);
 l_class(MainComponent);
 l_class(JComponent);
+l_class(CallOutBox);
 l_class(Viewport);
 l_class(OpenGLComponent);
 l_class(TextButton);
@@ -301,6 +302,7 @@ static const luaL_Reg luce_lib [] = {
     d(DocumentWindow),
     d(MainComponent),
     { "Component", l_JComponent },
+    d(CallOutBox),
     d(Viewport),
     d(OpenGLComponent),
     d(TextButton),

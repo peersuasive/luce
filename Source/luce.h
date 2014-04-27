@@ -67,6 +67,7 @@ namespace luce {
 #include "LDocumentWindow.h"
 #include "LMainComponent.h"
 #include "LJComponent.h"
+#include "LCallOutBox.h"
 #include "LOpenGLShaderProgram.h"
 #include "LOpenGLComponent.h"
 #include "LJUCEApplication.h"
