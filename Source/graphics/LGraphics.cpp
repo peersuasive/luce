@@ -194,10 +194,8 @@ int LGraphics::resetToDefaultState ( lua_State* ) {
 int LGraphics::fillAll ( lua_State *L ) {
     if(lua_isnoneornil(L, 2))
         Graphics::fillAll();
-    else if (lua_isstring(L, 2))
-        Graphics::fillAll( Colours::findColourForName( LUA::getString(2), Colours::black ) );
     else
-        Graphics::fillAll( *LUA::from_luce<LColour>(2) );
+        Graphics::fillAll(LUCE::luce_tocolour(2));
     return 0;
 }
 
@@ -249,15 +247,8 @@ int LGraphics::fillCheckerBoard ( lua_State *L ) {
     int checkWidth = LUA::getNumber<int>(2);
     int checkHeight = LUA::getNumber<int>(2);
     Colour colour1, colour2;
-    if(lua_isstring(L,2))
-        colour1 = Colours::findColourForName( LUA::getString(2), Colours::black );
-    else
-        Colour colour1 = *LUA::from_luce<LColour>(2);
-    if(lua_isstring(L,2))
-        colour2 = Colours::findColourForName( LUA::getString(2), Colours::black );
-    else
-        Colour colour2 = *LUA::from_luce<LColour>(2);
-
+    colour1 = LUCE::luce_tocolour(2);
+    colour2 = LUCE::luce_tocolour(2);
     Graphics::fillCheckerBoard( area, checkWidth, checkHeight, colour1, colour2 );
     return 0;
 }
@@ -513,10 +504,7 @@ int LGraphics::setOpacity ( lua_State* ) {
 }
 
 int LGraphics::setColour ( lua_State *L ) {
-    if(lua_istable(L,2))
-        Graphics::setColour( *LUA::from_luce<LColour>(2) );
-    else
-        Graphics::setColour( Colours::findColourForName( LUA::getString(2), Colours::black ) );
+    Graphics::setColour( LUCE::luce_tocolour(2) );
     return 0;
 }
 
@@ -674,21 +662,13 @@ int LGraphics::fillRectList(lua_State* L) {
 }
 
 int LGraphics::setGradientFill(lua_State* L) {
-    Colour colour1, colour2;
     float x1, y1, x2, y2;
     bool isRadial;
-    if(lua_isstring(L, 2)) {
-        colour1 = Colours::findColourForName( LUA::getString(2), Colours::black );
-    } else {
-        colour1 = *LUA::from_luce<LColour>(2);
-    }
+    Colour colour1, colour2;
+    colour1 = LUCE::luce_tocolour(2);
     x1 = LUA::getNumber<float>(2);
     y1 = LUA::getNumber<float>(2);
-    if(lua_isstring(L, 2)) {
-        colour2 = Colours::findColourForName( LUA::getString(2), Colours::black );
-    } else {
-        colour1 = *LUA::from_luce<LColour>(2);
-    }
+    colour1 = LUCE::luce_tocolour(2);
     x2 = LUA::getNumber<float>(2);
     y2 = LUA::getNumber<float>(2);
     isRadial = LUA::getBoolean(2);
