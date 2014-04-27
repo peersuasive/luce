@@ -91,6 +91,57 @@ namespace {
         lua_pop(L,1);
         return res ? res : "int";
     }
+
+    //
+    // macros and facilities
+    //
+    bool isofnumtype(const char *t, int i) {
+        const char *res = luce_numtype(i);
+        return res && strcmp(res, t) == 0;
+    }
+    bool isoftype(const char *t, int i) {
+        const char *res = luce_typename(i);
+        return res && strcmp(res, t) == 0;
+    }
+
+    bool isnumtype(const char* t1, const char *t2) {
+        return strcmp(t1,t2) == 0;
+    }
+    #define luce_isoftype(t,i) isoftype(#t, i)
+    #define luce_isofnumtype(t,i) isofnumtype(#t, i)
+
+    #define luce_isnumtype(t1, t2) isnumtype(#t1, t2)
+
+    template<class T>
+    bool isofclass(const char* t, int i) {
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
+        if(!lua_istable(L,i))
+            return false;
+
+        lua_getfield(L, i, "__self"); // may be nil
+        if(!lua_isnoneornil(L, -1)) {
+            const char* tname = std::string( std::string(t) +"_" ).c_str();
+            void *p = lua_touserdata(L, -1);
+            if (p != NULL) {
+                if (lua_getmetatable(L, -1)) {
+                    luaL_getmetatable(L, tname);
+                    if (!lua_rawequal(L, -1, -2))
+                        p = NULL;
+                    lua_pop(L, 2); // mt*2
+                    return p ? true : false;
+                }
+            }
+        }
+
+        lua_pop(L,1); // nil or userdata
+        return false;
+    }
+    #define ct_1(T)   isofclass<T>( #T )
+    #define ct_2(T,i) isofclass<T>( #T, i )
+    #define ct_sel(x,T,i,FUNC, ...) FUNC
+    #define luce_isofclass(...) ct_sel(,##__VA_ARGS__, ct_2(__VA_ARGS__), ct_1(__VA_ARGS__),)
+
+
     int luceI_pushvalue(int i = -1, const char* ltype_ = NULL) {
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
         const char *ltype = ltype_ ? ltype_ : luce_typename(i);
@@ -371,6 +422,69 @@ namespace {
         return luce_pushlightrectangleplacement(r);
     }
 
+    // Colour
+    const juce::Colour luce_tocolour(int i = -1) {
+        what = "Colour";
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
+        int ltype = lua_type(L,i);
+        if(isofclass<LColour>("LColour", i)) {
+            Colour c{*LUA::from_luce<LColour>(i)};
+            lua_remove(L,i);
+            return c;
+        }
+        
+        switch(ltype) {
+            case LUA_TTABLE: {
+                lua_pushnumber(L,1);
+                lua_rawget(L,i);
+                uint8 red = LUA::getNumber<uint8>();
+                lua_pushnumber(L,2);
+                lua_rawget(L,i);
+                uint8 green = LUA::getNumber<uint8>();
+                lua_pushnumber(L,3);
+                lua_rawget(L,i);
+                uint8 blue = LUA::getNumber<uint8>();
+                lua_pushnumber(L,4);
+                lua_rawget(L,i);
+                uint8 alpha = LUA::checkAndGetNumber<uint8>(-1, 255);
+                lua_remove(L,i);
+                return {red, green, blue, alpha};
+            }
+                break;
+            case LUA_TNUMBER: {
+                uint8 red = LUA::getNumber<uint8>(i);
+                uint8 green = LUA::getNumber<uint8>(i);
+                uint8 blue = LUA::getNumber<uint8>(i);
+                uint8 alpha = LUA::checkAndGetNumber<uint8>(i, 255);
+                return {red, green, blue, alpha};
+            }
+                break;
+            case LUA_TSTRING: {
+                std::string type = lua_tostring(L,i);
+                lua_remove(L,i);
+                if (type == "HSBA") {
+                    int l_i = i+1;
+                    uint8 hue = LUA::getNumber<float>(i);
+                    uint8 sat = LUA::getNumber<float>(i);
+                    uint8 bri = LUA::getNumber<float>(i);
+                    uint8 alpha = LUA::getNumber<uint8>(i);
+                    return {hue, sat, bri, alpha};
+                }
+                else
+                    return { Colours::findColourForName(type, Colours::black) };
+            }
+                break;
+            default:
+                luce_error(lua_pushfstring(L, "LColour: invalid class.\nExpected:\n %s,\n %s,\n %s,\n %s,\n %s,\n %s",
+                    "()",
+                    "(LColour)",
+                    "({r,g,b,[a]})",
+                    "(HSBA, 'HSBA')",
+                    "('colour_name')"
+                ));
+            }
+        return {};
+    }
 
     //
     // generic lists
@@ -582,54 +696,6 @@ namespace {
         return 1;
     }
 
-    //
-    // macros and facilities
-    //
-    bool isofnumtype(const char *t, int i) {
-        const char *res = luce_numtype(i);
-        return res && strcmp(res, t) == 0;
-    }
-    bool isoftype(const char *t, int i) {
-        const char *res = luce_typename(i);
-        return res && strcmp(res, t) == 0;
-    }
-
-    bool isnumtype(const char* t1, const char *t2) {
-        return strcmp(t1,t2) == 0;
-    }
-    #define luce_isoftype(t,i) isoftype(#t, i)
-    #define luce_isofnumtype(t,i) isofnumtype(#t, i)
-
-    #define luce_isnumtype(t1, t2) isnumtype(#t1, t2)
-
-    template<class T>
-    bool isofclass(const char* t, int i) {
-        i = (i<0) ? lua_gettop(L)-(i+1) : i;
-        if(!lua_istable(L,i))
-            return false;
-
-        lua_getfield(L, i, "__self"); // may be nil
-        if(!lua_isnoneornil(L, -1)) {
-            const char* tname = std::string( std::string(t) +"_" ).c_str();
-            void *p = lua_touserdata(L, -1);
-            if (p != NULL) {
-                if (lua_getmetatable(L, -1)) {
-                    luaL_getmetatable(L, tname);
-                    if (!lua_rawequal(L, -1, -2))
-                        p = NULL;
-                    lua_pop(L, 2); // mt*2
-                    return p ? true : false;
-                }
-            }
-        }
-
-        lua_pop(L,1); // nil or userdata
-        return false;
-    }
-    #define ct_1(T)   isofclass<T>( #T )
-    #define ct_2(T,i) isofclass<T>( #T, i )
-    #define ct_sel(x,T,i,FUNC, ...) FUNC
-    #define luce_isofclass(...) ct_sel(,##__VA_ARGS__, ct_2(__VA_ARGS__), ct_1(__VA_ARGS__),)
 }
 }
 #endif // __LUCE_O_H
