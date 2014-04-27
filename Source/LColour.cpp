@@ -67,7 +67,7 @@ const Luna<LColour>::StaticType LColour::statics[] = {
 
 LColour::LColour(lua_State *L)
     : LBase(L, "LColour", true),
-      Colour()
+      Colour(LUCE::luce_tocolour())
 {
     REGISTER_LIGHT_CLASS(Colour);
 }
@@ -81,11 +81,14 @@ LColour::LColour(lua_State *L, const Colour& class_)
 
 LColour::~LColour() {}
 
+/*
 int LColour::lnew(lua_State *L) {
-
     if(lua_isnoneornil(L,2))
         return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Colour()) );
+    
+    return LUA::storeAndReturnUserdata<LColour>( new LColour(L, LUCE::luce_tocolour(2)) );
 
+#if 0
     else if(!lua_isnumber(L,2) && lua_isstring(L,2)) {
         String type = LUA::getString(2);
         if (type == "HSBA") {
@@ -129,7 +132,9 @@ int LColour::lnew(lua_State *L) {
                     "(HSBA, 'HSBA')",
                     "('colour_name')"
         ));
+#endif
 }
+*/
 
 int LColour::fromRGB ( lua_State *L ) {
     uint8 red   = LUA::getNumber<uint8>(2);

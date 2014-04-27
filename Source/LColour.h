@@ -21,7 +21,7 @@ class LColour
 public:
     LColour(lua_State*);
     LColour(lua_State*, const Colour&);
-    static int lnew(lua_State*);
+    //static int lnew(lua_State*);
     ~LColour();
 
     //==============================================================================
