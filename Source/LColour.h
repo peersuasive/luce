@@ -28,26 +28,30 @@ public:
     int getHSB(lua_State*);
 
     //==============================================================================
-    int fromFloatRGBA(lua_State*);
-    int fromString(lua_State*);
-    int fromRGB(lua_State*);
+    static int s_fromRGB(lua_State*);
+    static int s_fromRGBA(lua_State*);
+    static int s_fromFloatRGBA(lua_State*);
+    static int s_fromHSV(lua_State*);
+    static int s_contrasting(lua_State*);
+    static int s_greyLevel(lua_State*);
+    static int s_fromString(lua_State*);
+
+
+    //==============================================================================
     int brighter(lua_State*);
+    int contrasting(lua_State*);
     int getFloatRed(lua_State*);
     int interpolatedWith(lua_State*);
     int getRed(lua_State*);
     int getSaturation(lua_State*);
     int getFloatAlpha(lua_State*);
     int overlaidWith(lua_State*);
-    int fromRGBA(lua_State*);
     int getPixelARGB(lua_State*);
     int toString(lua_State*);
     int withMultipliedBrightness(lua_State*);
     int withMultipliedAlpha(lua_State*);
     int toDisplayString(lua_State*);
-    int contrasting(lua_State*);
     int getHue(lua_State*);
-    int fromHSV(lua_State*);
-    int greyLevel(lua_State*);
     int isOpaque(lua_State*);
     int isTransparent(lua_State*);
     int withAlpha(lua_State*);
@@ -63,7 +67,6 @@ public:
     int withBrightness(lua_State*);
     int withHue(lua_State*);
     int withMultipliedSaturation(lua_State*);
-
 
     //==============================================================================
 

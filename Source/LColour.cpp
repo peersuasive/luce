@@ -22,9 +22,6 @@ const Luna<LColour>::PropertyType LColour::properties[] = {
     {0,0}
 };
 const Luna<LColour>::FunctionType LColour::methods[] = {
-    method( LColour, fromFloatRGBA ),
-    method( LColour, fromString ),
-    method( LColour, fromRGB ),
     method( LColour, brighter ),
     method( LColour, getFloatRed ),
     method( LColour, interpolatedWith ),
@@ -32,16 +29,12 @@ const Luna<LColour>::FunctionType LColour::methods[] = {
     method( LColour, getSaturation ),
     method( LColour, getFloatAlpha ),
     method( LColour, overlaidWith ),
-    method( LColour, fromRGBA ),
     method( LColour, getPixelARGB ),
     method( LColour, toString ),
     method( LColour, withMultipliedBrightness ),
     method( LColour, withMultipliedAlpha ),
     method( LColour, toDisplayString ),
-    method( LColour, contrasting ),
     method( LColour, getHue ),
-    method( LColour, fromHSV ),
-    method( LColour, greyLevel ),
     method( LColour, isOpaque ),
     method( LColour, isTransparent ),
     method( LColour, withAlpha ),
@@ -58,10 +51,18 @@ const Luna<LColour>::FunctionType LColour::methods[] = {
     method( LColour, withHue ),
     method( LColour, withMultipliedSaturation ),
     method( LColour, getHSB ),
+    method( LColour, contrasting ),
     {0,0}
 };
 
 const Luna<LColour>::StaticType LColour::statics[] = {
+    smethod( LColour, fromRGBA ),
+    smethod( LColour, fromRGB ),
+    smethod( LColour, fromFloatRGBA ),
+    smethod( LColour, fromHSV ),
+    smethod( LColour, contrasting ),
+    smethod( LColour, greyLevel ),
+    smethod( LColour, fromString ),
     {0,0}
 };
 
@@ -136,46 +137,52 @@ int LColour::lnew(lua_State *L) {
 }
 */
 
-int LColour::fromRGB ( lua_State *L ) {
-    uint8 red   = LUA::getNumber<uint8>(2);
-    uint8 green = LUA::getNumber<uint8>(2);
-    uint8 blue  = LUA::getNumber<uint8>(2);
+int LColour::s_fromRGB ( lua_State *L ) {
+    uint8 red   = LUA::getNumber<uint8>(1);
+    uint8 green = LUA::getNumber<uint8>(1);
+    uint8 blue  = LUA::getNumber<uint8>(1);
     return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
         Colour::fromRGB( red, green, blue )
     ));
 }
 
-int LColour::fromRGBA ( lua_State *L ) {
-    uint8 red   = LUA::getNumber<uint8>(2);
-    uint8 green = LUA::getNumber<uint8>(2);
-    uint8 blue  = LUA::getNumber<uint8>(2);
-    uint8 alpha = LUA::getNumber<uint8>(2);
+int LColour::s_fromRGBA ( lua_State *L ) {
+    uint8 red   = LUA::getNumber<uint8>(1);
+    uint8 green = LUA::getNumber<uint8>(1);
+    uint8 blue  = LUA::getNumber<uint8>(1);
+    uint8 alpha = LUA::getNumber<uint8>(1);
     return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
         Colour::fromRGBA( red, green, blue, alpha )
     ));
 }
 
-int LColour::fromHSV ( lua_State *L ) {
-    float hue        = LUA::getNumber<float>(2);
-    float saturation = LUA::getNumber<float>(2);
-    float brightness = LUA::getNumber<float>(2);
-    float alpha      = LUA::getNumber<float>(2);
-    return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
-        Colour::fromHSV( hue, saturation, brightness, alpha )
-    ));
-}
-
-int LColour::fromFloatRGBA ( lua_State *L ) {
-    float red   = LUA::getNumber<float>(2);
-    float green = LUA::getNumber<float>(2);
-    float blue  = LUA::getNumber<float>(2);
-    float alpha = LUA::getNumber<float>(2);
+int LColour::s_fromFloatRGBA ( lua_State *L ) {
+    float red   = LUA::getNumber<float>(1);
+    float green = LUA::getNumber<float>(1);
+    float blue  = LUA::getNumber<float>(1);
+    float alpha = LUA::getNumber<float>(1);
     return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
         Colour::fromFloatRGBA( red, green, blue, alpha )
     ));
 }
 
-int LColour::contrasting ( lua_State *L ) {
+int LColour::s_fromHSV ( lua_State *L ) {
+    float hue        = LUA::getNumber<float>(1);
+    float saturation = LUA::getNumber<float>(1);
+    float brightness = LUA::getNumber<float>(1);
+    float alpha      = LUA::getNumber<float>(1);
+    return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
+        Colour::fromHSV( hue, saturation, brightness, alpha )
+    ));
+}
+
+int LColour::s_greyLevel ( lua_State *L ) {
+    return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
+        Colour::greyLevel( LUA::getNumber<float>(1) )
+    ));
+}
+
+int LColour::contrasting(lua_State* L) {
     if (lua_isnoneornil(L,2) or lua_isnumber(L,2)) {
         float amount = LUA::checkAndGetNumber(1, 1.0f);
         return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
@@ -183,32 +190,35 @@ int LColour::contrasting ( lua_State *L ) {
         ));
     }
     else if ( lua_isnumber(L, 3) ) {
-        Colour targetColour = *LUA::from_luce<LColour>(2);
+        Colour targetColour = LUCE::luce_tocolour(2);
         float minLuminosityDiff = LUA::getNumber<float>(2);
         return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
             Colour::contrasting( targetColour, minLuminosityDiff ) 
         ));
     }
     else {
-        Colour colour1 = *LUA::from_luce<LColour>(2);
-        Colour colour2 = *LUA::from_luce<LColour>(2);
+        Colour colour1 = LUCE::luce_tocolour(2);
+        Colour colour2 = LUCE::luce_tocolour(2);
         return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
             Colour::contrasting( colour1, colour2 )
         ));
     }
 }
 
-int LColour::greyLevel ( lua_State *L ) {
-    return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
-        Colour::greyLevel( LUA::getNumber<float>(2) )
+int LColour::s_contrasting ( lua_State *L ) {
+    Colour colour2 = LUCE::luce_tocolour(1);
+    Colour colour1 = LUCE::luce_tocolour(2);
+    return LUA::storeAndReturnUserdata<LColour>( new LColour(L, 
+        Colour::contrasting( colour1, colour2 )
     ));
 }
 
-int LColour::fromString ( lua_State *L ) {
+int LColour::s_fromString ( lua_State *L ) {
     return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
-        Colour::fromString( StringRef(LUA::getString(2)) )
+        Colour::fromString( StringRef(LUA::getString(1)) )
     ));
 }
+
 
 int LColour::brighter ( lua_State *L ) {
     return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
@@ -223,7 +233,7 @@ int LColour::darker ( lua_State *L ) {
 }
 
 int LColour::interpolatedWith ( lua_State *L ) {
-    Colour other = *LUA::from_luce<LColour>(2);
+    Colour other = LUCE::luce_tocolour(2);
     float proportionOfOther = LUA::getNumber<float>(2);
     return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
         Colour::interpolatedWith( other, proportionOfOther )
@@ -232,7 +242,7 @@ int LColour::interpolatedWith ( lua_State *L ) {
 
 int LColour::overlaidWith ( lua_State *L ) {
     return LUA::storeAndReturnUserdata<LColour>( new LColour(L,
-        Colour::overlaidWith( *LUA::from_luce<LColour>(2) )
+        Colour::overlaidWith( LUCE::luce_tocolour(2) )
     ));
 }
 
