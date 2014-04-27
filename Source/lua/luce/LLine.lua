@@ -237,7 +237,7 @@ end
 
 function mt:dump()
     return { self.lstart.x, self.lstart.y, 
-        self.lend.x, self.lend.x }, self.__type, self.__ltype
+        self.lend.x, self.lend.y }--, self.__type, self.__ltype
 end
 
 function mt:type()
