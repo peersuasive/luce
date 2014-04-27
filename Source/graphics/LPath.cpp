@@ -206,7 +206,7 @@ int LPath::addTriangle ( lua_State* ) {
 
 int LPath::restoreFromString ( lua_State* ) {
     Path::restoreFromString(LUA::getString(2));
-    return 0;
+    return 1;
 }
 
 int LPath::addPieSegment ( lua_State* ) {
