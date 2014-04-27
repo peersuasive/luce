@@ -61,6 +61,12 @@ namespace luce {
 #include "LSlider.cpp"
 #include "LScrollBar.cpp"
 
+#include "drawable/LDrawable.cpp"
+#include "drawable/LDrawableShape.cpp"
+#include "drawable/LDrawablePath.cpp"
+#include "drawable/LDrawableRectangle.cpp"
+#include "drawable/LDrawableComposite.cpp"
+
 #include "LOptions.cpp"
 #include "LPopupMenu.cpp"
 

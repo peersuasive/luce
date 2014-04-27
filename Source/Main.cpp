@@ -269,6 +269,9 @@ l_class(ListBox);
 l_class(ComboBox);
 l_class(Slider);
 l_class(ScrollBar);
+l_class(DrawablePath);
+l_class(DrawableRectangle);
+l_class(DrawableComposite);
 // core
 l_class(Time);
 l_class(BigInteger);
@@ -320,6 +323,10 @@ static const luaL_Reg luce_lib [] = {
     d(ComboBox),
     d(Slider),
     d(ScrollBar),
+    d(DrawablePath),
+    d(DrawableRectangle),
+    d(DrawableComposite),
+
     // core
     d(Time),
     d(BigInteger),
