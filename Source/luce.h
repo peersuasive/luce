@@ -93,6 +93,8 @@ namespace luce {
 #include "LOptions.h"
 #include "LPopupMenu.h"
 
+#include "extra/LColourSelector.h"
+
 #include "LConstants.h"
 
 }

@@ -70,6 +70,9 @@ namespace luce {
 #include "LOptions.cpp"
 #include "LPopupMenu.cpp"
 
+#include "extra/LColourSelector.cpp"
+
+
 }
 
 #include "Main.cpp"

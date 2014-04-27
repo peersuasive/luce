@@ -272,6 +272,8 @@ l_class(ScrollBar);
 l_class(DrawablePath);
 l_class(DrawableRectangle);
 l_class(DrawableComposite);
+//extra
+l_class(ColourSelector);
 // core
 l_class(Time);
 l_class(BigInteger);
@@ -326,6 +328,9 @@ static const luaL_Reg luce_lib [] = {
     d(DrawablePath),
     d(DrawableRectangle),
     d(DrawableComposite),
+
+    // extra
+    d(ColourSelector),
 
     // core
     d(Time),
