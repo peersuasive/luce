@@ -61,6 +61,7 @@ const Luna<LPath>::FunctionType LPath::methods[] = {
     method( LPath, cubicTo ),
     method( LPath, clear ),
     method( LPath, addArrow ),
+    method( LPath, contains ),
     {0,0}
 };
 
@@ -111,6 +112,12 @@ int LPath::getPointAlongPath ( lua_State* ) {
 
 int LPath::getLength ( lua_State* ) {
     return LUA::returnNumber( Path::getLength( LAffineTransform::fromLuce( LUA::getList<float>(2) ) ) );
+}
+
+int LPath::contains(lua_State*) {
+    Point<float> p = LUCE::luce_topoint<float>(2);
+    float tolerance = LUA::checkAndGetNumber<float>(2, 1.0f);
+    return LUA::returnBoolean( Path::contains( p, tolerance ) );
 }
 
 int LPath::intersectsLine ( lua_State* ) {

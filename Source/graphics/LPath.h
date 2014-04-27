@@ -69,6 +69,7 @@ public:
     int getTransformToScaleToFit(lua_State*);
     int toString(lua_State*);
     int getNearestPoint(lua_State*);
+    int contains(lua_State*);
 
     //==============================================================================
 
