@@ -92,6 +92,16 @@ int LFillType::lnew(lua_State* L) {
             *LUA::from_luce<LFillType>(2)
         ));
     }
+    else
+        LUCE::luce_error(lua_pushfstring(L, 
+            "LFillType: constructor not matched.\nExpected:\n %s,\n %s,\n %s,\n %s,\n %s,\n %s",
+            "()",
+            "(LColour)",
+            "(string)",
+            "(LColourGradient)",
+            "(LImage)",
+            "(LFillType)"
+        ));
 
 }
 
