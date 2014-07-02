@@ -282,14 +282,19 @@ int LListBox::listBoxItemDoubleClicked(lua_State*) {
     return 0;
 }
 
-Component* LListBox::refreshComponentForRow (int rowNumber, bool isRowSelected, Component* existingComponentToUpdate) {
-    if(hasCallback("refreshComponentForRow ")) {
-        if ( callback("refreshComponentForRow", 1, 
-                { rowNumber, isRowSelected, new LRefBase("Component", existingComponentToUpdate) }) ) 
-        {
-            return LUA::from_luce<Component>(2);
-        } 
-        else return nullptr;
+Component* LListBox::refreshComponentForRow (int rowNumber, bool isRowSelected, 
+                    Component* existingComponentToUpdate) 
+{
+    if(hasCallback("refreshComponentForRow")) {
+        callback("refreshComponentForRow", 1,
+            { rowNumber, isRowSelected, new LRefBase("Component", existingComponentToUpdate) });
+        if( lua_isnoneornil(LUA::Get(), -1) ) {
+            if(existingComponentToUpdate)
+                delete existingComponentToUpdate;
+            return nullptr;
+        } else {
+            return LUA::from_luce<LJComponent, Component>();
+        }
     }
     else
         return nullptr;
