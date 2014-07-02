@@ -125,11 +125,12 @@ int reload(lua_State *L) {
     // meanwhile:
     //lua_pop(L, lua_gettop(L)-2);
 
+    // defined in luce.h for Lua5.1/5.2 compatibility
+    lua_pushglobaltable(L);
     lua_pushstring(L, "LUCE_LIVE_CODING");
     lua_pushnumber(L, 1);
-    // if LUA == 501...
-    // else lua_pushglobalstable...
-    lua_settable(L, LUA_GLOBALSINDEX);
+    lua_settable(L, -3);
+    lua_pop(L,1);
 
     int nb_args = 0;
     if ( lua_pcall(L, nb_args, 1, 0) != 0 ) {

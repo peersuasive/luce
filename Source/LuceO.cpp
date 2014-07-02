@@ -43,7 +43,8 @@ namespace {
         
             int top = lua_gettop(L);
 
-            lua_getfield(L, LUA_GLOBALSINDEX, "debug");
+            lua_pushglobaltable(L);
+            lua_getfield(L, -1, "debug");
             if(lua_istable(L,-1)) {
                 lua_getfield(L,-1,"traceback");
                 if(lua_isfunction(L,-1)) {

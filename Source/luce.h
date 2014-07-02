@@ -15,6 +15,9 @@
 
 #ifdef LUA52
 #define LUA_COMPAT_MODULE
+#else
+#define lua_pushglobaltable(L) \
+    lua_pushvalue(L, LUA_GLOBALSINDEX);
 #endif
 
 #include <lua.hpp>
