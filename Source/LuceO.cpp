@@ -495,12 +495,14 @@ namespace {
             }
                 break;
             default:
-                luce_error(lua_pushfstring(L, "LColour: invalid class.\nExpected:\n %s,\n %s,\n %s,\n %s,\n %s,\n %s",
+                luce_error(lua_pushfstring(L, 
+                    "LColour: invalid class.\nExpected:\n %s,\n %s,\n %s,\n %s,\n %s\ngot: %s\n",
                     "()",
                     "(LColour)",
                     "({r,g,b,[a]})",
                     "(HSBA, 'HSBA')",
-                    "('colour_name')"
+                    "('colour_name')",
+                    lua_typename(L, lua_type(L,i))
                 ));
             }
         return {};
