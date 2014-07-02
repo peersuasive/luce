@@ -19,6 +19,10 @@ all:
 
 distrib: $(LUCE_LIB) $(TARGETS_51) $(TARGETS_52)
 
+lua51: $(LUCE_LIB) $(TARGETS_51)
+
+lua52: $(LUCE_LIB) $(TARGETS_52)
+
 $(LUCE_LIB): $(LUCE_SQUISH_DIR)
 	@cd $^ && make extraclean && make
 	@mkdir -p $(OUT)/$(VERSION)
