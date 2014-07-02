@@ -8,10 +8,7 @@ A GUI Module for Lua (based on JUCE)
 .. image:: http://peersuasive.github.io/images/lua-inside.png
 
 
-
-``Luce`` 0.3.1 *overall impression* `released ! <https://github.com/peersuasive/luce/releases/tag/v0.3.1>`__
-
-``Luce`` 0.3 *it's fork time!* `released ! <https://github.com/peersuasive/luce/releases/tag/v0.3>`__
+``Luce`` 0.3.2 *trust in stilts* `released ! <https://github.com/peersuasive/luce/releases/tag/v0.3.2>`__
 
 `Downloads`_ for Linux, Windows, OS X, iOS and Android are available.
 
@@ -381,7 +378,7 @@ to compile the module and for C++ projects
 To extend with new JUCE classes 
 -------------------------------
 
-* ``JUCE`` 3.0.4+
+* ``JUCE`` 3.0.6+
 
 
 .. _download:
@@ -408,86 +405,52 @@ For Android, at the opposite, only the shared library/module is available, as a
 static library wouldn't really make sense, but feel free to ask also.
 
 
-v0.3.1 (alpha)
+v0.3.2 (alpha)
 --------------
 
 Linux64 5.1
 ~~~~~~~~~~~
 
-* `Linux/64/2.13 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.1.zip>`__
-* `Linux/64/2.13 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.1_dbg.zip>`__
-* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.Linux64-5.1_static.zip>`__
+* `Linux/64/2.13 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.linux64-5.1.zip>`__
+* `Linux/64/2.13 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.linux64-5.1_dbg.zip>`__
+* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.Linux64-5.1_static.zip>`__
 
 Linux64 5.2
 ~~~~~~~~~~~
-* `Linux/64/2.13 (lua 5.2 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.2.zip>`__
-* `Linux/64/2.13 (lua 5.2 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.linux64-5.2_dbg.zip>`__
-* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.Linux64-5.2_static.zip>`__
+* `Linux/64/2.13 (lua 5.2 module) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.linux64-5.2.zip>`__
+* `Linux/64/2.13 (lua 5.2 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.linux64-5.2_dbg.zip>`__
+* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.Linux64-5.2_static.zip>`__
 
 Win32 5.1
 ~~~~~~~~~
 
-* `Windows/32 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.1.zip>`__
-* `Windows/32 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.1_dbg.zip>`__
-* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.1_static.zip>`__
+* `Windows/32 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.win32-5.1.zip>`__
+* `Windows/32 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.win32-5.1_dbg.zip>`__
+* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.win32-5.1_static.zip>`__
 
 Win32 5.2
 ~~~~~~~~~
 
-* `Windows/32 (lua 5.2 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.2.zip>`__
-* `Windows/32 (lua 5.2 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.2_dbg.zip>`__
-* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.win32-5.2_static.zip>`__
+* `Windows/32 (lua 5.2 module) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.win32-5.2.zip>`__
+* `Windows/32 (lua 5.2 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.win32-5.2_dbg.zip>`__
+* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.win32-5.2_static.zip>`__
 
 OS X 5.1
 ~~~~~~~~
 
-* `Mac OS X/64/10.8 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.osx64-5.1.zip>`__
-* `Mac OS X/64/10.8 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.osx64-5.1_dbg.zip>`__
-* `Mac OS X/64/10.8 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.osx64-5.1_static.zip>`__
+* `Mac OS X/64/10.8 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.osx64-5.1.zip>`__
+* `Mac OS X/64/10.8 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.osx64-5.1_dbg.zip>`__
+* `Mac OS X/64/10.8 (static) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.osx64-5.1_static.zip>`__
 
 iOS 6.1 5.1
 ~~~~~~~~~~~
 
-* `iOS/5.1 (lua 5.1 static) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.ios61-5.1.zip>`__
+* `iOS/5.1 (lua 5.1 static) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.ios61-5.1.zip>`__
 
 Android 4.4 5.1
 ~~~~~~~~~~~~~~~
 
-* `Android/4.X (lua 5.1 shared) <https://github.com/peersuasive/luce/releases/download/v0.3.1/luce.v0.3.1.android44-5.1.zip>`__
-
-
-v0.3 (alpha)
-------------
-
-linux
-~~~~~
-
-* `Linux/64/2.13 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64.zip>`__
-* `Linux/64/2.13 (lua 5.1 module/debug) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_dbg.zip>`__
-* `Linux/64/2.13 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Linux64_static.zip>`__
-
-windows
-~~~~~~~~
-
-* `Windows/32 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32.zip>`__
-* `Windows/32 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Win32_static.zip>`__
-
-os x
-~~~~
-
-* `Mac OS X/64/10.8 (lua 5.1 module) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64.zip>`__
-* `Mac OS X/64/10.8 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.MacOSX64_static.zip>`__
-
-
-ios
-~~~
-
-* `iOS/5.1 (static) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.iOS6.1_static.zip>`__
-
-android
-~~~~~~~
-
-* `Android/4.X (shared) <https://github.com/peersuasive/luce/releases/download/v0.3/luce.0.3.Android.zip>`__
+* `Android/4.X (lua 5.1 shared) <https://github.com/peersuasive/luce/releases/download/v0.3.2/luce.v0.3.2.android44-5.1.zip>`__
 
 
 
