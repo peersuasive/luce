@@ -197,7 +197,11 @@ function mt:setLeft(l)
 end
 
 function mt:withLeft(l)
-    return self:new{ l, self.y, self.w-(l*2), self.h }
+    -- max
+    local w = self.x + (self.w-l)
+    w = (w<0) and 0 or w
+    return self:new{ l, self.y, w, self.h }
+    --return self:new{ l, self.y, self.w-(l*2), self.h }
 end
 
 function mt:setTop(t)
@@ -231,19 +235,23 @@ function mt:withBottom(b)
 end
 
 function mt:withTrimmedLeft(a)
-    return self:new{ self.x+a, self.y, self.w-a, self.h }
+    return self:withLeft( self.x + a )
+    --return self:new{ self.x+a, self.y, self.w-a, self.h }
 end
 
 function mt:withTrimmedRight(a)
-    return self:new{ self.x+a, self.y, self.w-(a*2), self.h }
+    return self:withWidth(self.w - a)
+    --return self:new{ self.x+a, self.y, self.w-(a*2), self.h }
 end
 
 function mt:withTrimmedTop(a)
-    return self:new{ self.x, self.y+a, self.w, self.h - (a*2) }
+    return self:withTop( self.y + a )
+    --return self:new{ self.x, self.y+a, self.w, self.h - (a*2) }
 end
 
 function mt:withTrimmedBottom(a)
-    return self:new{ self.x, self.y, self.w, self.h - a }
+    return self:withBottom( self.h - a )
+    --return self:new{ self.x, self.y, self.w, self.h - a }
 end
 
 function mt:translate(d, dy)
