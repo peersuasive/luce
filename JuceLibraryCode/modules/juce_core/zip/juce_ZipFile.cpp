@@ -298,8 +298,7 @@ InputStream* ZipFile::createStreamForEntry (const int index)
 
         if (zei->compressed)
         {
-            stream = new GZIPDecompressorInputStream (stream, true, true,
-                                                      zei->entry.uncompressedSize);
+            stream = new GZIPDecompressorInputStream (stream, true, true, (int64) zei->entry.uncompressedSize);
 
             // (much faster to unzip in big blocks using a buffer..)
             stream = new BufferedInputStream (stream, 32768, true);
@@ -452,7 +451,7 @@ public:
 
     bool writeData (OutputStream& target, const int64 overallStartPosition)
     {
-        MemoryOutputStream compressedData;
+        MemoryOutputStream compressedData ((size_t) file.getSize());
 
         if (compressionLevel > 0)
         {

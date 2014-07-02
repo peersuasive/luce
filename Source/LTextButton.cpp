@@ -146,7 +146,8 @@ bool LTextButton::keyPressed(const KeyPress& k) {
 
 /////// getters
 int LTextButton::getFont ( lua_State *L ) {
-    LFont *f = new LFont( L, TextButton::getFont() );
+    int height = TextButton::getHeight();
+    LFont *f = new LFont( L, LComponent::getLookAndFeel(4)->getTextButtonFont(*this, height) );
     return LUA::storeAndReturnUserdata<LFont>( f );
 }
 

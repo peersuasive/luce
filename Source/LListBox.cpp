@@ -79,12 +79,12 @@ const Luna<LListBox>::FunctionType LListBox::methods[] = {
     method( LListBox, refreshComponentForRow ),
     method( LListBox, getDragSourceDescription ),
     method( LListBox, getNumRows ),
-    method( LListBox, listBoxItemClicked ),
     method( LListBox, listWasScrolled ),
     method( LListBox, selectedRowsChanged ),
     method( LListBox, deleteKeyPressed ),
     method( LListBox, returnKeyPressed ),
     method( LListBox, backgroundClicked ),
+    method( LListBox, listBoxItemClicked ),
     method( LListBox, listBoxItemDoubleClicked ),
 
     {0,0}
@@ -219,15 +219,6 @@ void LListBox::paint(Graphics& g) {
         ListBox::paint(g);
 }
 
-void LListBox::listBoxItemClicked( int row, const MouseEvent& e ) {
-    if(hasCallback("listBoxItemClicked"))
-        callback("listBoxItemClicked", 0, { row, new LRefBase("MouseEvent", &e) } );
-}
-int LListBox::listBoxItemClicked(lua_State*) {
-    set("listBoxItemClicked");
-    return 0;
-}
-
 void LListBox::listWasScrolled() {
     if(hasCallback("listWasScrolled"))
         callback("listWasScrolled");
@@ -264,12 +255,21 @@ int LListBox::returnKeyPressed(lua_State*) {
     return 0;
 }
 
-void LListBox::backgroundClicked() {
+void LListBox::backgroundClicked(const MouseEvent& e) {
     if(hasCallback("backgroundClicked"))
-        callback("backgroundClicked");
+        callback("backgroundClicked", 0, { new LRefBase("MouseEvent", &e) } );
 }
 int LListBox::backgroundClicked(lua_State*) {
     set("backgroundClicked");
+    return 0;
+}
+
+void LListBox::listBoxItemClicked( int row, const MouseEvent& e ) {
+    if(hasCallback("listBoxItemClicked"))
+        callback("listBoxItemClicked", 0, { row, new LRefBase("MouseEvent", &e) } );
+}
+int LListBox::listBoxItemClicked(lua_State*) {
+    set("listBoxItemClicked");
     return 0;
 }
 

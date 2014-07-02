@@ -33,8 +33,7 @@ const Luna<LLabel>::FunctionType LLabel::methods[] = {
     method( LLabel, getAttachedComponent ),
     method( LLabel, getFont ),
     method( LLabel, setFont ),
-    method( LLabel, getHorizontalBorderSize ),
-    method( LLabel, getVerticalBorderSize ),
+    method( LLabel, getBorderSize ),
     method( LLabel, getMinimumHorizontalScale ),
     method( LLabel, setMinimumHorizontalScale ),
 
@@ -381,12 +380,8 @@ int LLabel::isEditableOnSingleClick ( lua_State* ) {
     return LUA::returnBoolean( Label::isEditableOnSingleClick() );
 }
 
-int LLabel::getHorizontalBorderSize ( lua_State* ) {
-    return LUA::returnNumber( Label::getHorizontalBorderSize() );
-}
-
-int LLabel::getVerticalBorderSize ( lua_State* ) {
-    return LUA::returnNumber( Label::getVerticalBorderSize() );
+int LLabel::getBorderSize ( lua_State* ) {
+    return LUCE::luce_pushtable( Label::getBorderSize() );
 }
 
 int LLabel::doesLossOfFocusDiscardChanges ( lua_State* ) {
@@ -426,9 +421,7 @@ int LLabel::createEditorComponent ( lua_State *L ) {
 
 /////// setters
 int LLabel::setBorderSize ( lua_State* ) {
-    int horizontalBorder = LUA::getNumber(2);
-    int verticalBorder = LUA::getNumber(2);
-    Label::setBorderSize( horizontalBorder, verticalBorder );
+    Label::setBorderSize( LUCE::luce_tobordersize<int>(2) );
     return 0;
 }
 

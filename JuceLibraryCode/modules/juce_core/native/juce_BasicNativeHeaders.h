@@ -98,15 +98,6 @@
  #endif
 
  #include <windows.h>
- #if JUCE_MINGW
- #ifdef near
- #undef near
- #endif
- #ifdef far
- #undef far
- #endif
- #endif
-
  #include <shellapi.h>
  #include <tchar.h>
  #include <stddef.h>

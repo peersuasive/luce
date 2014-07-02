@@ -115,7 +115,7 @@ private:
             else {
                 String a = first->getUniqueName();
                 String b = second->getUniqueName();
-                return a.compareLexicographically( b );
+                return a.compareNatural( b );
             }
         }
         int compareElements(lua_State*) {

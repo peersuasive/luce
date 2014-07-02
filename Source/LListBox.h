@@ -80,13 +80,13 @@ public:
     int getNumRows(lua_State*);
 
     //==============================================================================
-    int listBoxItemClicked(lua_State*);
     int listWasScrolled(lua_State*);
     int selectedRowsChanged(lua_State*);
     int deleteKeyPressed(lua_State*);
     int returnKeyPressed(lua_State*);
     int backgroundClicked(lua_State*);
     int paintListBoxItem(lua_State*);
+    int listBoxItemClicked(lua_State*);
     int listBoxItemDoubleClicked(lua_State*);
     
     //==============================================================================
@@ -115,13 +115,13 @@ private:
     virtual int getNumRows() override;
     virtual void paintListBoxItem( int rowNumber, Graphics& g, int width, int height, bool rowIsSelected ) override;
 
-    virtual void listBoxItemClicked( int row, const MouseEvent& e ) override;
     virtual void listWasScrolled() override;
     virtual void selectedRowsChanged( int lastRowSelected ) override;
     virtual void deleteKeyPressed( int lastRowSelected ) override;
     virtual void returnKeyPressed( int lastRowSelected ) override;
-    virtual void backgroundClicked() override;
-    virtual void listBoxItemDoubleClicked( int row, const MouseEvent& e ) override;
+    virtual void backgroundClicked(const MouseEvent&) override;
+    virtual void listBoxItemClicked( int row, const MouseEvent& ) override;
+    virtual void listBoxItemDoubleClicked( int row, const MouseEvent& ) override;
     virtual Component* refreshComponentForRow (int rowNumber, bool isRowSelected,
                                                Component* existingComponentToUpdate) override;
     virtual var getDragSourceDescription (const SparseSet<int>& currentlySelectedRows) override;

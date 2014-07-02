@@ -56,10 +56,20 @@
  #include <GL/gl.h>
  #undef KeyPress
 #elif JUCE_IOS
- #include <OpenGLES/ES2/gl.h>
+ #if defined (__IPHONE_7_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+  #include <OpenGLES/ES3/gl.h>
+ #else
+  #include <OpenGLES/ES2/gl.h>
+ #endif
 #elif JUCE_MAC
- #include <OpenGL/gl.h>
- #include "OpenGL/glext.h"
+ #if defined (MAC_OS_X_VERSION_10_7) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
+  #define JUCE_OPENGL3  1
+  #include <OpenGL/gl3.h>
+  #include <OpenGL/gl3ext.h>
+ #else
+  #include <OpenGL/gl.h>
+  #include "OpenGL/glext.h"
+ #endif
 #elif JUCE_ANDROID
  #include <GLES2/gl2.h>
 #endif

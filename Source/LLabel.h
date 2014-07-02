@@ -60,8 +60,7 @@ public:
     int getAttachedComponent(lua_State*);
     int isBeingEdited(lua_State*);
     int isEditableOnSingleClick(lua_State*);
-    int getHorizontalBorderSize(lua_State*);
-    int getVerticalBorderSize(lua_State*);
+    int getBorderSize(lua_State*);
     int createEditorComponent(lua_State*);
     int doesLossOfFocusDiscardChanges(lua_State*);
     int getTextValue(lua_State*);

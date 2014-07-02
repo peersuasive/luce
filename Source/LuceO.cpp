@@ -422,6 +422,25 @@ namespace {
         return luce_pushlightrectangleplacement(r);
     }
 
+    // BorderSize
+    template<class T>
+    const juce::BorderSize<T> luce_tobordersize(int i) {
+        what = "BorderSize";
+        return luceI_to4SClass<BorderSize<T>, T>(i);
+    }
+    const juce::BorderSize<int> luce_tobordersize(int i) {
+        return luce_tobordersize<int>(i);
+    }
+    template<class T>
+    int luce_pushlightbordersize(const juce::BorderSize<T>& r) {
+        return luceI_pushlightclass<T>({r.getTop(), r.getLeft(), r.getBottom(), r.getRight()}, 
+                "lightLBorderSize");
+    }
+    template<class T>
+    int luce_pushtable(const juce::BorderSize<T>& r) {
+        return luce_pushlightbordersize<T>(r);
+    }
+
     // Colour
     const juce::Colour luce_tocolour(int i = -1) {
         what = "Colour";

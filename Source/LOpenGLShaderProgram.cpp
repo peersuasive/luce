@@ -61,7 +61,7 @@ int LOpenGLShaderProgram::link ( lua_State* ) {
 }
 
 int LOpenGLShaderProgram::addFragmentShader ( lua_State* ) {
-    StringRef shaderSourceCode ( LUA::getString(2) );
+    const String shaderSourceCode ( LUA::getString(2) );
     return LUA::returnBoolean( OpenGLShaderProgram::addFragmentShader( shaderSourceCode ) );
 }
 
@@ -74,12 +74,12 @@ int LOpenGLShaderProgram::getProgramID ( lua_State *L ) {
 }
 
 int LOpenGLShaderProgram::addVertexShader ( lua_State* ) {
-    StringRef shaderSourceCode ( LUA::getString(2) );
+    const String shaderSourceCode ( LUA::getString(2) );
     return LUA::returnBoolean( OpenGLShaderProgram::addVertexShader( shaderSourceCode ) );
 }
 
 int LOpenGLShaderProgram::addShader ( lua_State* ) {
-    StringRef shaderSourceCode ( LUA::getString(2) );
+    const String shaderSourceCode ( LUA::getString(2) );
     GLenum shaderType = (GLenum)LUA::getNumber<int>(2);
     return LUA::returnBoolean( OpenGLShaderProgram::addShader( shaderSourceCode, shaderType ) );
 }
