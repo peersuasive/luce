@@ -124,10 +124,12 @@ int LLookAndFeel::drawTreeviewPlusMinusBox(lua_State*) {
 }
 
 bool LLookAndFeel::areLinesDrawnForTreeView (TreeView& tv) {
-    if(hasCallback("areLinesDrawnForTreeView"))
-        callback("areLinesDrawnForTreeView");
+    if(hasCallback("areLinesDrawnForTreeView")) {
+        callback("areLinesDrawnForTreeView", 1);
+        return LUA::checkAndGetBoolean(-1, false);
+    }
     else
-        LookAndFeel_V3::areLinesDrawnForTreeView(tv);
+        return LookAndFeel_V3::areLinesDrawnForTreeView(tv);
 }
 int LLookAndFeel::areLinesDrawnForTreeView(lua_State*) {
     set("areLinesDrawnForTreeView");
@@ -135,10 +137,17 @@ int LLookAndFeel::areLinesDrawnForTreeView(lua_State*) {
 }
 
 int LLookAndFeel::getTreeViewIndentSize (TreeView& tv) {
-    if(hasCallback("getTreeViewIndentSize"))
+    if(hasCallback("getTreeViewIndentSize")) {
         callback("getTreeViewIndentSize");
+        if(!lua_isnumber(LUA::Get(), -1))
+            LUCE::luce_error(lua_pushfstring(LUA::Get(), 
+                "LLookAndFeel: getTreeViewIndentSize: expected returned number, got %s\n",
+                lua_typename(LUA::Get(), lua_type(LUA::Get(), -1))
+            ));
+        return LUA::returnNumber(-1);
+    }
     else
-        LookAndFeel_V3::getTreeViewIndentSize(tv);
+        return LookAndFeel_V3::getTreeViewIndentSize(tv);
 }
 int LLookAndFeel::getTreeViewIndentSize(lua_State*) {
     set("getTreeViewIndentSize");
