@@ -140,9 +140,10 @@ void LViewport::mouseDoubleClick(const MouseEvent& e) {
 }
 
 void LViewport::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wheel) {
-    if(hasCallback("mouseWheelMove"))
+    if(hasCallback("mouseWheelMove")) {
         if(LComponent::lmouseWheelMove(e, wheel))
             Viewport::mouseWheelMove(e,wheel);
+    }
     else
         Viewport::mouseWheelMove(e, wheel);
 }
