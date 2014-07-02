@@ -168,6 +168,7 @@ int LGraphics::reduceClipRegion ( lua_State* L ) {
     else if(lua_istable(L,2)) {
         return LUA::returnBoolean(Graphics::reduceClipRegion( LUCE::luce_torectangle<int>(2) ) );
     }
+    else
     // error
     LUCE::luce_error(lua_pushfstring(L,
             "LGraphics: reduceClipRegion: wrong arguments.\nExpected:\n %s,\n %s,\n %s,\n %s",
@@ -518,9 +519,9 @@ int LGraphics::drawArrow ( lua_State* ) {
 }
 
 int LGraphics::drawDashedLine(lua_State* L) {
-    if(!lua_gettop(L)>3 
-            || (!LUCE::luce_isoftype(LLine,2) &&!lua_istable(L,2)) 
-            || !lua_istable(L,2))
+    if(! (lua_gettop(L)>3 
+            || (LUCE::luce_isoftype(LLine,2) &&!lua_istable(L,2)) 
+            || lua_istable(L,2)))
     {
         LUCE::luce_error(lua_pushfstring(L,
             "LGraphics: drawDashedLine: wrong arguments.\nExpected:\n %s",
