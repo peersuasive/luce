@@ -66,6 +66,12 @@ function mt:setXY(x,y)
     return self
 end
 
+function mt:addXY(x,y)
+    self.x = self.x + x
+    self.y = self.y + y
+    return self
+end
+
 function mt:translated(...)
     local x, y = ...
     if not(y)then local p = ...
