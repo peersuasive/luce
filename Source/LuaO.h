@@ -87,7 +87,7 @@ namespace LUA {
         int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ");
 
         const int call_cb( const LBase* key, const char *name, int nb_ret = 0,
-                                                                const std::list<var>& args = {} );
+                                                                const std::list<var>& args = std::list<var>() );
 
         const String getError();
 
