@@ -126,18 +126,24 @@ int LTreeViewItem::itemDropped(lua_State*){
 }
 
 void LTreeViewItem::paintItem( Graphics& g, int width, int height ) {
-    if (hasCallback("paintItem"))
-        if ( callback("paintItem", 1) ) {
-            String name = LUA::checkAndGetString(-1, String::empty);
-            if (TreeViewItem::isSelected())
-                g.fillAll( Colours::blue.withAlpha( 0.3f ));
-            g.setColour(Colours::black);
-            g.setFont(height * 0.7f);
+    if (hasCallback("paintItem")) {
+        LGraphics lg(LUA::Get(), g);
+        if ( callback("paintItem", 1, { new LRefBase("Graphics", &lg), width, height }) ) {
+            if ( ! lua_isnoneornil(LUA::Get(), -1) ) {
+                String name = LUA::checkAndGetString(-1, String::empty);
+                if (TreeViewItem::isSelected())
+                    g.fillAll( Colours::blue.withAlpha( 0.3f ));
+                g.setColour(Colours::black);
+                g.setFont(height * 0.7f);
 
-            g.drawText( name, 4, 0, width - 4, height, Justification::centredLeft, true );
+                g.drawText( name, 4, 0, width - 4, height, Justification::centredLeft, true );
+            } else if(lua_isnil(LUA::Get(), -1))
+                lua_pop(LUA::Get(), 1);
+            
         } else {
             std::cout << "failed to execute painItem callback: " << LUA::getError() << std::endl;
         }
+    }
     else if ( ! hasCallback("paintItem") && ! hasCallback("createItemComponent") ) {
         if (TreeViewItem::isSelected())
             g.fillAll( Colours::blue.withAlpha( 0.3f ));
@@ -278,8 +284,11 @@ int LTreeViewItem::getUniqueName ( lua_State* L ) {
 Component *LTreeViewItem::createItemComponent() {
     if (hasCallback("createItemComponent")) {
         if ( callback("createItemComponent", 1) ) {
-            Component *comp = LUA::from_luce<LComponent,Component>(-1);
-            return comp;
+            if( ! lua_isnoneornil(LUA::Get(), -1) ) {
+                Component *comp = LUA::from_luce<LComponent,Component>(-1);
+                return comp;
+            } else
+                return nullptr;
         }
     }
     return nullptr;
