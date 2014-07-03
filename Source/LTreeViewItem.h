@@ -42,6 +42,8 @@ public:
 
     //==============================================================================
     int getItemHeight(lua_State*);
+    int getItemWidth(lua_State*);
+
     int getNumSubItems(lua_State*);
     int canBeSelected(lua_State*);
 
@@ -49,7 +51,6 @@ public:
     
     int isLastOfSiblings(lua_State*);
     int getOwnerView(lua_State*);
-    int getItemWidth(lua_State*);
     int getItemPosition(lua_State*);
     int getItemIdentifierString(lua_State*);
     int isInterestedInFileDrag(lua_State*);
@@ -143,6 +144,10 @@ private:
     virtual bool isInterestedInDragSource (const DragAndDropTarget::SourceDetails& dragSourceDetails) override;
 
     virtual bool canBeSelected() const override;
+
+    virtual int getItemHeight() const override;
+    virtual int getItemWidth() const override;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LTreeViewItem)
 };

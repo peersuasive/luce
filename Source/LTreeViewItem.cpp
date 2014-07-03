@@ -311,6 +311,34 @@ int LTreeViewItem::isInterestedInDragSource ( lua_State* ) {
     return 0;
 }
 
+int LTreeViewItem::getItemHeight() const {
+    if(hasCallback("getItemHeight")) {
+        callback("getItemHeight", 1);
+        if(!lua_isnoneornil(LUA::Get(), -1))
+            return LUA::getNumber<int>(-1);
+    }
+    return TreeViewItem::getItemHeight();
+}
+int LTreeViewItem::getItemHeight ( lua_State* ) {
+    set("getItemHeight");
+    return 0;
+}
+
+int LTreeViewItem::getItemWidth() const {
+    if(hasCallback("getItemWidth")) {
+        callback("getItemWidth", 1);
+        if(!lua_isnoneornil(LUA::Get(), -1))
+            return LUA::getNumber<int>(-1);
+    }
+    return TreeViewItem::getItemWidth();
+}
+int LTreeViewItem::getItemWidth( lua_State* ) {
+    set("getItemWidth");
+    return 0;
+}
+
+
+
 /// end of callbacks
 
 
@@ -332,10 +360,6 @@ int LTreeViewItem::setSelected ( lua_State* ) {
 /////// getters
 int LTreeViewItem::isOpen ( lua_State* ) {
     return LUA::returnBoolean( TreeViewItem::isOpen() );
-}
-
-int LTreeViewItem::getItemHeight ( lua_State* ) {
-    return LUA::returnNumber( TreeViewItem::getItemHeight() );
 }
 
 int LTreeViewItem::getNumSubItems ( lua_State* ) {
@@ -370,10 +394,6 @@ int LTreeViewItem::getOwnerView ( lua_State* ) {
     // owner = TreeView, not implemented yet
     //return LUA::returnUserdata<LTreeView, TreeView>(TreeViewItem::getOwnerView());
     return 0;
-}
-
-int LTreeViewItem::getItemWidth ( lua_State* ) {
-    return LUA::returnNumber( TreeViewItem::getItemWidth() );
 }
 
 int LTreeViewItem::getItemPosition ( lua_State* ) {
