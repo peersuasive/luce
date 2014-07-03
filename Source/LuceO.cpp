@@ -281,6 +281,14 @@ namespace {
         return { a[0], a[1], a[2], a[3], a[4], a[5] };
     }
 
+    // size 9 class
+    template<class C, class T>
+    const C luceI_to9SClass(int i = -1) {
+        ArrayType<T> a = luce_tonumberarray<T>(i);
+        return { a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8] };
+    }
+
+
     //
     // from C++ to lua
     //
@@ -440,6 +448,67 @@ namespace {
     template<class T>
     int luce_pushtable(const juce::BorderSize<T>& r) {
         return luce_pushlightbordersize<T>(r);
+    }
+
+    // ComponentBoundsConstrainer
+    /*
+    minW (0)
+    maxW (0x3fffffff)
+    minH (0)
+    maxH (0x3fffffff)
+    minOffTop (0)
+    minOffLeft (0)
+    minOffBottom (0)
+    minOffRight (0)
+    aspectRatio (0.0)
+    */
+    juce::ComponentBoundsConstrainer *luce_tocomponentboundsconstrainer(int i) {
+        luaL_checktype(L, i, LUA_TTABLE);
+        i = (i<0) ? lua_gettop(L)-(i+1) : i;
+        lua_rawgeti(L, i, 1);
+        int minW = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 2);
+        int maxW = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 3);
+        int minH = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 4);
+        int maxH = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 5);
+        int minOffTop = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 6);
+        int minOffLeft = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 7);
+        int minOffBottom = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 8);
+        int minOffRight = luaL_checknumber(L, -1);
+        lua_rawgeti(L, i, 9);
+        double aspectRatio = luaL_checknumber(L, -1);
+        lua_pop(L, 9);
+        lua_remove(L,i);
+        ComponentBoundsConstrainer *c = new ComponentBoundsConstrainer();
+        c->setMinimumWidth( minW );
+        c->setMaximumWidth( maxW );
+        c->setMinimumHeight( minH );
+        c->setMaximumHeight( maxH );
+        c->setMinimumOnscreenAmounts( minOffTop, minOffLeft, minOffBottom, minOffRight );
+        c->setFixedAspectRatio( aspectRatio );
+    }
+    int luce_pushlightcomponentboundscontainer(const juce::ComponentBoundsConstrainer& c) {
+        return luceI_pushlightclass<var>({
+                    c.getMinimumWidth(),
+                    c.getMaximumWidth(),
+                    c.getMaximumHeight(),
+                    c.getMaximumHeight(),
+                    c.getMinimumWhenOffTheTop(),
+                    c.getMinimumWhenOffTheLeft(),
+                    c.getMinimumWhenOffTheBottom(),
+                    c.getMinimumWhenOffTheRight(),
+                    c.getFixedAspectRatio()
+                }, 
+                "lightLComponentBoundsConstrainer");
+    }
+    int luce_pushtable(const juce::ComponentBoundsConstrainer& c) {
+        return luce_pushlightcomponentboundscontainer(c);
     }
 
     // Colour
