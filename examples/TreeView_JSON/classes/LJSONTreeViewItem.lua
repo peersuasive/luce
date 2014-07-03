@@ -103,7 +103,7 @@ local function itemOpennessChanged(self, isNowOpen)
             end
         end
     else
-        -- we can clean hidden items to save some memort
+        -- we can clean hidden items to save some memory
         -- but we don't want to remove the top items
         -- ROOT is the root item, containing all the children
         if not(self.name == ROOT) then
