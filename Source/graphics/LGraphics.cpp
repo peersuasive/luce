@@ -294,7 +294,7 @@ int LGraphics::drawText ( lua_State *L ) {
     else {
         // error
         LUCE::luce_error(lua_pushfstring(L,
-            "LGraphics: drawEllipse: wrong arguments.\nExpected:\n %s,\n %s",
+            "LGraphics: drawText: wrong arguments.\nExpected:\n %s,\n %s",
             "(x,y,w,h)",
             "(LRectangle)"));
     }
@@ -304,26 +304,33 @@ int LGraphics::drawText ( lua_State *L ) {
     return 0;
 }
 
+const String drawFittedText_err = 
+            "LGraphics: drawFittedText: wrong arguments.\nExpected:\n"
+            "(string, x,y,w,h, justif, n-lines[, scale=0.7]),\n"
+            "(string, LRectangle, justif, n-lines[, scale=0.7])\n"
+            "got: %s\n";
+
 int LGraphics::drawFittedText ( lua_State *L ) {
     String text = LUA::getString(2);
     Rectangle<int> area;
-    if(!lua_isnumber(L, 2)) {
+    if(lua_isnumber(L, 2)) {
         int x = LUA::getNumber<int>(2); 
         int y = LUA::getNumber<int>(2);
         int w = LUA::getNumber<int>(2); 
         int h = LUA::getNumber<int>(2);
         area = { x, y, w, h };
     }
-    //else if(LUCE::luce_isoftype(LRectangle,2)) {
-    else if(lua_istable(L,2)) {
+    else if(lua_istable(L,2))
         area = LUCE::luce_torectangle<int>(2);
-    }
+    
     else {
         // error
         LUCE::luce_error(lua_pushfstring(L,
-            "LGraphics: drawEllipse: wrong arguments.\nExpected:\n %s,\n %s",
-            "(x,y,w,h)",
-            "(LRectangle)"));
+            "LGraphics: drawFittedText: wrong arguments.\nExpected:\n %s,\n %s\ngot: %s\n",
+            "(string, x,y,w,h, justif, n-lines[, scale=0.7]",
+            "(string, LRectangle, justif, n-lines[, scale=0.7]",
+            lua_typename(L, lua_type(L,2))
+        ));
     }
     Justification justificationFlags = LUA::getNumber<int>(2);
     int maximumNumberOfLines = LUA::getNumber<int>(2);
@@ -334,7 +341,7 @@ int LGraphics::drawFittedText ( lua_State *L ) {
 
 int LGraphics::fillRoundedRectangle ( lua_State *L ) {
     Rectangle<float> area;
-    if(!lua_isnumber(L, 2)) {
+    if(lua_isnumber(L, 2)) {
         float x = LUA::getNumber<float>(2); 
         float y = LUA::getNumber<float>(2);
         float w = LUA::getNumber<float>(2); 
@@ -348,7 +355,7 @@ int LGraphics::fillRoundedRectangle ( lua_State *L ) {
     else {
         // error
         LUCE::luce_error(lua_pushfstring(L,
-            "LGraphics: drawEllipse: wrong arguments.\nExpected:\n %s,\n %s",
+            "LGraphics: drawRoundedRectangle: wrong arguments.\nExpected:\n %s,\n %s",
             "(x,y,w,h)",
             "(LRectangle)"));
     }
@@ -382,21 +389,23 @@ int LGraphics::setFont ( lua_State *L ) {
 
 int LGraphics::fillRect ( lua_State *L ) {
     Rectangle<float> r;
-    if(lua_isnumber(L,2) && lua_isnumber(L,3) && lua_isnumber(L,4) && lua_isnumber(L,5)) {
+    if(lua_isnumber(L,2)) {
         float x = LUA::getNumber<float>(2);
         float y = LUA::getNumber<float>(2);
         float w = LUA::getNumber<float>(2);
         float h = LUA::getNumber<float>(2);
         r = {x,y,w,h};
     }
-    else if( LUCE::luce_isoftype(LRectangle, 2) || lua_istable(L, 2) ) {
+    else if( LUCE::luce_isoftype(LRectangle, 2) || lua_istable(L, 2) )
         r = LUCE::luce_torectangle<float>(2);
-    }
+    
     else {
         LUCE::luce_error(lua_pushfstring(L, 
-            "LGraphics: fillRect: wrong arguments.\nExpected:\n %s, %s",
+            "LGraphics: fillRect: wrong arguments.\nExpected:\n %s, %s\ngot: %s\n",
             "(x,y,w,h)",
-            "(LRectangle)"));
+            "(LRectangle)",
+            lua_typename(L, lua_type(L,2)
+            ));
     }
     Graphics::fillRect( r );
     return 0;
