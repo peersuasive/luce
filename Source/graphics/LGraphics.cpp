@@ -404,7 +404,7 @@ int LGraphics::fillRect ( lua_State *L ) {
             "LGraphics: fillRect: wrong arguments.\nExpected:\n %s, %s\ngot: %s\n",
             "(x,y,w,h)",
             "(LRectangle)",
-            lua_typename(L, lua_type(L,2)
+            lua_typename(L, lua_type(L,2))
             ));
     }
     Graphics::fillRect( r );
