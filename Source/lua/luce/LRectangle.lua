@@ -210,7 +210,8 @@ function mt:setTop(t)
 end
 
 function mt:withTop(t)
-    return self:new{ self.x, t, self.w, (self.y + self.h - t) }
+    local h = math.max(0, (self.y + self.h - t))
+    return self:new{ self.x, t, self.w, h}
     --return self:new{ self.x, t, self.w, self.h - (t*2) }
 end
 
@@ -230,8 +231,9 @@ function mt:setBottom(b)
 end
 
 function mt:withBottom(b)
-    local y = (b<self.y) and b or self.y
-    return self:new{ self.x, y, self.w, b-y}
+    local y = math.min(self.y, b)
+    local h = math.max( 0, b-y )
+    return self:new{ self.x, y, self.w, h }
 end
 
 function mt:withTrimmedLeft(a)
@@ -250,7 +252,7 @@ function mt:withTrimmedTop(a)
 end
 
 function mt:withTrimmedBottom(a)
-    return self:withBottom( self.h - a )
+    return self:withHeight( self.h - a )
     --return self:new{ self.x, self.y, self.w, self.h - a }
 end
 
