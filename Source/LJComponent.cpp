@@ -30,6 +30,9 @@ const Luna<LJComponent>::FunctionType LJComponent::methods[] = {
     method( LJComponent, startDragging ),
     method( LJComponent, addToDesktop ),
     method( LJComponent, removeFromDesktop ),
+
+    method( LJComponent, startDraggingComponent ),
+    method( LJComponent, dragComponent ),
     {0,0}
 };
 
@@ -123,4 +126,21 @@ bool LJComponent::keyPressed(const KeyPress& k) {
 void LJComponent::visibilityChanged() {
     if(hasCallback("visibilityChanged"))
         LComponent::lvisibilityChanged();
+}
+
+int LJComponent::startDraggingComponent(lua_State* L) {
+    MouseEvent *me = LUA::from_luce<LMouseEvent>(2);
+    ComponentDragger::startDraggingComponent(this, *me);
+    return 0;
+}
+
+int LJComponent::dragComponent(lua_State *L) {
+    MouseEvent *me = LUA::from_luce<LMouseEvent>(2);
+    ComponentBoundsConstrainer *c = nullptr;
+    if(! lua_isnoneornil(L, 2))
+        c = LUCE::luce_tocomponentboundsconstrainer(2);
+    ComponentDragger::dragComponent(this, *me, c);
+    if(c)
+        delete c;
+    return 0;
 }

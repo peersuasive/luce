@@ -15,7 +15,8 @@
 #define __LUCE_J_COMPONENT_WINDOW_H
 
 class LJComponent : public LComponent,
-                    public Component
+                    public Component,
+                    public ComponentDragger
 {
 public:
     LJComponent(lua_State*);
@@ -23,6 +24,10 @@ public:
 
     int addToDesktop(lua_State*);
     int removeFromDesktop(lua_State*);
+    
+    //==============================================================================
+    int startDraggingComponent(lua_State*);
+    int dragComponent(lua_State*);
 
     static const char className[];
     static const Luna<LJComponent>::Inheritence inherits[];
