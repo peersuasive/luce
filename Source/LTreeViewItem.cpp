@@ -207,7 +207,7 @@ int LTreeViewItem::itemClicked(lua_State* L) {
 
 void LTreeViewItem::itemSelectionChanged( bool isNowSelected ) {
     if(hasCallback("itemSelectionChanged"))
-        callback("itemSelectionChanged");
+        callback("itemSelectionChanged", 0, { isNowSelected });
 }
 int LTreeViewItem::itemSelectionChanged(lua_State*){
     set("itemSelectionChanged");
