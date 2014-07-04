@@ -515,13 +515,10 @@ namespace {
     const juce::Colour luce_tocolour(int i = -1) {
         what = "Colour";
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
-        int ltype = lua_type(L,i);
-        if(isofclass<LColour>("LColour", i)) {
-            Colour c{*LUA::from_luce<LColour>(i)};
-            lua_remove(L,i);
-            return c;
-        }
+        if(isofclass<LColour>("LColour", i))
+            return {*LUA::from_luce<LColour>(i)};
         
+        int ltype = lua_type(L,i);
         switch(ltype) {
             case LUA_TTABLE: {
                 lua_pushnumber(L,1);
@@ -537,6 +534,7 @@ namespace {
                 lua_rawget(L,i);
                 uint8 alpha = LUA::checkAndGetNumber<uint8>(-1, 255);
                 lua_remove(L,i);
+               
                 return {red, green, blue, alpha};
             }
                 break;
