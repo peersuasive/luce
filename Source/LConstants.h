@@ -19,8 +19,8 @@
 namespace LConstants {
 namespace {
     std::list<const char*> lColours = {
-        "transparentBlack",
-        "transparentWhite",
+        //"transparentBlack",
+        //"transparentWhite",
         "black",
         "white",
         "blue",
