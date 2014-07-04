@@ -558,7 +558,7 @@ namespace {
                     return {hue, sat, bri, alpha};
                 }
                 else
-                    return { Colours::findColourForName(type, Colours::black) };
+                    return { Colours::findColourForName(type, Colours::transparentWhite) };
             }
                 break;
             default:
