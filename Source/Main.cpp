@@ -252,6 +252,7 @@ l_class(OpenGLComponent);
 l_class(TextButton);
 l_class(ToggleButton);
 l_class(HyperlinkButton);
+l_class(ImageButton);
 l_class(Label);
 l_class(TextEditor);
 l_class(TreeView);
@@ -309,6 +310,7 @@ static const luaL_Reg luce_lib [] = {
     d(TextButton),
     d(ToggleButton),
     d(HyperlinkButton),
+    d(ImageButton),
     d(TextEditor),
     d(Label),
     d(TreeView),

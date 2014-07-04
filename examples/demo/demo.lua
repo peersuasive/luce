@@ -176,6 +176,18 @@ slider:stoppedDragging(function()
     print(string.format("slider last value: %s", slider.value))
 end)
 
+
+local imgButton = luce:ImageButton("ImageButton")
+local img = luce.Image:getFromFile("logo.png")
+imgButton:setImages(true, true, true, 
+                        img, 0.7, luce:Colour(luce.Colours.white):withAlpha(0.0),
+                        img, 1.0, luce:Colour(luce.Colours.red):withAlpha(0.5),
+                        img, 1.0, luce:Colour(luce.Colours.blue):withAlpha(0.8),
+                        0.5)
+
+imgButton:buttonClicked(function()
+    print("imgButton clicked!")
+end)
 --- add our Document Window and components to our main JUCE application
 mainWindow:initialise(function(...)
     mc:setSize{800,600}
@@ -207,6 +219,9 @@ mainWindow:initialise(function(...)
 
     mc:addAndMakeVisible(slider)
     slider:setBounds{ 410, 415, 200, 50 }
+
+    mc:addAndMakeVisible(imgButton)
+    imgButton:setBounds{ 10, 450, 200, 50 }
 
     --mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds
                                      -- as this is the last component before

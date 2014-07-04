@@ -78,6 +78,7 @@ namespace luce {
 #include "LTextButton.h"
 #include "LToggleButton.h"
 #include "LHyperlinkButton.h"
+#include "LImageButton.h"
 #include "LTextEditor.h"
 //#include "LValueTree.h"
 #include "LTreeView.h"
