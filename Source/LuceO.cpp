@@ -492,6 +492,7 @@ namespace {
         c->setMaximumHeight( maxH );
         c->setMinimumOnscreenAmounts( minOffTop, minOffLeft, minOffBottom, minOffRight );
         c->setFixedAspectRatio( aspectRatio );
+        return c;
     }
     int luce_pushlightcomponentboundscontainer(const juce::ComponentBoundsConstrainer& c) {
         return luceI_pushlightclass<var>({
