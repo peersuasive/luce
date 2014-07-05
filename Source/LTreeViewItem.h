@@ -143,6 +143,8 @@ private:
 
     virtual bool isInterestedInDragSource (const DragAndDropTarget::SourceDetails& dragSourceDetails) override;
 
+    virtual String getTooltip() override;
+
     virtual bool canBeSelected() const override;
 
     virtual int getItemHeight() const override;

@@ -353,13 +353,17 @@ int LTreeViewItem::canBeSelected (lua_State* L) {
         return this->canBeSelected();
 }
 
-int LTreeViewItem::getTooltip ( lua_State* ) {
-    // TODO: TreeViewItem returns String::empty anyway
-    //       so instanciate a Tooltip or something appropriate here
-    return LUA::returnString( TreeViewItem::getTooltip() );
+String LTreeViewItem::getTooltip() {
+    if(hasCallback("getTooltip")) {
+        callback("getTooltip", 1);
+        return LUA::checkAndGetString(-1, String::empty);
+    }
+    return String::empty;
 }
-
-
+int LTreeViewItem::getTooltip ( lua_State* ) {
+    set("getTooltip");
+    return 0;
+}
 
 /// end of callbacks
 
