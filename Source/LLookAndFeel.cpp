@@ -125,11 +125,10 @@ int LLookAndFeel::drawTreeviewPlusMinusBox(lua_State*) {
 
 bool LLookAndFeel::areLinesDrawnForTreeView (TreeView& tv) {
     if(hasCallback("areLinesDrawnForTreeView")) {
-        callback("areLinesDrawnForTreeView", 1);
-        return LUA::checkAndGetBoolean(-1, false);
+        if(callback("areLinesDrawnForTreeView", 1))
+            return LUA::checkAndGetBoolean(-1, false);
     }
-    else
-        return LookAndFeel_V3::areLinesDrawnForTreeView(tv);
+    return LookAndFeel_V3::areLinesDrawnForTreeView(tv);
 }
 int LLookAndFeel::areLinesDrawnForTreeView(lua_State*) {
     set("areLinesDrawnForTreeView");
@@ -155,10 +154,11 @@ int LLookAndFeel::getTreeViewIndentSize(lua_State*) {
 }
 
 Button* LLookAndFeel::createDocumentWindowButton (int buttonType) {
-    if(hasCallback("createDocumentWindowButton"))
-        callback("createDocumentWindowButton");
-    else
-        LookAndFeel_V3::createDocumentWindowButton(buttonType);
+    if(hasCallback("createDocumentWindowButton")) {
+        if( callback("createDocumentWindowButton", 1) )
+            return LUA::from_luce<Button>(2);
+    }
+    return LookAndFeel_V3::createDocumentWindowButton(buttonType);
 }
 int LLookAndFeel::createDocumentWindowButton(lua_State*) {
     set("createDocumentWindowButton");
@@ -215,10 +215,11 @@ int LLookAndFeel::drawMenuBarBackground(lua_State*) {
 }
 
 int LLookAndFeel::getTabButtonOverlap (int tabDepth) {
-    if(hasCallback("getTabButtonOverlap"))
-        callback("getTabButtonOverlap");
-    else
-        LookAndFeel_V3::getTabButtonOverlap(tabDepth);
+    if(hasCallback("getTabButtonOverlap")) {
+        if(callback("getTabButtonOverlap", 1))
+            return LUA::getNumber<int>(-1);
+    }
+    return LookAndFeel_V3::getTabButtonOverlap(tabDepth);
 }
 int LLookAndFeel::getTabButtonOverlap(lua_State*) {
     set("getTabButtonOverlap");
@@ -226,10 +227,11 @@ int LLookAndFeel::getTabButtonOverlap(lua_State*) {
 }
 
 int LLookAndFeel::getTabButtonSpaceAroundImage() {
-    if(hasCallback("getTabButtonSpaceAroundImage"))
-        callback("getTabButtonSpaceAroundImage");
-    else
-        LookAndFeel_V3::getTabButtonSpaceAroundImage();
+    if(hasCallback("getTabButtonSpaceAroundImage")) {
+        if( callback("getTabButtonSpaceAroundImage") )
+            return LUA::getNumber<int>(-1);
+    }
+    return LookAndFeel_V3::getTabButtonSpaceAroundImage();
 }
 int LLookAndFeel::getTabButtonSpaceAroundImage(lua_State*) {
     set("getTabButtonSpaceAroundImage");
@@ -283,10 +285,11 @@ int LLookAndFeel::drawStretchableLayoutResizerBar(lua_State*) {
 }
 
 bool LLookAndFeel::areScrollbarButtonsVisible() {
-    if(hasCallback("areScrollbarButtonsVisibl"))
-        callback("areScrollbarButtonsVisibl");
-    else
-        LookAndFeel_V3::areScrollbarButtonsVisible();
+    if(hasCallback("areScrollbarButtonsVisible")) {
+        if(callback("areScrollbarButtonsVisible", 1))
+            return LUA::getBoolean(-1);
+    }
+    return LookAndFeel_V3::areScrollbarButtonsVisible();
 }
 int LLookAndFeel::areScrollbarButtonsVisible(lua_State*) {
     set("areScrollbarButtonsVisible");
@@ -351,10 +354,11 @@ int LLookAndFeel::drawConcertinaPanelHeader(lua_State*) {
 }
 
 Path LLookAndFeel::getTickShape (float height) {
-    if(hasCallback("getTickShape"))
-        callback("getTickShape");
-    else
-        LookAndFeel_V3::getTickShape(height);
+    if(hasCallback("getTickShape")) {
+        if(callback("getTickShape", 1))
+            return *LUA::from_luce<LPath>(-1);
+    }
+    return LookAndFeel_V3::getTickShape(height);
 }
 int LLookAndFeel::getTickShape(lua_State*) {
     set("getTickShape");
@@ -362,10 +366,11 @@ int LLookAndFeel::getTickShape(lua_State*) {
 }
 
 Path LLookAndFeel::getCrossShape (float height) {
-    if(hasCallback("getCrossShape"))
-        callback("getCrossShape");
-    else
-        LookAndFeel_V3::getCrossShape(height);
+    if(hasCallback("getCrossShape")) {
+        if(callback("getCrossShape"))
+            return *LUA::from_luce<LPath>(-1);
+    }
+    return LookAndFeel_V3::getCrossShape(height);
 }
 int LLookAndFeel::getCrossShape(lua_State*) {
     set("getCrossShape");
