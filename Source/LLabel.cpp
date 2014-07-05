@@ -70,6 +70,9 @@ const Luna<LLabel>::FunctionType LLabel::methods[] = {
     method( LLabel, textEditorTextChanged ),
     method( LLabel, valueChanged ),
 
+    method( LLabel, setTooltip ),
+    method( LLabel, getTooltip ),
+
     //method( LLabel, componentVisibilityChanged ),
     //method( LLabel, callChangeListeners ),
     //method( LLabel, componentParentHierarchyChanged ),
@@ -291,6 +294,22 @@ bool LLabel::keyPressed(const KeyPress& k) {
         return Label::keyPressed(k);
 }
 
+int LLabel::setTooltip(lua_State*) {
+    Label::setTooltip(LUA::getString(2));
+    return 0;
+}
+
+String LLabel::getTooltip() {
+    if(hasCallback("getTooltip")) {
+        callback("getTooltip", 1);
+        return ( LUA::checkAndGetString(-1, String::empty) );
+    }
+    return Label::getTooltip();
+}
+int LLabel::getTooltip(lua_State*) {
+    set("getTooltip");
+    return 0;
+}
 
 
 /////// getters/setters

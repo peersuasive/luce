@@ -52,6 +52,9 @@ public:
     int addListener(lua_State*);
     int removeListener(lua_State*);
     
+    int setTooltip(lua_State*);
+    int getTooltip(lua_State*);
+
     //int componentVisibilityChanged(lua_State*);
     //int componentParentHierarchyChanged(lua_State*);
     //int callChangeListeners(lua_State*);
@@ -120,6 +123,9 @@ private:
  
     virtual bool keyPressed(const KeyPress&) override;
 
+    //==============================================================================
+    //virtual void setTooltip(const String&);
+    virtual String getTooltip() override;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LLabel)
