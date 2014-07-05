@@ -205,15 +205,6 @@ int LTreeViewItem::itemClicked(lua_State* L) {
     return 0;
 }
 
-void LTreeViewItem::itemSelectionChanged( bool isNowSelected ) {
-    if(hasCallback("itemSelectionChanged"))
-        callback("itemSelectionChanged", 0, { isNowSelected });
-}
-int LTreeViewItem::itemSelectionChanged(lua_State*){
-    set("itemSelectionChanged");
-    return 0;
-}
-
 void LTreeViewItem::itemDoubleClicked( const MouseEvent& e ) {
     if (! hasCallback("itemDoubleClicked") ) {
         if (mightContainSubItems())
@@ -229,6 +220,15 @@ int LTreeViewItem::itemDoubleClicked(lua_State* L) {
         else
             TreeViewItem::itemDoubleClicked( *LUA::toUserdata<LMouseEvent>(2) );
     }
+    return 0;
+}
+
+void LTreeViewItem::itemSelectionChanged( bool isNowSelected ) {
+    if(hasCallback("itemSelectionChanged"))
+        callback("itemSelectionChanged", 0, { isNowSelected });
+}
+int LTreeViewItem::itemSelectionChanged(lua_State*){
+    set("itemSelectionChanged");
     return 0;
 }
 
@@ -337,6 +337,28 @@ int LTreeViewItem::getItemWidth( lua_State* ) {
     return 0;
 }
 
+bool LTreeViewItem::canBeSelected() const {
+    if(hasCallback("canBeSelected")) {
+        if(callback("canBeSelected"))
+            return LUA::getBoolean();
+    }
+    return true;
+}
+int LTreeViewItem::canBeSelected (lua_State* L) {
+    if(lua_isfunction(L,2)) {
+        set("canBeSelected");
+        return 0;
+    }
+    else
+        return this->canBeSelected();
+}
+
+int LTreeViewItem::getTooltip ( lua_State* ) {
+    // TODO: TreeViewItem returns String::empty anyway
+    //       so instanciate a Tooltip or something appropriate here
+    return LUA::returnString( TreeViewItem::getTooltip() );
+}
+
 
 
 /// end of callbacks
@@ -366,22 +388,6 @@ int LTreeViewItem::getNumSubItems ( lua_State* ) {
     return LUA::returnNumber( TreeViewItem::getNumSubItems() );
 }
 
-bool LTreeViewItem::canBeSelected() const {
-    if(hasCallback("canBeSelected")) {
-        if(callback("canBeSelected"))
-            return LUA::getBoolean();
-    }
-    return true;
-}
-int LTreeViewItem::canBeSelected (lua_State* L) {
-    if(lua_isfunction(L,2)) {
-        set("canBeSelected");
-        return 0;
-    }
-    else
-        return this->canBeSelected();
-}
-
 int LTreeViewItem::getSubItem ( lua_State* ) {
     return LUA::returnUserdata<LTreeViewItem, TreeViewItem>( TreeViewItem::getSubItem(LUA::getNumber()) );
 }
@@ -402,12 +408,6 @@ int LTreeViewItem::getItemPosition ( lua_State* ) {
 
 int LTreeViewItem::getItemIdentifierString ( lua_State* ) {
     return LUA::returnString( TreeViewItem::getItemIdentifierString() );
-}
-
-int LTreeViewItem::getTooltip ( lua_State* ) {
-    // TODO: TreeViewItem returns String::empty anyway
-    //       so instanciate a Tooltip or something appropriate here
-    return LUA::returnString( TreeViewItem::getTooltip() );
 }
 
 int LTreeViewItem::areAllParentsOpen ( lua_State* ) {
