@@ -36,6 +36,8 @@ protected:
     //==============================================================================
     HashMap<String, bool> registered;
     void set( const String& r, int lua_type = LUA_TFUNCTION, int pos = -1);
+    void unset( const String& r );
+
     // avoid this constructor, it's causing issues with some compilers
     //int callback(const String& k, int nb_ret = 0, const std::list<var>& args = {}) const;
     int callback(const String& k, int nb_ret = 0, const std::list<var>& args = std::list<var>()) const;

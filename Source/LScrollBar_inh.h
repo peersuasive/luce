@@ -44,6 +44,7 @@ const Luna<LScrollBar>::InheritenceF LScrollBar::inheritsF[] = {
     method( LBase, light),
     method( LBase, unlight),
     method( LComponent, as ),
+    method( LComponent, unreg ),
     method( LComponent, startDragging ),
     method( LComponent, getExplicitFocusOrder ),
     method( LComponent, setExplicitFocusOrder ),

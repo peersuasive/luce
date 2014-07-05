@@ -56,6 +56,10 @@ void LBase::set( const String& r, int lua_type, int pos ) {
     if ( LUA::set(this, r.toRawUTF8(), pos) )
         this->registered.set(r, true);
 }
+void LBase::unset( const String& r ) {
+    LUA::unset(this, r.toRawUTF8());
+    this->registered.set(r, false);
+}
 
 int LBase::callback( const String& k, int nb_ret, const std::list<var>& args ) const {
     return LUA::call_cb(this, k.toRawUTF8(), nb_ret, args);

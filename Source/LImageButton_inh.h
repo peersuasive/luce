@@ -58,6 +58,7 @@ const Luna<LImageButton>::InheritenceF LImageButton::inheritsF[] = {
     method( LBase, unlight),
     // LComponent
     method( LComponent, as ),
+    method( LComponent, unreg ),
     method( LComponent, startDragging ),
     method( LButton, getExplicitFocusOrder ),
     method( LButton, setExplicitFocusOrder ),

@@ -24,6 +24,9 @@ public:
 
     int as(lua_State*);
     int startDragging(lua_State*);
+    
+    //==============================================================================
+    int unreg(lua_State*);
 
     //==============================================================================
     int setExplicitFocusOrder(lua_State*);

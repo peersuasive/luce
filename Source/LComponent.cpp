@@ -54,6 +54,12 @@ void LComponent::selfKill() {
     delete this;
 }
 
+int LComponent::unreg(lua_State*) {
+    String cb = LUA::getString(2);
+    unset(cb);
+    return 0;
+}
+
 int LComponent::startDragging(lua_State *L) {
     String desc = LUA::getString(2);
     Rectangle<int> pos = LUA::getRectangle(2);
