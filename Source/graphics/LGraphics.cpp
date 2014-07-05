@@ -176,6 +176,7 @@ int LGraphics::reduceClipRegion ( lua_State* L ) {
             "(LRectangleList)",
             "(LPath, [LAffineTransform])",
             "(LImage, [LAffineTransform])"));
+    return 0;
 }
 
 int LGraphics::clipRegionIntersects ( lua_State* ) {

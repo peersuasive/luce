@@ -102,7 +102,7 @@ int LFillType::lnew(lua_State* L) {
             "(LImage)",
             "(LFillType)"
         ));
-
+    return 0;
 }
 
 /////// getters/setters
