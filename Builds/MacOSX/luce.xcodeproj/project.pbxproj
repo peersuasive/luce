@@ -1537,6 +1537,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = ("../../JuceLibraryCode", "../../JuceLibraryCode/modules", "$(inherited)");
 				INFOPLIST_FILE = Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -I../../Luce -I/opt/zmq-osx/include/lua5.1 -DLUA51 -Wno-unused-variable -Wno-string-compare";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";

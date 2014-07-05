@@ -68,7 +68,7 @@
     <XCODE_MAC targetFolder="Builds/MacOSX" extraCompilerFlags="-I/usr/local/include&#10;-I../../Luce&#10;-I/opt/zmq-osx/include/lua5.1&#10;-DLUA51&#10;-Wno-unused-variable&#10;-Wno-string-compare"
                extraLinkerFlags="-undefined dynamic_lookup">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="10.6 SDK" osxArchitecture="default"
                        isDebug="0" optimisation="2" targetName="core"/>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
                        isDebug="1" optimisation="1" targetName="core"/>
