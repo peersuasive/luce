@@ -1538,7 +1538,7 @@
 				HEADER_SEARCH_PATHS = ("../../JuceLibraryCode", "../../JuceLibraryCode/modules", "$(inherited)");
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -I../../Luce -DLUA52 -Wno-unused-variable -Wno-string-compare";
+				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -I../../Luce -I/opt/zmq-osx/include/lua5.1 -DLUA51 -Wno-unused-variable -Wno-string-compare";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";
 				SDKROOT_ppc = macosx10.5; }; name = Release; };
 		C4D55B1D7739A48CE6B36787 = {isa = XCBuildConfiguration; buildSettings = {
@@ -1559,7 +1559,7 @@
 				HEADER_SEARCH_PATHS = ("../../JuceLibraryCode", "../../JuceLibraryCode/modules", "$(inherited)");
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
-				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -I../../Luce -DLUA52 -Wno-unused-variable -Wno-string-compare";
+				OTHER_CPLUSPLUSFLAGS = "-I/usr/local/include -I../../Luce -I/opt/zmq-osx/include/lua5.1 -DLUA51 -Wno-unused-variable -Wno-string-compare";
 				OTHER_LDFLAGS = "-undefined dynamic_lookup";
 				SDKROOT_ppc = macosx10.5; }; name = Debug; };
 		83071BB6AFB301655A63A894 = {isa = XCBuildConfiguration; buildSettings = {
