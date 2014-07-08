@@ -14,7 +14,7 @@ extern "C" {
 #endif
 int lua_shutdown(lua_State*);
 int lua_main(void);
-int lua_main_manual(lua_State*, const int&);
+int lua_main_manual(lua_State*, const int&, int ms = 0);
 int start(lua_State*);
 int start_manual(lua_State*);
 int reload(lua_State*);
@@ -42,10 +42,10 @@ int lua_main(void) {
     return res;
 }
 
-int lua_main_manual(lua_State *L, const int& cb_ref) {
+int lua_main_manual(lua_State *L, const int& cb_ref, int ms) {
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
 
-    MainThread myThread("Main luce Thread", L, cb_ref);
+    MainThread myThread("Main luce Thread", L, cb_ref, ms);
 
     #if JUCE_IOS
     // not ready yet
@@ -164,14 +164,24 @@ int start( lua_State *L ) {
 }
 int start_manual( lua_State *L ) {
     LUA::Set(L);
+    for(int i =1; i<=lua_gettop(L); ++i)
+        std::cout << lua_typename(L, lua_type(L,i)) << std::endl;
+    
     luaL_checktype(L, -1, LUA_TFUNCTION); // cb
-    luaL_checktype(L, -2, LUA_TTABLE); // LJUCEApp
+    luaL_checktype(L, -2, LUA_TNUMBER); // sleep
+    luaL_checktype(L, -3, LUA_TTABLE); // LJUCEApp
 
     int cb_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
+    
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2); // luaL_ref pop'ed the cb function
     mainClass = mc;
-    int rc = lua_main_manual(L, cb_ref);
+    for(int i =1; i<=lua_gettop(L); ++i)
+        std::cout << lua_typename(L, lua_type(L,i)) << std::endl;
+    int ms = luaL_checknumber(L, 3);
+    lua_settop(L,0);
+
+    int rc = lua_main_manual(L, cb_ref, ms);
     
     lua_shutdown(L);
     
