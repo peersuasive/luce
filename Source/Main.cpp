@@ -190,6 +190,14 @@ int start_manual( lua_State *L ) {
     return 1;
 }
 
+int lua_sleep(lua_State *L) {
+    int ms = luaL_checknumber(L,-1);
+    lua_pop(L,1);
+    std::chrono::milliseconds sleepDuration(ms);
+    std::this_thread::sleep_for(sleepDuration);
+    return 0;
+}
+
 //==============================================================================
 /*
  * for constants with value
@@ -356,6 +364,7 @@ static const luaL_Reg luce_lib [] = {
     { "start_manual", start_manual },
     { "reload", reload },
     { "shutdown", lua_shutdown },
+    { "sleep", lua_sleep },
     {NULL, NULL}
 };
 
