@@ -250,17 +250,25 @@ local function new(name, ...)
     
     -- start the main loop
     function self:start(mainClass, wants_control, wants_osx_delayed)
-        if(LUCE_LIVE_CODING)then
-            return mainClass
+        local t = type(wants_control)
+        local ms, cb
+        if("table"==t) then
+            cb, ms = wants_control[1], wants_control[2]
+        else
+            cb, ms = wants_control, 0
         end
-        if(wants_control) and not("function"==type(wants_control))then
+
+        if(LUCE_LIVE_CODING)then
+            return mainClass, cb, ms
+        end
+        if(wants_control) and not("function"==t or "table"==t)then
             return nil, 
                 string.format("Control callback: expected function, got '%s'", type(wants_control))
         end
         delayed = wants_osx_delayed
         MainClass = mainClass
-        if(wants_control) and not(OS.android or OS.ios)then
-            return luce:start_manual( lapp, wants_control)
+        if(cb) and not(OS.android or OS.ios)then
+            return luce:start_manual( lapp, ms, cb )
         else
             return luce:start( lapp )
         end
