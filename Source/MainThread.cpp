@@ -11,9 +11,10 @@
 
 *************************************************************/
 
-MainThread::MainThread( const String& name, lua_State *L, const int& ref) 
+MainThread::MainThread( const String& name, lua_State *L, const int& ref, int ms_) 
     : Thread(name),
-      cb_ref(ref)
+      cb_ref(ref),
+      ms(ms_)
 {
 }
 
@@ -37,15 +38,26 @@ void MainThread::run() {}
 #else
 void MainThread::run() {
     lua_State *L = LUA::Get();
+    std::chrono::steady_clock::time_point now;
+    std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
     while (! threadShouldExit()) {
+        if(ms)
+            now = std::chrono::steady_clock::now();
+
         MessageManagerLock mml (Thread::getCurrentThread());
         if (!mml.lockWasGained())
             return;
 
         if (! MessageManager::getInstance()->runDispatchLoopUntil(0) )
             break;
-        if ( run_cb(L, cb_ref) != 0 )
-            break;
+
+        // don't mess up with GUI refresh time, 
+        // but allow control method to sleep
+        if( ! ms || ( ms && ms < std::chrono::duration_cast<std::chrono::milliseconds>(now-lastTime).count() ) ) {
+            if ( run_cb(L, cb_ref) != 0 )
+                break;
+            lastTime = now;
+        }
 
         /*
         if ( cb_ref != LUA_REFNIL ) {
