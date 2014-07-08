@@ -164,20 +164,15 @@ int start( lua_State *L ) {
 }
 int start_manual( lua_State *L ) {
     LUA::Set(L);
-    for(int i =1; i<=lua_gettop(L); ++i)
-        std::cout << lua_typename(L, lua_type(L,i)) << std::endl;
-    
     luaL_checktype(L, -1, LUA_TFUNCTION); // cb
     luaL_checktype(L, -2, LUA_TNUMBER); // sleep
     luaL_checktype(L, -3, LUA_TTABLE); // LJUCEApp
 
     int cb_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-
     
     LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2); // luaL_ref pop'ed the cb function
     mainClass = mc;
-    for(int i =1; i<=lua_gettop(L); ++i)
-        std::cout << lua_typename(L, lua_type(L,i)) << std::endl;
+   
     int ms = luaL_checknumber(L, 3);
     lua_settop(L,0);
 
