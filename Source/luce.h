@@ -5,6 +5,7 @@
 #define LUCE_VERSION_MINOR 1
 #define LUCE_VERSION_BUILD 0
 
+#include <thread>
 #include <list>
 #include <map>
 #include <iostream>
