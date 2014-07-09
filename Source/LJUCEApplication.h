@@ -25,6 +25,7 @@ public:
     bool moreThanOneInstanceAllowed();
 
     int setDoubleClickTimeout(lua_State*);
+    int getDoubleClickTimeout(lua_State*);
 
     //==============================================================================
     // luce specifics

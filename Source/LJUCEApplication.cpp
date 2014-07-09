@@ -40,6 +40,7 @@ const Luna<LJUCEApplication>::FunctionType LJUCEApplication::methods[] = {
 
     // artificial
     method( LJUCEApplication, setDoubleClickTimeout ),
+    method( LJUCEApplication, getDoubleClickTimeout ),
 
     // ComponentAnimator
     method( LJUCEApplication, animateComponent ),
@@ -361,6 +362,10 @@ int LJUCEApplication::setDoubleClickTimeout(lua_State*) {
     MouseEvent::setDoubleClickTimeout(LUA::getNumber());
     return 0;
 }
+int LJUCEApplication::getDoubleClickTimeout(lua_State*) {
+    return LUA::returnNumber(MouseEvent::getDoubleClickTimeout());
+}
+
 
 //== ApplicationCommandManager =================================================
 int LJUCEApplication::clearCommands(lua_State*) {
