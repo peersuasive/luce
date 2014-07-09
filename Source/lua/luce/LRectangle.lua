@@ -316,7 +316,7 @@ function mt:removeFromRight(a)
 end
 
 function mt:removeFromBottom(a)
-    local a = (a<self.h) and a or self.h
+    local a = math.min( a, self.h )
     local r = self:new{ self.x, self.y + self.h - a, self.w, a }
     self.h = self.h-a
     return r
