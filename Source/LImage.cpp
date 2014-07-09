@@ -99,6 +99,9 @@ int LImage::lnew(lua_State *L) {
     if(lua_isnoneornil(L,2))
         return LUA::storeAndReturnUserdata<LImage>( new LImage(L) );
 
+    if(LUCE::luce_isofclass(LImage, 2))
+        return LUA::storeAndReturnUserdata<LImage>( new LImage(L, *LUA::from_luce<LImage>(2)) );
+
     juce::Image::PixelFormat fmt = (juce::Image::PixelFormat)LUA::getNumber<int>(2);
     int w = LUA::getNumber<int>(2);
     int h = LUA::getNumber<int>(2);
@@ -130,10 +133,8 @@ int LImage::lnew(lua_State *L) {
                 break;
         }
     }
-    else {
-        // TODO
-        LUCE::luce_error("No yet implemented: Image(..., ImageType)");
-    }
+    else
+        LUCE::luce_error("ERROR: unknown constructor");
 
     return 0;
 }
