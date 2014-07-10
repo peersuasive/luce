@@ -20,6 +20,7 @@ const Luna<LCallOutBox>::PropertyType LCallOutBox::properties[] = {
 const Luna<LCallOutBox>::FunctionType LCallOutBox::methods[] = {
     method( LCallOutBox, keyPressed ),
     method( LCallOutBox, hitTest ),
+    method( LCallOutBox, dismiss ),
     method( LCallOutBox, handleCommandMessage ),
     method( LCallOutBox, resized ),
     method( LCallOutBox, inputAttemptWhenModal ),
@@ -83,6 +84,11 @@ int LCallOutBox::hitTest ( lua_State* ) {
     int x = LUA::getNumber<int>(2);
     int y = LUA::getNumber<int>(2);
     return LUA::returnBoolean( CallOutBox::hitTest( x, y ) );
+}
+
+int LCallOutBox::dismiss(lua_State*) {
+    CallOutBox::dismiss();
+    return 0;
 }
 
 int LCallOutBox::handleCommandMessage ( lua_State* ) {

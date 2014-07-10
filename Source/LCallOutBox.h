@@ -28,6 +28,7 @@ public:
     static int s_launchAsynchronously(lua_State*);
 
     //==============================================================================
+    int dismiss(lua_State*);
     int keyPressed(lua_State*);
     int hitTest(lua_State*);
 
