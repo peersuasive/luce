@@ -1451,6 +1451,9 @@ int LComponent::setBoundsToFit ( lua_State* ) {
 int LComponent::setColour ( lua_State* ) {
     if (child) {
         int id = LUA::getNumber(2);
+        Colour colour = LUCE::luce_tocolour(2);
+        child->setColour( id, colour );
+        /*
         if ( lua_isnumber(L, -1) ) {
             // TODO: convert from lua number (double) to uint32
             var val = LUA::getNumber();
@@ -1462,6 +1465,7 @@ int LComponent::setColour ( lua_State* ) {
         } else {
             LUCE::luce_error( "Missing colour value (name or ARGB)" );
         }
+        */
     }
     return 0;
 }
