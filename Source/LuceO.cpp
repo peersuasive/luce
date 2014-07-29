@@ -128,7 +128,7 @@ namespace {
                     luaL_getmetatable(L, tname);
                     if (!lua_rawequal(L, -1, -2))
                         p = NULL;
-                    lua_pop(L, 2); // mt*2
+                    lua_pop(L, 3); // mt*2
                     return p ? true : false;
                 }
             }
