@@ -207,8 +207,14 @@ int LTextEditor::returnPressed(lua_State*){
 }
 
 bool LTextEditor::keyPressed(const KeyPress& k) {
-    if(hasCallback("keyPressed"))
-        return LComponent::lkeyPressed(k);
+    if(hasCallback("keyPressed")) {
+        callback("keyPressed", 1, { new LRefBase("KeyPress", &k ) });
+        if ( LUCE::luce_isofclass(LKeyPress, -1) )
+            return TextEditor::keyPressed( *LUA::from_luce<LKeyPress>(-1) );
+        
+        if ( ! LUA::checkAndGetBoolean(-1, false) )
+            return TextEditor::keyPressed( k );
+    }
     else
         return TextEditor::keyPressed(k);
 }
