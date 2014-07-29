@@ -271,6 +271,6 @@ end)
 --- so there's no need to loop here
 --- it is set with a a rate of 1ms by default
 --- note: not yet supported by iOS and Android
-luce:start_manual( mainWindow, function(...)
+luce:start_manual( mainWindow, 0, function(...)
     return stop_now
 end)
