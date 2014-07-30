@@ -1,5 +1,10 @@
 #include <cstring>
 
+// FIXME: thread-posix for mingw32
+#ifdef __MINGW32__
+#include <windows.h>
+#endif
+
 #define LUCE_API __attribute__ ((visibility ("default")))
 
 static luce::LJUCEApplication *mainClass = nullptr;
@@ -188,8 +193,13 @@ int start_manual( lua_State *L ) {
 int lua_sleep(lua_State *L) {
     int ms = luaL_checknumber(L,-1);
     lua_pop(L,1);
+// FIXME: posix-thread for mingw
+#ifdef __MINGW32__
+    Sleep(ms);
+#else
     std::chrono::milliseconds sleepDuration(ms);
     std::this_thread::sleep_for(sleepDuration);
+#endif
     return 0;
 }
 
