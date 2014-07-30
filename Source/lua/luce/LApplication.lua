@@ -97,18 +97,29 @@ local function new(name, prog, ...)
     -- look in $HOME/.luce for classes and modules first
     -- NOTE: should add ./ too
     if not(OS.win)then
-    local luce_lib = HOME.."/.luce/lib/?.so;"..HOME.."/.luce/lib/?/?.so;" -- "~/.luce/lib/?.so;~/.luce/lib/?/?.so"
+    local rel_path = prog:match("(.*)/[^/]+$") or "."
+    local luce_lib = rel_path.."/lib/?.so;"..rel_path.."/lib/?/?.so;"
+    luce_lib       = luce_lib..HOME.."/.luce/lib/?.so;"..HOME.."/.luce/lib/?/?.so;" -- "~/.luce/lib/?.so;~/.luce/lib/?/?.so"
     luce_lib       = luce_lib..HOME.."/.luce/lib/?.dylib;"..HOME.."/.luce/lib/?/?.dylib;"
     luce_lib       = luce_lib.."./lib/?.so;./lib/?.dylib;./lib/?/?.so;./lib/?/?.dylib;"
-    local luce_lua = HOME.."/.luce/lua/?.lua;"..HOME.."/.luce/lua/?/?.lua;"
+    local luce_lua = rel_path.."/classes/?.lua;"..rel_path.."/classes/?/?.lua;"
+    luce_lua       = luce_lua..rel_path.."/classes/init.lua;"..rel_path.."/classes/?/init.lua;"
+    luce_lua       = luce_lua..HOME.."/.luce/lua/?.lua;"..HOME.."/.luce/lua/?/?.lua;"
     luce_lua       = luce_lua.."./classes/?.lua;./classes/?/?.lua;./classes/init.lua;./classes/?/init.lua;"
     package.path   = luce_lua..package.path
     package.cpath  = luce_lib..package.cpath
+
+    self.pre_path  = rel_path
     else -- windows... is p* us off
-    local luce_lib = HOME.."\\_luce\\lib\\?.dll;"..HOME.."\\_luce\\lib\\?\\?.dll;" -- "~/.luce/lib/?.so;~/.luce/lib/?/?.so"
-    local luce_lua = HOME.."\\_luce\\lua\\?.lua;"..HOME.."\\_luce\\lua\\?\\?.lua;"
+    local rel_path = prog:match("(.*)\\[^\\]+$") or "."
+    local luce_lib = rel_path.."\\lib\\?.dll;"..rel_path.."\\lib\\?\\?.dll;"
+    luce_lib       = luce_lib..HOME.."\\_luce\\lib\\?.dll;"..HOME.."\\_luce\\lib\\?\\?.dll;"
+    local luce_lua = rel_path.."\\lua\\?.lua;"..rel_path.."\\lua\\?\\?.lua;"
+    luce_lua       = luce_lua.."\\_luce\\lua\\?.lua;"..HOME.."\\_luce\\lua\\?\\?.lua;"
     package.path   = luce_lua..package.path
     package.cpath  = luce_lib..package.cpath
+
+    self.pre_path  = rel_path
     end
 
     ---
