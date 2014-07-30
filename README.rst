@@ -179,7 +179,7 @@ A first app: say hello
     local poller      = function()  -- the callback you want to run in manual mode
         print "I'm in a loop!"
     end
-    return app:start( MainWindow, osx_delayed, manual, manual and poller ) -- returns the exit state
+    return app:start( MainWindow, manual and {poller,100}, osx_delayed,  ) -- returns the exit state
 
 
 A more complete example using only the low level API
@@ -346,7 +346,7 @@ A more complete example using only the low level API
     --- the function's executed in a loop within a thread,
     --- so there's no need to loop here
     --- it is set with the same rate than the JUCE's loop (1ms by default)
-    luce:start_manual( mainWindow, function(...)
+    luce:start_manual( mainWindow, 1, function(...)
         -- do some stuff, like zmq:poll(), for instance
         return stop_now
     end )
