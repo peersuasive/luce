@@ -172,6 +172,12 @@ local function new(name, prog, ...)
         logError(...)
     end
 
+    function self:getRes(res_path, as_bin)
+        -- TODO: return content if embedded and explicitly asked
+        --       or dump embedded content and return path
+        return self.pre_path .. OS.sep .. res_path
+    end
+
     ---
     -- LApplication Class initialisation
     ---
