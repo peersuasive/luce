@@ -51,11 +51,12 @@ local className = "LApplication"
 local mt = {}
 mt.__index = mt
 
-local function new(name, ...)
+local function new(name, prog, ...)
     local name = name or className
     local args = {...}
     -- pre-declaration
     local self = {
+        prog     = prog,
         args     = args,
         name     = name,
         log      = nil,
@@ -310,10 +311,12 @@ local function new(name, ...)
 end
 
 mt.__call = function(_, name, ...)
+    -- first arg is program with relative path
     local args = {...}
+    local prog = args[1]; table.remove(args,1)
     lDEBUG  = args[1] and args[1]:match("^[Dd]$") and table.remove(args,1) and true
     luce    = require"luce"(lDEBUG)
-    _G.App  = new(name, unpack(args))
+    _G.App  = new(name, prog, unpack(args))
     return _G.App, luce
 end
 
