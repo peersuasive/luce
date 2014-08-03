@@ -54,14 +54,11 @@ namespace {
                     lua_call(L, 2, 1);
                     lua_error(L);
                 }
-                else {
+                else
                     lua_pop(L,2);
-                }
-                    
             }
-            else {
+            else
                 lua_pop(L,1);
-            }
 
             lua_error(L);
         }
@@ -129,7 +126,7 @@ namespace {
                     luaL_getmetatable(L, tname);
                     if (!lua_rawequal(L, -1, -2))
                         p = NULL;
-                    lua_pop(L, 3); // mt*2
+                    lua_pop(L, 3); // field + mt*2
                     return p ? true : false;
                 }
             }
