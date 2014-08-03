@@ -481,10 +481,13 @@ namespace LUA {
             lua_remove(L,i);
             return dynamic_cast<U*>(res);
             */
-            luaL_checktype(L, i, LUA_TTABLE);
+            //luaL_checktype(L, i, LUA_TTABLE);
+            if ( lua_type(L,i) != LUA_TTABLE )
+                LUCE::luce_error("from_luce: given object is not a valid Luce object.");
+
             lua_getfield(L, i, "__self");
             if ( lua_isnil(L, -1) ) {
-                throwError("given object is not a valid Luce object");
+                LUCE::luce_error("from_luce: given object is not a valid Luce object: can't find __self.");
                 return nullptr;
             }
             T **obj = static_cast<T**>(lua_touserdata(L, -1));
