@@ -41,6 +41,7 @@ namespace {
             if(!what.empty())
                 lua_pushfstring(L, "%s: %s", what.c_str(), lua_tostring(L,-1));
         
+            what = "";
             int top = lua_gettop(L);
 
             lua_pushglobaltable(L);
