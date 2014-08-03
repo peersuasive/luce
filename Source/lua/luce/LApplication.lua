@@ -330,7 +330,7 @@ end
 mt.__call = function(_, name, ...)
     -- first arg is program with relative path
     local args = {...}
-    local prog = args[1] or "."; table.remove(args,1)
+    local prog = args[1] or (arg and arg[0]) or "."; table.remove(args,1)
     lDEBUG  = args[1] and args[1]:match("^[Dd]$") and table.remove(args,1) and true
     luce    = require"luce"(lDEBUG)
     _G.App  = new(name, prog, unpack(args))
