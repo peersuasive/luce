@@ -14,6 +14,8 @@
 
 ------------------------------------------------------------------------------]]
 
+-- TODO: this is just... a mess -- should start over
+
 local new = function(self, ...)
     local self = self or {}
     --local me = self.class.new(class, ...)

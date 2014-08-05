@@ -166,6 +166,9 @@ public:
         luaL_newmetatable(L, T::className);
         int metatable = lua_gettop(L);
 
+        // FIXME: instead of __exists, offer __index and __newindex
+        //        @see http://stackoverflow.com/questions/3332448/treating-userdate-like-a-table-in-lua
+        //        for an example, which would also take care of user defined variables
         lua_pushstring(L, "__exists");
         lua_pushcfunction(L, &Luna < T >::property_exists);
         lua_settable(L, metatable);
