@@ -359,6 +359,9 @@ For more examples, see the `examples
 <https://github.com/peersuasive/luce/tree/master/examples>`__ folder of the
 repository.
 
+Projects `lTox <https://github.com/peersuasive/ltox>`__ and `Lecture
+<https://github.com/peersuasive/lecture>`__ are also good starting points.
+
 
 
 Requirements and dependencies
@@ -593,35 +596,21 @@ Once the class is created, include it in ``luce.cpp``, ``luce.h`` and reference 
 ``Luce`` Roadmap
 ================
 
-``Luce`` is still very young but growing fast -- at least as fast as
-our needs for it. Most of the basic widgets are aleady there and it's already
-possible to build full applications with it.
-Performances are there too, even if there isn't any optimisation done yet.
+``Luce`` is now stable and complete enough to implement some GUI applications.
 
-Next big steps are:
+It's still lacking a high level API to hide the relative complexity of JUCE, though.
 
-* implementating a high level API (porcelaine) to simplify the process of
-  creating new applications and reduce the number of required calls and methods
-  to the native (JUCE) API
+* documentation
 
-* more low level binding, like box2d, to be able to create our own fancy widgets
+* high level API (to create classes, maybe inheritence (@see `30log <https://github.com/Yonaba/30log.git>`__, for instance.)
 
-* an equivalent to JUCE's message broadcasting, between C++/Lua but also between
-  any components (gadokai? pure ømq?)
+* integrate debugging facilities
 
-* a var/Value equivalent usable within lua, even out of any JUCE context (gadokai? ømq?)
+* events broadcasting, be it JUCE's or something else
 
-* some minor tasks like overriding LookAndFeel lua side
+* portability: finalise Windows and OSX, optimisations for Android and iOS, start \*BSD
 
-* optimisation, if required (there's a looooot of room for optimisation, no worry at all on this side)
-
-API documentation will come later as Juce's one is still fully relevant.
-
-You may also want to have a look at `luz <https://github.com/peersuasive/luz>`_,
-a simple demonstrator on remotely and dynamically creating a ``Luce``
-application, a small *avant goût* of the forthcoming Peersuasive's smart-data
-oriented architecture ``gadokai`` (yet to be announced).
-
+* ease look-and-feel customisation
 
 
 Related Projects
