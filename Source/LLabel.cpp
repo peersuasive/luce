@@ -421,7 +421,7 @@ int LLabel::getCurrentTextEditor ( lua_State* ) {
 
 TextEditor* LLabel::createEditorComponent() {
     if(hasCallback("createEditorComponent")) {
-        if(callback("createEditorComponent"))
+        if(callback("createEditorComponent", 1))
             return LUA::from_luce<LTextEditor, TextEditor>();
         else
             return nullptr;
