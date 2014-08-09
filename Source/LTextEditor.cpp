@@ -215,8 +215,7 @@ bool LTextEditor::keyPressed(const KeyPress& k) {
         if ( ! LUA::checkAndGetBoolean(-1, false) )
             return TextEditor::keyPressed( k );
     }
-    else
-        return TextEditor::keyPressed(k);
+    return TextEditor::keyPressed(k);
 }
 
 void LTextEditor::performPopupMenuAction( int menuItemID ) {
