@@ -159,6 +159,7 @@ const Luna<LOpenGLComponent>::InheritenceF LOpenGLComponent::inheritsF[] = {
     method( LComponent, getWindowHandle ),
     method( LComponent, moveKeyboardFocusToSibling ),
     method( LComponent, addChildComponent ),
+    method( LComponent, removeChildComponent ),
     method( LComponent, updateMouseCursor ),
     method( LComponent, addMouseListener ),
     method( LComponent, removeComponentListener ),

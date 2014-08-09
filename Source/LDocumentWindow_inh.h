@@ -175,6 +175,7 @@ const Luna<LDocumentWindow>::InheritenceF LDocumentWindow::inheritsF[] = {
     method( LComponent, setBufferedToImage ),
     method( LComponent, setBoundsToFit ),
     method( LComponent, addChildAndSetID ),
+    method( LComponent, removeChildComponent ),
     method( LComponent, getInterceptsMouseClicks ),
     method( LComponent, removeMouseListener ),
     method( LComponent, beginDragAutoRepeat ),

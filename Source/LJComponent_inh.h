@@ -153,6 +153,7 @@ const Luna<LJComponent>::InheritenceF LJComponent::inheritsF[] = {
     method( LComponent, toFront ),
     method( LComponent, addKeyListener ),
     method( LComponent, addAndMakeVisible ),
+    method( LComponent, removeChildComponent ),
     method( LComponent, setTopLeftPosition ),
     method( LComponent, removeKeyListener ),
     method( LComponent, sendLookAndFeelChange ),
