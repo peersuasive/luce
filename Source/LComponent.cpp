@@ -157,9 +157,13 @@ int LComponent::addChildAndSetID ( lua_State* ) {
     return 0;
 }
 
-int LComponent::removeChildComponent ( lua_State* ) {
-    if (child)
-        return LUA::returnUserdata<LJComponent, Component>( child->removeChildComponent( LUA::getNumber(2) ) );
+int LComponent::removeChildComponent ( lua_State *L ) {
+    if (child) {
+        if(lua_isnumber(L,2))
+            return LUA::returnUserdata<LJComponent, Component>( child->removeChildComponent( LUA::getNumber(2) ) );
+        else
+            child->removeChildComponent( LUA::from_luce<LJComponent, Component>(2) );
+    }
     return 0;
 }
 
