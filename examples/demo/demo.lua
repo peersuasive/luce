@@ -188,6 +188,24 @@ imgButton:setImages(true, true, true,
 imgButton:buttonClicked(function()
     print("imgButton clicked!")
 end)
+
+
+-- file chooser
+local browse = luce:TextButton("browser")
+browse.buttonText = "Choose file..."
+browse:setLookAndFeel(4)
+browse:buttonClicked(function()
+    local chooser = luce:FileChooser("Pick a file...", {
+        start = "/",
+        filter = "*",
+        native = false,
+    })
+    local flags = chooser.Flags
+    if( chooser:showDialog(flags.openMode+flags.canSelectFiles) ) then
+        print("picked: ", chooser.getResult())
+    end
+end)
+
 --- add our Document Window and components to our main JUCE application
 mainWindow:initialise(function(...)
     mc:setSize{800,600}
@@ -222,6 +240,9 @@ mainWindow:initialise(function(...)
 
     mc:addAndMakeVisible(imgButton)
     imgButton:setBounds{ 10, 450, 200, 50 }
+
+    mc:addAndMakeVisible(browse)
+    browse:setBounds{200, 470, 80, 30}
 
     --mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds
                                      -- as this is the last component before
