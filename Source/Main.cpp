@@ -300,6 +300,7 @@ l_class(DrawableRectangle);
 l_class(DrawableComposite);
 //extra
 l_class(ColourSelector);
+l_class(FileChooser);
 // core
 l_class(Time);
 l_class(BigInteger);
@@ -359,6 +360,7 @@ static const luaL_Reg luce_lib [] = {
 
     // extra
     d(ColourSelector),
+    d(FileChooser),
 
     // core
     d(Time),
