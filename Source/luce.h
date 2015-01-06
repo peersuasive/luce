@@ -14,7 +14,7 @@
 //#include "JuceHeader.h"
 #include "Luce.h"
 
-#ifdef LUA52
+#if defined LUA52 || defined LUA53
 #define LUA_COMPAT_MODULE
 #else
 #define lua_pushglobaltable(L) \
