@@ -391,7 +391,7 @@ LUCE_API int luaopen_luce_core_d (lua_State *L) {
 LUCE_API int luaopen_luce_core (lua_State *L) {
 #endif
     LUA::Set(L);
-    DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
+    DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR));
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
     initialiseJuce_GUI();
 
@@ -418,7 +418,7 @@ static const luaL_Reg lucecore_lib [] = {
 
 LUCE_API int luaopen_core(lua_State *L) {
     LUA::Set(L);
-    DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR))
+    DBG("LUCE " JUCE_STRINGIFY(LUCE_VERSION_MAJOR) "." JUCE_STRINGIFY(LUCE_VERSION_MINOR));
     juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
 
     // X11 requires this at this point, but OS X can't stand it this soon

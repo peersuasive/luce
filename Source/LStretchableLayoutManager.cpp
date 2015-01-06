@@ -47,7 +47,7 @@ int LStretchableLayoutManager::getItemLayout ( lua_State* ) {
     double minimumSize, maximumSize, preferedSize;
     bool hasBeenSet = StretchableLayoutManager::getItemLayout( LUA::getNumber(2), minimumSize, maximumSize, preferedSize );
     if ( hasBeenSet )
-        return LUCE::luce_pushtable( {minimumSize, maximumSize, preferedSize} );
+        return LUCE::luce_pushtable( std::list<var>{minimumSize, maximumSize, preferedSize} );
     else
         return LUA::returnNil();
 }
