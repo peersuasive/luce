@@ -98,7 +98,7 @@ A first app: say hello
         local currentCol = 1
         local function changeSize()
             currentSize = (currentSize<maxSize) and currentSize+0.5 or baseSize
-            currentCol  = (currentCol>#colours) and 1 or currentCol+1
+            currentCol  = (currentCol>=#colours) and 1 or currentCol+1
             return currentSize, colours[currentCol]
         end
 
@@ -328,7 +328,6 @@ A more complete example using only the low level API
     mainWindow:systemRequestedQuit(function(...)
         print("** MainWindow system requested quit")
         stop_now = true
-        mainWindow:shutdown()
         mainWindow:quit()
     end)
 
