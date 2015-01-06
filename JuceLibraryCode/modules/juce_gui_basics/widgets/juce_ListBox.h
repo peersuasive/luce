@@ -45,7 +45,10 @@ public:
     */
     virtual int getNumRows() = 0;
 
-    /** This method must be implemented to draw a row of the list. */
+    /** This method must be implemented to draw a row of the list.
+        Note that the rowNumber value may be greater than the number of rows in your
+        list, so be careful that you don't assume it's less than getNumRows().
+    */
     virtual void paintListBoxItem (int rowNumber,
                                    Graphics& g,
                                    int width, int height,
@@ -216,7 +219,16 @@ public:
         clicked and to get it to do the appropriate selection based on whether
         the ctrl/shift keys are held down.
     */
-    void setMultipleSelectionEnabled (bool shouldBeEnabled);
+    void setMultipleSelectionEnabled (bool shouldBeEnabled) noexcept;
+
+    /** If enabled, this makes the listbox flip the selection status of
+        each row that the user clicks, without affecting other selected rows.
+
+        (This only has an effect if multiple selection is also enabled).
+        If not enabled, you can still get the same row-flipping behaviour by holding
+        down CMD or CTRL when clicking.
+    */
+    void setClickingTogglesRowSelection (bool flipRowSelection) noexcept;
 
     /** Makes the list react to mouse moves by selecting the row that the mouse if over.
 
@@ -399,7 +411,7 @@ public:
         The component returned will have been created using createRowComponent().
 
         If the component for this row is off-screen or if the row is out-of-range,
-        this will return 0.
+        this will return nullptr.
 
         @see getRowContainingPosition
     */
@@ -459,7 +471,6 @@ public:
     void setOutlineThickness (int outlineThickness);
 
     /** Returns the thickness of outline that will be drawn around the listbox.
-
         @see setOutlineColour
     */
     int getOutlineThickness() const noexcept            { return outlineThickness; }
@@ -474,6 +485,9 @@ public:
         different component, or when the listbox is deleted.
     */
     void setHeaderComponent (Component* newHeaderComponent);
+
+    /** Returns whatever header component was set with setHeaderComponent(). */
+    Component* getHeaderComponent() const noexcept      { return headerComponent; }
 
     /** Changes the width of the rows in the list.
 
@@ -540,6 +554,8 @@ public:
     /** @internal */
     void colourChanged() override;
     /** @internal */
+    void parentHierarchyChanged() override;
+    /** @internal */
     void startDragAndDrop (const MouseEvent&, const var& dragDescription, bool allowDraggingToOtherWindows);
 
 private:
@@ -555,7 +571,7 @@ private:
     int totalItems, rowHeight, minimumRowWidth;
     int outlineThickness;
     int lastRowSelected;
-    bool multipleSelection, hasDoneInitialUpdate;
+    bool multipleSelection, alwaysFlipSelection, hasDoneInitialUpdate;
     SparseSet<int> selected;
 
     void selectRowInternal (int rowNumber, bool dontScrollToShowThisRow,

@@ -28,11 +28,13 @@
  using namespace juce;
 #endif
 
+#if ! JUCE_DONT_DECLARE_PROJECTINFO
 namespace ProjectInfo
 {
     const char* const  projectName    = "luce";
     const char* const  versionString  = "0.1";
     const int          versionNumber  = 0x100;
 }
+#endif
 
 #endif   // __APPHEADERFILE_FTVH6X__

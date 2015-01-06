@@ -35,8 +35,8 @@
     See also SystemStats::getJUCEVersion() for a string version.
 */
 #define JUCE_MAJOR_VERSION      3
-#define JUCE_MINOR_VERSION      0
-#define JUCE_BUILDNUMBER        7
+#define JUCE_MINOR_VERSION      1
+#define JUCE_BUILDNUMBER        1
 
 /** Current Juce version number.
 
@@ -50,7 +50,10 @@
 
 
 //==============================================================================
+#include <vector>  // included before platform defs to provide a definition of _LIBCPP_VERSION
+
 #include "juce_PlatformDefs.h"
+#include "juce_CompilerSupport.h"
 
 //==============================================================================
 // Now we'll include some common OS headers..
@@ -70,10 +73,10 @@
 #include <cstring>
 #include <cstdio>
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <functional>
 
-#if JUCE_USE_INTRINSICS
+#if JUCE_USE_MSVC_INTRINSICS
  #include <intrin.h>
 #endif
 
@@ -102,7 +105,7 @@
 #endif
 
 #if JUCE_ANDROID
- #include <sys/atomics.h>
+ #include <atomic>
  #include <byteswap.h>
 #endif
 

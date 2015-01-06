@@ -219,6 +219,11 @@ bool File::setReadOnly (const bool shouldBeReadOnly,
     return setFileReadOnlyInternal (shouldBeReadOnly) && worked;
 }
 
+bool File::setExecutePermission (bool shouldBeExecutable) const
+{
+    return setFileExecutableInternal (shouldBeExecutable);
+}
+
 bool File::deleteRecursively() const
 {
     bool worked = true;
@@ -476,7 +481,7 @@ bool File::loadFileAsData (MemoryBlock& destBlock) const
         return false;
 
     FileInputStream in (*this);
-    return in.openedOk() && getSize() == in.readIntoMemoryBlock (destBlock);
+    return in.openedOk() && getSize() == (int64) in.readIntoMemoryBlock (destBlock);
 }
 
 String File::loadFileAsString() const
