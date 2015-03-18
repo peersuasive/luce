@@ -102,11 +102,17 @@ local function new(name, prog, ...)
     luce_lib       = luce_lib..HOME.."/.luce/lib/?.so;"..HOME.."/.luce/lib/?/?.so;" -- "~/.luce/lib/?.so;~/.luce/lib/?/?.so"
     luce_lib       = luce_lib..HOME.."/.luce/lib/?.dylib;"..HOME.."/.luce/lib/?/?.dylib;"
     luce_lib       = luce_lib.."./lib/?.so;./lib/?.dylib;./lib/?/?.so;./lib/?/?.dylib;"
-    local luce_lua = rel_path.."/classes/?.lua;"..rel_path.."/classes/?/?.lua;"
-    luce_lua       = luce_lua..rel_path.."/classes/init.lua;"..rel_path.."/classes/?/init.lua;"
+
+    local luce_lua = rel_path.."/lua/?.lua;"..rel_path.."/lua/?/?.lua;"
+    luce_lua       = luce_lua..rel_path.."/lua/init.lua;"..rel_path.."/lua/?/init.lua;"
     luce_lua       = luce_lua..HOME.."/.luce/lua/?.lua;"..HOME.."/.luce/lua/?/?.lua;"
-    luce_lua       = luce_lua.."./classes/?.lua;./classes/?/?.lua;./classes/init.lua;./classes/?/init.lua;"
+    luce_lua       = luce_lua.."./lua/?.lua;./lua/?/?.lua;./lua/init.lua;./lua/?/init.lua;"
+
+    local luce_cls = rel_path.."/classes/?.lua;"..rel_path.."/classes/?/?.lua;"
+    luce_cls       = luce_cls..rel_path.."/classes/init.lua;"..rel_path.."/classes/?/init.lua;"
+    luce_cls       = luce_cls.."./classes/?.lua;./classes/?/?.lua;./classes/init.lua;./classes/?/init.lua;"
     package.path   = luce_lua..package.path
+    package.path   = luce_cls..package.path
     package.cpath  = luce_lib..package.cpath
 
     self.pre_path  = rel_path
