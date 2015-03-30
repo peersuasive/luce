@@ -58,6 +58,7 @@ const Luna<LImage>::StaticType LImage::statics[] = {
 
     smethod( LImage, getFromFile ),
     smethod( LImage, getFromMemory ),
+    smethod( LImage, getFromBytes ),
     smethod( LImage, getFromHashCode ),
     smethod( LImage, addImageToCache ),
     smethod( LImage, setCacheTimeout ),
@@ -172,6 +173,42 @@ int LImage::s_getFromMemory(lua_State *L) {
     //return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
     //     ImageCache::getFromMemory( data, (int)size )
     //));
+}
+
+int LImage::s_getFromBytes(lua_State *L) {
+    size_t size;
+    unsigned char *data  = (unsigned char*)lua_tostring(L,2);
+
+    lua_remove(L, 2);
+    int w = LUA::getNumber<int>(2);
+    int h = LUA::getNumber<int>(2);
+
+    bool hasAlphaChan = true;
+    Image image;
+    image = Image (Image::ARGB, w, h, hasAlphaChan);
+    image.getProperties()->set ("originalImageHadAlpha", image.hasAlphaChannel());
+    const Image::BitmapData destData (image, Image::BitmapData::writeOnly);
+
+    unsigned char *ptr;
+    ptr = data;
+    for (int y=0;y<w;++y) {
+        uint8 *dest = destData.getLinePointer(y);
+        for (int x=0,j=0;x<w;++x) {
+            unsigned char r,g,b,a;
+            a = ptr[j++];
+            r = ptr[j++];
+            g = ptr[j++];
+            b = ptr[j++];
+            ((PixelARGB*) dest)->setARGB (a, r, g, b);
+            ((PixelARGB*) dest)->premultiply();
+            dest += destData.pixelStride;
+        }
+        ptr += w*4;
+    }
+
+    return LUA::storeAndReturnUserdata<LImage>( new LImage(L,
+        image
+    ));
 }
 
 int LImage::s_getFromHashCode(lua_State *L) {

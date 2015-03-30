@@ -73,6 +73,7 @@ public:
     // ImageCache
     static int s_getFromFile(lua_State*);
     static int s_getFromMemory(lua_State*);
+    static int s_getFromBytes(lua_State*);
     static int s_getFromHashCode(lua_State*);
     static int s_addImageToCache(lua_State*);
     static int s_setCacheTimeout(lua_State*);
