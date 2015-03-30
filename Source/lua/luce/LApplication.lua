@@ -335,8 +335,16 @@ end
 
 mt.__call = function(_, name, ...)
     -- first arg is program with relative path
-    local args = {...}
-    local prog = args[1] or (arg and arg[0]) or "."; table.remove(args,1)
+    --local args = {...}
+    --local prog = args[1] or (arg and arg[0]) or "."; table.remove(args,1)
+    -- TODO: test if that still works when embedded
+    local args, prog = {...}
+    if (arg) then
+        prog = arg[0]
+    else
+        prog = args[1] or "."
+        table.remove(args,1)
+    end
     lDEBUG  = args[1] and args[1]:match("^[Dd]$") and table.remove(args,1) and true
     luce    = require"luce"(lDEBUG)
     _G.App  = new(name, prog, unpack(args))
