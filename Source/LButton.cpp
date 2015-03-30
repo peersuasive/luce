@@ -118,6 +118,7 @@ int LButton::getToggleState ( lua_State* ) {
 }
 int LButton::setToggleState ( lua_State* ) {
     bool shouldBeOn = LUA::getBoolean(2);
+    // FIXME: notif should be optional
     int notif = LUA::getNumber<int>(2);
     if (child)
         child->setToggleState( shouldBeOn, (NotificationType)notif );
