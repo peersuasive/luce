@@ -159,7 +159,7 @@ $(OUT)/$(VERSION)/luce.$(VERSION).osx64-5.2.zip: $(OUT)/$(VERSION)/MacOSX64-5.2/
 												 $(OUT)/$(VERSION)/luce.$(VERSION).osx64-5.2_dbg.zip \
 												 $(OUT)/$(VERSION)/luce.$(VERSION).osx64-5.2_static.zip
 
-macosx64-5.1: $(OUT)/$(VERSION)/luce.$(VERSION).osx64-5.2.zip
+macosx64-5.2: $(OUT)/$(VERSION)/luce.$(VERSION).osx64-5.2.zip
 
 $(OUT)/$(VERSION)/iOS6.1/build: iOS
 	@echo Building for iOS61
