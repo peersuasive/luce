@@ -96,7 +96,8 @@ int LPositionedGlyph::createPath ( lua_State* ) {
 }
 
 int LPositionedGlyph::draw ( lua_State *L ) {
-    const Graphics &g = (const Graphics&)*LUA::from_luce<LGraphics>(2);
+    //const Graphics &g = (const Graphics&)*LUA::from_luce<LGraphics>(2);
+    Graphics &g = (Graphics&)*LUA::from_luce<LGraphics>(2);
     if(lua_isnoneornil(L,2))
         PositionedGlyph::draw(g);
     else {

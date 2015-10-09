@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission to use, copy, modify, and/or distribute this software for any purpose with
    or without fee is hereby granted, provided that the above copyright notice and this
@@ -832,8 +832,8 @@ public:
 
     /** Removes an item from the array.
 
-        This will remove the first occurrence of the given element from the array.
-        If the item isn't found, no action is taken.
+        This will remove all occurrences of the given element from the array.
+        If no such items are found, no action is taken.
 
         @param valueToRemove   the object to try to remove
         @see remove, removeRange

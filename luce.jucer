@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="ftVh6x" name="luce" projectType="dll" version="0.1" bundleIdentifier="org.peersuasive.luce"
-              includeBinaryInAppConfig="1" jucerVersion="3.1.1">
+              includeBinaryInAppConfig="1" jucerVersion="3.2.0">
   <MAINGROUP id="dqAalt" name="luce">
     <GROUP id="{2FE4F1A2-0FC8-4734-52AA-2C4364E3272C}" name="Source">
       <FILE id="w7NYw6" name="luce_core.cpp" compile="1" resource="0" file="Luce/modules/luce_core/luce_core.cpp"/>
@@ -123,7 +123,7 @@
              androidMinimumSDK="8" androidInternetNeeded="1" androidKeyStore="${user.home}/.android/debug.keystore"
              androidKeyStorePass="android" androidKeyAlias="androiddebugkey"
              androidKeyAliasPass="android" extraCompilerFlags="-std=c++11&#10;-I/opt/zmq-android/include/lua5.1&#10;-I../../Luce&#10;-Wno-unused-result"
-             extraLinkerFlags="-std=c++11" androidCpp11="1">
+             extraLinkerFlags="-std=c++11" androidCpp11="1" androidVersionCode="1">
       <CONFIGURATIONS>
         <CONFIGURATION name="Release" androidArchitectures="armeabi armeabi-v7a" isDebug="0"
                        optimisation="3" targetName="luce"/>

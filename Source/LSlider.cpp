@@ -275,8 +275,9 @@ int LSlider::setVelocityBasedMode ( lua_State* ) {
 }
 
 int LSlider::getDoubleClickReturnValue ( lua_State* ) {
-    bool isEnabled = LUA::getBoolean(2);
-    return LUA::returnNumber( Slider::getDoubleClickReturnValue( isEnabled ) );
+    //bool isEnabled = LUA::getBoolean(2);
+    //return LUA::returnNumber( Slider::getDoubleClickReturnValue( isEnabled ) );
+    return LUA::returnNumber( Slider::getDoubleClickReturnValue() );
 }
 int LSlider::setDoubleClickReturnValue ( lua_State* ) {
     bool isDoubleClickEnabled = LUA::getBoolean(2);

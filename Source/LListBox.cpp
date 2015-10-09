@@ -163,9 +163,10 @@ int LListBox::itemDragExit(lua_State*) {
 
 int LListBox::startDragAndDrop ( lua_State* ) {
     MouseEvent *me = LUA::from_luce<LMouseEvent, MouseEvent>(2);
+    SparseSet<int> rowsToDrag = LUA::getSparseSet(2);
     var dragDescription = LUA::getString(2);
     bool allowDraggingToOtherWindows = LUA::getBoolean(2);
-    ListBox::startDragAndDrop( *me, dragDescription, allowDraggingToOtherWindows);
+    ListBox::startDragAndDrop( *me, rowsToDrag, dragDescription, allowDraggingToOtherWindows);
     return 0;
 }
 

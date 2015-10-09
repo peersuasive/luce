@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2015 - ROLI Ltd.
 
    Permission is granted to use this software under the terms of either:
    a) the GPL v2 (or any later version)
@@ -63,7 +63,7 @@ public:
     ~ComboBox();
 
     //==============================================================================
-    /** Sets whether the test in the combo-box is editable.
+    /** Sets whether the text in the combo-box is editable.
 
         The default state for a new ComboBox is non-editable, and can only be changed
         by choosing from the drop-down list.
@@ -338,7 +338,7 @@ public:
         These constants can be used either via the Component::setColour(), or LookAndFeel::setColour()
         methods.
 
-        To change the colours of the menu that pops up
+        To change the colours of the menu that pops up, you can set the colour IDs in PopupMenu::ColourIDs.
 
         @see Component::setColour, Component::findColour, LookAndFeel::setColour, LookAndFeel::findColour
     */

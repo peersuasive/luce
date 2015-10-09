@@ -203,6 +203,12 @@
     <Filter Include="Juce Modules\juce_opengl\opengl">
       <UniqueIdentifier>{2D8D0E19-E676-83EB-38D9-F73500DD6B79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Juce Modules\juce_opengl\geometry">
+      <UniqueIdentifier>{B3141847-8F13-F67D-45B2-E3ECF6E09088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Juce Modules\juce_opengl\utils">
+      <UniqueIdentifier>{9E586194-C056-101C-5311-F2AF5191AC80}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Juce Modules\juce_opengl\native">
       <UniqueIdentifier>{151B49D8-6102-F802-1C07-D59931BC0574}</UniqueIdentifier>
     </Filter>
@@ -216,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\luce.cpp">
       <Filter>luce\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_Base64.cpp">
+      <Filter>Juce Modules\juce_core\text</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.cpp">
       <Filter>Juce Modules\juce_core\text</Filter>
@@ -409,6 +418,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\native\juce_android_Threads.cpp">
       <Filter>Juce Modules\juce_core\native</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\native\juce_curl_Network.cpp">
+      <Filter>Juce Modules\juce_core\native</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\native\juce_linux_CommonFile.cpp">
       <Filter>Juce Modules\juce_core\native</Filter>
     </ClCompile>
@@ -461,6 +473,9 @@
       <Filter>Juce Modules\juce_data_structures\values</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_data_structures\values\juce_ValueTree.cpp">
+      <Filter>Juce Modules\juce_data_structures\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\modules\juce_data_structures\values\juce_ValueTreeSynchroniser.cpp">
       <Filter>Juce Modules\juce_data_structures\values</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_data_structures\undomanager\juce_UndoManager.cpp">
@@ -1030,6 +1045,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\documents\juce_FileBasedDocument.cpp">
       <Filter>Juce Modules\juce_gui_extra\documents</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\misc\juce_AnimatedAppComponent.cpp">
+      <Filter>Juce Modules\juce_gui_extra\misc</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_gui_extra\misc\juce_BubbleMessageComponent.cpp">
       <Filter>Juce Modules\juce_gui_extra\misc</Filter>
     </ClCompile>
@@ -1111,6 +1129,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_opengl\opengl\juce_OpenGLTexture.cpp">
       <Filter>Juce Modules\juce_opengl\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\modules\juce_opengl\utils\juce_OpenGLAppComponent.cpp">
+      <Filter>Juce Modules\juce_opengl\utils</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_core\juce_core.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
@@ -1136,6 +1157,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\luce.h">
       <Filter>luce\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_Base64.h">
+      <Filter>Juce Modules\juce_core\text</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\text\juce_CharacterFunctions.h">
       <Filter>Juce Modules\juce_core\text</Filter>
@@ -1186,6 +1210,9 @@
       <Filter>Juce Modules\juce_core\maths</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\maths\juce_MathsFunctions.h">
+      <Filter>Juce Modules\juce_core\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\maths\juce_NormalisableRange.h">
       <Filter>Juce Modules\juce_core\maths</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\maths\juce_Random.h">
@@ -1407,6 +1434,9 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\logging\juce_Logger.h">
       <Filter>Juce Modules\juce_core\logging</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\system\juce_CompilerSupport.h">
+      <Filter>Juce Modules\juce_core\system</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_core\system\juce_PlatformDefs.h">
       <Filter>Juce Modules\juce_core\system</Filter>
     </ClInclude>
@@ -1476,6 +1506,9 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_data_structures\values\juce_ValueTree.h">
       <Filter>Juce Modules\juce_data_structures\values</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_data_structures\values\juce_ValueTreeSynchroniser.h">
+      <Filter>Juce Modules\juce_data_structures\values</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_data_structures\undomanager\juce_UndoableAction.h">
       <Filter>Juce Modules\juce_data_structures\undomanager</Filter>
     </ClInclude>
@@ -1510,6 +1543,9 @@
       <Filter>Juce Modules\juce_events\messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_events\messages\juce_MessageManager.h">
+      <Filter>Juce Modules\juce_events\messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_events\messages\juce_MountedVolumeListChangeDetector.h">
       <Filter>Juce Modules\juce_events\messages</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_events\messages\juce_NotificationType.h">
@@ -2091,6 +2127,9 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_gui_extra\embedding\juce_UIViewComponent.h">
       <Filter>Juce Modules\juce_gui_extra\embedding</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_gui_extra\misc\juce_AnimatedAppComponent.h">
+      <Filter>Juce Modules\juce_gui_extra\misc</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_gui_extra\misc\juce_AppleRemote.h">
       <Filter>Juce Modules\juce_gui_extra\misc</Filter>
     </ClInclude>
@@ -2127,12 +2166,6 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.h">
       <Filter>Juce Modules\juce_gui_extra</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\opengl\juce_Draggable3DOrientation.h">
-      <Filter>Juce Modules\juce_opengl\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\opengl\juce_Matrix3D.h">
-      <Filter>Juce Modules\juce_opengl\opengl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\opengl\juce_OpenGLContext.h">
       <Filter>Juce Modules\juce_opengl\opengl</Filter>
     </ClInclude>
@@ -2160,11 +2193,20 @@
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\opengl\juce_OpenGLTexture.h">
       <Filter>Juce Modules\juce_opengl\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\opengl\juce_Quaternion.h">
-      <Filter>Juce Modules\juce_opengl\opengl</Filter>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\geometry\juce_Draggable3DOrientation.h">
+      <Filter>Juce Modules\juce_opengl\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\opengl\juce_Vector3D.h">
-      <Filter>Juce Modules\juce_opengl\opengl</Filter>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\geometry\juce_Matrix3D.h">
+      <Filter>Juce Modules\juce_opengl\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\geometry\juce_Quaternion.h">
+      <Filter>Juce Modules\juce_opengl\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\geometry\juce_Vector3D.h">
+      <Filter>Juce Modules\juce_opengl\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\utils\juce_OpenGLAppComponent.h">
+      <Filter>Juce Modules\juce_opengl\utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_opengl\native\juce_MissingGLDefinitions.h">
       <Filter>Juce Modules\juce_opengl\native</Filter>
