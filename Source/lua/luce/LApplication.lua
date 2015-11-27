@@ -348,7 +348,7 @@ mt.__call = function(_, name, ...)
     lDEBUG  = args[1] and args[1]:match("^[Dd]$") and table.remove(args,1) and true
     luce    = require"luce"(lDEBUG)
     _G.App  = new(name, prog, unpack(args))
-    return _G.App, luce
+    return _G.App, luce, args
 end
 
 return setmetatable(mt, mt)
