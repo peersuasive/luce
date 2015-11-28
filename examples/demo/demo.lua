@@ -56,7 +56,7 @@ button2:buttonClicked(function(...)
 end)
 
 --- set a different look and feel for button2
-button2:setLookAndFeel(3)
+button2:setLookAndFeel(2)
 
 ---
 --- create a Label
