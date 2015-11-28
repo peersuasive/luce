@@ -1170,7 +1170,11 @@ private:
         // If no scale factor is set by GNOME or Ubuntu then calculate from monitor dpi
         // We use the same approach as chromium which simply divides the dpi by 96
         // and then rounds the result
-        return round (info.dpi / 150.0);
+        //return round (info.dpi / 150.0);
+
+        // looks like this is wrong, my HDMI display would be 2x, while it really is 1x
+        //return round (info.dpi / 150.0);
+        return 1;
     }
 
     //==============================================================================
@@ -2215,7 +2219,8 @@ public:
     {
         currentModifiers = currentModifiers.withFlags (buttonModifierFlag);
         toFront (true);
-        handleMouseEvent (0, getMousePos (buttonPressEvent), currentModifiers, getEventTime (buttonPressEvent));
+        handleMouseEvent (0, getMousePos (buttonPressEvent), currentModifiers,
+                          MouseInputSource::invalidPressure, getEventTime (buttonPressEvent));
     }
 
     void handleButtonPressEvent (const XButtonPressedEvent& buttonPressEvent)
@@ -2253,7 +2258,8 @@ public:
         if (dragState.dragging)
             handleExternalDragButtonReleaseEvent();
 
-        handleMouseEvent (0, getMousePos (buttonRelEvent), currentModifiers, getEventTime (buttonRelEvent));
+        handleMouseEvent (0, getMousePos (buttonRelEvent), currentModifiers,
+                          MouseInputSource::invalidPressure, getEventTime (buttonRelEvent));
 
         clearLastMousePos();
     }
@@ -2267,7 +2273,8 @@ public:
         if (dragState.dragging)
             handleExternalDragMotionNotify();
 
-        handleMouseEvent (0, getMousePos (movedEvent), currentModifiers, getEventTime (movedEvent));
+        handleMouseEvent (0, getMousePos (movedEvent), currentModifiers,
+                          MouseInputSource::invalidPressure, getEventTime (movedEvent));
     }
 
     void handleEnterNotifyEvent (const XEnterWindowEvent& enterEvent)
@@ -2280,7 +2287,8 @@ public:
         if (! currentModifiers.isAnyMouseButtonDown())
         {
             updateKeyModifiers ((int) enterEvent.state);
-            handleMouseEvent (0, getMousePos (enterEvent), currentModifiers, getEventTime (enterEvent));
+            handleMouseEvent (0, getMousePos (enterEvent), currentModifiers,
+                              MouseInputSource::invalidPressure, getEventTime (enterEvent));
         }
     }
 
@@ -2293,7 +2301,8 @@ public:
              || leaveEvent.mode == NotifyUngrab)
         {
             updateKeyModifiers ((int) leaveEvent.state);
-            handleMouseEvent (0, getMousePos (leaveEvent), currentModifiers, getEventTime (leaveEvent));
+            handleMouseEvent (0, getMousePos (leaveEvent), currentModifiers,
+                              MouseInputSource::invalidPressure, getEventTime (leaveEvent));
         }
     }
 
