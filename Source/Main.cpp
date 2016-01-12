@@ -120,7 +120,7 @@ int reload(lua_State *L) {
     // check what we have
     if(!lua_isfunction(L,2)) {
         lua_pushnil(L);
-        lua_pushfstring(L,"luceLiveReload: expected function, got '%s'", lua_typename(L, lua_type(L,1)));
+        lua_pushfstring(L,"luceLiveReload: expected function, got '%s'", lua_typename(L, lua_type(L,2)));
         return 2;
     }
     // TODO: get and remove params
