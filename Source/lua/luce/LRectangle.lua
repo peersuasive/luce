@@ -125,7 +125,7 @@ function mt:setX(x)
 end
 
 function mt:setY(y)
-    selt.y = y
+    self.y = y
     return self
 end
 
