@@ -18,7 +18,10 @@ local luce = _G.Luce
 local mt = { className = "LImageComponent" }
 
 function mt:setImage(newImage, placement)
-    if(newImage ~= self.image)then
+    if not(newImage) then
+        self.image = nil
+        self:repaint()
+    elseif(newImage ~= self.image)then
         self.image = newImage
         self.placement = placement or self.placement
         self:repaint()
@@ -52,6 +55,7 @@ local function new(_,name, placement)
     local function paint(g)
         isPainting = true
         g:setOpacity(1.0)
+        if not self.image then return end
         g:drawImageWithin(self.image, 0, 0, comp:getWidth(), comp:getHeight(), self.placement, false)
     end
     local paint_cb = paint
