@@ -116,6 +116,7 @@ int lua_shutdown(lua_State *L) {
  *
  **/
 int reload(lua_State *L) {
+    int top = lua_gettop(L);
     LUA::liveCoding(true);
     // check what we have
     if(!lua_isfunction(L,2)) {
@@ -135,6 +136,12 @@ int reload(lua_State *L) {
     lua_pushstring(L, "LUCE_LIVE_CODING");
     lua_pushnumber(L, 1);
     lua_settable(L, -3);
+    if(top>2) {
+        lua_pushstring(L, "LPATH");
+        lua_pushstring(L, luaL_checkstring(L,3));
+        lua_settable(L, -3);
+        lua_remove(L,3);
+    }
     lua_pop(L,1);
 
     int nb_args = 0;
