@@ -181,7 +181,7 @@ local function new(name, prog, ...)
     function self:getRes(res_path, as_bin)
         -- TODO: return content if embedded and explicitly asked
         --       or dump embedded content and return path
-        return self.pre_path .. OS.sep .. res_path
+        return (LPATH or self.pre_path) .. OS.sep .. res_path
     end
 
     ---
@@ -345,6 +345,7 @@ mt.__call = function(_, name, ...)
         prog = args[1] or "."
         table.remove(args,1)
     end
+    if LPATH then prog = LPATH end
     lDEBUG  = args[1] and args[1]:match("^[Dd]$") and table.remove(args,1) and true
     luce    = require"luce"(lDEBUG)
     _G.App  = new(name, prog, unpack(args))
