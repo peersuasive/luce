@@ -24,6 +24,8 @@ const Luna<LDocumentWindow>::PropertyType LDocumentWindow::properties[] = {
     {"backgroundColour", &LDocumentWindow::getBackgroundColour, &LDocumentWindow::setBackgroundColour},
     {"minimised", &LDocumentWindow::isMinimised, &LDocumentWindow::setMinimised},
     {"draggable", &LDocumentWindow::isDraggable, &LDocumentWindow::setDraggable},
+    {"usingNativeTitleBar", &LDocumentWindow::isUsingNativeTitleBar, &LDocumentWindow::setUsingNativeTitleBar},
+    {"nativeTitleBar", &LDocumentWindow::isUsingNativeTitleBar, &LDocumentWindow::setUsingNativeTitleBar},
 
     {0,0}
 };
@@ -32,6 +34,8 @@ const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
     method( LDocumentWindow, closeButtonPressed ),
     method( LDocumentWindow, closeWindow ),
     method( LDocumentWindow, setVisible ),
+    method( LDocumentWindow, isUsingNativeTitleBar ),
+    method( LDocumentWindow, setUsingNativeTitleBar ),
     method( LDocumentWindow, addChildComponent ),
     method( LDocumentWindow, addAndMakeVisible ),
     method( LDocumentWindow, setContentOwned ),
@@ -129,12 +133,20 @@ int LDocumentWindow::setContentOwned(lua_State*) {
     return 0;
 }
 
+int LDocumentWindow::isUsingNativeTitleBar(lua_State *L) {
+    return LUA::returnBoolean( DocumentWindow::isUsingNativeTitleBar() );
+}
+int LDocumentWindow::setUsingNativeTitleBar(lua_State *L) {
+    bool v = LUA::getBoolean(2);
+    DocumentWindow::setUsingNativeTitleBar(v);
+    return 0;
+}
 int LDocumentWindow::setVisible(lua_State *L) {
     bool v = LUA::getBoolean(2);
     if(v) {
         DocumentWindow::setVisible (true);
         #if ! JUCE_ANDROID
-        setUsingNativeTitleBar( true );
+        DocumentWindow::setUsingNativeTitleBar( true );
         #endif
     }
     else

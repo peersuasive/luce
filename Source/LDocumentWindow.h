@@ -19,6 +19,8 @@ public:
     int addChildComponent(lua_State*);
     int addAndMakeVisible(lua_State*);
     int setVisible(lua_State *L);
+    int isUsingNativeTitleBar(lua_State *L);
+    int setUsingNativeTitleBar(lua_State *L);
 
     //==============================================================================
     int setConstrainer(lua_State*);
