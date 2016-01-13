@@ -49,6 +49,8 @@ public:
     int setResizeLimits(lua_State*);
     int clearContentComponent(lua_State*);
     int setContentComponentSize(lua_State*);
+    int setDraggable(lua_State*);
+    int isDraggable(lua_State*);
 
     //==============================================================================
     static const char className[];

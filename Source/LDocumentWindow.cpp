@@ -23,6 +23,7 @@ const Luna<LDocumentWindow>::PropertyType LDocumentWindow::properties[] = {
     {"resizable", &LDocumentWindow::isResizable, &LDocumentWindow::setResizable},
     {"backgroundColour", &LDocumentWindow::getBackgroundColour, &LDocumentWindow::setBackgroundColour},
     {"minimised", &LDocumentWindow::isMinimised, &LDocumentWindow::setMinimised},
+    {"draggable", &LDocumentWindow::isDraggable, &LDocumentWindow::setDraggable},
 
     {0,0}
 };
@@ -57,6 +58,8 @@ const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
     method( LDocumentWindow, setBoundsConstrained ),
     method( LDocumentWindow, activeWindowStatusChanged ),
     method( LDocumentWindow, setResizeLimits ),
+    method( LDocumentWindow, setDraggable ),
+    method( LDocumentWindow, isDraggable ),
     method( LDocumentWindow, clearContentComponent ),
     method( LDocumentWindow, setContentComponentSize ),
 
@@ -336,6 +339,15 @@ int LDocumentWindow::setResizeLimits ( lua_State* ) {
     DocumentWindow::setResizeLimits( newMinimumWidth, newMinimumHeight, newMaximumWidth, newMaximumHeight );
     return 0;
 }
+
+int LDocumentWindow::isDraggable ( lua_State* ) {
+    return LUA::returnBoolean( DocumentWindow::isDraggable() );
+}
+int LDocumentWindow::setDraggable ( lua_State* ) {
+    DocumentWindow::setDraggable(LUA::getBoolean(2));
+    return 0;
+}
+
 
 int LDocumentWindow::clearContentComponent ( lua_State* ) {
     DocumentWindow::clearContentComponent();
