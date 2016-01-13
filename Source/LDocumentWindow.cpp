@@ -211,7 +211,7 @@ int LDocumentWindow::isResizable ( lua_State* ) {
 }
 int LDocumentWindow::setResizable ( lua_State* ) {
     bool shouldBeResizable = LUA::getBoolean(2);
-    bool useBottomRightCornerResizer = LUA::getBoolean(2);
+    bool useBottomRightCornerResizer = LUA::checkAndGetBoolean(2, false);
     DocumentWindow::setResizable( shouldBeResizable, useBottomRightCornerResizer );
     return 0;
 }
