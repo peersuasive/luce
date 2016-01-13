@@ -316,7 +316,10 @@ local function new(name, prog, ...)
         logDebug("SYSTEM REQUESTED QUIT")
         self:exit()
     end)
+    local is_closing = false
     function self:exit(state)
+        if is_closing then return "zob" end
+        is_closing = true
         lapp:quit(status)
     end
     self.quit = exit
