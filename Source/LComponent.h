@@ -253,10 +253,10 @@ protected:
     void linputAttemptWhenModal();
     void lpaint( Graphics& g );
     void lhandleCommandMessage( int commandId );
-    void lresized();
+    int lresized();
     void lfocusGained( Component::FocusChangeType cause );
     void lpaintOverChildren( Graphics& g );
-    void lmoved();
+    int lmoved();
     void lchildBoundsChanged( Component* child );
     void lfocusLost( Component::FocusChangeType cause );
     void lminimisationStateChanged( bool isNowMinimised );

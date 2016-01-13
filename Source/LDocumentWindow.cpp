@@ -167,6 +167,26 @@ int LDocumentWindow::closeButtonPressed(lua_State *L) {
     return 0;
 }
 
+
+void LDocumentWindow::resized() {
+    if ( hasCallback("resized") ) {
+        bool b = LComponent::lresized();
+        if(!b) DocumentWindow::resized();
+    }else{
+        DocumentWindow::resized();
+    }
+}
+
+void LDocumentWindow::moved() {
+    if ( hasCallback("moved") ) {
+        bool b = LComponent::lmoved();
+        if(!b) DocumentWindow::moved();
+    }else{
+        DocumentWindow::moved();
+    }
+}
+
+// keyboard
 bool LDocumentWindow::keyPressed(const KeyPress& k) {
     if(hasCallback("keyPressed"))
         return LComponent::lkeyPressed(k);

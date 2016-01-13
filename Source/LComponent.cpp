@@ -190,9 +190,15 @@ int LComponent::repaint(lua_State *L) {
     return 0;
 }
 
-void LComponent::lresized() {
-    if (child && hasCallback("resized"))
-        callback("resized");
+int LComponent::lresized() {
+    int res = 0;
+    if (child && hasCallback("resized")) {
+        callback("resized", 1);
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
+    //if (child && hasCallback("resized"))
+    //    callback("resized");
 }
 int LComponent::resized(lua_State *L) {
     if (child) {
@@ -969,9 +975,16 @@ int LComponent::paintOverChildren(lua_State*){
     return 0;
 }
 
-void LComponent::lmoved() {
-    if (child)
-        callback("moved");
+int LComponent::lmoved() {
+    //if (child)
+    //    callback("moved");
+    int res = 0;
+    if (child && hasCallback("moved")) {
+        callback("moved", 1);
+        res = LUA::checkAndGetBoolean(-1, false);
+    }
+    return res;
+
 }
 int LComponent::moved(lua_State*){
     if (child)

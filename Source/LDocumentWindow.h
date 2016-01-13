@@ -61,6 +61,8 @@ public:
     static const Luna<LDocumentWindow>::Enum enums[];
 private:
     //==============================================================================
+    virtual void resized () override; // call ResizabledWindow::resized in subclass!
+    virtual void moved() override; // call ResizableWindow::moved in subclass!
 
     virtual bool keyPressed(const KeyPress&) override;
     virtual bool keyStateChanged(bool) override;
