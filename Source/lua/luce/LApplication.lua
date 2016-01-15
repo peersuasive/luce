@@ -51,6 +51,54 @@ local className = "LApplication"
 local mt = {}
 mt.__index = mt
 
+-- Events that can be run in the main loop, when started in controlled mode
+-- example usage:
+-- app:start(MainWindow, { function()
+--   if(app.ControlEvent)then app.ControlEvent:run() end
+-- end,
+-- 200})
+-- anywhere in the application's code, add an event with app.ControlEvent.attachEvent(fn, opts, arg, arg...)
+-- opts can contain 'mode' and 'name'
+-- mode can be "default" or "once", which is the default, for the event to be executed once then discarded
+-- any other value will keep the event until it is explicitely discarded with app.ControlEvent.detachEvent(fn),
+-- where fn is the function originally attached to the event
+-- name is optional and links the event with the name, to help tracing errors, for example
+local events = {}
+local ControlEvents = function()
+    local events = {}
+    return {
+        attachEvent = function(self,fn,opts,...)
+            local opts = opts or {}
+            local mode, name, args, cb = opts.mode or 'default', opts.name or 'anonymous', ...
+            if 'once'==mode or 'default'==mode then
+                cb = function()
+                    local r={fn(args)}
+                    self:detachEvent(fn)
+                    return r
+                end
+            else
+                cb = function()return fn(args)end
+            end
+            events[fn] = {cb,name}
+        end,
+        detachEvent = function(self,fn)
+            events[fn] = nil
+        end,
+        run = function(self,...)
+            local results = {}
+            for _,ev in next,events do
+                local fn, name = unpack(ev)
+                local r = {fn(...)}
+                if(#r>0 and not(r[1]))then
+                    print("Event failed:", name)
+                    for _,v in next,r do print(v) end
+                end
+            end
+            return #results>0 and results or nil
+        end,
+    }
+end
+
 local function new(name, prog, ...)
     local name = name or className
     local args = {...}
@@ -281,6 +329,8 @@ local function new(name, prog, ...)
         else
             cb, ms = wants_control, 0
         end
+        local ce = cb and ControlEvents()
+        self.ControlEvent = ce
 
         if(LUCE_LIVE_CODING)then
             return mainClass, cb, ms
