@@ -326,7 +326,7 @@ local function new(name, prog, ...)
         local t = type(wants_control)
         local ms, cb
         if("table"==t) then
-            cb, ms = wants_control[1], wants_control[2]
+            cb, ms = wants_control[1], wants_control[2] or 0
         else
             cb, ms = wants_control, 0
         end
