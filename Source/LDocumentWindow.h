@@ -21,6 +21,7 @@ public:
     int setVisible(lua_State *L);
     int isUsingNativeTitleBar(lua_State *L);
     int setUsingNativeTitleBar(lua_State *L);
+    int addToDesktop(lua_State*);
 
     //==============================================================================
     int setConstrainer(lua_State*);

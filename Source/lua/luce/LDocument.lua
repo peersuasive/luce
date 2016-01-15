@@ -36,7 +36,7 @@ local className = "LDocument"
 local mt = {}
 mt.__index = mt
 
-local function new(_, name, ...)
+local function new(_, name, addToDesktop)
     local LDEBUG = _G.LDEBUG
     local luce   = _G.Luce
     local app    = _G.App
@@ -64,7 +64,7 @@ local function new(_, name, ...)
     -- for instance, there's no need to set bounds of the Document
     -- on mobile devices as we'll want it to be fullscreen anyway
     ---
-    local this   = luce:DocumentWindow(name)
+    local this   = luce:DocumentWindow(name, addToDesktop)
     local bounds = {0,0,800,600}
     local size   = {800, 600}
 

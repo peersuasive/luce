@@ -170,7 +170,7 @@ const Luna<LDocumentWindow>::InheritenceF LDocumentWindow::inheritsF[] = {
     method( LComponent, setInterceptsMouseClicks ),
     method( LComponent, setTopRightPosition ),
     method( LComponent, grabKeyboardFocus ),
-    method( LComponent, addToDesktop ),
+    //method( LComponent, addToDesktop ),
     method( LComponent, repaint ),
     method( LComponent, setBufferedToImage ),
     method( LComponent, setBoundsToFit ),

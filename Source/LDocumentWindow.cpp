@@ -39,6 +39,7 @@ const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
     method( LDocumentWindow, addChildComponent ),
     method( LDocumentWindow, addAndMakeVisible ),
     method( LDocumentWindow, setContentOwned ),
+    method( LDocumentWindow, addToDesktop ),
 
     method( LDocumentWindow, getConstrainer ),
     method( LDocumentWindow, setConstrainer ),
@@ -78,11 +79,14 @@ const Luna<LDocumentWindow>::StaticType LDocumentWindow::statics[] = {
 //static ScopedPointer<ApplicationCommandManager> commandManager;
 LDocumentWindow::LDocumentWindow(lua_State *L)
     :  LComponent(L, this),
-       DocumentWindow( "DocumentWindow", Colours::lightgrey, DocumentWindow::allButtons )
+       DocumentWindow( "DocumentWindow", Colours::lightgrey, DocumentWindow::allButtons, false )
 {
     REGISTER_CLASS(LDocumentWindow);
 
     DocumentWindow::setName( myName() );
+
+    bool toDesktop = LUA::checkAndGetBoolean(2, true);
+    if(toDesktop) DocumentWindow::addToDesktop();
 
     DocumentWindow::setResizable( true, false );
 }
@@ -130,6 +134,15 @@ int LDocumentWindow::s_Displays(lua_State *L) {
 
 int LDocumentWindow::setContentOwned(lua_State*) {
     DocumentWindow::setContentOwned( LUA::from_luce<LComponent,Component>(2), LUA::checkAndGetBoolean(2, true) );
+    return 0;
+}
+
+int LDocumentWindow::addToDesktop(lua_State *L) {
+    if(lua_gettop(L)==1) {
+        DocumentWindow::addToDesktop();
+    }else{
+        return LComponent::addToDesktop(L);
+    }
     return 0;
 }
 
