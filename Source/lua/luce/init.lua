@@ -66,6 +66,7 @@ local LModules = {
     "RectanglePlacement",
     "ImageComponent",
     "AnimatedPosition",
+    "EventCentral",
 }
 
 local function init(self,dbg)
