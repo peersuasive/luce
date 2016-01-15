@@ -49,10 +49,11 @@ local function load_luce(self, core)
     --mt.Rectangle = function(self, ...) return LRectangle(...) end
     --mt.RectangleList = function(self, ...) return LRectangleList(...) end
 
-    local xmeta = setmetatable(mt, {
-        __index = mt
-    })
-    return xmeta
+    --local xmeta = setmetatable(mt, {
+    --    __index = mt
+    --})
+    --return xmeta
+    return mt
 end
 
 local LModules = {
