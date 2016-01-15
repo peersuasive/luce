@@ -321,7 +321,8 @@ local function new(name, prog, ...)
     end)
     
     -- start the main loop
-    function self:start(mainClass, wants_control, wants_osx_delayed)
+    function self:start(mainClass, wants_control, wants_osx_delayed, with_ce)
+        local with_ce = with_ce==nil and true or with_ce
         local t = type(wants_control)
         local ms, cb
         if("table"==t) then
@@ -329,8 +330,11 @@ local function new(name, prog, ...)
         else
             cb, ms = wants_control, 0
         end
-        local ce = cb and ControlEvents()
-        self.ControlEvent = ce
+        if(cb and with_ce)then
+            local ce, fn = ControlEvents(), cb
+            self.ControlEvent = ce
+            cb = function()ce:run()return fn()end
+        end
 
         if(LUCE_LIVE_CODING)then
             return mainClass, cb, ms
