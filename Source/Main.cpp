@@ -302,6 +302,7 @@ l_class(ListBox);
 l_class(ComboBox);
 l_class(Slider);
 l_class(ScrollBar);
+l_class(SystemTrayIconComponent);
 l_class(DrawablePath);
 l_class(DrawableRectangle);
 l_class(DrawableComposite);
@@ -361,6 +362,7 @@ static const luaL_Reg luce_lib [] = {
     d(ComboBox),
     d(Slider),
     d(ScrollBar),
+    d(SystemTrayIconComponent),
     d(DrawablePath),
     d(DrawableRectangle),
     d(DrawableComposite),

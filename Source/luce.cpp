@@ -62,6 +62,7 @@ namespace luce {
 #include "LComboBox.cpp"
 #include "LSlider.cpp"
 #include "LScrollBar.cpp"
+#include "LSystemTrayIconComponent.cpp"
 
 #include "drawable/LDrawable.cpp"
 #include "drawable/LDrawableShape.cpp"
