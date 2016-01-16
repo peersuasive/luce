@@ -89,8 +89,9 @@ namespace luce {
 #include "LComboBox.h"
 #include "LSlider.h"
 #include "LScrollBar.h"
+#if JUCE_WINDOWS || JUCE_LINUX || JUCE_MAC 
 #include "LSystemTrayIconComponent.h"
-
+#endif
 #include "drawable/LDrawable.h"
 #include "drawable/LDrawableShape.h"
 #include "drawable/LDrawablePath.h"
@@ -101,7 +102,9 @@ namespace luce {
 #include "LPopupMenu.h"
 
 #include "extra/LColourSelector.h"
+#if JUCE_MODAL_LOOPS_PERMITTED
 #include "extra/LFileChooser.h"
+#endif
 
 #include "LConstants.h"
 

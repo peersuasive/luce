@@ -117,8 +117,10 @@ using namespace juce;
 - (BOOL) shouldAutorotateToInterfaceOrientation: (UIInterfaceOrientation) interfaceOrientation;
 - (void) willRotateToInterfaceOrientation: (UIInterfaceOrientation) toInterfaceOrientation duration: (NSTimeInterval) duration;
 - (void) didRotateFromInterfaceOrientation: (UIInterfaceOrientation) fromInterfaceOrientation;
-- (void) viewWillTransitionToSize: (CGSize) size withTransitionCoordinator: (id<UIViewControllerTransitionCoordinator>) coordinator;
 
+#if defined (__IPHONE_8_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
+- (void) viewWillTransitionToSize: (CGSize) size withTransitionCoordinator: (id<UIViewControllerTransitionCoordinator>) coordinator;
+#endif
 - (void) viewDidLoad;
 - (void) viewWillAppear: (BOOL) animated;
 - (void) viewDidAppear: (BOOL) animated;
@@ -330,6 +332,7 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
     [UIView setAnimationsEnabled: YES];
 }
 
+#if defined (__IPHONE_8_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
 - (void) viewWillTransitionToSize: (CGSize) size withTransitionCoordinator: (id<UIViewControllerTransitionCoordinator>) coordinator
 {
     [super viewWillTransitionToSize: size withTransitionCoordinator: coordinator];
@@ -339,7 +342,7 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
     // async update to double-check..
     MessageManager::callAsync ([=]() { sendScreenBoundsUpdate (self); });
 }
-
+#endif
 - (void) viewDidLoad
 {
     sendScreenBoundsUpdate (self);

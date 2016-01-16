@@ -302,13 +302,17 @@ l_class(ListBox);
 l_class(ComboBox);
 l_class(Slider);
 l_class(ScrollBar);
+#if JUCE_WINDOWS || JUCE_LINUX || JUCE_MAC 
 l_class(SystemTrayIconComponent);
+#endif
 l_class(DrawablePath);
 l_class(DrawableRectangle);
 l_class(DrawableComposite);
 //extra
 l_class(ColourSelector);
+#if JUCE_MODAL_LOOPS_PERMITTED
 l_class(FileChooser);
+#endif
 // core
 l_class(Time);
 l_class(BigInteger);
@@ -362,14 +366,18 @@ static const luaL_Reg luce_lib [] = {
     d(ComboBox),
     d(Slider),
     d(ScrollBar),
+#if JUCE_WINDOWS || JUCE_LINUX || JUCE_MAC 
     d(SystemTrayIconComponent),
+#endif
     d(DrawablePath),
     d(DrawableRectangle),
     d(DrawableComposite),
 
     // extra
     d(ColourSelector),
+#if JUCE_MODAL_LOOPS_PERMITTED
     d(FileChooser),
+#endif
 
     // core
     d(Time),
