@@ -15,7 +15,7 @@ LUCE_LIB   := $(OUT)/$(VERSION)/luce.lua
 
 
 all:
-	echo "It's $$(date)"
+	@echo "It's $$(date)"
 
 distrib: $(LUCE_LIB) $(TARGETS_51) $(TARGETS_52)
 
