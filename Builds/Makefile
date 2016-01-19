@@ -6,10 +6,12 @@ MAKEFLAGS += --no-print-directory
 VERSION = $(shell git describe)
 OUT 	= distrib
 
-TARGETS_51_ := linux64 win32 osx64 ios61 android44
+TARGETS_51_ := linux64 win32 osx64 ios51 android44
 TARGETS_51 := $(foreach obj,$(TARGETS_51_),$(OUT)/$(VERSION)/luce.$(VERSION).$(obj)-5.1.zip)
-TARGETS_52_ := linux64 win32
+TARGETS_52_ := linux64 win32 osx64 ios51
 TARGETS_52 := $(foreach obj,$(TARGETS_52_),$(OUT)/$(VERSION)/luce.$(VERSION).$(obj)-5.2.zip)
+TARGETS_53_ := linux64
+TARGETS_53 := $(foreach obj,$(TARGETS_53_),$(OUT)/$(VERSION)/luce.$(VERSION).$(obj)-5.3.zip)
 
 LUCE_LIB   := $(OUT)/$(VERSION)/luce.lua
 
@@ -17,11 +19,13 @@ LUCE_LIB   := $(OUT)/$(VERSION)/luce.lua
 all:
 	@echo "It's $$(date)"
 
-distrib: $(LUCE_LIB) $(TARGETS_51) $(TARGETS_52)
+distrib: $(LUCE_LIB) $(TARGETS_51) $(TARGETS_52) $(TARGET_53)
 
 lua51: $(LUCE_LIB) $(TARGETS_51)
 
 lua52: $(LUCE_LIB) $(TARGETS_52)
+
+lua53: $(LUCE_LIB) $(TARGETS_53)
 
 $(LUCE_LIB): $(LUCE_SQUISH_DIR)
 	@cd $^ && make extraclean && make
@@ -72,6 +76,29 @@ $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.2.zip: $(OUT)/$(VERSION)/Linux64-5.2
 												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.2_static.zip
 
 linux64-5.2: $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.2.zip
+
+$(OUT)/$(VERSION)/Linux64-5.3/build: Linux-lua5.3 $(LUCE_LIB)
+	@echo Building for Linux64-5.3 5.3
+	@mkdir -p $(shell dirname $(@))/luce
+	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
+	@cd $< && make -j5 && make -j5 CONFIG=Debug
+	@ln -f $</build/core.so $(@:build=luce/core.so)
+	@ln -f $</build/core_d.so $(@:build=luce/core_d.so)
+	@ln -f $</build/intermediate/Release/libluce_lin.a $(@:build=luce/libluce.a)
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64-5.3.zip luce/core.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64-5.3_dbg.zip luce/core_d.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64-5.3_static.zip luce/libluce.a luce.lua
+
+$(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3.zip: $(OUT)/$(VERSION)/Linux64-5.3/build \
+												   $(OUT)/$(VERSION)/Linux64-5.3/luce/core.so \
+												   $(OUT)/$(VERSION)/Linux64-5.3/luce/core_d.so \
+												   $(OUT)/$(VERSION)/Linux64-5.3/luce/libluce.a \
+												   $(OUT)/$(VERSION)/Linux64-5.3/luce.lua \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3_dbg.zip \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3_static.zip
+
+linux64-5.3: $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3.zip
+
 
 $(OUT)/$(VERSION)/Win32/build: MingW $(LUCE_LIB)
 	@echo Building for Win32 5.1
@@ -161,17 +188,28 @@ $(OUT)/$(VERSION)/luce.$(VERSION).osx64-5.2.zip: $(OUT)/$(VERSION)/MacOSX64-5.2/
 
 macosx64-5.2: $(OUT)/$(VERSION)/luce.$(VERSION).osx64-5.2.zip
 
-$(OUT)/$(VERSION)/iOS6.1/build: iOS
-	@echo Building for iOS61
+$(OUT)/$(VERSION)/iOS51/build: iOS
+	@echo Building for iOS51 5.1
 	@mkdir -p $(shell dirname $(@))
 	@cd $< && ./wrapper
 	@ln -f $</build/intermediate/Release/libluce_ios.a $(@:build=libluce.a)
-	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).ios61-5.1.zip libluce.a
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).ios51-5.1.zip libluce.a
 
-$(OUT)/$(VERSION)/luce.$(VERSION).ios61-5.1.zip: $(OUT)/$(VERSION)/iOS6.1/build \
-											     $(OUT)/$(VERSION)/iOS6.1/libluce.a
+$(OUT)/$(VERSION)/luce.$(VERSION).ios51-5.1.zip: $(OUT)/$(VERSION)/iOS51/build \
+											     $(OUT)/$(VERSION)/iOS51/libluce.a
 
-ios: $(OUT)/$(VERSION)/luce.$(VERSION).ios61-5.1.zip
+$(OUT)/$(VERSION)/iOS51-5.2/build: iOS
+	@echo Building for iOS51 5.2
+	@mkdir -p $(shell dirname $(@))
+	@cd $< && ./wrapper52
+	@ln -f $</build52/intermediate/Release/libluce_ios.a $(@:build=libluce.a)
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).ios51-5.2.zip libluce.a
+
+$(OUT)/$(VERSION)/luce.$(VERSION).ios51-5.2.zip: $(OUT)/$(VERSION)/iOS51-5.2/build \
+											     $(OUT)/$(VERSION)/iOS51-5.2/libluce.a
+
+
+ios: $(OUT)/$(VERSION)/luce.$(VERSION).ios51-5.2.zip
 
 $(OUT)/$(VERSION)/Android4.4/build: Android
 	@echo Building for Android4.4

@@ -389,6 +389,7 @@ Downloads
 =========
 
 As of v0.3.1, modules are available for both lua5.1/luajit2.X and lua5.2.
+As of v0.3.3, lua5.3 is supported under linux.
 
 To use with lua scripts as a module, pick the module download.
 
