@@ -75,7 +75,7 @@ int LHyperlinkButton::getURL ( lua_State *L ) {
     return LUA::returnString( HyperlinkButton::getURL().toString(true) );
 }
 int LHyperlinkButton::setURL ( lua_State* ) {
-    HyperlinkButton::setURL( URL( LUA::getString() ) );
+    HyperlinkButton::setURL( URL( LUA::checkAndGetString() ) );
     return 0;
 }
 
