@@ -145,7 +145,7 @@ int LButton::getTooltip ( lua_State* ) {
 }
 int LButton::setTooltip ( lua_State* ) {
     if (child)
-        child->setTooltip(LUA::getString());
+        child->setTooltip(LUA::checkAndGetString());
     return 0;
 }
 
