@@ -36,6 +36,7 @@ namespace luce {
 #include "base/LTime.h"
 #include "base/LBigInteger.h"
 #include "base/LRandom.h"
+#include "base/LInputStream.h"
 #include "base/LURL.h"
 
 #include "LLookAndFeel.h"

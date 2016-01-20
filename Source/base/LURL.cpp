@@ -41,6 +41,8 @@ const Luna<LURL>::FunctionType LURL::methods[] = {
     method( LURL, withParameter ),
     method( LURL, toString ),
     method( LURL, getDomain ),
+    // callbacks
+    method( LURL, progress ),
     {0,0}
 };
 
@@ -205,22 +207,53 @@ int LURL::withParameters ( lua_State *L ) {
     ));
 }
 
+bool LURL::progressCallback(void *context, int byteSend, int totalBytes) {
+    LURL *me = (LURL*)context;
+    if(me->hasCallback("progress")) {
+        me->callback("progress", 1);
+        return LUA::checkAndGetBoolean(-1, true);
+    }else return true;
+}
+int LURL::progress(lua_State*) {
+    if(!hasCallback("progress"))
+        set("progress");
+    return 0;
+}
+
 int LURL::createInputStream ( lua_State *L ) {
-    bool doPostLikeRequest = LUA::getBoolean(2);
-    // OpenStreamProgressCallback* progressCallback = LUA::from_luce<LOpenStreamProgressCallback>(2); // TODO;
-    // void* progressCallbackContext = LUA::from_luce<Lvoid>(2); // TODO;
-    String extraHeaders = LUA::checkAndGetString(2);
-    int connectionTimeOutMs = LUA::checkAndGetNumber<int>(2, 0);
-    // StringPairArray* responseHeaders = LUA::from_luce<LStringPairArray>(2); // TODO;
+    bool doPostLikeRequest = false;
+    OpenStreamProgressCallback *progress_cb = nullptr;
+    void *progressCallbackContext = nullptr;
+    String extraHeaders = String();
+    int connectionTimeOutMs = 0;
+    int numRedirectsToFollow = 5;
+    String httpRequestCmd = String();
+    if(lua_gettop(L)>1) {
+        doPostLikeRequest = LUA::checkAndGetBoolean(2,false);
+        if(lua_type(L,2)==LUA_TFUNCTION && !hasCallback("progress")) {
+            set("progress", LUA_TFUNCTION, 2);
+            lua_remove(L,2);
+        }
+        extraHeaders = LUA::checkAndGetString(2, String());
+        numRedirectsToFollow = LUA::checkAndGetNumber(2, 5);
+        httpRequestCmd = LUA::checkAndGetString(2, String());
+    }
+    if(hasCallback("progress")) {
+        progress_cb = &progressCallback;
+        progressCallbackContext = this;
+    }
+    
+    StringPairArray responseHeaders;
     int statusCode;
-    int numRedirectsToFollow = LUA::checkAndGetNumber<int>(2, 5);
-    String httpRequestCmd = LUA::checkAndGetString(2);
-    // CHECK
-    // return LUA::storeAndReturnUserdata<LInputStream>( new LInputStream(L,
-    //     URL::createInputStream( doPostLikeRequest, progressCallback, progressCallbackContext, extraHeaders, connectionTimeOutMs, responseHeaders, &statusCode, numRedirectsToFollow, httpRequestCmd )
-    // ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "InputStream createInputStream( doPostLikeRequest, progressCallback, progressCallbackContext, extraHeaders, connectionTimeOutMs, responseHeaders, statusCode, numRedirectsToFollow, httpRequestCmd )" );
+    InputStream *is = URL::createInputStream( doPostLikeRequest, progress_cb, progressCallbackContext,
+            extraHeaders, connectionTimeOutMs, &responseHeaders, &statusCode, numRedirectsToFollow, httpRequestCmd);
+    if(statusCode)
+        LUA::storeAndReturnUserdata<LInputStream>( new LInputStream(L, is) );
+    else
+        lua_pushnil(L);
+    LUCE::luce_pushtable(responseHeaders);
+    lua_pushnumber(L, statusCode);
+    return 3;
 }
 
 int LURL::getPostData ( lua_State* ) {

@@ -9,6 +9,7 @@ namespace luce {
 #include "base/LTime.cpp"
 #include "base/LBigInteger.cpp"
 #include "base/LRandom.cpp"
+#include "base/LInputStream.cpp"
 #include "base/LURL.cpp"
 
 #include "LLookAndFeel.cpp"

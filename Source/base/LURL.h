@@ -58,6 +58,10 @@ public:
     int toString(lua_State*);
     int getDomain(lua_State*);
 
+    //== callbacks =================================================================
+    static bool progressCallback(void *context, int byteSend, int totalBytes);
+    int progress(lua_State*);
+
     //==============================================================================
     static const char className[];
     static const Luna<LURL>::Inheritence inherits[];
