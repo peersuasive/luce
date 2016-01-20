@@ -348,6 +348,7 @@ l_class(FileChooser);
 l_class(Time);
 l_class(BigInteger);
 l_class(Random);
+l_class(URL);
 
 static const luaL_Reg luce_lib [] = {
     d(JUCEApplication),
@@ -414,6 +415,7 @@ static const luaL_Reg luce_lib [] = {
     d(Time),
     d(BigInteger),
     d(Random),
+    d(URL),
 
     { "start", start },
     { "start_manual", start_manual },
