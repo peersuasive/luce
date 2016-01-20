@@ -9,7 +9,7 @@ handle objects to/from lua
     @copyright 
 
 
-(c) 2014, Peersuasive Technologies
+(c) 2014-2016, Peersuasive Technologies
 
 *************************************************************/
 
@@ -106,10 +106,10 @@ namespace {
     bool isnumtype(const char* t1, const char *t2) {
         return strcmp(t1,t2) == 0;
     }
-    #define luce_isoftype(t,i) isoftype(#t, i)
-    #define luce_isofnumtype(t,i) isofnumtype(#t, i)
+    //#define luce_isoftype(t,i) isoftype(#t, i)
+    //#define luce_isofnumtype(t,i) isofnumtype(#t, i)
 
-    #define luce_isnumtype(t1, t2) isnumtype(#t1, t2)
+    //#define luce_isnumtype(t1, t2) isnumtype(#t1, t2)
 
     template<class T>
     bool isofclass(const char* t, int i) {
@@ -135,10 +135,10 @@ namespace {
         lua_pop(L,1); // nil or userdata
         return false;
     }
-    #define ct_1(T)   isofclass<T>( #T )
-    #define ct_2(T,i) isofclass<T>( #T, i )
-    #define ct_sel(x,T,i,FUNC, ...) FUNC
-    #define luce_isofclass(...) ct_sel(,##__VA_ARGS__, ct_2(__VA_ARGS__), ct_1(__VA_ARGS__),)
+    //#define ct_1(T)   isofclass<T>( #T )
+    //#define ct_2(T,i) isofclass<T>( #T, i )
+    //#define ct_sel(x,T,i,FUNC, ...) FUNC
+    //#define luce_isofclass(...) ct_sel(,##__VA_ARGS__, ct_2(__VA_ARGS__), ct_1(__VA_ARGS__),)
 
 
     int luceI_pushvalue(int i = -1, const char* ltype_ = NULL) {
@@ -511,7 +511,7 @@ namespace {
     }
 
     // Colour
-    const juce::Colour luce_tocolour(int i = -1) {
+    const juce::Colour luce_tocolour(int i) {
         what = "Colour";
         i = (i<0) ? lua_gettop(L)-(i+1) : i;
         if(isofclass<LColour>("LColour", i))
@@ -695,6 +695,32 @@ namespace {
         for(int i=0;i<sa.size();++i)
             r.push_back(sa[i]);
         return luce_pushtable(r);
+    }
+
+    const juce::StringPairArray luce_tostringpairarray(int i) {
+        if(!lua_istable(L,i))
+            luce_error(lua_pushfstring(L, "Luce Error: expected StringPairArray, got %s", lua_typename(L,lua_type(L,-1))) );
+        StringPairArray array;
+        int top = i;
+        lua_pushnil(L);
+        while(lua_next(L, top)) {
+            array.set(lua_tostring(L,-2), lua_tostring(L,-1));
+            lua_pop(L,1);
+        }
+        lua_remove(L,i);
+        return array;
+    }
+    int luce_pushtable(const StringPairArray& spa) {
+        int size = spa.size();
+        lua_createtable(L, 0, size);
+        StringArray keys = spa.getAllKeys();
+        for(int i=0;i<keys.size();++i) {
+            String k = keys[i];
+            lua_pushstring(L, k.toRawUTF8());
+            lua_pushstring(L, spa.getValue(StringRef(k), String::empty).toRawUTF8() );
+            lua_settable(L,-3);
+        }
+        return 1;
     }
 
     template<class T>

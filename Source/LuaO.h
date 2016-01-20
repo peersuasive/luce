@@ -9,6 +9,8 @@ namespace LUA {
         bool set(const LBase* key, const char* name, int n_ = -1);
         void unset(const LBase* key, const char* name);
         bool hasCallback(const LBase* key, const char* name);
+        void liveCoding(bool b);
+        bool liveCoding();
 
         void Set(lua_State *L_);
         void throwError(const char *msg);
