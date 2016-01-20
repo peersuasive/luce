@@ -129,7 +129,7 @@ int LComponent::getSize(lua_State *L) {
 
 int LComponent::setVisible(lua_State *L) {
     if(child)
-        child->setVisible( LUA::getBoolean() );
+        child->setVisible( LUA::checkAndGetBoolean() );
     return 0;
 }
 
@@ -231,7 +231,7 @@ int LComponent::isFocusContainer ( lua_State* ) {
 }
 int LComponent::setFocusContainer ( lua_State* ) {
     if (child)
-        child->setFocusContainer(LUA::getBoolean());
+        child->setFocusContainer(LUA::checkAndGetBoolean() );
     return 0;
 }
 
@@ -242,7 +242,7 @@ int LComponent::isOpaque ( lua_State* ) {
 }
 int LComponent::setOpaque ( lua_State* ) {
     if (child)
-        child->setOpaque(LUA::getBoolean());
+        child->setOpaque(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -264,7 +264,7 @@ int LComponent::isEnabled ( lua_State* ) {
 }
 int LComponent::setEnabled ( lua_State* ) {
     if (child)
-        child->setEnabled(LUA::getBoolean());
+        child->setEnabled(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -286,7 +286,7 @@ int LComponent::isAlwaysOnTop ( lua_State* ) {
 }
 int LComponent::setAlwaysOnTop ( lua_State* ) {
     if (child)
-        child->setAlwaysOnTop(LUA::getBoolean());
+        child->setAlwaysOnTop(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -297,7 +297,7 @@ int LComponent::getWantsKeyboardFocus ( lua_State* ) {
 }
 int LComponent::setWantsKeyboardFocus ( lua_State* ) {
     if (child)
-        child->setWantsKeyboardFocus(LUA::getBoolean());
+        child->setWantsKeyboardFocus(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -308,7 +308,7 @@ int LComponent::isBroughtToFrontOnMouseClick ( lua_State* ) {
 }
 int LComponent::setBroughtToFrontOnMouseClick ( lua_State* ) {
     if (child)
-        child->setBroughtToFrontOnMouseClick(LUA::getBoolean());
+        child->setBroughtToFrontOnMouseClick(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -319,7 +319,7 @@ int LComponent::getMouseClickGrabsKeyboardFocus ( lua_State* ) {
 }
 int LComponent::setMouseClickGrabsKeyboardFocus ( lua_State* ) {
     if (child)
-        child->setMouseClickGrabsKeyboardFocus(LUA::getBoolean());
+        child->setMouseClickGrabsKeyboardFocus(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -631,13 +631,13 @@ int LComponent::setBoundsInset ( lua_State* ) {
 
 int LComponent::setRepaintsOnMouseActivity ( lua_State* ) {
     if (child)
-        child->setRepaintsOnMouseActivity(LUA::getBoolean());
+        child->setRepaintsOnMouseActivity(LUA::checkAndGetBoolean());
     return 0;
 }
 
 int LComponent::toFront ( lua_State* ) {
     if (child)
-        child->toFront(LUA::getBoolean());
+        child->toFront(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -681,7 +681,7 @@ int LComponent::sendLookAndFeelChange ( lua_State* ) {
 
 int LComponent::moveKeyboardFocusToSibling ( lua_State* ) {
     if (child) {
-        child->moveKeyboardFocusToSibling(LUA::getBoolean());
+        child->moveKeyboardFocusToSibling(LUA::checkAndGetBoolean());
     }
     return 0;
 }
@@ -694,7 +694,7 @@ int LComponent::updateMouseCursor ( lua_State* ) {
 
 int LComponent::setPaintingIsUnclipped ( lua_State* ) {
     if (child)
-        child->setPaintingIsUnclipped(LUA::getBoolean());
+        child->setPaintingIsUnclipped(LUA::checkAndGetBoolean());
     return 0;
 }
 
@@ -734,7 +734,7 @@ int LComponent::grabKeyboardFocus ( lua_State* ) {
 
 int LComponent::setBufferedToImage ( lua_State* ) {
     if (child)
-        child->setBufferedToImage(LUA::getBoolean());
+        child->setBufferedToImage(LUA::checkAndGetBoolean());
     return 0;
 }
 
