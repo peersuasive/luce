@@ -6,11 +6,11 @@ MAKEFLAGS += --no-print-directory
 VERSION = $(shell git describe)
 OUT 	= distrib
 
-TARGETS_51_ := linux64 win32 osx64 ios51 android44
+TARGETS_51_ := linux64 linux64_nocurl win32 osx64 ios51 android44
 TARGETS_51 := $(foreach obj,$(TARGETS_51_),$(OUT)/$(VERSION)/luce.$(VERSION).$(obj)-5.1.zip)
-TARGETS_52_ := linux64 win32 osx64 ios51
+TARGETS_52_ := linux64 linux64_nocurl win32 osx64 ios51
 TARGETS_52 := $(foreach obj,$(TARGETS_52_),$(OUT)/$(VERSION)/luce.$(VERSION).$(obj)-5.2.zip)
-TARGETS_53_ := linux64
+TARGETS_53_ := linux64 linux64_nocurl
 TARGETS_53 := $(foreach obj,$(TARGETS_53_),$(OUT)/$(VERSION)/luce.$(VERSION).$(obj)-5.3.zip)
 
 LUCE_LIB   := $(OUT)/$(VERSION)/luce.lua
@@ -37,7 +37,7 @@ $(OUT)/$(VERSION)/Linux64/build: Linux $(LUCE_LIB)
 	@echo Building for Linux64 5.1
 	@mkdir -p $(shell dirname $(@))/luce
 	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
-	@cd $< && make -j5 && make -j5 CONFIG=Debug
+	@cd $< && make -j5 && make strip && make -j5 CONFIG=Debug
 	@ln -f $</build/core.so $(@:build=luce/core.so)
 	@ln -f $</build/core_d.so $(@:build=luce/core_d.so)
 	@ln -f $</build/intermediate/Release/libluce_lin.a $(@:build=luce/libluce.a)
@@ -55,11 +55,34 @@ $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.1.zip: $(OUT)/$(VERSION)/Linux64/bui
 
 linux64: $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.1.zip
 
+$(OUT)/$(VERSION)/Linux64_nocurl/build: Linux $(LUCE_LIB)
+	@echo "Building for Linux64 (no curl) 5.1"
+	@mkdir -p $(shell dirname $(@))/luce
+	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
+	@cd $< && make clean && make NOCURL=1 -j5 && make NOCURL=1 strip && make NOCURL=1 -j5 CONFIG=Debug
+	@ln -f $</build/core.so $(@:build=luce/core.so)
+	@ln -f $</build/core_d.so $(@:build=luce/core_d.so)
+	@ln -f $</build/intermediate/Release/libluce_lin.a $(@:build=luce/libluce.a)
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.1.zip luce/core.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.1_dbg.zip luce/core_d.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.1_static.zip luce/libluce.a luce.lua
+
+$(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.1.zip: $(OUT)/$(VERSION)/Linux64_nocurl/build \
+												   $(OUT)/$(VERSION)/Linux64_nocurl/luce/core.so \
+												   $(OUT)/$(VERSION)/Linux64_nocurl/luce/core_d.so \
+												   $(OUT)/$(VERSION)/Linux64_nocurl/luce/libluce.a \
+												   $(OUT)/$(VERSION)/Linux64_nocurl/luce.lua \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.1_dbg.zip \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.1_static.zip
+
+linux64_nocurl: $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.1.zip
+
+
 $(OUT)/$(VERSION)/Linux64-5.2/build: Linux-lua5.2 $(LUCE_LIB)
 	@echo Building for Linux64-5.2 5.2
 	@mkdir -p $(shell dirname $(@))/luce
 	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
-	@cd $< && make -j5 && make -j5 CONFIG=Debug
+	@cd $< && make -j5 && make strip && make -j5 CONFIG=Debug
 	@ln -f $</build/core.so $(@:build=luce/core.so)
 	@ln -f $</build/core_d.so $(@:build=luce/core_d.so)
 	@ln -f $</build/intermediate/Release/libluce_lin.a $(@:build=luce/libluce.a)
@@ -77,11 +100,34 @@ $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.2.zip: $(OUT)/$(VERSION)/Linux64-5.2
 
 linux64-5.2: $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.2.zip
 
+$(OUT)/$(VERSION)/Linux64_nocurl-5.2/build: Linux-lua5.2 $(LUCE_LIB)
+	@echo "Building for Linux64-5.2 (no curl) 5.2"
+	@mkdir -p $(shell dirname $(@))/luce
+	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
+	@cd $< && make clean && make NOCURL=1 -j5 && make NOCURL=1 strip && make NOCURL=1 -j5 CONFIG=Debug
+	@ln -f $</build/core.so $(@:build=luce/core.so)
+	@ln -f $</build/core_d.so $(@:build=luce/core_d.so)
+	@ln -f $</build/intermediate/Release/libluce_lin.a $(@:build=luce/libluce.a)
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.2.zip luce/core.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.2_dbg.zip luce/core_d.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.2_static.zip luce/libluce.a luce.lua
+
+$(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.2.zip: $(OUT)/$(VERSION)/Linux64_nocurl-5.2/build \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.2/luce/core.so \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.2/luce/core_d.so \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.2/luce/libluce.a \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.2/luce.lua \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.2_dbg.zip \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.2_static.zip
+
+linux64_nocurl-5.2: $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.2.zip
+
+
 $(OUT)/$(VERSION)/Linux64-5.3/build: Linux-lua5.3 $(LUCE_LIB)
 	@echo Building for Linux64-5.3 5.3
 	@mkdir -p $(shell dirname $(@))/luce
 	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
-	@cd $< && make -j5 && make -j5 CONFIG=Debug
+	@cd $< && make -j5 && make strip && make -j5 CONFIG=Debug
 	@ln -f $</build/core.so $(@:build=luce/core.so)
 	@ln -f $</build/core_d.so $(@:build=luce/core_d.so)
 	@ln -f $</build/intermediate/Release/libluce_lin.a $(@:build=luce/libluce.a)
@@ -98,6 +144,29 @@ $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3.zip: $(OUT)/$(VERSION)/Linux64-5.3
 												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3_static.zip
 
 linux64-5.3: $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3.zip
+
+
+$(OUT)/$(VERSION)/Linux64_nocurl-5.3/build: Linux-lua5.3 $(LUCE_LIB)
+	@echo "Building for Linux64-5.3 (no curl) 5.3"
+	@mkdir -p $(shell dirname $(@))/luce
+	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
+	@cd $< && make clean && make NOCURL=1 -j5 && make NOCURL=1 strip && make NOCURL=1 -j5 CONFIG=Debug
+	@ln -f $</build/core.so $(@:build=luce/core.so)
+	@ln -f $</build/core_d.so $(@:build=luce/core_d.so)
+	@ln -f $</build/intermediate/Release/libluce_lin.a $(@:build=luce/libluce.a)
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.3.zip luce/core.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.3_dbg.zip luce/core_d.so luce.lua
+	@cd $(shell dirname $(@)) && zip -q -9 ../luce.$(VERSION).linux64_nocurl-5.3_static.zip luce/libluce.a luce.lua
+
+$(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.3.zip: $(OUT)/$(VERSION)/Linux64_nocurl-5.3/build \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.3/luce/core.so \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.3/luce/core_d.so \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.3/luce/libluce.a \
+												   $(OUT)/$(VERSION)/Linux64_nocurl-5.3/luce.lua \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.3_dbg.zip \
+												   $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.3_static.zip
+
+linux64_nocurl-5.3: $(OUT)/$(VERSION)/luce.$(VERSION).linux64_nocurl-5.3.zip
 
 
 $(OUT)/$(VERSION)/Win32/build: MingW $(LUCE_LIB)
