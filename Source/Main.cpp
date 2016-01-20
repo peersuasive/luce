@@ -23,6 +23,7 @@ int lua_main_manual(lua_State*, const int&, int ms = 0);
 int start(lua_State*);
 int start_manual(lua_State*);
 int reload(lua_State*);
+JUCEApplicationBase *LApp;
 
 #if JUCE_ANDROID
     #include <jni.h>
@@ -64,9 +65,9 @@ int lua_main_manual(lua_State *L, const int& cb_ref, int ms) {
     #endif
     return 0;
 }
-
 int lua_shutdown(lua_State *L) {
     DBG("START CLEANING");
+    LApp = nullptr;
     lua_gc(L, LUA_GCCOLLECT, 0 );
     // clean instanciated but never used or orphan objects
     if (LUA::objects.size()) {
@@ -195,6 +196,36 @@ int start_manual( lua_State *L ) {
     DBG("END of START (manual)\n");
     lua_pushnumber(L, rc);
     return 1;
+}
+
+int tick(lua_State *L) {
+    bool r = MessageManager::getInstanceWithoutCreating()->runDispatchLoopUntil(0);
+    if(!r){
+        LApp->shutdown();
+        lua_shutdown(L);
+    }
+    lua_pushboolean(L,r);
+    return 1;
+}
+int start_controlled( lua_State *L ) {
+    LUA::Set(L);
+    #if JUCE_IOS
+    return 0;
+    #else
+    LJUCEApplication *mc = Luna<LJUCEApplication>::check(L, 2); // luaL_ref pop'ed the cb function
+    mainClass = mc;
+    juce::JUCEApplicationBase::createInstance = &juce_CreateApplication;
+    initialiseJuce_GUI();
+    LApp = juce::JUCEApplicationBase::createInstance();
+    if (LApp==nullptr || !LApp->initialiseApp()) {
+        if(LApp!=nullptr)LApp->shutdown();
+        lua_pushstring(L,"LUCE ERROR: Couldn't initialise app");
+        lua_error(L);
+        return 0;
+    }
+    lua_pushcclosure(L, tick, 0);
+    return 1;
+    #endif
 }
 
 int lua_sleep(lua_State *L) {
@@ -386,6 +417,7 @@ static const luaL_Reg luce_lib [] = {
 
     { "start", start },
     { "start_manual", start_manual },
+    { "start_controlled", start_controlled },
     { "reload", reload },
     { "shutdown", lua_shutdown },
     { "sleep", lua_sleep },

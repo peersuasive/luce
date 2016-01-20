@@ -351,7 +351,10 @@ local function new(name, prog, ...)
             return luce:start( lapp )
         end
     end
-
+    function self:start_controlled(mainClass)
+        MainClass = mainClass
+        return luce:start_controlled(lapp)
+    end
     -- clean up environment when the application is about to close
     local shutdown_callback = function()end
     lapp:shutdown(function()
