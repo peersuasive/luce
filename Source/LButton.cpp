@@ -156,7 +156,7 @@ int LButton::getButtonText ( lua_State* ) {
 }
 int LButton::setButtonText ( lua_State* ) {
     if (child)
-        child->setButtonText(LUA::getString());
+        child->setButtonText(LUA::checkAndGetString());
     return 0;
 }
 
