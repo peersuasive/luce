@@ -4,6 +4,10 @@
 # (this disables dependency generation if multiple architectures are set)
 DEPFLAGS := $(if $(word 2, $(TARGET_ARCH)), , -MMD)
 
+CC  = gcc-4.9
+CXX = g++-4.9
+LD  = g++-4.9
+
 ifndef CONFIG
   CONFIG=Release
 endif
