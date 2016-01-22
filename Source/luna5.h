@@ -623,7 +623,7 @@ public:
         return 1;
     }
     static int ___eq(lua_State *L) {
-        DBG("2 eq");
+        //DBG("2 eq");
         return __eq(L);
     }
 
