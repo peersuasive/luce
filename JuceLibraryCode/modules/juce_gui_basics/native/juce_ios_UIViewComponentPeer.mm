@@ -117,7 +117,9 @@ using namespace juce;
 - (BOOL) shouldAutorotateToInterfaceOrientation: (UIInterfaceOrientation) interfaceOrientation;
 - (void) willRotateToInterfaceOrientation: (UIInterfaceOrientation) toInterfaceOrientation duration: (NSTimeInterval) duration;
 - (void) didRotateFromInterfaceOrientation: (UIInterfaceOrientation) fromInterfaceOrientation;
+#if defined (__IPHONE_8_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
 - (void) viewWillTransitionToSize: (CGSize) size withTransitionCoordinator: (id<UIViewControllerTransitionCoordinator>) coordinator;
+#endif
 - (BOOL) prefersStatusBarHidden;
 - (UIStatusBarStyle) preferredStatusBarStyle;
 
@@ -340,6 +342,7 @@ static bool isKioskModeView (JuceUIViewController* c)
     [UIView setAnimationsEnabled: YES];
 }
 
+#if defined (__IPHONE_8_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
 - (void) viewWillTransitionToSize: (CGSize) size withTransitionCoordinator: (id<UIViewControllerTransitionCoordinator>) coordinator
 {
     [super viewWillTransitionToSize: size withTransitionCoordinator: coordinator];
@@ -349,7 +352,7 @@ static bool isKioskModeView (JuceUIViewController* c)
     // async update to double-check..
     MessageManager::callAsync ([=]() { sendScreenBoundsUpdate (self); });
 }
-
+#endif
 - (BOOL) prefersStatusBarHidden
 {
     return isKioskModeView (self);
@@ -1016,9 +1019,10 @@ void Desktop::setKioskComponent (Component* kioskModeComp, bool enableOrDisable,
 
     if (ComponentPeer* peer = kioskModeComp->getPeer())
     {
+        #if defined (__IPHONE_7_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
         if (UIViewComponentPeer* uiViewPeer = dynamic_cast<UIViewComponentPeer*> (peer))
             [uiViewPeer->controller setNeedsStatusBarAppearanceUpdate];
-
+        #endif
         peer->setFullScreen (enableOrDisable);
     }
 }
