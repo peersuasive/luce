@@ -117,10 +117,10 @@ using namespace juce;
 - (BOOL) shouldAutorotateToInterfaceOrientation: (UIInterfaceOrientation) interfaceOrientation;
 - (void) willRotateToInterfaceOrientation: (UIInterfaceOrientation) toInterfaceOrientation duration: (NSTimeInterval) duration;
 - (void) didRotateFromInterfaceOrientation: (UIInterfaceOrientation) fromInterfaceOrientation;
-
-#if defined (__IPHONE_8_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
 - (void) viewWillTransitionToSize: (CGSize) size withTransitionCoordinator: (id<UIViewControllerTransitionCoordinator>) coordinator;
-#endif
+- (BOOL) prefersStatusBarHidden;
+- (UIStatusBarStyle) preferredStatusBarStyle;
+
 - (void) viewDidLoad;
 - (void) viewWillAppear: (BOOL) animated;
 - (void) viewDidAppear: (BOOL) animated;
@@ -300,6 +300,15 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
     juceView->owner->updateTransformAndScreenBounds();
 }
 
+static bool isKioskModeView (JuceUIViewController* c)
+{
+    JuceUIView* juceView = (JuceUIView*) [c view];
+    jassert (juceView != nil && juceView->owner != nullptr);
+
+    return Desktop::getInstance().getKioskModeComponent() == &(juceView->owner->getComponent());
+}
+
+
 } // (juce namespace)
 
 //==============================================================================
@@ -319,20 +328,18 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
 - (void) willRotateToInterfaceOrientation: (UIInterfaceOrientation) toInterfaceOrientation
                                  duration: (NSTimeInterval) duration
 {
-    (void) toInterfaceOrientation;
-    (void) duration;
+    ignoreUnused (toInterfaceOrientation, duration);
 
     [UIView setAnimationsEnabled: NO]; // disable this because it goes the wrong way and looks like crap.
 }
 
 - (void) didRotateFromInterfaceOrientation: (UIInterfaceOrientation) fromInterfaceOrientation
 {
-    (void) fromInterfaceOrientation;
+    ignoreUnused (fromInterfaceOrientation);
     sendScreenBoundsUpdate (self);
     [UIView setAnimationsEnabled: YES];
 }
 
-#if defined (__IPHONE_8_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
 - (void) viewWillTransitionToSize: (CGSize) size withTransitionCoordinator: (id<UIViewControllerTransitionCoordinator>) coordinator
 {
     [super viewWillTransitionToSize: size withTransitionCoordinator: coordinator];
@@ -342,7 +349,17 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
     // async update to double-check..
     MessageManager::callAsync ([=]() { sendScreenBoundsUpdate (self); });
 }
-#endif
+
+- (BOOL) prefersStatusBarHidden
+{
+    return isKioskModeView (self);
+}
+
+- (UIStatusBarStyle) preferredStatusBarStyle
+{
+    return UIStatusBarStyleDefault;
+}
+
 - (void) viewDidLoad
 {
     sendScreenBoundsUpdate (self);
@@ -350,13 +367,13 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
 
 - (void) viewWillAppear: (BOOL) animated
 {
-    (void) animated;
+    ignoreUnused (animated);
     [self viewDidLoad];
 }
 
 - (void) viewDidAppear: (BOOL) animated
 {
-    (void) animated;
+    ignoreUnused (animated);
     [self viewDidLoad];
 }
 
@@ -408,7 +425,7 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
 //==============================================================================
 - (void) touchesBegan: (NSSet*) touches withEvent: (UIEvent*) event
 {
-    (void) touches;
+    ignoreUnused (touches);
 
     if (owner != nullptr)
         owner->handleTouches (event, true, false, false);
@@ -416,7 +433,7 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
 
 - (void) touchesMoved: (NSSet*) touches withEvent: (UIEvent*) event
 {
-    (void) touches;
+    ignoreUnused (touches);
 
     if (owner != nullptr)
         owner->handleTouches (event, false, false, false);
@@ -424,7 +441,7 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
 
 - (void) touchesEnded: (NSSet*) touches withEvent: (UIEvent*) event
 {
-    (void) touches;
+    ignoreUnused (touches);
 
     if (owner != nullptr)
         owner->handleTouches (event, false, true, false);
@@ -462,7 +479,7 @@ static void sendScreenBoundsUpdate (JuceUIViewController* c)
 
 - (BOOL) textView: (UITextView*) textView shouldChangeTextInRange: (NSRange) range replacementText: (NSString*) text
 {
-    (void) textView;
+    ignoreUnused (textView);
     return owner->textViewReplaceCharacters (Range<int> ((int) range.location, (int) (range.location + range.length)),
                                              nsStringToJuce (text));
 }
@@ -762,6 +779,26 @@ void UIViewComponentPeer::setIcon (const Image& /*newIcon*/)
 }
 
 //==============================================================================
+static float getMaximumTouchForce (UITouch* touch) noexcept
+{
+   #if defined (__IPHONE_9_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0
+    if ([touch respondsToSelector: @selector (maximumPossibleForce)])
+        return (float) touch.maximumPossibleForce;
+   #endif
+
+    return 0.0f;
+}
+
+static float getTouchForce (UITouch* touch) noexcept
+{
+   #if defined (__IPHONE_9_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0
+    if ([touch respondsToSelector: @selector (force)])
+        return (float) touch.force;
+   #endif
+
+    return 0.0f;
+}
+
 void UIViewComponentPeer::handleTouches (UIEvent* event, const bool isDown, const bool isUp, bool isCancel)
 {
     NSArray* touches = [[event touchesForView: view] allObjects];
@@ -769,12 +806,9 @@ void UIViewComponentPeer::handleTouches (UIEvent* event, const bool isDown, cons
     for (unsigned int i = 0; i < [touches count]; ++i)
     {
         UITouch* touch = [touches objectAtIndex: i];
+        const float maximumForce = getMaximumTouchForce (touch);
 
-       #if defined (__IPHONE_9_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0
-        if ([touch phase] == UITouchPhaseStationary && touch.maximumPossibleForce <= 0)
-       #else
-        if ([touch phase] == UITouchPhaseStationary)
-       #endif
+        if ([touch phase] == UITouchPhaseStationary && maximumForce <= 0)
             continue;
 
         CGPoint p = [touch locationInView: view];
@@ -819,13 +853,9 @@ void UIViewComponentPeer::handleTouches (UIEvent* event, const bool isDown, cons
             modsToSend = currentModifiers = currentModifiers.withoutMouseButtons();
         }
 
-        float pressure = MouseInputSource::invalidPressure;
-
-       #if defined (__IPHONE_9_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0
-        if (touch.maximumPossibleForce > 0)
-            // NB: other devices return 0 or 1.0 if pressure is unknown, so we'll clip our value to a believable range:
-            pressure = jlimit (0.0001f, 0.9999f, (float) (touch.force / touch.maximumPossibleForce));
-       #endif
+        // NB: some devices return 0 or 1.0 if pressure is unknown, so we'll clip our value to a believable range:
+        float pressure = maximumForce > 0 ? jlimit (0.0001f, 0.9999f, getTouchForce (touch) / maximumForce)
+                                          : MouseInputSource::invalidPressure;
 
         handleMouseEvent (touchIndex, pos, modsToSend, pressure, time);
 
@@ -982,14 +1012,18 @@ bool UIViewComponentPeer::canBecomeKeyWindow()
 //==============================================================================
 void Desktop::setKioskComponent (Component* kioskModeComp, bool enableOrDisable, bool /*allowMenusAndBars*/)
 {
-    [[UIApplication sharedApplication] setStatusBarHidden: enableOrDisable
-                                            withAnimation: UIStatusBarAnimationSlide];
-
     displays->refresh();
 
-    if (ComponentPeer* const peer = kioskModeComp->getPeer())
+    if (ComponentPeer* peer = kioskModeComp->getPeer())
+    {
+        if (UIViewComponentPeer* uiViewPeer = dynamic_cast<UIViewComponentPeer*> (peer))
+            [uiViewPeer->controller setNeedsStatusBarAppearanceUpdate];
+
         peer->setFullScreen (enableOrDisable);
+    }
 }
+
+void Desktop::allowedOrientationsChanged() {}
 
 //==============================================================================
 void UIViewComponentPeer::repaint (const Rectangle<int>& area)

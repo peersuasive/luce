@@ -22,7 +22,7 @@
   ==============================================================================
 */
 
-//==================================================================================================
+
 #if JUCE_USE_DIRECTWRITE
 namespace DirectWriteTypeLayout
 {
@@ -41,7 +41,7 @@ namespace DirectWriteTypeLayout
         JUCE_COMRESULT QueryInterface (REFIID refId, void** result) override
         {
             if (refId == __uuidof (IDWritePixelSnapping))
-                return castToType <IDWritePixelSnapping> (result);
+                return castToType<IDWritePixelSnapping> (result);
 
             return ComBaseClassHelper<IDWriteTextRenderer>::QueryInterface (refId, result);
         }
@@ -54,12 +54,9 @@ namespace DirectWriteTypeLayout
 
         JUCE_COMRESULT GetCurrentTransform (void*, DWRITE_MATRIX* matrix) override
         {
-            matrix->m11 = 1.0f;
-            matrix->m12 = 0.0f;
-            matrix->m21 = 0.0f;
-            matrix->m22 = 1.0f;
-            matrix->dx = 0.0f;
-            matrix->dy = 0.0f;
+            matrix->m11 = 1.0f; matrix->m12 = 0.0f;
+            matrix->m21 = 0.0f; matrix->m22 = 1.0f;
+            matrix->dx  = 0.0f; matrix->dy  = 0.0f;
             return S_OK;
         }
 
@@ -172,10 +169,13 @@ namespace DirectWriteTypeLayout
         Font getFontForRun (const DWRITE_GLYPH_RUN& glyphRun, float fontHeight)
         {
             for (int i = 0; i < attributedString.getNumAttributes(); ++i)
-                if (const Font* font = attributedString.getAttribute(i)->getFont())
-                    if (WindowsDirectWriteTypeface* wt = dynamic_cast<WindowsDirectWriteTypeface*> (font->getTypeface()))
-                        if (wt->getIDWriteFontFace() == glyphRun.fontFace)
-                            return font->withHeight (fontHeight);
+            {
+                const Font& font = attributedString.getAttribute(i).font;
+
+                if (WindowsDirectWriteTypeface* wt = dynamic_cast<WindowsDirectWriteTypeface*> (font.getTypeface()))
+                    if (wt->getIDWriteFontFace() == glyphRun.fontFace)
+                        return font.withHeight (fontHeight);
+            }
 
             ComSmartPtr<IDWriteFont> dwFont;
             HRESULT hr = fontCollection.GetFontFromFontFace (glyphRun.fontFace, dwFont.resetAndGetPointerAddress());
@@ -253,9 +253,8 @@ namespace DirectWriteTypeLayout
         range.startPosition = attr.range.getStart();
         range.length = jmin (attr.range.getLength(), textLen - attr.range.getStart());
 
-        if (const Font* const font = attr.getFont())
         {
-            const String familyName (FontStyleHelpers::getConcreteFamilyName (*font));
+            const String familyName (FontStyleHelpers::getConcreteFamilyName (attr.font));
 
             BOOL fontFound = false;
             uint32 fontIndex;
@@ -275,7 +274,7 @@ namespace DirectWriteTypeLayout
             {
                 hr = fontFamily->GetFont (i, dwFont.resetAndGetPointerAddress());
 
-                if (font->getTypefaceStyle() == getFontFaceName (dwFont))
+                if (attr.font.getTypefaceStyle() == getFontFaceName (dwFont))
                     break;
             }
 
@@ -285,16 +284,16 @@ namespace DirectWriteTypeLayout
             textLayout.SetFontStyle (dwFont->GetStyle(), range);
 
             const float fontHeightToEmSizeFactor = getFontHeightToEmSizeFactor (*dwFont);
-            textLayout.SetFontSize (font->getHeight() * fontHeightToEmSizeFactor, range);
+            textLayout.SetFontSize (attr.font.getHeight() * fontHeightToEmSizeFactor, range);
         }
 
-        if (const Colour* const colour = attr.getColour())
         {
+            const Colour col (attr.colour);
             ComSmartPtr<ID2D1SolidColorBrush> d2dBrush;
-            renderTarget.CreateSolidColorBrush (D2D1::ColorF (colour->getFloatRed(),
-                                                              colour->getFloatGreen(),
-                                                              colour->getFloatBlue(),
-                                                              colour->getFloatAlpha()),
+            renderTarget.CreateSolidColorBrush (D2D1::ColorF (col.getFloatRed(),
+                                                              col.getFloatGreen(),
+                                                              col.getFloatBlue(),
+                                                              col.getFloatAlpha()),
                                                 d2dBrush.resetAndGetPointerAddress());
 
             // We need to call SetDrawingEffect with a legimate brush to get DirectWrite to break text based on colours
@@ -353,34 +352,24 @@ namespace DirectWriteTypeLayout
         const int numAttributes = text.getNumAttributes();
 
         for (int i = 0; i < numAttributes; ++i)
-            addAttributedRange (*text.getAttribute (i), *textLayout, textLen, renderTarget, fontCollection);
+            addAttributedRange (text.getAttribute (i), *textLayout, textLen, renderTarget, fontCollection);
 
         return true;
     }
 
-    void createLayout (TextLayout& layout, const AttributedString& text, IDWriteFactory& directWriteFactory,
-                       ID2D1Factory& direct2dFactory, IDWriteFontCollection& fontCollection)
+    void createLayout (TextLayout& layout, const AttributedString& text,
+                       IDWriteFactory& directWriteFactory,
+                       IDWriteFontCollection& fontCollection,
+                       ID2D1DCRenderTarget& renderTarget)
     {
-        // To add color to text, we need to create a D2D render target
-        // Since we are not actually rendering to a D2D context we create a temporary GDI render target
-
-        D2D1_RENDER_TARGET_PROPERTIES d2dRTProp = D2D1::RenderTargetProperties (D2D1_RENDER_TARGET_TYPE_SOFTWARE,
-                                                                                D2D1::PixelFormat (DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                                                                   D2D1_ALPHA_MODE_IGNORE),
-                                                                                0, 0,
-                                                                                D2D1_RENDER_TARGET_USAGE_GDI_COMPATIBLE,
-                                                                                D2D1_FEATURE_LEVEL_DEFAULT);
-        ComSmartPtr<ID2D1DCRenderTarget> renderTarget;
-        HRESULT hr = direct2dFactory.CreateDCRenderTarget (&d2dRTProp, renderTarget.resetAndGetPointerAddress());
-
         ComSmartPtr<IDWriteTextLayout> dwTextLayout;
 
-        if (! setupLayout (text, layout.getWidth(), layout.getHeight(), *renderTarget,
+        if (! setupLayout (text, layout.getWidth(), layout.getHeight(), renderTarget,
                            directWriteFactory, fontCollection, dwTextLayout))
             return;
 
         UINT32 actualLineCount = 0;
-        hr = dwTextLayout->GetLineMetrics (nullptr, 0, &actualLineCount);
+        HRESULT hr = dwTextLayout->GetLineMetrics (nullptr, 0, &actualLineCount);
 
         layout.ensureStorageAllocated (actualLineCount);
 
@@ -429,9 +418,8 @@ static bool canAllTypefacesBeUsedInLayout (const AttributedString& text)
     const int numCharacterAttributes = text.getNumAttributes();
 
     for (int i = 0; i < numCharacterAttributes; ++i)
-        if (const Font* const font = text.getAttribute (i)->getFont())
-            if (dynamic_cast<WindowsDirectWriteTypeface*> (font->getTypeface()) == nullptr)
-                return false;
+        if (dynamic_cast<WindowsDirectWriteTypeface*> (text.getAttribute(i).font.getTypeface()) == nullptr)
+            return false;
 
     return true;
 }
@@ -448,8 +436,11 @@ bool TextLayout::createNativeLayout (const AttributedString& text)
 
     if (factories->d2dFactory != nullptr && factories->systemFonts != nullptr)
     {
-        DirectWriteTypeLayout::createLayout (*this, text, *factories->directWriteFactory,
-                                             *factories->d2dFactory, *factories->systemFonts);
+        DirectWriteTypeLayout::createLayout (*this, text,
+                                             *factories->directWriteFactory,
+                                             *factories->systemFonts,
+                                             *factories->directWriteRenderTarget);
+
         return true;
     }
    #else

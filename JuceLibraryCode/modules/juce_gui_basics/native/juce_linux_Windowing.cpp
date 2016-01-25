@@ -1170,11 +1170,7 @@ private:
         // If no scale factor is set by GNOME or Ubuntu then calculate from monitor dpi
         // We use the same approach as chromium which simply divides the dpi by 96
         // and then rounds the result
-        //return round (info.dpi / 150.0);
-
-        // looks like this is wrong, my HDMI display would be 2x, while it really is 1x
-        //return round (info.dpi / 150.0);
-        return 1;
+        return round (info.dpi / 150.0);
     }
 
     //==============================================================================
@@ -3749,6 +3745,8 @@ void Desktop::setKioskComponent (Component* comp, bool enableOrDisable, bool /* 
     if (enableOrDisable)
         comp->setBounds (getDisplays().getMainDisplay().totalArea);
 }
+
+void Desktop::allowedOrientationsChanged() {}
 
 //==============================================================================
 ComponentPeer* Component::createNewPeer (int styleFlags, void* nativeWindowToAttachTo)

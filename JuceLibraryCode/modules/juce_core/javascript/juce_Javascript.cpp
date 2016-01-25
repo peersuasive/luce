@@ -1466,7 +1466,7 @@ struct JavascriptEngine::RootObject   : public DynamicObject
         }
 
         static Identifier getClassName()   { static const Identifier i ("Object"); return i; }
-        static var dump  (Args a)          { DBG (JSON::toString (a.thisObject)); (void) a; return var::undefined(); }
+        static var dump  (Args a)          { DBG (JSON::toString (a.thisObject)); ignoreUnused (a); return var::undefined(); }
         static var cloneFn (Args a)        { return a.thisObject.clone(); }
     };
 
@@ -1478,6 +1478,7 @@ struct JavascriptEngine::RootObject   : public DynamicObject
             setMethod ("contains", contains);
             setMethod ("remove",   remove);
             setMethod ("join",     join);
+            setMethod ("push",     push);
         }
 
         static Identifier getClassName()   { static const Identifier i ("Array"); return i; }
@@ -1507,6 +1508,19 @@ struct JavascriptEngine::RootObject   : public DynamicObject
                     strings.add (array->getReference(i).toString());
 
             return strings.joinIntoString (getString (a, 0));
+        }
+
+        static var push (Args a)
+        {
+            if (Array<var>* array = a.thisObject.getArray())
+            {
+                for (int i = 0; i < a.numArguments; ++i)
+                    array->add (a.arguments[i]);
+
+                return array->size();
+            }
+
+            return var::undefined();
         }
     };
 
@@ -1560,7 +1574,6 @@ struct JavascriptEngine::RootObject   : public DynamicObject
             setMethod ("random",    Math_random);           setMethod ("randInt",   Math_randInt);
             setMethod ("min",       Math_min);              setMethod ("max",       Math_max);
             setMethod ("range",     Math_range);            setMethod ("sign",      Math_sign);
-            setMethod ("PI",        Math_pi);               setMethod ("E",         Math_e);
             setMethod ("toDegrees", Math_toDegrees);        setMethod ("toRadians", Math_toRadians);
             setMethod ("sin",       Math_sin);              setMethod ("asin",      Math_asin);
             setMethod ("sinh",      Math_sinh);             setMethod ("asinh",     Math_asinh);
@@ -1572,10 +1585,11 @@ struct JavascriptEngine::RootObject   : public DynamicObject
             setMethod ("exp",       Math_exp);              setMethod ("pow",       Math_pow);
             setMethod ("sqr",       Math_sqr);              setMethod ("sqrt",      Math_sqrt);
             setMethod ("ceil",      Math_ceil);             setMethod ("floor",     Math_floor);
+
+            setProperty ("PI", double_Pi);
+            setProperty ("E", exp (1.0));
         }
 
-        static var Math_pi        (Args)   { return double_Pi; }
-        static var Math_e         (Args)   { return exp (1.0); }
         static var Math_random    (Args)   { return Random::getSystemRandom().nextDouble(); }
         static var Math_randInt   (Args a) { return Random::getSystemRandom().nextInt (Range<int> (getInt (a, 0), getInt (a, 1))); }
         static var Math_abs       (Args a) { return isInt (a, 0) ? var (std::abs   (getInt (a, 0))) : var (std::abs   (getDouble (a, 0))); }

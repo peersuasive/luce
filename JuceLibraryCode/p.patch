@@ -1,0 +1,50 @@
+diff --git a/JuceLibraryCode/modules/juce_opengl/native/juce_OpenGL_ios.h b/JuceLibraryCode/modules/juce_opengl/native/juce_OpenGL_ios.h
+index eee71ec..fe12566 100644
+--- a/JuceLibraryCode/modules/juce_opengl/native/juce_OpenGL_ios.h
++++ b/JuceLibraryCode/modules/juce_opengl/native/juce_OpenGL_ios.h
+@@ -146,8 +146,8 @@ public:
+         if (useMSAA)
+         {
+            #if defined (__IPHONE_7_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+-            glBindFramebuffer (GL_DRAW_FRAMEBUFFER, frameBufferHandle);
+-            glBindFramebuffer (GL_READ_FRAMEBUFFER, msaaBufferHandle);
++             glBindFramebuffer (GL_DRAW_FRAMEBUFFER, frameBufferHandle);
++             glBindFramebuffer (GL_READ_FRAMEBUFFER, msaaBufferHandle);
+            #else
+             glBindFramebuffer (GL_DRAW_FRAMEBUFFER_APPLE, frameBufferHandle);
+             glBindFramebuffer (GL_READ_FRAMEBUFFER_APPLE, msaaBufferHandle);
+@@ -245,7 +245,7 @@ private:
+         glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorBufferHandle);
+ 
+         bool ok = [context renderbufferStorage: GL_RENDERBUFFER fromDrawable: glLayer];
+-        jassert (ok); (void) ok;
++        jassert (ok); ignoreUnused (ok);
+ 
+         GLint width, height;
+         glGetRenderbufferParameteriv (GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width);
+@@ -260,10 +260,11 @@ private:
+             glBindRenderbuffer (GL_RENDERBUFFER, msaaColorHandle);
+ 
+             #if defined (__IPHONE_7_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+-            glRenderbufferStorageMultisample (GL_RENDERBUFFER, 4, GL_RGBA8, width, height);
++             glRenderbufferStorageMultisample (GL_RENDERBUFFER, 4, GL_RGBA8, width, height);
+             #else
+-            glRenderbufferStorageMultisampleAPPLE (GL_RENDERBUFFER, 4, GL_RGBA8_OES, width, height);
++             glRenderbufferStorageMultisampleAPPLE (GL_RENDERBUFFER, 4, GL_RGBA8_OES, width, height);
+             #endif
++
+             glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, msaaColorHandle);
+         }
+ 
+@@ -274,9 +275,9 @@ private:
+ 
+             if (useMSAA)
+                 #if defined (__IPHONE_7_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+-                glRenderbufferStorageMultisample (GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
++                 glRenderbufferStorageMultisample (GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
+                 #else
+-                glRenderbufferStorageMultisampleAPPLE (GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
++                 glRenderbufferStorageMultisampleAPPLE (GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
+                 #endif
+             else
+                 glRenderbufferStorage (GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
