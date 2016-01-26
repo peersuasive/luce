@@ -108,8 +108,11 @@ int LAttributedString::getNumAttributes ( lua_State* ) {
 }
 
 int LAttributedString::getAttribute ( lua_State *L ) {
-    return LUA::returnUserdata<LAttribute, Attribute>( 
-        AttributedString::getAttribute( LUA::getNumber<int>(2) ) 
+    //return LUA::returnUserdata<LAttribute, Attribute>( 
+    //    AttributedString::getAttribute( LUA::getNumber<int>(2) ) 
+    //);
+    return LUA::storeAndReturnUserdata<LAttribute>(
+            new LAttribute(L, AttributedString::getAttribute( LUA::getNumber<int>(2) ))
     );
 }
 

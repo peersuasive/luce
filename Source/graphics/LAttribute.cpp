@@ -31,7 +31,8 @@ const Luna<LAttribute>::StaticType LAttribute::statics[] = {
 
 LAttribute::LAttribute(lua_State *L)
     : LBase(L, "LAttribute", true),
-      Attribute( Range<int>(), Colours::black )
+      Attribute()
+      //Attribute( Range<int>(), Colours::black )
 {
     // INVALID (almost)
 }
@@ -49,10 +50,12 @@ int LAttribute::getRange(lua_State*) {
 }
 
 /////// getters
-int LAttribute::getColour (lua_State*) {
-    return LUA::returnUserdata<LColour, Colour>( AttributedString::Attribute::getColour() );
+int LAttribute::getColour (lua_State *L) {
+    //return LUA::returnUserdata<LColour, Colour>( AttributedString::Attribute::getColour() );
+    return LUA::storeAndReturnUserdata<LColour>( new LColour(L, Attribute::colour) );
 }
 
-int LAttribute::getFont (lua_State*) {
-    return LUA::returnUserdata<LFont, Font>( AttributedString::Attribute::getFont() );
+int LAttribute::getFont (lua_State *L) {
+    //return LUA::returnUserdata<LFont, Font>( Attribute::font );
+    return LUA::storeAndReturnUserdata<LFont>( new LFont(L, Attribute::font) );
 }
