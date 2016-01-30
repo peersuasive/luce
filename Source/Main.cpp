@@ -210,6 +210,9 @@ int start_manual( lua_State *L ) {
 }
 
 int tick(lua_State *L) {
+    #if JUCE_ANDROID
+    return 0;
+    #else
     bool r = MessageManager::getInstanceWithoutCreating()->runDispatchLoopUntil(0);
     if(!r){
         LApp->shutdown();
@@ -217,6 +220,7 @@ int tick(lua_State *L) {
     }
     lua_pushboolean(L,r);
     return 1;
+    #endif
 }
 int start_controlled( lua_State *L ) {
     LUA::Set(L);
