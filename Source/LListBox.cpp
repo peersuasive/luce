@@ -131,10 +131,12 @@ int LListBox::isInterestedInDragSource(lua_State*) {
 }
 
 void LListBox::itemDropped (const DragAndDropTarget::SourceDetails& sd) {
-    ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
-    callback("itemDropped", 0,
-            { new LRefBase("SourceDetails", lsd) });
-            //{ new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
+    if(hasCallback("itemDropped")) {
+        ScopedPointer<LSourceDetails> lsd = new LSourceDetails(LUA::Get(), sd);
+        callback("itemDropped", 0,
+                { new LRefBase("SourceDetails", lsd) });
+                //{ new LRefBase("SourceDetails", new LSourceDetails(LUA::Get(), sd)) });
+    }
 }
 int LListBox::itemDropped(lua_State*) {
     set("itemDropped");
