@@ -85,6 +85,8 @@ int LURL::lnew(lua_State *L) {
             new LURL(L, *LUA::from_luce<LURL>(2))
         );
     }
+    // TODO: error...
+    return 0;
 }
 
 /////// statics
