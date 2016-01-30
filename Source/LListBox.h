@@ -18,7 +18,8 @@ class LListBox
     : public LComponent,
       public ListBox,
       public ListBoxModel,
-      public DragAndDropTarget
+      public DragAndDropTarget,
+      public FileDragAndDropTarget
 {
 public:
     LListBox(lua_State*);
@@ -99,6 +100,14 @@ public:
     int itemDragExit(lua_State*);
 
     int startDragAndDrop(lua_State*);
+
+    //== file drag and drop ========================================================
+    int isInterestedInFileDrag(lua_State*);
+    int filesDropped(lua_State*);
+    int fileDragEnter(lua_State*);
+    int fileDragMove(lua_State*);
+    int fileDragExit(lua_State*);
+
     //==============================================================================
 
     static const char className[];
@@ -133,6 +142,14 @@ private:
     virtual void itemDropped (const DragAndDropTarget::SourceDetails&) override;
     virtual void itemDragEnter(const DragAndDropTarget::SourceDetails& dragSourceDetails) override;
     virtual void itemDragExit(const DragAndDropTarget::SourceDetails& dragSourceDetails) override;
+
+    // file drag and drop
+    virtual bool isInterestedInFileDrag (const StringArray &files) override;
+    virtual void filesDropped (const StringArray &files, int x, int y) override;
+    virtual void fileDragEnter(const StringArray &files, int x, int y) override;
+    virtual void fileDragMove(const StringArray &files, int x, int y) override;
+    virtual void fileDragExit(const StringArray &files) override;
+
 
     //==============================================================================
     virtual void paint(Graphics&) override;

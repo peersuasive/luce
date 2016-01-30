@@ -73,6 +73,12 @@ const Luna<LListBox>::FunctionType LListBox::methods[] = {
     method( LListBox, itemDragEnter),
     method( LListBox, itemDragExit),
 
+    method( LListBox, isInterestedInFileDrag),
+    method( LListBox, filesDropped),
+    method( LListBox, fileDragEnter),
+    method( LListBox, fileDragMove),
+    method( LListBox, fileDragExit),
+
     method( LListBox, paintListBoxItem ),
     method( LListBox, getMouseCursorForRow ),
     method( LListBox, getTooltipForRow ),
@@ -169,6 +175,80 @@ int LListBox::startDragAndDrop ( lua_State* ) {
     ListBox::startDragAndDrop( *me, rowsToDrag, dragDescription, allowDraggingToOtherWindows);
     return 0;
 }
+
+
+bool LListBox::isInterestedInFileDrag (const StringArray& files) {
+    if(hasCallback("isInterestedInFileDrag")) {
+        LUCE::luce_pushtable(files);
+        int files = lua_gettop(LUA::Get());
+        if( callback("isInterestedInFileDrag", 1,
+            { new LRefBase( files ) } 
+            )
+        )
+        {
+            return LUA::checkAndGetBoolean(-1, false);
+        }
+    }
+    return false;
+}
+int LListBox::isInterestedInFileDrag(lua_State*) {
+    set("isInterestedInFileDrag");
+    return 0;
+}
+
+void LListBox::filesDropped (const StringArray& files, int x, int y) {
+    if(hasCallback("filesDropped")) {
+        LUCE::luce_pushtable(files);
+        int files = lua_gettop(LUA::Get());
+        callback("filesDropped", 0,
+            { new LRefBase( files ), x, y });
+    }
+}
+int LListBox::filesDropped(lua_State*) {
+    set("filesDropped");
+    return 0;
+}
+
+void LListBox::fileDragEnter(const StringArray& files, int x, int y) {
+    if(hasCallback("fileDragEnter")) {
+        LUCE::luce_pushtable(files);
+        int files = lua_gettop(LUA::Get());
+        callback("fileDragEnter", 0,
+            { new LRefBase( files ), x, y});
+    }
+}
+int LListBox::fileDragEnter(lua_State*) {
+    set("fileDragEnter");
+    return 0;
+}
+
+void LListBox::fileDragMove(const StringArray& files, int x, int y) {
+    if(hasCallback("fileDragMove")) {
+        LUCE::luce_pushtable(files);
+        int files = lua_gettop(LUA::Get());
+        callback("fileDragMove", 0,
+            { new LRefBase( files ), x, y });
+    }
+}
+int LListBox::fileDragMove(lua_State*) {
+    set("fileDragMove");
+    return 0;
+}
+
+void LListBox::fileDragExit(const StringArray& files) {
+    if(hasCallback("fileDragExit")) {
+        LUCE::luce_pushtable(files);
+        int files = lua_gettop(LUA::Get());
+        callback("fileDragExit", 0,
+            { new LRefBase( files ) });
+    }
+}
+int LListBox::fileDragExit(lua_State*) {
+    set("fileDragExit");
+    return 0;
+}
+
+
 
 /*
 void LListBox::paintListBoxItem( int rowNumber, Graphics& g, int width, int height, bool rowIsSelected ) {
