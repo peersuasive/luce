@@ -2,8 +2,6 @@
 
 namespace luce {
 #include "LSelfKill.cpp"
-#include "LuaO.cpp"
-#include "LuceO.cpp"
 #include "MainThread.cpp"
 
 #include "base/LTime.cpp"
@@ -81,7 +79,6 @@ namespace luce {
 #if JUCE_MODAL_LOOPS_PERMITTED
 #include "extra/LFileChooser.cpp"
 #endif
-
 }
 
-#include "Main.cpp"
+//#include "Main.cpp"

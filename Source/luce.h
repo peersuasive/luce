@@ -1,6 +1,10 @@
 #ifndef __LUCE_H
 #define __LUCE_H
 
+#ifndef LUCE_API
+#define LUCE_API __attribute__ ((visibility("default")))
+#endif
+
 #define LUCE_VERSION_MAJOR 0
 #define LUCE_VERSION_MINOR 1
 #define LUCE_VERSION_BUILD 0
@@ -26,11 +30,10 @@ namespace luce {
 
 #include "LSelfKill.h"
 #include "LBase.h"
-#include "LuaO.h"
-#include "LuceO.h"
-#include "MainThread.h"
+#include "LuaO_Common.hpp"
 #include "luna5.h"
 
+#include "MainThread.h"
 #include "LRefBase.h"
 
 #include "base/LTime.h"
@@ -41,7 +44,6 @@ namespace luce {
 
 #include "LLookAndFeel.h"
 #include "MyLookAndFeel.h"
-//#include "LBase.h"
 #include "LModifierKeys.h"
 #include "LKeyPress.h"
 #include "LMouseEvent.h"
@@ -107,6 +109,9 @@ namespace luce {
 #if JUCE_MODAL_LOOPS_PERMITTED
 #include "extra/LFileChooser.h"
 #endif
+
+#include "LuaO.hpp"
+#include "LuceO.hpp"
 
 #include "LConstants.h"
 

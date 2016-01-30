@@ -9,6 +9,11 @@ public:
          object(o)
     {}
 
+    LRefBase( const int idx )
+        : me("index"),
+          index(idx)
+    {
+    }
     LRefBase( const HashMap<String, var>& h )
         : me("Properties")
     {
@@ -28,10 +33,15 @@ public:
         return &hash;
     }
 
+    const int getIndex() {
+        return index;
+    }
+
     typedef ReferenceCountedObjectPtr<LRefBase> Ptr;
 
 private:
     const void* object;
+    int index;
     String me;
     HashMap<String,var> hash;
 };

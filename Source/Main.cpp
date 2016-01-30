@@ -5,7 +5,11 @@
 #include <windows.h>
 #endif
 
+#ifndef LUCE_API
 #define LUCE_API __attribute__ ((visibility ("default")))
+#endif
+
+#include "luce.h"
 
 static luce::LJUCEApplication *mainClass = nullptr;
 LUCE_API juce::JUCEApplicationBase* juce_CreateApplication() {
@@ -14,6 +18,13 @@ LUCE_API juce::JUCEApplicationBase* juce_CreateApplication() {
 }
 
 namespace luce {
+
+/* externs */
+lua_State LUCE_API *LUA::L = nullptr;
+lua_State LUCE_API *LUCE::L = nullptr;
+std::map<int, WeakReference<LSelfKill>> LUA_COMMON::objects;
+bool LUA_COMMON::LUCE_LIVE_CODING;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -70,8 +81,8 @@ int lua_shutdown(lua_State *L) {
     LApp = nullptr;
     lua_gc(L, LUA_GCCOLLECT, 0 );
     // clean instanciated but never used or orphan objects
-    if (LUA::objects.size()) {
-        for (auto& it : LUA::objects) {
+    if (LUA_COMMON::objects.size()) {
+        for (auto& it : LUA_COMMON::objects) {
             if ( it.second ) {
                 if ( dynamic_cast<LComponent*>( (LSelfKill*)it.second ) )
                     #if DEBUG
@@ -118,7 +129,7 @@ int lua_shutdown(lua_State *L) {
  **/
 int reload(lua_State *L) {
     int top = lua_gettop(L);
-    LUA::liveCoding(true);
+    LUA_COMMON::liveCoding(true);
     // check what we have
     if(!lua_isfunction(L,2)) {
         lua_pushnil(L);
@@ -235,8 +246,8 @@ int lua_sleep(lua_State *L) {
 #ifdef __MINGW32__
     Sleep(ms);
 #else
-    std::chrono::milliseconds sleepDuration(ms);
-    std::this_thread::sleep_for(sleepDuration);
+    //std::chrono::milliseconds sleepDuration(ms);
+    //std::this_thread::sleep_for(sleepDuration);
 #endif
     return 0;
 }

@@ -258,7 +258,7 @@ public:
     static int constructor(lua_State * L) {
         T*  ap = new T(L);
         WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(ap);
-        LUA::store( (intptr_t)ap, ref );
+        LUA_COMMON::store( (intptr_t)ap, ref );
 
         lua_newtable(L);
         int t = lua_gettop(L);
@@ -542,34 +542,34 @@ public:
         T** obj = static_cast < T ** >(lua_touserdata(L, -1));
         if(obj and *obj) {
             int ptr = (intptr_t)(*obj);
-            if( LUA::objects[ptr] && LUA::objects[ptr]->pureBase() ) {
-                if( LUA::objects[ptr]->refCount() == 0) {
+            if( LUA_COMMON::objects[ptr] && LUA_COMMON::objects[ptr]->pureBase() ) {
+                if( LUA_COMMON::objects[ptr]->refCount() == 0) {
                     delete *obj;
-                    LUA::objects.erase( ptr );
+                    LUA_COMMON::objects.erase( ptr );
                 }
                 else
-                    LUA::objects[ptr]->decRefCount();
+                    LUA_COMMON::objects[ptr]->decRefCount();
             }
         }
         /*
         DBG(String(">>>>>>>>> collecting: ") + T::className);
         T** obj = static_cast < T ** >(lua_touserdata(L, -1));
-        if ( LUA::objects[addr] ) {
-            LBase *b = LUA::objects[addr];
+        if ( LUA_COMMON::objects[addr] ) {
+            LBase *b = LUA_COMMON::objects[addr];
             if ( b )
                 delete *obj;
         } else {
             if( obj && *obj && obj != nullptr )
                 *obj = nullptr;
         }
-        LUA::objects.erase(addr);
+        LUA_COMMON::objects.erase(addr);
 
-        if ( LUA::objects.size() == 0 ) {
+        if ( LUA_COMMON::objects.size() == 0 ) {
             if ( MessageManager::getInstanceWithoutCreating() != nullptr )
                 MessageManager::deleteInstance();
             std::cout << ((MessageManager::getInstanceWithoutCreating() == nullptr) ? "CLEAN" : "NOT CLEAN") << std::endl;
         } else
-            std::cout << "leaving " << LUA::objects.size() << " objects on stack" << std::endl;
+            std::cout << "leaving " << LUA_COMMON::objects.size() << " objects on stack" << std::endl;
         */
         return 0;
     }

@@ -3,7 +3,9 @@
 
 #if defined LUA52 || defined LUA53
 //#define LUA_COMPAT_MODULE
+#ifndef lua_objlen(L,i)
 #define lua_objlen(L,i)           lua_rawlen(L, (i))
+#endif
 //#define lua_strlen(L,i)           lua_rawlen(L, (i))
 //#define lua_equal(L,idx1,idx2)    lua_compare(L,(idx1),(idx2),LUA_OPEQ)
 //#define lua_lessthan(L,idx1,idx2) lua_compare(L,(idx1),(idx2),LUA_OPLT)
@@ -11,10 +13,11 @@
 #endif
 
 namespace LUA {
+    extern lua_State LUCE_API *L;
     namespace {
+        const char *SELF = "self";
         juce::Array<int> locked;
 
-        lua_State *L = nullptr;
         void Set(lua_State *L_) {
             if ( !L || L == nullptr ) L = L_;
         }
@@ -22,16 +25,8 @@ namespace LUA {
             return L;
         }
 
-        bool LUCE_LIVE_CODING = false;
-        void liveCoding(bool b) {
-            LUCE_LIVE_CODING = b;
-        }
-        bool liveCoding() {
-            return LUCE_LIVE_CODING;
-        }
-
         void throwError(const char *msg) {
-            if(liveCoding())
+            if(LUA_COMMON::liveCoding())
                 std::cout << "ERROR: " << msg << std::endl;
             else {
                 if(!lua_isstring(L,-1))
@@ -61,7 +56,7 @@ namespace LUA {
             lua_settable(L, LUA_REGISTRYINDEX);
         }
 
-        bool set(const LBase* key, const char* name, int n_) {
+        bool set(const LBase* key, const char* name, int n_ = -1) {
             bool res = false;
             if ( ! lua_isfunction(L, n_) )
                 throwError(lua_pushfstring(L,
@@ -105,6 +100,39 @@ namespace LUA {
             lua_settable(L, top);
             lua_pop(L,1);
         }
+        bool put(const LBase* key, const char* name) {
+            bool res = false;
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            if ( lua_istable(L, -1) ) {
+                lua_pushstring(L, name);
+                lua_newtable(L);
+                lua_settable(L, -3);
+                lua_pop(L,2);
+                res = true;
+            } else {
+                lua_pop(L,1); // nil
+                // could create table here, instead... but I want to get sure this
+                // is stored at the correct place, just to avoid having ghost tables
+                std::cout << "Can't get registry for " << key << std::endl;
+                throwError("LUCE ERROR: can't get registry to store register");
+            }
+            return res;
+        }
+
+        bool get(const LBase *key, const char *name) {
+            bool res = false;
+            lua_pushlightuserdata(L, (void*)key);
+            lua_gettable(L, LUA_REGISTRYINDEX);
+            int i = lua_gettop(L);
+            if ( lua_istable(L, -1) ) {
+                lua_getfield(L, -1, name);
+                res = true;
+            }
+            lua_remove(L, i);
+            // leaves callback on top
+            return res;
+        }
         bool hasCallback(const LBase* key, const char* name) {
             bool res = false;
             lua_pushlightuserdata(L, (void*)key);
@@ -134,22 +162,17 @@ namespace LUA {
             return res;
         }
 
-        //void store(int addr, WeakReference<LBase> o) {
-        void store(int addr, WeakReference<LSelfKill> o) {
-            objects[addr] = o;
-        }
-
-        bool isEmpty(int i) {
+        bool isEmpty(int i = -1) {
             return lua_isnoneornil(L,i);
         }
 
         // get results from stack
-        const var getNumber(int i) {
+        const var getNumber(int i = -1) {
             var res( luaL_checknumber(L, i) );
             lua_remove(L, i);
             return res;
         }
-        const var checkAndGetNumber(int i, var def) {
+        const var checkAndGetNumber(int i = 2, var def = 0) {
             if (lua_type(L, i) == LUA_TNUMBER)
                 return getNumber(i);
             if(lua_type(L,i) == LUA_TNIL)
@@ -157,13 +180,13 @@ namespace LUA {
             return def;
         }
         template<class T>
-        const T getNumber(int i) {
+        const T getNumber(int i = -1) {
             T n = luaL_checknumber(L, i);
             lua_remove(L, i);
             return n;
         }
         template<class T>
-        const T checkAndGetNumber(int i, T def) {
+        const T checkAndGetNumber(int i = 2, T def = 0) {
             if (lua_type(L, i) == LUA_TNUMBER)
                 return getNumber<T>(i);
             if(lua_type(L,i) == LUA_TNIL)
@@ -171,13 +194,13 @@ namespace LUA {
             return def;
         }
 
-        const bool getBoolean(int i) {
+        const bool getBoolean(int i = -1) {
             luaL_checktype(L, i, LUA_TBOOLEAN);
             bool res = lua_toboolean(L, i);
             lua_remove(L, i);
             return res;
         }
-        const bool checkAndGetBoolean(int i, int def) {
+        const bool checkAndGetBoolean(int i = 2, int def = false) {
             if ((lua_type(L, i) == LUA_TBOOLEAN))
                 return getBoolean(i);
             if(lua_type(L,i) == LUA_TNIL)
@@ -185,7 +208,7 @@ namespace LUA {
             return def;
         }
 
-        const String getString(int i) {
+        const String getString(int i = -1) {
             size_t len;
             const char *s = luaL_checklstring(L, i, &len);
             CharPointer_UTF8 cp(s);
@@ -194,7 +217,7 @@ namespace LUA {
             return str;
             //return String(s, len);
         }
-        const String checkAndGetString(int i, String def) {
+        const String checkAndGetString(int i = 2, String def = String::empty) {
             if (lua_type(L, i) == LUA_TSTRING)
                 return getString(i);
             if(lua_type(L,i) == LUA_TNIL)
@@ -202,7 +225,7 @@ namespace LUA {
             return def;
         }
 
-        const Array<var> getList(int i) {
+        const Array<var> getList(int i = -1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             Array<var> res;
@@ -237,7 +260,7 @@ namespace LUA {
         }
 
         template<class T>
-        const Array<T> getList(int i) {
+        const Array<T> getList(int i = -1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             Array<T> res;
@@ -251,34 +274,8 @@ namespace LUA {
             return res;
         }
 
-        template<class T, class U>
-        const Array<U*> getObjectList(int i) {
-            i = (i<0) ? lua_gettop(L) - (i+1) : i;
-            luaL_checktype(L, i, LUA_TTABLE);
-            int n = lua_objlen(L, i);
-            Array<U*> res;
-
-            for (int ind=1;ind<=n;++ind) {
-                U *comp;
-                lua_rawgeti(L, i, ind);
-                // to emulate nil object, use a string
-                if ( lua_type(L, -1) == LUA_TSTRING ) { // any string will do
-                    comp = nullptr;
-                    lua_pop(L,1);
-                }
-                else
-                    comp = from_luce<T,U>();
-                res.add( comp );
-            }
-            lua_remove(L,i);
-            return res;
-        }
-        const Array<Component*> getComponentList(int i) {
-            return getObjectList<LComponent, Component>(i);
-        }
-
         template<class T>
-        const juce::Rectangle<T> getRectangle(int i) {
+        const juce::Rectangle<T> getRectangle(int i = -1) {
             luaL_checktype(L, i, LUA_TTABLE);
             i = (i<0) ? lua_gettop(L)-(i+1) : i;
             if ( lua_getmetatable(L, i) > 0 ) {
@@ -319,12 +316,12 @@ namespace LUA {
 
             return { x, y, w, h };
         }
-        const juce::Rectangle<int> getRectangle(int i) {
+        const juce::Rectangle<int> getRectangle(int i = -1) {
             return getRectangle<int>(i);
         }
 
         template<class T>
-        const juce::Line<T> getLine(int i) {
+        const juce::Line<T> getLine(int i = -1) {
             luaL_checktype(L, i, LUA_TTABLE);
             i = (i<0) ? lua_gettop(L)-(i+1) : i;
             lua_getmetatable(L, i);
@@ -361,13 +358,13 @@ namespace LUA {
 
             return { x, y, x1, y1 };
         }
-        const juce::Line<int> getLine(int i) {
+        const juce::Line<int> getLine(int i = -1) {
             return getLine<int>(i);
         }
 
 
         template<class T>
-        const juce::Point<T> getPoint(int i) {
+        const juce::Point<T> getPoint(int i = -1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             lua_rawgeti(L, -1, 1);
@@ -378,12 +375,12 @@ namespace LUA {
             lua_remove(L,i);
             return { x, y };
         }
-        const juce::Point<int> getPoint(int i) {
+        const juce::Point<int> getPoint(int i = -1) {
             return getPoint<int>(i);
         }
 
         template<class T>
-        const juce::Range<T> getRange(int i) {
+        const juce::Range<T> getRange(int i = -1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
             lua_rawgeti(L, -1, 1);
@@ -394,11 +391,11 @@ namespace LUA {
             lua_remove(L,i);
             return { x, y };
         }
-        const juce::Range<int> getRange(int i) {
+        const juce::Range<int> getRange(int i = -1) {
             return getRange<int>(i);
         }
 
-        const juce::SparseSet<int> getSparseSet(int i) {
+        const juce::SparseSet<int> getSparseSet(int i = -1) {
             SparseSet<int> s;
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L, i);
@@ -417,7 +414,7 @@ namespace LUA {
             return s;
         }
 
-        const std::list<var> getStdList(int i) {
+        const std::list<var> getStdList(int i = -1) {
             luaL_checktype(L, i, LUA_TTABLE);
             lua_pushvalue(L,i);
             std::list<var> res;
@@ -452,44 +449,46 @@ namespace LUA {
         }
 
         template<class T>
-        T* toUserdata(int i) {
+        T* toUserdata(int i = -1) {
             T* res = Luna<T>::check(L,i);
             lua_remove(L,1);
             return res;
         }
 
         template<class T>
-        T* to_juce(int i) {
+        T* to_juce(int i = -1) {
             T* res = Luna<T>::to_juce(L, i);
             lua_remove(L,i);
             return res;
         }
 
         template<class T>
-        T* raw_cast(int i) {
+        T* raw_cast(int i = -1) {
             luaL_checktype(L, i, LUA_TUSERDATA);
             T* res = static_cast<T*>(lua_touserdata(L, i));
             lua_remove(L,i);
             return res;
         }
 
-        template<class T, class U>
-        U* from_luce(int i) {
+        template<class T, class U=T>
+        U* from_luce(int i = -1) {
             // TODO: use check, meaning -- refactor luna5 first
-            /*
-            T* res = Luna<T>::check(L,i);
-            lua_remove(L,i);
-            return dynamic_cast<U*>(res);
-            */
+            //T* res = Luna<T>::check(L,i);
+            //lua_remove(L,i);
+            //return dynamic_cast<U*>(res);
             //luaL_checktype(L, i, LUA_TTABLE);
             if ( lua_type(L,i) != LUA_TTABLE )
-                LUCE::luce_error("from_luce: given object is not a valid Luce object.");
+                //LUCE::luce_error("from_luce: given object is not a valid Luce object.");
+                throwError("from_luce: given object is not a valid Luce object.");
 
             lua_getfield(L, i, "__self");
             if ( lua_isnil(L, -1) ) {
-                LUCE::luce_error("from_luce: given object is not a valid Luce object: can't find __self.");
+                //LUCE::luce_error("from_luce: given object is not a valid Luce object: can't find __self.");
+                throwError("from_luce: given object is not a valid Luce object: can't find __self.");
                 return nullptr;
             }
+            // ???? et si l'objet était détruit par C++ ? il faudrait peut-être incrémenter les références
+            // mais si l'objet n'est pas détruit par C++, il ne le sera jamais !...
             T **obj = static_cast<T**>(lua_touserdata(L, -1));
 
             lua_remove(L, i); // object
@@ -500,7 +499,7 @@ namespace LUA {
             //return *obj;
         }
 
-        template<class T, class U>
+        template<class T, class U = T>
         int returnUserdata(const U* udata) {
             if ( udata ) {
                 const T *ldata = static_cast<const T*>( udata );
@@ -569,8 +568,63 @@ namespace LUA {
         template<class T, class U = T>
         int storeAndReturnUserdata(U* udata) {
             WeakReference<LSelfKill> ref = dynamic_cast<LSelfKill*>(udata);
-            LUA::store( (intptr_t)udata, ref );
+            LUA_COMMON::store( (intptr_t)udata, ref );
             return returnUserdata<T, U>(udata);
+        }
+
+        // as for Component
+        typedef int(*constructor_t)(Component* udata);
+        typedef std::map<String, constructor_t> types_t;
+        types_t types, testtypes;
+
+        template<class T>
+        int luacast(Component* udata) { return returnUserdata<T,Component>(udata); }
+
+        template<class T>
+        int testcast(Component* udata) {
+            return( dynamic_cast<T*>(udata) != nullptr );
+        }
+
+        template<class T>
+        void register_class(String const& n) {
+            types.insert( std::make_pair(n, &luacast<T>));
+            testtypes.insert( std::make_pair(n, &testcast<T>));
+        }
+        
+        int casttype(String const& n, Component* udata) {
+            types_t::iterator i = types.find(n);
+            if( i==types.end() ) return 0;
+            return i->second(udata);
+        }
+
+        int testtype(String const& n, Component* udata) {
+            types_t::iterator i = testtypes.find(n);
+            if( i==testtypes.end() ) return 0;
+            return i->second(udata);
+        }
+
+        template<class T>
+        T luaL_getnum(const char *t, int i = -1);
+
+        // from LBase light user data
+        typedef int(*constructor_unlight_t)(void* udata);
+        typedef std::map<String, constructor_unlight_t> types_unlight_t;
+        types_unlight_t types_unlight;
+
+        template<class T, class U = T>
+        int luacast_unlight(void* udata) {
+            return returnUserdata<T,U>(static_cast<U*>(udata));
+        }
+
+        template<class T, class U = T>
+        void register_class_unlight(String const& n) {
+            types_unlight.insert( std::make_pair("L"+n, &luacast_unlight<T,U>) );
+        }
+        
+        int casttype_unlight(String const& n, void* udata) {
+            types_unlight_t::iterator i = types_unlight.find(n);
+            if( i==types_unlight.end() ) return 0;
+            return i->second(udata);
         }
 
         int returnBoolean(bool val) {
@@ -600,7 +654,7 @@ namespace LUA {
             return 1;
         }
 
-        int TODO_OBJECT(const String& tmpl, const String& msg) {
+        int TODO_OBJECT(const String& tmpl, const String& msg = "Not yet implemented: ") {
             throwError((msg + tmpl).toRawUTF8());
             return 0;
         }
@@ -667,7 +721,8 @@ namespace LUA {
             locked.add(ref);
         }
 
-        const int call_cb( const LBase* key, const char *name, int nb_ret, const std::list<var>& args ) {
+        const int call_cb( const LBase* key, const char *name, int nb_ret = 0,
+                                                                const std::list<var>& args = std::list<var>() ) {
             jassert( L != nullptr );
             if ( L == nullptr ) {
                 std::cout << "No lua state found !" << std::endl;
@@ -703,7 +758,12 @@ namespace LUA {
                 else if ( it.isObject() ) {
                     LRefBase* lr = ((LRefBase*)it.getObject());
                     String type = lr->getType();
-                    if ( type == "MouseEvent" || type == "LMouseEvent" ) {
+                    if( type == "index" ) {
+                        int idx = lr->getIndex();
+                        lua_pushvalue(L, idx);
+                        lua_remove(L, idx);
+                        --func_index;
+                    } else if ( type == "MouseEvent" || type == "LMouseEvent" ) {
                         //returnUserdata<LMouseEvent, MouseEvent>( (MouseEvent*)lr->getMe() );
                         returnUserdata<LMouseEvent, MouseEvent>( static_cast<const MouseEvent*>(lr->getMe()) );
 
@@ -728,6 +788,11 @@ namespace LUA {
 
                     } else if ( type == "Colour" ) {
                         returnUserdata<LColour, Colour>( static_cast<const LColour*>(lr->getMe()) );
+
+                    #if LUCE_AUDIO
+                    } else if ( type == "AudioSampleBuffer" ) {
+                        returnUserdata<LAudioSampleBuffer>( (LAudioSampleBuffer*)lr->getMe() );
+                    #endif
 
                     } else if ( type == SELF ) {
                         // UNTESTED
@@ -788,7 +853,7 @@ namespace LUA {
             return err;
         }
 
-        const char* lua_getnumtype(int i) {
+        const char* lua_getnumtype(int i = -1) {
             if (lua_isnumber(L, i)) return "int";
             else if (!lua_istable(L, i)) return NULL;
             lua_getfield(L, i, "__type");
@@ -810,16 +875,44 @@ namespace LUA {
             return n;
         }
 
-        bool isoftype(const char *t, int i) {
-            return lua_getnumtype(i) == t;
+        template<class T, class U = T>
+        const Array<U*> getObjectList(int i = -1) {
+            i = (i<0) ? lua_gettop(L) - (i+1) : i;
+            luaL_checktype(L, i, LUA_TTABLE);
+            int n = lua_objlen(L, i);
+            Array<U*> res;
+
+            for (int ind=1;ind<=n;++ind) {
+                U *comp;
+                lua_rawgeti(L, i, ind);
+                // to emulate nil object, use a string
+                if ( lua_type(L, -1) == LUA_TSTRING ) { // any string will do
+                    comp = nullptr;
+                    lua_pop(L,1);
+                }
+                else
+                    comp = LUA::from_luce<T,U>();
+                res.add( comp );
+            }
+            lua_remove(L,i);
+            return res;
         }
-        #define lua_isoftype(t,i) isoftype(#t, i)
-        #define cn_1(p)   luaL_getlnumber<p>( #p )
-        #define cn_2(p,i) luaL_getlnumber<p>( #p, i )
-        #define cn_sel(x,p,i,FUNC, ...) FUNC
-        #define luaL_checknum(...) cn_sel(,##__VA_ARGS__, cn_2(__VA_ARGS__), cn_1(__VA_ARGS__),)
+        const Array<Component*> getComponentList(int i = -1) {
+            return getObjectList<LComponent, Component>(i);
+        }
+
+        //bool isoftype(const char *t, int i) {
+        //    return lua_getnumtype(i) == t;
+        //}
+        //#define lua_isoftype(t,i) isoftype(#t, i)
+        //#define cn_1(p)   luaL_getlnumber<p>( #p )
+        //#define cn_2(p,i) luaL_getlnumber<p>( #p, i )
+        //#define cn_sel(x,p,i,FUNC, ...) FUNC
+        //#define luaL_checknum(...) cn_sel(,##__VA_ARGS__, cn_2(__VA_ARGS__), cn_1(__VA_ARGS__),)
 
     }
 }
+#define REGISTER_CLASS(T) LUA::register_class<T>(#T)
+#define REGISTER_LIGHT_CLASS(T) LUA::register_class_unlight<L##T, T>(#T)
 
 #endif // __LUA_O_H
