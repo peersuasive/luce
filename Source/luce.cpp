@@ -81,4 +81,6 @@ namespace luce {
 #endif
 }
 
-//#include "Main.cpp"
+#if JUCE_WINDOWS
+#include "Main.cpp"
+#endif
