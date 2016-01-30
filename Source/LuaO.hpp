@@ -3,7 +3,7 @@
 
 #if defined LUA52 || defined LUA53
 //#define LUA_COMPAT_MODULE
-#ifndef lua_objlen(L,i)
+#ifndef lua_objlen
 #define lua_objlen(L,i)           lua_rawlen(L, (i))
 #endif
 //#define lua_strlen(L,i)           lua_rawlen(L, (i))
