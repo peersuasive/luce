@@ -4,69 +4,63 @@
 # (this disables dependency generation if multiple architectures are set)
 DEPFLAGS := $(if $(word 2, $(TARGET_ARCH)), , -MMD)
 
-CC  = gcc-4.9
-CXX = g++-4.9
-LD  = g++-4.9
-
 ifndef CONFIG
   CONFIG=Release
 endif
 
 ifeq ($(CONFIG),Release)
-  BINDIR := build
-  LIBDIR := build
-  OBJDIR := build/intermediate/Release
-  OUTDIR := build
+	OBJ_CONFIG := Release
+else
+	OBJ_CONFIG := Debug
+endif
+BINDIR := build
+LIBDIR := build
+OBJDIR := build/intermediate/$(OBJ_CONFIG)
+OUTDIR := build
 
-  ifeq ($(TARGET_ARCH),)
-    TARGET_ARCH := -march=native
-  endif
-
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
-  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -O3 -std=c++11 -I/usr/include/lua5.1 -I../../Luce -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -fPIC
-  CXXFLAGS += $(CFLAGS) -std=c++11
-  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt 
-
-  ifneq ($(NOCURL),1)
-  CPPFLAGS += -DJUCE_USE_CURL
-  LDFLAGS += -lcurl
-  endif
-
-  LDFLAGS += -std=c++11 -fPIC -shared
-  LDDEPS :=
-  RESFLAGS :=  -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
-  TARGET := core.so
-  BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
-  CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
+ifeq ($(TARGET_ARCH),)
+  TARGET_ARCH := -march=native
 endif
 
-ifeq ($(CONFIG),Debug)
-  BINDIR := build
-  LIBDIR := build
-  OBJDIR := build/intermediate/Debug
-  OUTDIR := build
-
-  ifeq ($(TARGET_ARCH),)
-    TARGET_ARCH := -march=native
+CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -std=c++11 -I/usr/include/lua5.1 -I../../Luce -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
+ifeq ($(CONFIG),Release)
+	CPPFLAGS += -D "NDEBUG=1"
+	TARGET := core.so
+  ifeq ($(SMALL),1)
+  	CFLAGS += -Os
+  else
+  	CFLAGS += -O3
   endif
-
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
-  CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -O0 -std=c++11 -I/usr/include/lua5.1 -I../../Luce -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -fPIC
-  CXXFLAGS += $(CFLAGS) -std=c++11
-  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt
-
-  ifneq ($(NOCURL),1)
-  CPPFLAGS += -DJUCE_USE_CURL
-  LDFLAGS += -lcurl
-  endif
-
-  LDFLAGS += -std=c++11 -fPIC -shared
-  LDDEPS :=
-  RESFLAGS :=  -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
-  TARGET := core_d.so
-  BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
-  CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
+else
+	CPPFLAGS += -D "DEBUG=1" -D "_DEBUG=1" 
+	CFLAGS += -g -ggdb -O0
+	TARGET := core_d.so
 endif
+CFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+ifeq ($(AUDIO),1)
+  CFLAGS  += -DLUCE_AUDIO=1
+  ifeq ($(MP3),1)
+  	CFLAGS += -DJUCE_USE_MP3AUDIOFORMAT
+  endif
+  LDFLAGS += -lasound
+endif
+
+CXXFLAGS += $(CFLAGS) -std=c++11
+LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -fvisibility-inlines-hidden
+LDFLAGS += -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama
+LDFLAGS += -ldl -lfreetype -lpthread -lrt
+
+ifneq ($(NOCURL),1)
+CPPFLAGS += -DJUCE_USE_CURL
+LDFLAGS += -lcurl
+endif
+
+LDFLAGS += -std=c++11 -fPIC -shared
+LDDEPS :=
+RESFLAGS :=  -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
+CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
 
 OBJECTS := \
   $(OBJDIR)/luce_core_4af9a860.o \
@@ -76,8 +70,10 @@ OBJECTS := \
   $(OBJDIR)/juce_graphics_c8f1e7a4.o \
   $(OBJDIR)/juce_gui_basics_a630dd20.o \
   $(OBJDIR)/juce_gui_extra_7767d6a8.o \
-  $(OBJDIR)/juce_opengl_c7e3506c.o \
-  $(OBJDIR)/luce_3c70ee94.o \
+  $(OBJDIR)/juce_opengl_c7e3506c.o
+
+OBJECTS += $(OBJDIR)/luce_3c70ee94.o
+OBJECTS += $(OBJDIR)/luce_main.o
 
 .PHONY: clean
 
@@ -103,9 +99,19 @@ $(OBJDIR)/luce_core_4af9a860.o: ../../Luce/modules/luce_core/luce_core.cpp
 	@echo "Compiling luce_core.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
+$(OBJDIR)/luce_core_audio.o: ../../Luce/modules/luce_audio/luce_audio.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling luce_core_audio.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/luce_3c70ee94.o: ../../Source/luce.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling luce.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/luce_main.o: ../../Source/Main.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling luce_main.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/juce_core_aff681cc.o: ../../JuceLibraryCode/modules/juce_core/juce_core.cpp
