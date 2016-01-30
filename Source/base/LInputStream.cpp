@@ -187,9 +187,8 @@ int LInputStream::skipNextBytes(lua_State*) {
 }
 
 int LInputStream::read (void* destBuffer, int maxBytesToRead) {
-    if(child) {
-        child->read(destBuffer, maxBytesToRead);
-    }else return 0;
+    if(child) child->read(destBuffer, maxBytesToRead);
+    return 0;
 }
 int LInputStream::read ( lua_State *L ) {
     if(child) {
