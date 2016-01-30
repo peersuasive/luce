@@ -287,8 +287,10 @@ int LListBox::paintListBoxItem(lua_State*) {
 }
 
 int LListBox::getNumRows() {
-    callback("getNumRows", 1);
-    return LUA::checkAndGetNumber();
+    if(hasCallback("getNumRows")) {
+        callback("getNumRows", 1);
+        return LUA::checkAndGetNumber();
+    } else return 0;
 }
 int LListBox::getNumRows(lua_State*) {
     set("getNumRows");
