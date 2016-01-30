@@ -102,29 +102,15 @@ public:
     static const Luna<LTreeViewItem>::Enum enums[];
 
 private:
-    struct LComparator : private LBase {
-        LComparator(lua_State* L) : LBase(L) {}
-        const int compareElements( TreeViewItem *first, TreeViewItem *second ) {
-            if (hasCallback("compareElements")) {
-                if ( callback("compareElements", 1, 
-                            { new LRefBase("TreeViewItem", first), 
-                              new LRefBase("TreeViewItem", second) } ) ) {
-                    return LUA::getNumber();
-                }
-                return 0;
-            }
-            else {
-                String a = first->getUniqueName();
-                String b = second->getUniqueName();
-                return a.compareNatural( b );
-            }
-        }
-        int compareElements(lua_State*) {
-            set("compareElements");
-            return 0;
-        }
+    struct LComparator
+        : private LBase
+    {
+        LComparator(lua_State*);
+        const int compareElements( TreeViewItem *first, TreeViewItem *second );
+        int compareElements(lua_State*);
+    private:
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LComparator)
     };
-
     LComparator comparator;
 
     //==============================================================================

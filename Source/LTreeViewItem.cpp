@@ -84,6 +84,28 @@ const Luna<LTreeViewItem>::StaticType LTreeViewItem::statics[] = {
     {0,0}
 };
 
+LTreeViewItem::LComparator::LComparator(lua_State* L) : LBase(L) {}
+const int LTreeViewItem::LComparator::compareElements( TreeViewItem *first, TreeViewItem *second ) {
+    if (hasCallback("compareElements")) {
+        if ( callback("compareElements", 1, 
+                    { new LRefBase("TreeViewItem", first), 
+                    new LRefBase("TreeViewItem", second) } ) ) {
+            return LUA::getNumber();
+        }
+        return 0;
+    }
+    else {
+        String a = first->getUniqueName();
+        String b = second->getUniqueName();
+        return a.compareNatural( b );
+    }
+}
+int LTreeViewItem::LComparator::compareElements(lua_State*) {
+    set("compareElements");
+    return 0;
+}
+
+
 LTreeViewItem::LTreeViewItem(lua_State *L)
     : LBase(L, "LTreeViewItem", false),
       TreeViewItem( /* TODO: add args */ ),
