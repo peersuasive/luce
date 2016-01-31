@@ -39,7 +39,7 @@ Provides the following methods and parameters:
     @license GPLv3
     @copyright 
 
-(c) 2014, Peersuasive Technologies
+(c) 2014-2016, Peersuasive Technologies
 
 ------------------------------------------------------------------------------]]
 
@@ -145,6 +145,12 @@ local function new(name, prog, ...)
     -- look in $HOME/.luce for classes and modules first
     -- NOTE: should add ./ too
     if not(OS.win)then
+    --if(OS.osx)then
+    --    args = args or {}
+    --    table.insert(args, 1, prog)
+    --    prog = "LuceApp"
+    --    self.prog = "LuceApp"
+    --end
     local rel_path = prog:match("(.*)/[^/]+$") or "."
     local luce_lib = rel_path.."/lib/?.so;"..rel_path.."/lib/?/?.so;"
     luce_lib       = luce_lib..HOME.."/.luce/lib/?.so;"..HOME.."/.luce/lib/?/?.so;" -- "~/.luce/lib/?.so;~/.luce/lib/?/?.so"
@@ -159,11 +165,19 @@ local function new(name, prog, ...)
     local luce_cls = rel_path.."/classes/?.lua;"..rel_path.."/classes/?/?.lua;"
     luce_cls       = luce_cls..rel_path.."/classes/init.lua;"..rel_path.."/classes/?/init.lua;"
     luce_cls       = luce_cls.."./classes/?.lua;./classes/?/?.lua;./classes/init.lua;./classes/?/init.lua;"
+    if(OS.osx)then
+        luce_cls   = "../Resources/classes/?.lua;../Resources/classes/?/?.lua;../Resources/classes/init.lua;../Resources/classes/?/init.lua;"..luce_cls
+        luce_lib   = "../Resources/lib/?.so;../Resources/lib/?.dylib;../Resources/lib/?/?.so;../Resources/lib/?/?.dylib;"..luce_lib
+    end
     package.path   = luce_lua..package.path
     package.path   = luce_cls..package.path
     package.cpath  = luce_lib..package.cpath
 
-    self.pre_path  = rel_path
+    if(OS.osx)then
+        self.pre_path  = "../Resources"
+    else
+        self.pre_path  = rel_path
+    end
     else -- windows... is p* us off
     local rel_path = prog:match("(.*)\\[^\\]+$") or "."
     local luce_lib = rel_path.."\\lib\\?.dll;"..rel_path.."\\lib\\?\\?.dll;"

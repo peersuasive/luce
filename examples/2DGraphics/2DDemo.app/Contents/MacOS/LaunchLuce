@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+here=$(dirname "$0")
+cd "$here"
+res="../Resources"
+export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+LUA=$(which luajit||which lua)
+export LUA_PATH="$(LUA -e 'print(package.path)');$res/?.lua;$res/?/init.lua"
+$LUA app.lua
+exit 0
