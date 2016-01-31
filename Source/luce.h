@@ -16,7 +16,7 @@
 #include <fstream>
 
 //#include "JuceHeader.h"
-#include "Luce.h"
+#include "LLuce.h"
 
 #if defined LUA52 || defined LUA53
 #define LUA_COMPAT_MODULE
