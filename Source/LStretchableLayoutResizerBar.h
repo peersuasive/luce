@@ -20,6 +20,9 @@ class LStretchableLayoutResizerBar
 {
 public:
     LStretchableLayoutResizerBar(lua_State*);
+    LStretchableLayoutResizerBar(lua_State*, StretchableLayoutManager*, int idx, bool vertical);
+
+    static int lnew(lua_State*);
     ~LStretchableLayoutResizerBar();
 
     //==============================================================================

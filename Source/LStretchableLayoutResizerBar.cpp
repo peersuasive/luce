@@ -34,13 +34,36 @@ const Luna<LStretchableLayoutResizerBar>::StaticType LStretchableLayoutResizerBa
 
 LStretchableLayoutResizerBar::LStretchableLayoutResizerBar(lua_State *L)
     : LComponent(L, this),
-      StretchableLayoutResizerBar( LUA::from_luce<LStretchableLayoutManager>(2), 
-                                        (int)LUA::getNumber(3), LUA::getBoolean(4) )
+      StretchableLayoutResizerBar(nullptr,0,0)
+{
+    StretchableLayoutResizerBar::setName(myName());
+    REGISTER_CLASS(LStretchableLayoutResizerBar);
+}
+
+
+LStretchableLayoutResizerBar::LStretchableLayoutResizerBar(lua_State *L, StretchableLayoutManager *layout, int idx, bool vertical)
+    : LComponent(L, this),
+      StretchableLayoutResizerBar(layout, idx, vertical)
 {
     StretchableLayoutResizerBar::setName(myName());
     REGISTER_CLASS(LStretchableLayoutResizerBar);
 }
 LStretchableLayoutResizerBar::~LStretchableLayoutResizerBar(){}
+
+int LStretchableLayoutResizerBar::lnew(lua_State *L) {
+    if(lua_gettop(L)>3) {
+        int idx = lua_gettop(L)>4 && lua_type(L,2)==LUA_TSTRING ? 3 : 2; // named component ?
+        ScopedPointer<StretchableLayoutManager> layout( LUA::from_luce<LStretchableLayoutManager>(idx) );
+        int index = LUA::getNumber(idx);
+        bool vertical = LUA::getBoolean(idx);
+        return LUA::storeAndReturnUserdata<LStretchableLayoutResizerBar>(
+                new LStretchableLayoutResizerBar(L, layout.release(), index, vertical));
+    } else {
+        LUCE::luce_error("LStretchableLayoutResizerBar: invalid constructor.");
+    }
+    return 0;
+}
+
 
 /////// callbacks
 void LStretchableLayoutResizerBar::hasBeenMoved() {
