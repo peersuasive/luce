@@ -72,7 +72,8 @@ LScrollBar::LScrollBar(lua_State *L, bool isVertical)
 LScrollBar::~LScrollBar() {}
 
 int LScrollBar::lnew(lua_State* L) {
-    return LUA::storeAndReturnUserdata<LScrollBar>( new LScrollBar(L, LUA::getBoolean(2)));
+    int idx = lua_gettop(L)>2 && lua_type(L,2)==LUA_TSTRING ? 3 : 2; // named component ?
+    return LUA::storeAndReturnUserdata<LScrollBar>( new LScrollBar(L, LUA::getBoolean(idx)));
 }
 
 void LScrollBar::mouseMove(const MouseEvent& e) {
