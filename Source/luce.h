@@ -20,12 +20,23 @@
 
 #if defined LUA52 || defined LUA53
 #define LUA_COMPAT_MODULE
+#endif
+
+#include <lua.hpp>
+
+#if defined LUA52 || defined LUA53
+#ifndef lua_objlen
+#define lua_objlen(L,i)           lua_rawlen(L, (i))
+#endif
+//#define lua_strlen(L,i)           lua_rawlen(L, (i))
+//#define lua_equal(L,idx1,idx2)    lua_compare(L,(idx1),(idx2),LUA_OPEQ)
+//#define lua_lessthan(L,idx1,idx2) lua_compare(L,(idx1),(idx2),LUA_OPLT)
+//#define luaL_getn(L,i)            luaL_len(L,(i))
 #else
 #define lua_pushglobaltable(L) \
     lua_pushvalue(L, LUA_GLOBALSINDEX);
 #endif
 
-#include <lua.hpp>
 namespace luce {
 
 #include "LSelfKill.h"

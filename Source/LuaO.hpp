@@ -1,16 +1,16 @@
 #ifndef __LUA_O_H
 #define __LUA_O_H
 
-#if defined LUA52 || defined LUA53
-//#define LUA_COMPAT_MODULE
-#ifndef lua_objlen
-#define lua_objlen(L,i)           lua_rawlen(L, (i))
-#endif
-//#define lua_strlen(L,i)           lua_rawlen(L, (i))
-//#define lua_equal(L,idx1,idx2)    lua_compare(L,(idx1),(idx2),LUA_OPEQ)
-//#define lua_lessthan(L,idx1,idx2) lua_compare(L,(idx1),(idx2),LUA_OPLT)
-//#define luaL_getn(L,i)            luaL_len(L,(i))
-#endif
+//#if defined LUA52 || defined LUA53
+////#define LUA_COMPAT_MODULE
+//#ifndef lua_objlen
+//#define lua_objlen(L,i)           lua_rawlen(L, (i))
+//#endif
+////#define lua_strlen(L,i)           lua_rawlen(L, (i))
+////#define lua_equal(L,idx1,idx2)    lua_compare(L,(idx1),(idx2),LUA_OPEQ)
+////#define lua_lessthan(L,idx1,idx2) lua_compare(L,(idx1),(idx2),LUA_OPLT)
+////#define luaL_getn(L,i)            luaL_len(L,(i))
+//#endif
 
 namespace LUA {
     extern lua_State LUCE_API *L;
