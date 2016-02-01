@@ -364,6 +364,7 @@ l_class(Time);
 l_class(BigInteger);
 l_class(Random);
 l_class(URL);
+l_class(ConnectionPool);
 #if LUCE_AUDIO
 l_class(AudioAppComponent);
 #endif
@@ -434,6 +435,7 @@ static const luaL_Reg luce_lib [] = {
     d(BigInteger),
     d(Random),
     d(URL),
+    d(ConnectionPool),
     #if LUCE_AUDIO
     d(AudioAppComponent),
     #endif

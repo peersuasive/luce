@@ -9,6 +9,7 @@ namespace luce {
 #include "base/LRandom.cpp"
 #include "base/LInputStream.cpp"
 #include "base/LURL.cpp"
+#include "base/LConnectionPool.cpp"
 
 #include "LLookAndFeel.cpp"
 #include "MyLookAndFeel.cpp"

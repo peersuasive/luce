@@ -52,6 +52,7 @@ namespace luce {
 #include "base/LRandom.h"
 #include "base/LInputStream.h"
 #include "base/LURL.h"
+#include "base/LConnectionPool.h"
 
 #include "LLookAndFeel.h"
 #include "MyLookAndFeel.h"
