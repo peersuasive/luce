@@ -9,7 +9,8 @@ local function MainWindow(args)
     local wsize     = {240,120}
     local mc = luce:MainComponent("MainComponent")
     local dw = luce:Document(title)
-
+    local bgText = "Drop files here!"
+    local bgFontSize = 24.0
     local dropTarget = luce:ListBox("dropTarget")
     dropTarget.bounds = {0,0,240,120}
 
@@ -22,8 +23,12 @@ local function MainWindow(args)
         return #files>0
     end)
     dropTarget:filesDropped(function(files, x, y)
-        print"DROPPED FILES:"
-        for i,f in next,files do print(i, f) end
+        local dropped = {}
+        bgFontSize = 12.0
+        for _,f in next,files do
+            dropped[#dropped+1] = f:match('/([^/]+)$')
+        end
+        bgText = table.concat(dropped, ", ")
         dropTarget:setColour( dropTarget.ColourIds.backgroundColourId, bg )
     end)
     dropTarget:fileDragEnter(function(files, x, y)
@@ -38,11 +43,11 @@ local function MainWindow(args)
     app:initialised(function()
     end)
 
-    local bgText = luce:Colour(Colours.black):withAlpha(0.5)
+    local bgTextColour = luce:Colour(Colours.black):withAlpha(0.5)
     mc:paint(function(g)
-        g:setFont(24.0)
-        g:setColour( bgText )
-        g:drawText("Drop a file here!", mc:getLocalBounds(), luce.JustificationType.centred, true);
+        g:setFont(bgFontSize)
+        g:setColour( bgTextColour )
+        g:drawFittedText(bgText, luce:Rectangle(mc:getLocalBounds()):reduced(5), luce.JustificationType.centred, 5);
     end)
 
     --
