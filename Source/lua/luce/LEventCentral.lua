@@ -48,17 +48,7 @@ end
 -- LLIVE
 
 local mt = {
-    broadcast = function(event,...)
-        if not ec[event] then return nil, "Event not registered" end
-        for l in next, ec[event] or {} do
-            if(app.ControlEvent)then
-                app.ControlEvent:attachEvent(l,'default',...)
-            else
-                l(...)
-            end
-        end
-        return true
-    end,
+    broadcast = function()end, -- see definition in constructor
     register = function(event, cb)
         if not("function"==type(cb))then return nil, "Callback not found or not a function" end
         local l = ec[event] or {}
@@ -80,6 +70,25 @@ local mt = {
 }
 local function new()
     app = app or _G.App
+    if(app.ControlEvent)then
+        mt.broadcast = function(event,...)
+            if not ec[event] then return nil, "Event not registered" end
+            for l in next, ec[event] or {} do
+                app.ControlEvent:attachEvent(l,'default',...)
+            end
+            return true
+
+        end
+    else
+        mt.broadcast = function(event,...)
+            if not ec[event] then return nil, "Event not registered" end
+            for l in next, ec[event] or {} do
+                l(...)
+            end
+            return true
+        end
+    end
+
     return setmetatable({}, {
         __index = mt,
         __self = className,

@@ -64,8 +64,20 @@ mt.__index = mt
 -- where fn is the function originally attached to the event
 -- name is optional and links the event with the name, to help tracing errors, for example
 local events = {}
-local ControlEvents = function()
+local LControlEvents = function(CE)
+    -- En C, je pourrais lancer le message avec la pile L dupliquée dans un lua_newthread et simplement
+    -- dépiler à la réception de l'événement !...
+    -- on duplique autant de fois qu'il y a d'événements
+    -- et on s'évite de passer pas le C++...
     local events = {}
+    local with_ce = CE
+    local CE = CE or {
+        attachEvent = function(_,fn, t) events[fn] = t end,
+        detachEvent = function(_,fn) events[fn] = nil end,
+        start = function()end,
+        stop = function()end,
+    }
+    --CE:start()
     return {
         attachEvent = function(self,fn,opts,...)
             local opts = opts or {}
@@ -79,12 +91,12 @@ local ControlEvents = function()
             else
                 cb = function()return fn(args)end
             end
-            events[fn] = {cb,name}
+            CE:attachEvent(fn, {cb,name})
         end,
         detachEvent = function(self,fn)
-            events[fn] = nil
+            CE:detachEvent(fn)
         end,
-        run = function(self,...)
+        run = not(with_ce) and function(self,...)
             local results = {}
             for _,ev in next,events do
                 local fn, name = unpack(ev)
@@ -96,6 +108,7 @@ local ControlEvents = function()
             end
             return #results>0 and results or nil
         end,
+        stop = function()CE:stop()end,
     }
 end
 
@@ -345,9 +358,14 @@ local function new(name, prog, ...)
             cb, ms = wants_control, 0
         end
         if(cb and with_ce)then
-            local ce, fn = ControlEvents(), cb
+            --local ce, fn = LControlEvents(luce.JUCEApplication:createControlEvents()), cb
+            local ce, fn = LControlEvents(), cb
             self.ControlEvent = ce
-            cb = function()ce:run()return fn()end
+            if(ce.run)then
+                cb = function()ce:run()return fn()end
+            end
+        else
+            --self.ControlEvent = LControlEvents(luce.JUCEApplication:createControlEvents()), cb
         end
 
         if(LUCE_LIVE_CODING)then
