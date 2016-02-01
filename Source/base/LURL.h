@@ -59,7 +59,7 @@ public:
     int getDomain(lua_State*);
 
     //== callbacks =================================================================
-    static bool progressCallback(void *context, int byteSend, int totalBytes);
+    static bool progressCallback(void *context, int byteSent, int totalBytes);
     int progress(lua_State*);
 
     //==============================================================================

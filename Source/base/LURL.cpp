@@ -209,10 +209,10 @@ int LURL::withParameters ( lua_State *L ) {
     ));
 }
 
-bool LURL::progressCallback(void *context, int byteSend, int totalBytes) {
+bool LURL::progressCallback(void *context, int byteSent, int totalBytes) {
     LURL *me = (LURL*)context;
-    if(me->hasCallback("progress")) {
-        me->callback("progress", 1);
+    if(me && me->hasCallback("progress")) {
+        me->callback("progress", 1, {byteSent, totalBytes});
         return LUA::checkAndGetBoolean(-1, true);
     }else return true;
 }
@@ -232,9 +232,10 @@ int LURL::createInputStream ( lua_State *L ) {
     String httpRequestCmd = String();
     if(lua_gettop(L)>1) {
         doPostLikeRequest = LUA::checkAndGetBoolean(2,false);
-        if(lua_type(L,2)==LUA_TFUNCTION && !hasCallback("progress")) {
-            set("progress", LUA_TFUNCTION, 2);
-            lua_remove(L,2);
+        if(lua_type(L,2)==LUA_TFUNCTION) {
+            if(!hasCallback("progress"))
+                set("progress", LUA_TFUNCTION, 2);
+            else lua_remove(L,2);
         }
         extraHeaders = LUA::checkAndGetString(2, String());
         numRedirectsToFollow = LUA::checkAndGetNumber(2, 5);

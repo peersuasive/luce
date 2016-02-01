@@ -62,6 +62,7 @@ LInputStream::LInputStream(lua_State *L)
     : LBase(L, "LInputStream", true),
       InputStream()
 {
+    child = this;
 }
 
 LInputStream::LInputStream(lua_State *L, InputStream *child_)
@@ -80,27 +81,39 @@ LInputStream::~LInputStream() {
 
 /////// getters
 int LInputStream::getNumBytesRemaining ( lua_State* ) {
-    return LUA::returnNumber( InputStream::getNumBytesRemaining() );
+    if(child)
+        return LUA::returnNumber( child->getNumBytesRemaining() );
+    else return 0;
 }
 
 int LInputStream::readShort ( lua_State *L ) {
-    return LUA::returnNumber( InputStream::readShort() );
+    if(child)
+        return LUA::returnNumber( child->readShort() );
+    else return 0;
 }
 
 int LInputStream::readInt64BigEndian ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readInt64BigEndian() );
+    if(child)
+        return LUA::returnNumber( child->readInt64BigEndian() );
+    else return 0;
 }
 
 int LInputStream::readInt ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readInt() );
+    if(child)
+        return LUA::returnNumber( child->readInt() );
+    else return 0;
 }
 
 int LInputStream::readCompressedInt ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readCompressedInt() );
+    if(child)
+       return LUA::returnNumber( child->readCompressedInt() );
+    else return 0;
 }
 
 int LInputStream::readShortBigEndian ( lua_State *L ) {
-    return LUA::returnNumber( InputStream::readShortBigEndian() );
+    if(child)
+       return LUA::returnNumber( child->readShortBigEndian() );
+    else return 0;
 }
 
 int64 LInputStream::getTotalLength() {
@@ -112,15 +125,21 @@ int LInputStream::getTotalLength ( lua_State* ) {
 }
 
 int LInputStream::readDoubleBigEndian ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readDoubleBigEndian() );
+    if(child)
+       return LUA::returnNumber( child->readDoubleBigEndian() );
+    else return 0;
 }
 
 int LInputStream::readFloat ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readFloat() );
+    if(child)
+       return LUA::returnNumber( child->readFloat() );
+    else return 0;
 }
 
 int LInputStream::readByte ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readByte() );
+    if(child)
+       return LUA::returnNumber( child->readByte() );
+    else return 0;
 }
 
 int64 LInputStream::getPosition() {
@@ -128,7 +147,9 @@ int64 LInputStream::getPosition() {
     else return 0;
 }
 int LInputStream::getPosition ( lua_State* ) {
-    return LUA::returnNumber( getPosition() );
+    if(child)
+        return LUA::returnNumber( getPosition() );
+    else return 0;
 }
 
 bool LInputStream::setPosition (int64 newPosition) {
@@ -136,8 +157,10 @@ bool LInputStream::setPosition (int64 newPosition) {
     else return false;
 }
 int LInputStream::setPosition ( lua_State* ) {
-    int64 newPosition = LUA::getNumber<int64>(2);
-    return LUA::returnBoolean( setPosition( newPosition ) );
+    if(child) {
+        int64 newPosition = LUA::getNumber<int64>(2);
+        return LUA::returnBoolean( setPosition( newPosition ) );
+    } else return 0;
 }
 
 bool LInputStream::isExhausted() {
@@ -145,50 +168,71 @@ bool LInputStream::isExhausted() {
     else return true;
 }
 int LInputStream::isExhausted ( lua_State* ) {
-    return LUA::returnBoolean( isExhausted() );
+    if(child)
+        return LUA::returnBoolean( child->isExhausted() );
+    else return 0;
 }
 
 int LInputStream::readEntireStreamAsString ( lua_State* ) {
-    return LUA::returnString( InputStream::readEntireStreamAsString() );
+    if(child)
+       return LUA::returnString( child->readEntireStreamAsString() );
+    else return 0;
 }
 
 int LInputStream::readString ( lua_State* ) {
-    return LUA::returnString( InputStream::readString() );
+    if(child)
+       return LUA::returnString( child->readString() );
+    else return 0;
 }
 
 int LInputStream::readDouble ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readDouble() );
+    if(child)
+       return LUA::returnNumber( child->readDouble() );
+    else return 0;
 }
 
 int LInputStream::readNextLine ( lua_State* ) {
-    return LUA::returnString( InputStream::readNextLine() );
+    if(child)
+       return LUA::returnString( child->readNextLine() );
+    else return 0;
 }
 
 int LInputStream::readIntBigEndian ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readIntBigEndian() );
+    if(child)
+       return LUA::returnNumber( child->readIntBigEndian() );
+    else return 0;
 }
 
 int LInputStream::readBool ( lua_State* ) {
-    return LUA::returnBoolean( InputStream::readBool() );
+    if(child)
+       return LUA::returnBoolean( child->readBool() );
+    else return 0;
 }
 
 int LInputStream::readInt64 ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readInt64() );
+    if(child)
+       return LUA::returnNumber( child->readInt64() );
+    else return 0;
 }
 
 int LInputStream::readFloatBigEndian ( lua_State* ) {
-    return LUA::returnNumber( InputStream::readFloatBigEndian() );
+    if(child)
+       return LUA::returnNumber( child->readFloatBigEndian() );
+    else return 0;
 }
 
 int LInputStream::skipNextBytes(lua_State*) {
-    int64 numBytesToSkip = LUA::getNumber<int64>();
-    InputStream::skipNextBytes(numBytesToSkip);
+    if(child) {
+        int64 numBytesToSkip = LUA::getNumber<int64>();
+        child->skipNextBytes(numBytesToSkip);
+    }
     return 0;
 }
 
 int LInputStream::read (void* destBuffer, int maxBytesToRead) {
-    if(child) child->read(destBuffer, maxBytesToRead);
-    return 0;
+    if(child)
+        return child->read(destBuffer, maxBytesToRead);
+    else return 0;
 }
 int LInputStream::read ( lua_State *L ) {
     if(child) {
