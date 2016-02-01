@@ -34,11 +34,11 @@ const Luna<LConnectionPool>::StaticType LConnectionPool::statics[] = {
     {0,0}
 };
 
-LConnectionPool::LConnectionPool(lua_State *_L)
-    : LBase(_L, "LConnectionPool", true),
+LConnectionPool::LConnectionPool(lua_State * L_)
+    : LBase(L_, "LConnectionPool", true),
       Thread("LConnectionPool")
 {
-    L=_L;
+    L=L_;
 }
 
 LConnectionPool::~LConnectionPool() {
