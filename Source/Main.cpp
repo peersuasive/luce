@@ -364,6 +364,9 @@ l_class(Time);
 l_class(BigInteger);
 l_class(Random);
 l_class(URL);
+#if LUCE_AUDIO
+l_class(AudioAppComponent);
+#endif
 
 static const luaL_Reg luce_lib [] = {
     d(JUCEApplication),
@@ -431,6 +434,9 @@ static const luaL_Reg luce_lib [] = {
     d(BigInteger),
     d(Random),
     d(URL),
+    #if LUCE_AUDIO
+    d(AudioAppComponent),
+    #endif
 
     { "start", start },
     { "start_manual", start_manual },

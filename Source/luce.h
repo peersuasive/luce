@@ -121,6 +121,14 @@ namespace luce {
 #include "extra/LFileChooser.h"
 #endif
 
+#if LUCE_AUDIO
+#ifndef JUCE_LINUX
+#undef LUCE_AUDIO
+#else
+#include "luce_audio.h"
+#endif
+#endif
+
 #include "LuaO.hpp"
 #include "LuceO.hpp"
 
