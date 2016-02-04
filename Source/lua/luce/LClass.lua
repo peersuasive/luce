@@ -57,13 +57,17 @@ local new = function(self, ...)
             if not(me.__exists(me,k)) then
                 if(LDEBUG)then
                     --print("NEWINDEX: setting local", k, me.__self)
+                    pcall(rawset,t,k,v)
+                else
+                    rawset(t,k,v)
                 end
-                rawset(t,k,v)
             else
                 if(LDEBUG)then
                     --print("NEWINDEX: setting native", k, me.__self)
+                    pcall(function()me[k] = v end)
+                else
+                    me[k] = v
                 end
-                me[k] = v
             end
             --[[
             if not ( me.__index(me,k)
