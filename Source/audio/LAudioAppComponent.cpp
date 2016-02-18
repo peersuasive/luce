@@ -15,6 +15,7 @@
 
 const char LAudioAppComponent::className[] = "LAudioAppComponent";
 const Luna<LAudioAppComponent>::PropertyType LAudioAppComponent::properties[] = {
+    {"volume", &LAudioAppComponent::getVolume, &LAudioAppComponent::setVolume},
     {0,0}
 };
 const Luna<LAudioAppComponent>::FunctionType LAudioAppComponent::methods[] = {
@@ -24,6 +25,9 @@ const Luna<LAudioAppComponent>::FunctionType LAudioAppComponent::methods[] = {
     method( LAudioAppComponent, getNextAudioBlock ),
     method( LAudioAppComponent, start ),
     method( LAudioAppComponent, stop ),
+    method( LAudioAppComponent, close ),
+    method( LAudioAppComponent, setVolume ),
+    method( LAudioAppComponent, getVolume ),
     {0,0}
 };
 
@@ -32,9 +36,13 @@ const Luna<LAudioAppComponent>::StaticType LAudioAppComponent::statics[] = {
 };
 
 LAudioAppComponent::LAudioAppComponent(lua_State *L)
-    : LComponent(L, this)
+    : LComponent(L, this),
+      audioOpen(false),
+      stopped(true),
+      volume(-1.0)
 {
     Ls = L;
+
     REGISTER_CLASS(LAudioAppComponent);
 }
 
@@ -44,8 +52,9 @@ LAudioAppComponent::~LAudioAppComponent() {
 
 /////// callbacks
 void LAudioAppComponent::prepareToPlay( int samplesPerBlockExpected, double sampleRate ) {
-    if(hasCallback("prepareToPlay"))
+    if(hasCallback("prepareToPlay")) {
         callback("prepareToPlay", 0, {samplesPerBlockExpected, sampleRate});
+    }
 }
 int LAudioAppComponent::prepareToPlay(lua_State*){
     set("prepareToPlay");
@@ -53,47 +62,98 @@ int LAudioAppComponent::prepareToPlay(lua_State*){
 }
 
 void LAudioAppComponent::getNextAudioBlock( const AudioSourceChannelInfo& bufferToFill ) {
-    if(audioSourcePlayer.getCurrentSource()==nullptr) {
+    if(stopped
+            || !audioOpen
+            || !hasCallback("getNextAudioBlock") 
+            || (audioOpen && audioSourcePlayer.getCurrentSource()==nullptr) )
+    {
         bufferToFill.clearActiveBufferRegion();
         return;
     }
-    LAudioSampleBuffer audioBuffer(Ls, *bufferToFill.buffer);
-    callback("getNextAudioBlock", 0, {
-            bufferToFill.startSample,
-            bufferToFill.numSamples,
-            bufferToFill.buffer->getNumChannels(),
-            new LRefBase("AudioSampleBuffer", &audioBuffer),
-    });
+    if(hasCallback("getNextAudioBlock")) {
+        MessageManagerLock mml (Thread::getCurrentThread());
+            if (! mml.lockWasGained()) {
+                DBG("CAN'T GET LOCK");
+                return; // another thread is trying to kill us!
+            }
+        LAudioSampleBuffer audioBuffer(Ls, *bufferToFill.buffer);
+        callback("getNextAudioBlock", 0, {
+                bufferToFill.startSample,
+                bufferToFill.numSamples,
+                bufferToFill.buffer->getNumChannels(),
+                new LRefBase("AudioSampleBuffer", &audioBuffer)
+        });
+        if(volume>-1) {
+            if(volume) bufferToFill.buffer->applyGain(volume);
+            else bufferToFill.clearActiveBufferRegion();
+        }
+    }
 }
-int LAudioAppComponent::getNextAudioBlock(lua_State*){
+int LAudioAppComponent::getNextAudioBlock(lua_State*) {
     set("getNextAudioBlock");
     return 0;
 }
 
+void LAudioAppComponent::stopPlaying() {
+    stopped = true;
+}
+int LAudioAppComponent::stop(lua_State*) {
+    stopPlaying();
+    return 0;
+}
 void LAudioAppComponent::shutdownAudio() {
+    stopPlaying();
+    if(!audioOpen)return;
     if(audioSourcePlayer.getCurrentSource()!=nullptr) {
         audioSourcePlayer.setSource (nullptr);
+    }
+    if(audioOpen) {
         deviceManager.removeAudioCallback (&audioSourcePlayer);
         deviceManager.closeAudioDevice();
     }
+    audioOpen = false;
 }
-int LAudioAppComponent::stop ( lua_State* ) {
+
+int LAudioAppComponent::close(lua_State*) {
     shutdownAudio();
     return 0;
 }
 
-int LAudioAppComponent::start(lua_State *L) {
-    audioSourcePlayer.setSource (this);
+int LAudioAppComponent::getVolume(lua_State*) {
+    return LUA::returnNumber(volume);
+}
+int LAudioAppComponent::setVolume(lua_State*) {
+    volume = LUA::getNumber<float>(2);
     return 0;
 }
 
-int LAudioAppComponent::setAudioChannels ( lua_State *L ) {
+int LAudioAppComponent::start(lua_State *L) {
+    if(!stopped) {
+        lua_pushnil(L);
+        lua_pushliteral(L, "player already started");
+        return 2;
+    }
+    if(audioOpen && audioSourcePlayer.getCurrentSource()==nullptr) {
+        audioSourcePlayer.setSource(this);
+    }
+    stopped = false;
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int LAudioAppComponent::setAudioChannels(lua_State *L) {
+    if(audioOpen) {
+        lua_pushnil(L);
+        lua_pushliteral(L, "audio channels already set.");
+        return 2;
+    }
     int numInputChannels = LUA::checkAndGetNumber<int>(2, 0);
     int numOutputChannels = LUA::checkAndGetNumber<int>(2, 2);
     String audioError = deviceManager.initialise (numInputChannels, numOutputChannels, nullptr, true);
     jassert (audioError.isEmpty());
     if(audioError.isEmpty()) {
         deviceManager.addAudioCallback (&audioSourcePlayer);
+        audioOpen = true;
         lua_pushboolean(L, true);
         return 1;
     }else{
@@ -111,76 +171,3 @@ int LAudioAppComponent::releaseResources(lua_State*){
     set("releaseResources");
     return 0;
 }
-
-// mouse...
-/*
-void LAudioAppComponent::mouseMove(const MouseEvent& e) {
-    if(hasCallback("mouseMove"))
-        LComponent::lmouseMove(e);
-    else
-        AudioAppComponent::mouseMove(e);
-}
-
-void LAudioAppComponent::mouseEnter(const MouseEvent& e) {
-    if(hasCallback("mouseEnter"))
-        LComponent::lmouseEnter(e);
-    else
-        AudioAppComponent::mouseEnter(e);
-}
-
-void LAudioAppComponent::mouseExit(const MouseEvent& e) {
-    if(hasCallback("mouseExit"))
-        LComponent::lmouseExit(e);
-    else
-        AudioAppComponent::mouseExit(e);
-}
-
-void LAudioAppComponent::mouseDown(const MouseEvent& e) {
-    if(hasCallback("mouseDown"))
-        LComponent::lmouseDown(e);
-    else
-        AudioAppComponent::mouseDown(e);
-}
-
-void LAudioAppComponent::mouseDrag(const MouseEvent& e) {
-    if(hasCallback("mouseDrag"))
-        LComponent::lmouseDrag(e);
-    else
-        AudioAppComponent::mouseDrag(e);
-}
-
-void LAudioAppComponent::mouseUp(const MouseEvent& e) {
-    if(hasCallback("mouseUp"))
-        LComponent::lmouseUp(e);
-    else
-        AudioAppComponent::mouseUp(e);
-}
-
-void LAudioAppComponent::mouseDoubleClick(const MouseEvent& e) {
-    if(hasCallback("mouseDoubleClick"))
-        LComponent::lmouseDoubleClick(e);
-    else
-        AudioAppComponent::mouseDoubleClick(e);
-}
-
-void LAudioAppComponent::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& wheel) {
-    if(hasCallback("mouseWheelMove"))
-        LComponent::lmouseWheelMove(e, wheel);
-    else
-        AudioAppComponent::mouseWheelMove(e, wheel);
-}
-
-void LAudioAppComponent::mouseMagnify(const MouseEvent& e, float scaleFactor) {
-    if(hasCallback("mouseMagnify"))
-        LComponent::lmouseMagnify(e, scaleFactor);
-    else
-        AudioAppComponent::mouseMagnify(e, scaleFactor);
-}
-
-bool LAudioAppComponent::keyPressed(const KeyPress& k) {
-    if(hasCallback("keyPressed"))
-        return LComponent::lkeyPressed(k);
-    else
-        return AudioAppComponent::keyPressed(k);
-}
-*/

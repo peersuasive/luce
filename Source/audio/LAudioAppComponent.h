@@ -24,12 +24,16 @@ public:
     ~LAudioAppComponent();
 
     //==============================================================================
-
-    //==============================================================================
     void shutdownAudio();
+    void stopPlaying();
     int setAudioChannels(lua_State*);
     int start(lua_State*);
     int stop(lua_State*);
+    int close(lua_State*);
+
+    //==============================================================================
+    int setVolume(lua_State*);
+    int getVolume(lua_State*);
 
     //==============================================================================
     virtual int prepareToPlay(lua_State*);
@@ -46,32 +50,25 @@ public:
     static const Luna<LAudioAppComponent>::Enum enums[];
 
     //==============================================================================
-    AudioDeviceManager deviceManager;
-
-private:
-    //==============================================================================
-    lua_State *Ls;
-    //==============================================================================
-    AudioSourcePlayer audioSourcePlayer;
-    
-    //==============================================================================
     // callbacks
     virtual void prepareToPlay( int samplesPerBlockExpected, double sampleRate ) override;
     virtual void getNextAudioBlock( const AudioSourceChannelInfo& bufferToFill ) override;
     virtual void releaseResources() override;
 
-    /*
-    virtual void mouseMove(const MouseEvent&) override;
-    virtual void mouseEnter(const MouseEvent&) override;
-    virtual void mouseExit(const MouseEvent&) override;
-    virtual void mouseDown(const MouseEvent&) override;
-    virtual void mouseDrag(const MouseEvent&) override;
-    virtual void mouseUp(const MouseEvent&) override;
-    virtual void mouseDoubleClick(const MouseEvent&) override;
-    virtual void mouseWheelMove(const MouseEvent&, const MouseWheelDetails&) override;
-    virtual void mouseMagnify(const MouseEvent&, float) override;
-    virtual bool keyPressed(const KeyPress&) override;
-    */
+    //==============================================================================
+    AudioDeviceManager deviceManager;
+
+private:
+    //==============================================================================
+    lua_State *Ls;
+
+    //==============================================================================
+    bool stopped, audioOpen;
+    AudioSourcePlayer audioSourcePlayer;
+    
+    //==============================================================================
+    float volume;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LAudioAppComponent)
 };
