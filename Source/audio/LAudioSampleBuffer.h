@@ -29,34 +29,45 @@ public:
     ~LAudioSampleBuffer();
 
     //==============================================================================
-    int setSample(lua_State*);
-    int getSample(lua_State*);
 
     //==============================================================================
-    int getArrayOfReadPointers(lua_State*);
-    int getMagnitude(lua_State*);
-    int findMinMax(lua_State*);
-    int getRMSLevel(lua_State*);
     int getNumChannels(lua_State*);
-    int setData(lua_State*);
     int getNumSamples(lua_State*);
     int getReadPointer(lua_State*);
-    int getArrayOfWritePointers(lua_State*);
+    int setDataToReferTo(lua_State*); // getWritePointer
+    int getArrayOfReadPointers(lua_State*);
+    int setArrayOfData(lua_State*); // getArrayOfWritePointer
+    int setSize(lua_State*);
+    int makeCopyOf(lua_State*);
+    int clear(lua_State*);
     int hasBeenCleared(lua_State*);
+    int getSample(lua_State*);
+    int setSample(lua_State*);
+    int addSample(lua_State*);
+    int applyGain(lua_State*);
+    int applyGainRamp(lua_State*);
+    int addFrom(lua_State*);
+    int addFromWithRamp(lua_State*);
+    int copyFrom(lua_State*);
+    int copyFromWithRamp(lua_State*);
+    int findMinMax(lua_State*);
+    int getMagnitude(lua_State*);
+    int getRMSLevel(lua_State*);
+    int reverse(lua_State*);
 
     //==============================================================================
-    int applyGainRamp(lua_State*);
-    int makeCopyOf(lua_State*);
-    int reverse(lua_State*);
-    int addFrom(lua_State*);
-    int copyFromWithRamp(lua_State*);
-    int copyFrom(lua_State*);
-    int setSize(lua_State*);
-    int setDataToReferTo(lua_State*);
-    int addFromWithRamp(lua_State*);
-    int addSample(lua_State*);
-    int clear(lua_State*);
-    int applyGain(lua_State*);
+    /** 
+       Replacement for getWritePointer.
+
+       Accepts an indexed table with numbers.a
+
+       @param channelNum the channel number to set data to
+       @param sampleIndex the sample to start from
+       @param *data array of numbers
+
+       @return [true],[nil,error]
+    */
+    int setData(lua_State*);
 
     //==============================================================================
     static const char className[];

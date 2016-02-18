@@ -19,30 +19,31 @@ const Luna<LAudioSampleBuffer>::PropertyType LAudioSampleBuffer::properties[] = 
     {0,0}
 };
 const Luna<LAudioSampleBuffer>::FunctionType LAudioSampleBuffer::methods[] = {
-    method( LAudioSampleBuffer, getArrayOfReadPointers ),
-    method( LAudioSampleBuffer, getSample ),
-    method( LAudioSampleBuffer, setSample ),
-    method( LAudioSampleBuffer, getMagnitude ),
-    method( LAudioSampleBuffer, findMinMax ),
-    method( LAudioSampleBuffer, getRMSLevel ),
     method( LAudioSampleBuffer, getNumChannels ),
-    method( LAudioSampleBuffer, setData ),
     method( LAudioSampleBuffer, getNumSamples ),
     method( LAudioSampleBuffer, getReadPointer ),
-    method( LAudioSampleBuffer, getArrayOfWritePointers ),
-    method( LAudioSampleBuffer, hasBeenCleared ),
-    method( LAudioSampleBuffer, applyGainRamp ),
-    method( LAudioSampleBuffer, makeCopyOf ),
-    method( LAudioSampleBuffer, reverse ),
-    method( LAudioSampleBuffer, addFrom ),
-    method( LAudioSampleBuffer, copyFromWithRamp ),
-    method( LAudioSampleBuffer, copyFrom ),
+    method( LAudioSampleBuffer, setData ), // getWritePointer
+    method( LAudioSampleBuffer, getArrayOfReadPointers ),
+    method( LAudioSampleBuffer, setArrayOfData ), // getArrayOfWritePointers
     method( LAudioSampleBuffer, setSize ),
     method( LAudioSampleBuffer, setDataToReferTo ),
-    method( LAudioSampleBuffer, addFromWithRamp ),
-    method( LAudioSampleBuffer, addSample ),
+    method( LAudioSampleBuffer, makeCopyOf ),
     method( LAudioSampleBuffer, clear ),
+    method( LAudioSampleBuffer, hasBeenCleared ),
+    method( LAudioSampleBuffer, getSample ),
+    method( LAudioSampleBuffer, setSample ),
+    method( LAudioSampleBuffer, addSample ),
     method( LAudioSampleBuffer, applyGain ),
+    method( LAudioSampleBuffer, applyGainRamp ),
+    method( LAudioSampleBuffer, addFrom ),
+    method( LAudioSampleBuffer, addFromWithRamp ),
+    method( LAudioSampleBuffer, copyFrom ),
+    method( LAudioSampleBuffer, copyFromWithRamp ),
+    method( LAudioSampleBuffer, findMinMax ),
+    method( LAudioSampleBuffer, getMagnitude ),
+    method( LAudioSampleBuffer, getRMSLevel ),
+    method( LAudioSampleBuffer, reverse ),
+
     {0,0}
 };
 
@@ -110,84 +111,25 @@ int LAudioSampleBuffer::lnew(lua_State *L) {
 
 LAudioSampleBuffer::~LAudioSampleBuffer() {}
 
-
-/////// getters/setters
-int LAudioSampleBuffer::getSample ( lua_State *L ) {
-    int channel = LUA::getNumber<int>(2);
-    int sampleIndex = LUA::getNumber<int>(2);
-    // CHECK
-    // return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    //     AudioSampleBuffer::getSample( channel, sampleIndex )
-    // ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getSample( channel, sampleIndex )" );
-}
-int LAudioSampleBuffer::setSample ( lua_State* ) {
-    int destChannel = LUA::getNumber<int>(2);
-    int destSample = LUA::getNumber<int>(2);
-    // float newValue = *LUA::from_luce<Lfloat>(2); // TODO;
-    // AudioSampleBuffer::setSample( destChannel, destSample, newValue );
-    LUA::TODO_OBJECT( "setSample,  destChannel, destSample, newValue " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-/////// getters
-int LAudioSampleBuffer::getArrayOfReadPointers ( lua_State *L ) {
-    // CHECK
-    // return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    //     AudioSampleBuffer::getArrayOfReadPointers()
-    // ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getArrayOfReadPointers()" );
-}
-
-int LAudioSampleBuffer::getMagnitude ( lua_State *L ) {
-    // override
-    int channel = LUA::getNumber<int>(2);
-    int startSample = LUA::getNumber<int>(2);
-    int numSamples = LUA::getNumber<int>(2);
-    // CHECK
-    // return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    //     AudioSampleBuffer::getMagnitude( channel, startSample, numSamples )
-    // ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getMagnitude( channel, startSample, numSamples )" );
-
-    //// override
-    //int startSample = LUA::getNumber<int>(2);
-    //int numSamples = LUA::getNumber<int>(2);
-    //// CHECK
-    //// return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    ////     AudioSampleBuffer::getMagnitude( startSample, numSamples )
-    //// ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getMagnitude( startSample, numSamples )" );
-}
-
-int LAudioSampleBuffer::findMinMax ( lua_State* ) {
-    int channel = LUA::getNumber<int>(2);
-    int startSample = LUA::getNumber<int>(2);
-    int numSamples = LUA::getNumber<int>(2);
-    return LUCE::luce_pushtable( AudioSampleBuffer::findMinMax( channel, startSample, numSamples ) );
-}
-
-int LAudioSampleBuffer::getRMSLevel ( lua_State *L ) {
-    int channel = LUA::getNumber<int>(2);
-    int startSample = LUA::getNumber<int>(2);
-    int numSamples = LUA::getNumber<int>(2);
-    // CHECK
-    // return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    //     AudioSampleBuffer::getRMSLevel( channel, startSample, numSamples )
-    // ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getRMSLevel( channel, startSample, numSamples )" );
-}
-
 int LAudioSampleBuffer::getNumChannels ( lua_State* ) {
     return LUA::returnNumber( AudioSampleBuffer::getNumChannels() );
 }
 
+int LAudioSampleBuffer::getNumSamples ( lua_State* ) {
+    return LUA::returnNumber( AudioSampleBuffer::getNumSamples() );
+}
+
+int LAudioSampleBuffer::getReadPointer ( lua_State *L ) {
+    int channelNumber = LUA::getNumber<int>(2);
+    int sampleIndex = LUA::checkAndGetNumber<int>(2,0);
+    const float *buffer = AudioSampleBuffer::getReadPointer(channelNumber, sampleIndex);
+    int size = AudioSampleBuffer::getNumSamples() - sampleIndex;
+    LUCE::luce_pushtable(buffer, size);
+    buffer = nullptr;
+    return 1;
+}
+
+// getWritePointer
 int LAudioSampleBuffer::setData( lua_State *L ) {
     int channelNumber = LUA::getNumber(2);
     int sampleIndex = LUA::getNumber(2);
@@ -206,176 +148,65 @@ int LAudioSampleBuffer::setData( lua_State *L ) {
         return 2;
     }
     float *data = AudioSampleBuffer::getWritePointer(channelNumber, sampleIndex);
-    for(int i=1,j=sampleIndex;i<len;++i,++j) {
+    for(int i=1,j=sampleIndex;i<=len;++i,++j) {
         lua_rawgeti(L, -1, i);
         data[j] = (float)lua_tonumber(L,-1);
         lua_pop(L,1);
     }
+    data = nullptr;
     lua_pop(L,1);
-    return 0;
+    lua_pushboolean(L, true);
+    return 1;
 }
 
-int LAudioSampleBuffer::getNumSamples ( lua_State* ) {
-    return LUA::returnNumber( AudioSampleBuffer::getNumSamples() );
+int LAudioSampleBuffer::getArrayOfReadPointers ( lua_State *L ) {
+    int channels = AudioSampleBuffer::getNumChannels();
+    int samples  = AudioSampleBuffer::getNumSamples();
+    const float **array= AudioSampleBuffer::getArrayOfReadPointers();
+    lua_createtable(L, channels, 0);
+    for(int i=0,j=1;i<channels;++i,++j) {
+        lua_pushnumber(L,j);
+        LUCE::luce_pushtable( array[i], samples );
+        lua_settable(L, -3);
+    }
+    return 1;
 }
 
-int LAudioSampleBuffer::getReadPointer ( lua_State *L ) {
+// getArrayOfWritePointers
+int LAudioSampleBuffer::setArrayOfData ( lua_State *L ) {
+    if(!lua_istable(L,2)) {
+        lua_pushnil(L);
+        lua_pushfstring(L,"LAudioSampleBuffer: error in setArrayOfData: expected table, got %s\n",
+                lua_typename(L,lua_type(L,2)));
+        return 2;
+    }
+    int channels = AudioSampleBuffer::getNumChannels();
+    int samples = AudioSampleBuffer::getNumSamples();
+    
+    int dataSize = lua_objlen(L,2);
+    if(dataSize != channels) {
+        lua_pushnil(L);
+        lua_pushfstring(L,"LAudioSampleBuffer: error in setArrayOfData: wrong number of elements in data: expected %d, got %d\n", 
+                channels, dataSize);
+        return 2;
+    }
 
-    // override
-    int channelNumber = LUA::getNumber<int>(2);
-    // CHECK
-    // return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    //     AudioSampleBuffer::getReadPointer( channelNumber )
-    // ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getReadPointer( channelNumber )" );
-
-    //// override
-    //int channelNumber = LUA::getNumber<int>(2);
-    //int sampleIndex = LUA::getNumber<int>(2);
-    //// CHECK
-    //// return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    ////     AudioSampleBuffer::getReadPointer( channelNumber, sampleIndex )
-    //// ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getReadPointer( channelNumber, sampleIndex )" );
-}
-
-int LAudioSampleBuffer::getArrayOfWritePointers ( lua_State *L ) {
-    // CHECK
-    // return LUA::storeAndReturnUserdata<Lfloat>( new Lfloat(L,
-    //     AudioSampleBuffer::getArrayOfWritePointers()
-    // ));
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return LUA::TODO_OBJECT( "float getArrayOfWritePointers()" );
-}
-
-int LAudioSampleBuffer::hasBeenCleared ( lua_State* ) {
-    return LUA::returnBoolean( AudioSampleBuffer::hasBeenCleared() );
-}
-
-/////// setters
-int LAudioSampleBuffer::applyGainRamp ( lua_State* ) {
-
-    // override
-    int channel = LUA::getNumber<int>(2);
-    int startSample = LUA::getNumber<int>(2);
-    int numSamples = LUA::getNumber<int>(2);
-    // float startGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    // float endGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    // AudioSampleBuffer::applyGainRamp( channel, startSample, numSamples, startGain, endGain );
-    LUA::TODO_OBJECT( "applyGainRamp,  channel, startSample, numSamples, startGain, endGain " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-
-    //// override
-    //int startSample = LUA::getNumber<int>(2);
-    //int numSamples = LUA::getNumber<int>(2);
-    //// float startGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    //// float endGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    //// AudioSampleBuffer::applyGainRamp( startSample, numSamples, startGain, endGain );
-    //LUA::TODO_OBJECT( "applyGainRamp,  startSample, numSamples, startGain, endGain " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LAudioSampleBuffer::makeCopyOf ( lua_State* ) {
-    // AudioSampleBuffer::makeCopyOf(*LUA::from_luce<LAudioBuffer>(2); // TODO);
-    LUA::TODO_OBJECT( "makeCopyOf, *LUA::from_luce<LAudioBuffer>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LAudioSampleBuffer::reverse ( lua_State* ) {
-
-    // override
-    int channel = LUA::getNumber<int>(2);
-    int startSample = LUA::getNumber<int>(2);
-    int numSamples = LUA::getNumber<int>(2);
-    AudioSampleBuffer::reverse( channel, startSample, numSamples );
-    return 0;
-
-    //// override
-    //int startSample = LUA::getNumber<int>(2);
-    //int numSamples = LUA::getNumber<int>(2);
-    //AudioSampleBuffer::reverse( startSample, numSamples );
-    return 0;
-}
-
-int LAudioSampleBuffer::addFrom ( lua_State* ) {
-
-    // override
-    int destChannel = LUA::getNumber<int>(2);
-    int destStartSample = LUA::getNumber<int>(2);
-    // AudioSampleBuffer source = *LUA::from_luce<LAudioBuffer>(2); // TODO;
-    int sourceChannel = LUA::getNumber<int>(2);
-    int sourceStartSample = LUA::getNumber<int>(2);
-    int numSamples = LUA::getNumber<int>(2);
-    // float gainToApplyToSource = *LUA::from_luce<Lfloat>(2); // TODO;
-    // AudioSampleBuffer::addFrom( destChannel, destStartSample, source, sourceChannel, sourceStartSample, numSamples, gainToApplyToSource );
-    LUA::TODO_OBJECT( "addFrom,  destChannel, destStartSample, source, sourceChannel, sourceStartSample, numSamples, gainToApplyToSource " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-
-    //// override
-    //int destChannel = LUA::getNumber<int>(2);
-    //int destStartSample = LUA::getNumber<int>(2);
-    //// float* source = LUA::from_luce<Lfloat>(2); // TODO;
-    //int numSamples = LUA::getNumber<int>(2);
-    //// float gainToApplyToSource = *LUA::from_luce<Lfloat>(2); // TODO;
-    //// AudioSampleBuffer::addFrom( destChannel, destStartSample, source, numSamples, gainToApplyToSource );
-    //LUA::TODO_OBJECT( "addFrom,  destChannel, destStartSample, source, numSamples, gainToApplyToSource " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LAudioSampleBuffer::copyFromWithRamp ( lua_State* ) {
-    int destChannel = LUA::getNumber<int>(2);
-    int destStartSample = LUA::getNumber<int>(2);
-    // float* source = LUA::from_luce<Lfloat>(2); // TODO;
-    int numSamples = LUA::getNumber<int>(2);
-    // float startGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    // float endGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    // AudioSampleBuffer::copyFromWithRamp( destChannel, destStartSample, source, numSamples, startGain, endGain );
-    LUA::TODO_OBJECT( "copyFromWithRamp,  destChannel, destStartSample, source, numSamples, startGain, endGain " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-}
-
-int LAudioSampleBuffer::copyFrom ( lua_State* ) {
-
-    // override
-    int destChannel = LUA::getNumber<int>(2);
-    int destStartSample = LUA::getNumber<int>(2);
-    // AudioSampleBuffer source = *LUA::from_luce<LAudioBuffer>(2); // TODO;
-    int sourceChannel = LUA::getNumber<int>(2);
-    int sourceStartSample = LUA::getNumber<int>(2);
-    int numSamples = LUA::getNumber<int>(2);
-    // AudioSampleBuffer::copyFrom( destChannel, destStartSample, source, sourceChannel, sourceStartSample, numSamples );
-    LUA::TODO_OBJECT( "copyFrom,  destChannel, destStartSample, source, sourceChannel, sourceStartSample, numSamples " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-
-    //// override
-    //int destChannel = LUA::getNumber<int>(2);
-    //int destStartSample = LUA::getNumber<int>(2);
-    //// float* source = LUA::from_luce<Lfloat>(2); // TODO;
-    //int numSamples = LUA::getNumber<int>(2);
-    //// AudioSampleBuffer::copyFrom( destChannel, destStartSample, source, numSamples );
-    //LUA::TODO_OBJECT( "copyFrom,  destChannel, destStartSample, source, numSamples " );
-    //lua_settop(LUA::Get(), 1); // added by TODO
-    //return 0;
-
-    //// override
-    //int destChannel = LUA::getNumber<int>(2);
-    //int destStartSample = LUA::getNumber<int>(2);
-    //// float* source = LUA::from_luce<Lfloat>(2); // TODO;
-    //int numSamples = LUA::getNumber<int>(2);
-    //// float gain = *LUA::from_luce<Lfloat>(2); // TODO;
-    //// AudioSampleBuffer::copyFrom( destChannel, destStartSample, source, numSamples, gain );
-    //LUA::TODO_OBJECT( "copyFrom,  destChannel, destStartSample, source, numSamples, gain " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
+    float **array = AudioSampleBuffer::getArrayOfWritePointers();
+    for(int channel = 0, i=1; channel<channels; ++channel, ++i) {
+        lua_rawgeti(L, 2, i);
+        // if(lua_isnoneornil(L,-1)) { ERROR; continue; }
+        //int len = lua_objlen(L, -1); // should check array size vs numSamples... or let it to the user...
+        //if(len!=samples) std::cout << "WARNING: provided number of samples differs with numSamples"a
+        for (int sample = 0, j=1; sample<samples; ++sample, ++j) {
+            lua_rawgeti(L,-1,j);
+            float v = (float)lua_tonumber(L,-1); lua_pop(L,1);
+            array[channel][sample] = v;
+        }
+        lua_pop(L,1);
+    }
+    lua_pop(L,1);
+    lua_pushboolean(L,true);
+    return 1;
 }
 
 int LAudioSampleBuffer::setSize ( lua_State* ) {
@@ -388,84 +219,271 @@ int LAudioSampleBuffer::setSize ( lua_State* ) {
     return 0;
 }
 
-int LAudioSampleBuffer::setDataToReferTo ( lua_State* ) {
-    // float** dataToReferTo = LUA::from_luce<Lfloat>(2); // TODO;
+int LAudioSampleBuffer::setDataToReferTo ( lua_State *L ) {
     int newNumChannels = LUA::getNumber<int>(2);
     int newNumSamples = LUA::getNumber<int>(2);
-    // AudioSampleBuffer::setDataToReferTo( dataToReferTo, newNumChannels, newNumSamples );
-    LUA::TODO_OBJECT( "setDataToReferTo,  dataToReferTo, newNumChannels, newNumSamples " );
-    lua_settop(LUA::Get(), 1); // added by TODO
+    float ** dataToReferTo = (float**)lua_touserdata(L,2);
+
+    AudioSampleBuffer::setDataToReferTo( dataToReferTo, newNumChannels, newNumSamples );
     return 0;
 }
 
-int LAudioSampleBuffer::addFromWithRamp ( lua_State* ) {
+int LAudioSampleBuffer::makeCopyOf ( lua_State* ) {
+    AudioSampleBuffer::makeCopyOf(*LUA::from_luce<LAudioSampleBuffer>(2));
+    return 0;
+}
+
+int LAudioSampleBuffer::clear ( lua_State *L ) {
+    int n = lua_gettop(L)-1;
+    if(!n) {
+        AudioSampleBuffer::clear();
+    } else if(n==2) {
+        int startSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(2);
+        AudioSampleBuffer::clear(startSample, numSamples);
+    } else if(n==3) {
+        int channel = LUA::getNumber<int>(2);
+        int startSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(2);
+        AudioSampleBuffer::clear( channel, startSample, numSamples );
+    } else {
+        lua_pushnil(L);
+        lua_pushliteral(L, "LAudioSampleBuffer::clear: wrong number of arguments");
+        return 2;
+    }
+    lua_pushboolean(L,true);
+    return 1;
+}
+
+int LAudioSampleBuffer::hasBeenCleared ( lua_State* ) {
+    return LUA::returnBoolean( AudioSampleBuffer::hasBeenCleared() );
+}
+
+int LAudioSampleBuffer::getSample ( lua_State *L ) {
+    int channel = LUA::getNumber<int>(2);
+    int sampleIndex = LUA::getNumber<int>(2);
+    lua_pushnumber(L, AudioSampleBuffer::getSample(channel, sampleIndex));
+    return 1;
+}
+int LAudioSampleBuffer::setSample ( lua_State* ) {
     int destChannel = LUA::getNumber<int>(2);
-    int destStartSample = LUA::getNumber<int>(2);
-    // float* source = LUA::from_luce<Lfloat>(2); // TODO;
-    int numSamples = LUA::getNumber<int>(2);
-    // float startGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    // float endGain = *LUA::from_luce<Lfloat>(2); // TODO;
-    // AudioSampleBuffer::addFromWithRamp( destChannel, destStartSample, source, numSamples, startGain, endGain );
-    LUA::TODO_OBJECT( "addFromWithRamp,  destChannel, destStartSample, source, numSamples, startGain, endGain " );
-    lua_settop(LUA::Get(), 1); // added by TODO
+    int destSample = LUA::getNumber<int>(2);
+    float newValue = LUA::getNumber<float>(2);
+    AudioSampleBuffer::setSample(destChannel, destSample, newValue);
     return 0;
 }
 
 int LAudioSampleBuffer::addSample ( lua_State* ) {
     int destChannel = LUA::getNumber<int>(2);
     int destSample = LUA::getNumber<int>(2);
-    // float valueToAdd = *LUA::from_luce<Lfloat>(2); // TODO;
-    // AudioSampleBuffer::addSample( destChannel, destSample, valueToAdd );
-    LUA::TODO_OBJECT( "addSample,  destChannel, destSample, valueToAdd " );
-    lua_settop(LUA::Get(), 1); // added by TODO
+    float newValue = LUA::getNumber<float>(2);
+    AudioSampleBuffer::addSample(destChannel, destSample, newValue);
     return 0;
 }
 
-int LAudioSampleBuffer::clear ( lua_State* ) {
+int LAudioSampleBuffer::applyGain ( lua_State *L ) {
+    int n = lua_gettop(L)-1;
+    if(n==1) {
+        float gain = LUA::getNumber<float>(2);
+        AudioSampleBuffer::applyGain( gain );
+    }else if(n==3) {
+        int channel = LUA::getNumber<int>(2);
+        int startSample = LUA::getNumber<int>(2);
+        float gain = LUA::getNumber<float>(2);
+        AudioSampleBuffer::applyGain( channel, startSample, gain );
+    }else if(n==4) {
+        int channel = LUA::getNumber<int>(2);
+        int startSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(2);
+        float gain = LUA::getNumber<float>(2);
+        AudioSampleBuffer::applyGain( channel, startSample, numSamples, gain );
+    }else {
+        lua_pushnil(L);
+        lua_pushliteral(L, "LAudioSampleBuffer::applyGain: wrong number of arguments");
+        return 2;
+    }
+    lua_pushboolean(L,true);
+    return 1;
+}
 
-    // override
-    AudioSampleBuffer::clear();
-    return 0;
+int LAudioSampleBuffer::applyGainRamp ( lua_State *L ) {
+    int n = lua_gettop(L)-1;
+    if(n==4) {
+        int startSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(2);
+        float startGain = LUA::getNumber<float>(2);
+        float endGain = LUA::getNumber<float>(2);
+        AudioSampleBuffer::applyGainRamp( startSample, numSamples, startGain, endGain );
+    }else if(n==5) {
+        int channel = LUA::getNumber<int>(2);
+        int startSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(2);
+        float startGain = LUA::getNumber<float>(2);
+        float endGain = LUA::getNumber<float>(2);
+        AudioSampleBuffer::applyGainRamp( channel, startSample, numSamples, startGain, endGain );
+    } else {
+        lua_pushnil(L);
+        lua_pushliteral(L, "LAudioSampleBuffer::applyGain: wrong number of arguments");
+        return 2;
+    }
+    lua_pushboolean(L,true);
+    return 1;
+}
 
-    //// override
-    //int startSample = LUA::getNumber<int>(2);
-    //int numSamples = LUA::getNumber<int>(2);
-    //AudioSampleBuffer::clear( startSample, numSamples );
-    //return 0;
+int LAudioSampleBuffer::addFrom ( lua_State *L ) {
+    int n = lua_gettop(L)-1;
+    if (n>5) {
+        int destChannel = LUA::getNumber<int>(2);
+        int destStartSample = LUA::getNumber<int>(2);
+        AudioSampleBuffer source = *LUA::from_luce<LAudioSampleBuffer>(2);
+        int sourceChannel = LUA::getNumber<int>(2);
+        int sourceStartSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(2);
+        float gainToApplyToSource = LUA::checkAndGetNumber<float>(2,1.0);
 
-    //// override
-    //int channel = LUA::getNumber<int>(2);
-    //int startSample = LUA::getNumber<int>(2);
-    //int numSamples = LUA::getNumber<int>(2);
-    //AudioSampleBuffer::clear( channel, startSample, numSamples );
+        AudioSampleBuffer::addFrom( destChannel, destStartSample, source,
+                sourceChannel, sourceStartSample, numSamples, gainToApplyToSource );
+
+    } else if(n>3) {
+        int destChannel = LUA::getNumber<int>(2);
+        int destStartSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(3);
+        float gainToApplyToSource = LUA::checkAndGetNumber<float>(3,1.0);
+
+        float source[numSamples];
+        for(int sample = 0, i=1; sample<numSamples;++sample,++i) {
+            lua_rawgeti(L, 2, i);
+            float v = (float)lua_tonumber(L,-1); lua_pop(L,1);
+            source[sample] = v;
+        }
+        lua_remove(L,2);
+        AudioSampleBuffer::addFrom( destChannel, destStartSample, source, numSamples, gainToApplyToSource);
+    } else { // ERROR
+        lua_pushnil(L);
+        lua_pushliteral(L, "LAudioSampleBuffer::addFrom: wrong number of arguments.");
+        return 2;
+    }
+
+    lua_pushboolean(L,true);
+    return 1;
+}
+
+int LAudioSampleBuffer::addFromWithRamp ( lua_State *L ) {
+    int destChannel = LUA::getNumber<int>(2);
+    int destStartSample = LUA::getNumber<int>(2);
+    int numSamples = LUA::getNumber<int>(3);
+    float startGain = LUA::getNumber<float>(3);
+    float endGain = LUA::getNumber<float>(3);
+
+    float source[numSamples];
+    for(int sample = 0, i=1; sample<numSamples;++sample,++i) {
+        lua_rawgeti(L, 2, i);
+        float v = (float)lua_tonumber(L,-1); lua_pop(L,1);
+        source[sample] = v;
+    }
+    lua_remove(L,2);
+    AudioSampleBuffer::addFromWithRamp( destChannel, destStartSample, source, numSamples, startGain, endGain );
     return 0;
 }
 
-int LAudioSampleBuffer::applyGain ( lua_State* ) {
+int LAudioSampleBuffer::copyFrom ( lua_State *L ) {
+    int n = lua_gettop(L)-1;
+    if (n==4) {
+        int destChannel = LUA::getNumber<int>(2);
+        int destStartSample = LUA::getNumber<int>(2);
+        AudioSampleBuffer source = *LUA::from_luce<LAudioSampleBuffer>(2);
+        int sourceChannel = LUA::getNumber<int>(2);
+        int sourceStartSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(2);
+        AudioSampleBuffer::copyFrom( destChannel, destStartSample, source,
+                sourceChannel, sourceStartSample, numSamples );
 
-    // override
+    } else if(n>4) {
+        int destChannel = LUA::getNumber<int>(2);
+        int destStartSample = LUA::getNumber<int>(2);
+        int numSamples = LUA::getNumber<int>(3);
+        float gain = LUA::checkAndGetNumber<float>(3,0);
+
+        float source[numSamples];
+        for(int sample = 0, i=1; sample<numSamples;++sample,++i) {
+            lua_rawgeti(L, 2, i);
+            float v = (float)lua_tonumber(L,-1); lua_pop(L,1);
+            source[sample] = v;
+        }
+        lua_remove(L,2);
+        if(gain) {
+            AudioSampleBuffer::copyFrom( destChannel, destStartSample, source, numSamples, gain);
+        }else{
+            AudioSampleBuffer::copyFrom( destChannel, destStartSample, source, numSamples);
+        }
+    } else { // ERROR
+        lua_pushnil(L);
+        lua_pushliteral(L, "LAudioSampleBuffer::copyFrom: wrong number of arguments.");
+        return 2;
+    }
+    lua_pushboolean(L,true);
+    return 1;
+}
+
+int LAudioSampleBuffer::copyFromWithRamp ( lua_State *L ) {
+    int destChannel = LUA::getNumber<int>(2);
+    int destStartSample = LUA::getNumber<int>(2);
+    int numSamples = LUA::getNumber<int>(3);
+    float startGain = LUA::getNumber<float>(3);
+    float endGain = LUA::getNumber<float>(3);
+
+    float source[numSamples];
+    for(int sample = 0, i=1; sample<numSamples;++sample,++i) {
+        lua_rawgeti(L, 2, i);
+        float v = (float)lua_tonumber(L,-1); lua_pop(L,1);
+        source[sample] = v;
+    }
+    lua_remove(L,2);
+    AudioSampleBuffer::copyFromWithRamp( destChannel, destStartSample, source, numSamples, startGain, endGain );
+    return 0;
+}
+
+int LAudioSampleBuffer::findMinMax ( lua_State* ) {
     int channel = LUA::getNumber<int>(2);
     int startSample = LUA::getNumber<int>(2);
     int numSamples = LUA::getNumber<int>(2);
-    // float gain = *LUA::from_luce<Lfloat>(2); // TODO;
-    // AudioSampleBuffer::applyGain( channel, startSample, numSamples, gain );
-    LUA::TODO_OBJECT( "applyGain,  channel, startSample, numSamples, gain " );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
-
-    //// override
-    //int startSample = LUA::getNumber<int>(2);
-    //int numSamples = LUA::getNumber<int>(2);
-    //// float gain = *LUA::from_luce<Lfloat>(2); // TODO;
-    //// AudioSampleBuffer::applyGain( startSample, numSamples, gain );
-    //LUA::TODO_OBJECT( "applyGain,  startSample, numSamples, gain " );
-    //lua_settop(LUA::Get(), 1); // added by TODO
-    //return 0;
-
-    //// override
-    //// AudioSampleBuffer::applyGain(*LUA::from_luce<Lfloat>(2); // TODO);
-    //LUA::TODO_OBJECT( "applyGain, *LUA::from_luce<Lfloat>(2); // TODO" );
-    lua_settop(LUA::Get(), 1); // added by TODO
-    return 0;
+    return LUCE::luce_pushtable( AudioSampleBuffer::findMinMax( channel, startSample, numSamples ) );
 }
 
+int LAudioSampleBuffer::getMagnitude ( lua_State *L ) {
+    int startSample = LUA::getNumber<int>(2);
+    int numSamples = LUA::getNumber<int>(2);
+    float mag;
+    if(lua_isnoneornil(L,2)) {
+        mag = AudioSampleBuffer::getMagnitude( startSample, numSamples );
+    }else{
+        int channel = startSample;
+        startSample = numSamples;
+        numSamples = LUA::getNumber<int>(2);
+        mag = AudioSampleBuffer::getMagnitude( channel, startSample, numSamples );
+    }
+    lua_pushnumber(L, mag);
+    return 1;
+}
+
+int LAudioSampleBuffer::getRMSLevel ( lua_State *L ) {
+    int channel = LUA::getNumber<int>(2);
+    int startSample = LUA::getNumber<int>(2);
+    int numSamples = LUA::getNumber<int>(2);
+    lua_pushnumber(L, AudioSampleBuffer::getRMSLevel( channel, startSample, numSamples ));
+    return 1;
+}
+
+int LAudioSampleBuffer::reverse ( lua_State *L ) {
+    int startSample = LUA::getNumber<int>(2);
+    int numSamples = LUA::getNumber<int>(2);
+    if(lua_isnoneornil(L,2)) {
+        AudioSampleBuffer::reverse( startSample, numSamples );
+    } else {
+        int channel = startSample;
+        startSample = numSamples;
+        numSamples = LUA::getNumber<int>(2);
+        AudioSampleBuffer::reverse( channel, startSample, numSamples );
+    }
+    return 0;
+}
