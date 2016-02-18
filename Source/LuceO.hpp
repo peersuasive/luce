@@ -79,6 +79,9 @@ namespace {
     int luce_pushtable(const StringPairArray& sa);
     int luce_pushtable(const Array<var>& val);
 
+    template<class T>
+    int luce_pushtable(const T* buffer, int size);
+
     ComponentBoundsConstrainer *luce_tocomponentboundsconstrainer(int i);
 
     template<class T>
@@ -732,6 +735,17 @@ namespace {
                     break;
             }
             lua_rawseti(L, i, ++j);
+        }
+        return 1;
+    }
+
+    template<class T>
+    int luce_pushtable(const T* buffer, int size) {
+        lua_createtable(L, size, 0);
+        for(int i=0,j=1;i<size;++i,++j) {
+            lua_pushnumber(L,j);
+            lua_pushnumber(L,buffer[i]);
+            lua_settable(L,-3);
         }
         return 1;
     }
