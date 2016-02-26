@@ -32,6 +32,8 @@ const Luna<LDocumentWindow>::PropertyType LDocumentWindow::properties[] = {
 
 const Luna<LDocumentWindow>::FunctionType LDocumentWindow::methods[] = {
     method( LDocumentWindow, closeButtonPressed ),
+    method( LDocumentWindow, minimiseButtonPressed ),
+    method( LDocumentWindow, maximiseButtonPressed ),
     method( LDocumentWindow, closeWindow ),
     method( LDocumentWindow, setVisible ),
     method( LDocumentWindow, isUsingNativeTitleBar ),
@@ -189,9 +191,36 @@ void LDocumentWindow::closeButtonPressed() {
     }
     JUCEApplication::getInstance()->systemRequestedQuit();
 }
-
 int LDocumentWindow::closeButtonPressed(lua_State *L) {
     set("closeButtonPressed");
+    return 0;
+}
+
+void LDocumentWindow::minimiseButtonPressed() {
+    if(hasCallback("minimiseButtonPressed")) {
+        if ( callback( "minimiseButtonPressed", 1 ) ) {
+            bool r = LUA::checkAndGetBoolean(-1, true);
+            if(!r) return;
+        }
+    }
+    DocumentWindow::minimiseButtonPressed();
+}
+int LDocumentWindow::minimiseButtonPressed(lua_State *L) {
+    set("minimiseButtonPressed");
+    return 0;
+}
+
+void LDocumentWindow::maximiseButtonPressed() {
+    if(hasCallback("maximiseButtonPressed")) {
+        if ( callback( "maximiseButtonPressed", 1 ) ) {
+            bool r = LUA::checkAndGetBoolean(-1, true);
+            if(!r) return;
+        }
+    }
+    DocumentWindow::maximiseButtonPressed();
+}
+int LDocumentWindow::maximiseButtonPressed(lua_State *L) {
+    set("maximiseButtonPressed");
     return 0;
 }
 

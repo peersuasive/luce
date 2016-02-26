@@ -12,6 +12,10 @@ public:
 
     int closeButtonPressed(lua_State*);
     void closeButtonPressed();
+    int minimiseButtonPressed(lua_State*);
+    void minimiseButtonPressed();
+    int maximiseButtonPressed(lua_State*);
+    void maximiseButtonPressed();
     
     int closeWindow(lua_State*);
 
