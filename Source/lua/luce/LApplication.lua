@@ -409,7 +409,7 @@ local function new(name, prog, ...)
     function self:exit(state)
         if is_closing then return "zob" end
         is_closing = true
-        lapp:quit(status)
+        lapp:quit(state)
     end
     self.quit = exit
 
