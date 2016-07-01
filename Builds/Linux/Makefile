@@ -8,8 +8,9 @@ DEPFLAGS := $(if $(word 2, $(TARGET_ARCH)), , -MMD)
 #CXX = g++-4.9
 #LD  = g++-4.9
 
-AUDIO := 1
+AUDIO := 0
 MP3 := 1
+MPG123 := 0
 
 LUA_V :=
 
@@ -35,7 +36,7 @@ ifeq ($(LUA_V),52)
 	CFLAGS += -DLUA52 -I/usr/include/lua5.2
 else
 ifeq ($(LUA_V),53)
-	CFLAGS += -DLUA53 -I/usr/include/lua5.3
+	CFLAGS += -DLUA53 -I/usr/local/include/lua5.3
 else
 	CFLAGS += -DLUA51 -I/usr/include/lua5.1
 endif
@@ -59,6 +60,10 @@ ifeq ($(AUDIO),1)
   CFLAGS  += -DLUCE_AUDIO=1
   ifeq ($(MP3),1)
   	CFLAGS += -DJUCE_USE_MP3AUDIOFORMAT
+  endif
+  ifeq ($(MPG123),1)
+  	CFLAGS += -DLUCE_MPG123=1
+	LDFLAGS += -lmpg123
   endif
   LDFLAGS += -lasound
 endif
@@ -130,6 +135,11 @@ $(OBJDIR)/luce_core_audio.o: ../../Luce/modules/luce_audio/luce_audio.cpp
 	@echo "Compiling luce_core_audio.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
+$(OBJDIR)/luce_audio.o: ../../Source/luce_audio.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling luce_audio.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/juce_audio_basics_2442e4ea.o: ../../JuceLibraryCode/modules/juce_audio_basics/juce_audio_basics.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_audio_basics.cpp"
@@ -158,11 +168,6 @@ $(OBJDIR)/juce_audio_utils_f63b12e8.o: ../../JuceLibraryCode/modules/juce_audio_
 $(OBJDIR)/juce_video_184321c8.o: ../../JuceLibraryCode/modules/juce_video/juce_video.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_video.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/luce_audio.o: ../../Source/luce_audio.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling luce_audio.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/luce_3c70ee94.o: ../../Source/luce.cpp

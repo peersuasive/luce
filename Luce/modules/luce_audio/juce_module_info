@@ -1,0 +1,24 @@
+{
+  "id":             "luce_audio",
+  "name":           "Luce audio wrappers"
+  "version":        "4.1.0",
+  "description":    "altmain",
+  "website":        "https://peersuasive.com/luce"
+  "license":        "GPLv3/Commercial",
+
+  "dependencies":   [
+                        { "id": "juce_audio_basics",  "version": "matching" },
+                        { "id": "juce_audio_devices", "version": "matching" },
+                    ],
+
+  "include":        "luce_audio.h",
+
+  "compile":        [ { "file": "luce_audio.cpp", "target": "! xcode" },
+                      { "file": "luce_audio.mm",  "target": "xcode" } ],
+
+  "browse":         [],
+  "OSXFrameworks":  "CoreAudio CoreMIDI DiscRecording",
+  "iOSFrameworks":  "AudioToolbox CoreMIDI CoreAudio AVFoundation",
+  "LinuxLibs":      "asound",
+  "mingwLibs":      "winmm"
+}

@@ -6,6 +6,9 @@
 
 #include "LAppConfig.h"
 #include "modules/luce_core/luce_core.h"
+#if LUCE_AUDIO
+#include "modules/luce_audio/luce_audio.h"
+#endif
 
 using namespace juce;
 
