@@ -46,6 +46,8 @@ private:
     virtual void mouseUp(const MouseEvent&) override;
     virtual void mouseDoubleClick(const MouseEvent&) override;
 
+    virtual void mouseWheelMove(const MouseEvent&, const MouseWheelDetails&) override;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LSystemTrayIconComponent)
 };

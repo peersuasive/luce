@@ -107,3 +107,10 @@ void LSystemTrayIconComponent::mouseDoubleClick(const MouseEvent& e) {
     else
         SystemTrayIconComponent::mouseDoubleClick(e);
 }
+
+void LSystemTrayIconComponent::mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& m) {
+    if(hasCallback("mouseWheelMove"))
+        LComponent::lmouseWheelMove(e, m);
+    else
+        SystemTrayIconComponent::mouseWheelMove(e, m);
+}
