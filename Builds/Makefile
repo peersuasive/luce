@@ -146,7 +146,7 @@ $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3.zip: $(OUT)/$(VERSION)/Linux64-5.3
 linux64-5.3: $(OUT)/$(VERSION)/luce.$(VERSION).linux64-5.3.zip
 
 
-$(OUT)/$(VERSION)/Linux64_nocurl-5.3/build: Linux-lua5.3 $(LUCE_LIB)
+$(OUT)/$(VERSION)/Linux64_nocurl-5.3/build: Linux $(LUCE_LIB)
 	@echo "Building for Linux64-5.3 (no curl) 5.3"
 	@mkdir -p $(shell dirname $(@))/luce
 	@cp -f $(OUT)/$(VERSION)/luce.lua $(shell dirname $(@))/
