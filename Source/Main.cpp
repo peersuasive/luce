@@ -335,6 +335,7 @@ l_class(TreeView);
 l_class(TreeViewItem);
 l_class(ModifierKeys);
 l_class(KeyPress);
+l_class(MouseInputSource);
 l_class(MouseEvent);
 l_class(SourceDetails);
 l_class(Timer);
@@ -404,6 +405,7 @@ static const luaL_Reg luce_lib [] = {
     d(TreeViewItem),
     d(ModifierKeys),
     d(KeyPress),
+    d(MouseInputSource),
     d(MouseEvent),
     d(SourceDetails),
     d(Timer),

@@ -16,6 +16,7 @@ namespace luce {
 #include "LBase.cpp"
 #include "LModifierKeys.cpp"
 #include "LKeyPress.cpp"
+#include "LMouseInputSource.cpp"
 #include "LMouseEvent.cpp"
 #include "LColour.cpp"
 #include "LAffineTransform.cpp"
@@ -82,6 +83,6 @@ namespace luce {
 #endif
 }
 
-#if JUCE_WINDOWS
+#if JUCE_WINDOWS || JUCE_IOS
 #include "Main.cpp"
 #endif

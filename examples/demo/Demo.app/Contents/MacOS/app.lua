@@ -206,6 +206,36 @@ browse:buttonClicked(function()
     end
 end)
 
+-- mouse dragging zone
+--local mouseDragger = luce:Component("mouse dragger")
+local mouseDragger = luce:Label("mouse dragger")
+mouseDragger.text = "drag there"
+mouseDragger:setJustificationType( luce.JustificationType.centred )
+mouseDragger:setColour( luce.Label.ColourIds.backgroundColourId, "white" )
+
+mouseDragger:mouseDrag(function(me)
+    print("dragging", me.source.getIndex())
+    local s = me.source
+    print(string.format([[
+    current index: %s
+    is mouse: %s
+    is touch: %s
+    valid pressure?: %s
+    pressure: %s
+]],
+    s.index,
+    s.mouse,
+    s.touch,
+    s.pressureValid,
+    s.currentPressure
+    ))
+end)
+
+mouseDragger:mouseDown(function(me)
+    print("Mouse down")
+end)
+
+
 --- add our Document Window and components to our main JUCE application
 mainWindow:initialise(function(...)
     mc:setSize{800,600}
@@ -244,13 +274,16 @@ mainWindow:initialise(function(...)
     mc:addAndMakeVisible(browse)
     browse:setBounds{200, 470, 80, 30}
 
+    mc:addAndMakeVisible(mouseDragger)
+    mouseDragger:setBounds{620, 20, 200, 200}
+
     --mc:setBounds{ 0, 0, 800, 600 } -- set the component bounds
                                      -- as this is the last component before
                                      -- DocumentWindow, it'll set the window size
                                      -- too, unless dw sets one
     dw:setContentOwned( mc, true )
 
-    dw:centreWithSize{800, 600} -- centre window on screen with size 800x600
+    dw:centreWithSize{850, 600} -- centre window on screen with size 800x600
     --dw:setCentrePosition{ 0, 0 } -- move it to the top left corner
     
     --dw:setBounds{ 100, 100, 800,600 } -- sets the window bounds

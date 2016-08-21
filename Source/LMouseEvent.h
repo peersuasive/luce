@@ -53,6 +53,7 @@ public:
     int getX(lua_State*);
     int getY(lua_State*);
     int getMods(lua_State*);
+    int getSource(lua_State*);
     int getOriginalComponent(lua_State*);
     int getEventComponent(lua_State*);
 

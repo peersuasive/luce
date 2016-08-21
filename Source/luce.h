@@ -58,6 +58,7 @@ namespace luce {
 #include "MyLookAndFeel.h"
 #include "LModifierKeys.h"
 #include "LKeyPress.h"
+#include "LMouseInputSource.h"
 #include "LMouseEvent.h"
 #include "LColour.h"
 #include "LAffineTransform.h"

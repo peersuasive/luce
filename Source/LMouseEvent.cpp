@@ -21,6 +21,7 @@ const Luna<LMouseEvent>::PropertyType LMouseEvent::properties[] = {
     {"x", &LMouseEvent::getX, &LBase::readOnly},
     {"y", &LMouseEvent::getY, &LBase::readOnly},
     {"mods", &LMouseEvent::getMods, &LBase::readOnly},
+    {"source", &LMouseEvent::getSource, &LBase::readOnly},
     {"originalComponent", &LMouseEvent::getOriginalComponent, &LBase::readOnly},
     {"eventComponent", &LMouseEvent::getEventComponent, &LBase::readOnly},
     {0,0}
@@ -107,6 +108,10 @@ int LMouseEvent::getEventComponent(lua_State*) {
 
 int LMouseEvent::getMods(lua_State* L) {
     return LUA::returnUserdata<LModifierKeys, ModifierKeys>( &this->mods );
+}
+
+int LMouseEvent::getSource(lua_State* L) {
+    return LUA::returnUserdata<LMouseInputSource, MouseInputSource>( &this->source );
 }
 
 int LMouseEvent::getDoubleClickTimeout ( lua_State* ) {
