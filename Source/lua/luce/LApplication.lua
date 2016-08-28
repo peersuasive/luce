@@ -279,8 +279,10 @@ local function new(name, prog, ...)
             end
         end
 
-        TMP2 = luce.JUCEApplication.tempDirectory():gsub(".temp$","")
-        logDebug("dirs: home: %s, docs: %s, data: %s, tmp2: %s",HOME, DOCS, DATA, TMP2)
+        if(LDEBUG)then
+            local TMP2 = luce.JUCEApplication.tempDirectory():gsub(".temp$","")
+            logDebug("dirs: home: %s, docs: %s, data: %s, tmp2: %s",HOME, DOCS, DATA, TMP2)
+        end
 
         initialised_callback()
     end)
