@@ -1,4 +1,4 @@
-#!/usr/bin/env luajit
+#!/usr/bin/env lua
 
 local title = "Drop Files"
 local app, luce = require"luce.LApplication"(title, ...)

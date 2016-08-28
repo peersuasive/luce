@@ -1,3 +1,5 @@
+#!/usr/bin/env lua
+
 local title = "Hello World!"
 
 local app, luce = require"luce.LApplication"(title, ...) -- create a basic Application

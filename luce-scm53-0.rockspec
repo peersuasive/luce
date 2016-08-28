@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 package	= 'luce'
-version	= 'scm-0'
+version	= 'scm53-0'
 source	= {
 	url	= 'git://github.com/peersuasive/luce.git'
 }
@@ -12,22 +12,22 @@ description	= {
 	license	= 'GPLv3',
 }
 dependencies = {
-    "lua = 5.1"
+    "lua = 5.3",
 }
 
 build	= {
 	type	= 'command',
     platforms = {
         linux = {
-            build_command = "cd Builds/Linux && make CONFIG=Release AUDIO=0",
+            build_command = "cd Builds/Linux && make CONFIG=Release AUDIO=0 LUA_V=53",
             install = {
-                lib = { ["luce.core"] = "Builds/Linux/build/core.so" },
+                lib = { ["luce.core"] = "Builds/Linux/build53/core.so" },
             },
         },
         mingw32 = {
-            build_command = "cd Builds/MingW && ./wrapper CONFIG=Release AUDIO=0",
+            build_command = "cd Builds/MingW && ./wrapper-53 CONFIG=Release AUDIO=0",
             install = {
-                lib = { ["luce.core"] = "Builds/MingW/build/core.dll" },
+                lib = { ["luce.core"] = "Builds/MingW/build53/core.dll" },
             },
         },
     },
@@ -52,9 +52,8 @@ build	= {
             ["luce.LRectangle"] = "Source/lua/luce/LRectangle.lua",
             ["luce.LRectangleList"] = "Source/lua/luce/LRectangleList.lua",
             ["luce.LRectanglePlacement"] = "Source/lua/luce/LRectanglePlacement.lua",
-            ["luce.deepcopy"] = "Source/lua/luce/deepcopy.lua",
-            ["luce.bit.numberlua"] = "Source/lua/luce/bit/numberlua.lua"
-        }
+            ["luce.deepcopy"] = "Source/lua/luce/deepcopy.lua"
+        },
     },
 
     copy_directories = { "examples" },

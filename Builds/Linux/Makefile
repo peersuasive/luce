@@ -33,12 +33,12 @@ endif
 CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=0.1" -D "JUCE_APP_VERSION_HEX=0x100" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
 CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -std=c++11 -I../../Luce -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
 ifeq ($(LUA_V),52)
-	CFLAGS += -DLUA52 -I/usr/include/lua5.2
+	CFLAGS += -DLUA53 `pkg-config --cflags lua5.2`
 else
 ifeq ($(LUA_V),53)
-	CFLAGS += -DLUA53 -I/usr/local/include/lua5.3
+	CFLAGS += -DLUA53 `pkg-config --cflags lua5.3`
 else
-	CFLAGS += -DLUA51 -I/usr/include/lua5.1
+	CFLAGS += -DLUA51 `pkg-config --exists lua5.1 && pkg-config --cflags lua5.1 || pkg-config --cflags luajit`
 endif
 endif
 

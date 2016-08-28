@@ -43,8 +43,21 @@ Getting started
 
 2. put it somewhere in your lua modules path (ex: ``/usr/local/share/lua/5.1``)
 
-- if you're on Linux, you can also use the provided `luarock
-  <https://github.com/peersuasive/luce/raw/master/luce-scm-0.rockspec>`_
+- if you're on Linux, you can also use the provided luarock:
+
+  Check the `requirements`_, then:
+
+  for lua 5.1::
+
+    ~$ luarocks install https://github.com/peersuasive/luce/raw/master/luce-scm-0.rockspec
+  
+  for lua 5.2::
+
+    ~$ luarocks install https://github.com/peersuasive/luce/raw/master/luce-scm52-0.rockspec
+
+  for lua 5.3::
+
+    ~$ luarocks install https://github.com/peersuasive/luce/raw/master/luce-scm53-0.rockspec
 
 - if you don't know JUCE, you should consider having a look at its
   `documentation <https://www.juce.com/api/annotated.html>`__ as Luce low level
@@ -179,7 +192,7 @@ A first app: say hello
     local poller      = function()  -- the callback you want to run in manual mode
         print "I'm in a loop!"
     end
-    return app:start( MainWindow, manual and {poller,100}, osx_delayed,  ) -- returns the exit state
+    return app:start( MainWindow, manual and {poller,100}, osx_delayed ) -- returns the exit state
 
 
 A more complete example using only the low level API
@@ -362,7 +375,6 @@ Projects `lTox <https://github.com/peersuasive/ltox>`__ and `Lecture
 <https://github.com/peersuasive/lecture>`__ are also good starting points.
 
 
-
 Requirements and dependencies
 =============================
 
@@ -370,12 +382,62 @@ To simply use Luce as a module,
 
 * lua 5.1 / lua 5.2 / luajit 2.X
 
+.. _requirements:
+
 to compile the module and for C++ projects
 ------------------------------------------
 
 * C++11
   
 * GCC 4.6+ / CLANG 3.3+
+
+centos 7
+~~~~~~~~
+
+::
+
+    ~$ yum install -y git make gcc gcc-c++ libcurl-devel libX11-devel freetype-devel libXrandr-devel libXinerama-devel libXcursor-devel mesa-libGL-devel lua-devel
+
+ubuntu 14.04-16.10
+~~~~~~~~~~~~~~~~~~
+
+::
+
+    ~$ apt-get install -y git gcc g++ make libcurl4-gnutls-dev libx11-dev libfreetype6-dev libxrandr-dev libxinerama-dev libxcursor-dev mesa-common-dev libgl1-mesa-dev
+
+Install whichever lua version you need:
+
+::
+
+    ~ $ apt-get install -y liblua5.1-0-dev lua5.1
+
+    or
+
+::
+
+    ~ $ apt-get install -y liblua5.2-0-dev lua5.2
+
+    or
+
+::
+
+    ~ $ apt-get install -y liblua5.3-0-dev lua5.3
+
+    or
+
+::
+
+    ~ $ apt-get install -y libluajit-5.1-dev luajit
+
+
+.. note::
+
+    If you're on Trusty, Lua 5.3.1 package can be found in vbernat's haproxy-1.6 ppa repository::
+
+        ~$ sudo add-apt-repository ppa:vbernat/haproxy-1.6
+
+
+
 
 To extend with new JUCE classes 
 -------------------------------

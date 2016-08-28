@@ -1,4 +1,4 @@
-#!/usr/bin/env luajit
+#!/usr/bin/env lua
 
 local debug
 if arg and arg[1] and arg[1]:match("^[Dd]") then
@@ -216,13 +216,16 @@ mouseDragger:setColour( luce.Label.ColourIds.backgroundColourId, "white" )
 mouseDragger:mouseDrag(function(me)
     print("dragging", me.source.getIndex())
     local s = me.source
+    local m = me.mods
     print(string.format([[
+    is left button down?: %s
     current index: %s
     is mouse: %s
     is touch: %s
     valid pressure?: %s
     pressure: %s
 ]],
+    m:isLeftButtonDown(),
     s.index,
     s.mouse,
     s.touch,
